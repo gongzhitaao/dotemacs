@@ -1,0 +1,22 @@
+;; -*- mode: emacs-lisp -*-
+
+;; Time-stamp: <2012-09-24 09:27:01 gongzhitaao>
+
+(defconst my-emacs-dir
+  (expand-file-name "~/Documents/dotemacs/")
+  "my emacs load path")
+(defconst my-emacs-config-dir
+  (concat my-emacs-dir "config/")
+  "My emacs config path")
+(defconst my-emacs-plugin-dir
+  (concat my-emacs-dir "plugin/")
+  "My emacs plugin path")
+
+(add-to-list 'load-path my-emacs-config-dir)
+(add-to-list 'load-path my-emacs-plugin-dir)
+
+(load "basic")
+(load "bindings")
+(load "myorg")
+
+(server-start)

@@ -5,9 +5,6 @@
 (color-theme-initialize)
 (color-theme-gnome2)
 
-(require 'epa-file)
-(epa-file-enable)
-
 (setq inhibit-startup-message t)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -38,6 +35,8 @@
 
 (add-hook 'write-file-hooks 'time-stamp)
 (add-hook 'write-file-hooks 'delete-trailing-whitespace)
+(add-hook 'find-file-hook 'turn-on-auto-fill)
+
 (setq require-final-newline t)
 (setq x-select-enable-clipboard t)
 
@@ -45,7 +44,7 @@
 (icomplete-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
-(setq resize-mini-windows nil)
+(setq resize-mini-windows t)
 
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
@@ -54,19 +53,27 @@
 (setq c-basic-offset 4
       c-ident-level 4)
 
-(setq calendar-chinese-all-holidays-flag t
-	  calendar-date-style (quote iso)
-	  calendar-mark-holidays-flag t
-	  calendar-view-holidays-initially-flag nil
-	  column-number-mode t)
-
-(setq backup-by-copying t      ; don't clobber symlinks
-      backup-directory-alist '(("." . "~/.saves"))    ; don't litter my fs tree
+;; ---------------------------------------------------------------------
+;; backup thing
+;; ---------------------------------------------------------------------
+(setq backup-directory-alist '(("." . "~/.saves"))
+      backup-by-copying t
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
-      version-control t)       ; use versioned backups
+      version-control t)
+
+(message "Auto cleaning week's old backup files...")
+(let ((week (* 60 60 24 7))
+      (current (float-time (current-time))))
+  (dolist (file (directory-files "~/.saves/" t))
+    (when (and (backup-file-name-p file)
+	       (> (- current
+		     (float-time (fifth (file-attributes file))))
+		  week))
+      (message "%s" file)
+      (delete-file file))))
 
 (set-default-font "DejaVu Sans Mono:pixelsize=13")
 
-(provide 'basic.el)
+(provide 'basic)
