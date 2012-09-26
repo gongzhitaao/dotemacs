@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-09-26 18:57:15 gongzhitaao>
+;;; Time-stamp: <2012-09-26 19:44:09 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -62,7 +62,9 @@
 	("n" "Note" entry (file "~/Documents/org/notes.org")
 	 "* %? :NOTE:\n%U\n" :clock-in t :clock-resume t)
         ("t" "Todo" entry (file+headline "~/Documents/org/todo.org" "Tasks")
-	 "** TODO %?\n%U\n" :clock-in t :clock-resume t)))
+	 "** TODO %?\n%U\n" :clock-in t :clock-resume t)
+        ("w" "Wish todo" entry (file "~/Documents/org/someday.org")
+         "* PENDING %?\n%U\n" :clock-in t :clock-resume t)))
 
 ;; BBDB thing
 (setq bbdb-file "~/Documents/org/contacts.bbdb")
