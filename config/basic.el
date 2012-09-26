@@ -13,14 +13,15 @@
 (add-to-list 'default-frame-alist '(width . 120))
 
 (setq line-spacing 1)
+(set-default-font "DejaVu Sans Mono:pixelsize=13")
 
 (setq frame-title-format "%b    %f")
 (column-number-mode 1)
 (global-linum-mode t)
 
 (setq size-indication-mode t
-	  display-time-24hr-format t
-	  display-time-day-and-date t)
+      display-time-24hr-format t
+      display-time-day-and-date t)
 (display-time)
 
 (setq kill-ring-max 1000)
@@ -53,11 +54,14 @@
 (setq c-basic-offset 4
       c-ident-level 4)
 
+(setq-default indent-tabs-mode nil)
+
 ;; ---------------------------------------------------------------------
 ;; backup thing
 ;; ---------------------------------------------------------------------
-(setq backup-directory-alist '(("." . "~/.saves"))
-      backup-by-copying t
+(unless (file-exists-p "~/.saves/") (make-directory "~/.saves/"))
+(setq backup-directory-alist '(("." . "~/.saves/")))
+(setq backup-by-copying t
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
@@ -73,7 +77,5 @@
 		  week))
       (message "%s" file)
       (delete-file file))))
-
-(set-default-font "DejaVu Sans Mono:pixelsize=13")
 
 (provide 'basic)
