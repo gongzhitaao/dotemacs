@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-09-26 19:44:09 gongzhitaao>
+;;; Time-stamp: <2012-09-27 11:45:52 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -27,6 +27,7 @@
 
 (setq org-agenda-repeating-timestamp-show-all t)
 (setq org-agenda-show-all-dates t)
+(setq org-use-fast-tag-selection t)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d!)")
@@ -62,9 +63,9 @@
 	("n" "Note" entry (file "~/Documents/org/notes.org")
 	 "* %? :NOTE:\n%U\n" :clock-in t :clock-resume t)
         ("t" "Todo" entry (file+headline "~/Documents/org/todo.org" "Tasks")
-	 "** TODO %?\n%U\n" :clock-in t :clock-resume t)
+	 "** TODO %^{TODO: }\n%^G\n%?\n%U\n" :clock-in t :clock-resume t)
         ("w" "Wish todo" entry (file "~/Documents/org/someday.org")
-         "* PENDING %?\n%U\n" :clock-in t :clock-resume t)))
+         "* PENDING %^{Make a wish: }\n%^G\n%?\n%U\n" :clock-in t :clock-resume t)))
 
 ;; BBDB thing
 (setq bbdb-file "~/Documents/org/contacts.bbdb")
