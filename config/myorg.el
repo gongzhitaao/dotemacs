@@ -1,71 +1,90 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-09-27 11:45:52 gongzhitaao>
+;;; Time-stamp: <2012-09-28 22:13:29 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
 
 (setq org-modules '(org-bbdb
-		    org-bibtex
-		    org-crypt
-		    org-docview
-		    org-gnus
-		    org-habit
-		    org-id
-		    org-info
-		    org-jsinfo
-		    org-inlinetask
-		    org-irc
-		    org-mew
-		    org-mhe
-		    org-rmail
-		    org-vm
-		    org-w3m
-		    org-wl))
+                    org-bibtex
+                    org-crypt
+                    org-docview
+                    org-gnus
+                    org-habit
+                    org-id
+                    org-info
+                    org-jsinfo
+                    org-inlinetask
+                    org-irc
+                    org-mew
+                    org-mhe
+                    org-rmail
+                    org-vm
+                    org-w3m
+                    org-wl))
 
-(setq org-agenda-files '("~/Documents/org/"))
+(setq org-agenda-files
+      '("~/Documents/org/todo.org"
+        "~/Documents/org/habits.org"
+        "~/Documents/org/someday.org"
+))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (local-unset-key (kbd "C-c ["))
+            (local-unset-key (kbd "C-c ]"))
+            (local-unset-key (kbd "C-c ;"))))
 
 (setq org-agenda-repeating-timestamp-show-all t)
 (setq org-agenda-show-all-dates t)
-(setq org-use-fast-tag-selection t)
-
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d!)")
-        (sequence "PROPOSE(p)" "WORKING(w!)" "|" "FINISHED(f!)")
-        (sequence "|" "CANCELED(c@)")))
+(setq org-use-fast-todo-selection t)
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+(setq org-use-fast-tag-selection nil)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "|"
-		  "CANCELLED(c@/!)")))
+        (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "TERM(e@/!)")))
+
+(setq org-tag-alist
+      '((:startgroup)
+        ("@computer" . ?C)
+        ("@afk" . ?A)
+        (:endgroup)
+        ("HOLD" . ?H)
+        ("NEXT" . ?N)
+        ("WAIT" . ?W)
+        ("TERM" . ?T)
+        ("code" . ?c)
+        ("hobby" . ?h)
+        ("social" . ?s) ; social activities, phone friends and etc.
+        ("tianer" . ?t) ; tianer-related tasks
+))
 
 (setq org-todo-keyword-faces
       '(("TODO" :foreground "red" :weight bold)
-	("NEXT" :foreground "blue" :weight bold)
-	("DONE" :foreground "forest green" :weight bold)
-	("WAITING" :foreground "orange" :weight bold)
-	("HOLD" :foreground "magenta" :weight bold)
-	("CANCELLED" :foreground "forest green" :weight bold)
-	("PHONE" :foreground "forest green" :weight bold)))
+        ("NEXT" :foreground "cyan" :weight bold)
+        ("DONE" :foreground "green" :weight bold)
+        ("WAIT" :foreground "yellow" :weight bold)
+        ("HOLD" :foreground "magenta" :weight bold)
+        ("TERM" :foreground "forest green" :weight bold)))
 
 (setq org-todo-state-tags-triggers
-      '(("CANCELLED" ("CANCELLED" . t))
-	("WAITING" ("WAITING" . t))
-	("HOLD" ("WAITING" . t) ("HOLD" . t))
-	(done ("WAITING") ("HOLD"))
-	("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-	("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-	("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+      '(("TODO" ("WAIT") ("TERM") ("HOLD"))
+        ("NEXT" ("WAIT") ("TERM") ("HOLD"))
+        ("DONE" ("WAIT") ("TERM") ("HOLD"))
+        ("WAIT" ("WAIT" . t))
+        ("HOLD" ("WAIT" . t) ("HOLD" . t))
+        ("TERM" ("TERM" . t))
+        (done ("WAIT") ("HOLD"))
+))
 
 (setq org-capture-templates
-      '(("j" "Journal" entry (file+datetree "~/Documents/org/diary.org")
-         "* %?\n%U\n" :clock-in t :clock-resume t)
-	("n" "Note" entry (file "~/Documents/org/notes.org")
-	 "* %? :NOTE:\n%U\n" :clock-in t :clock-resume t)
+      '(("n" "Note" entry (file "~/Documents/org/notes.org")
+         "* %? :note:%^G\n%U\n")
         ("t" "Todo" entry (file+headline "~/Documents/org/todo.org" "Tasks")
-	 "** TODO %^{TODO: }\n%^G\n%?\n%U\n" :clock-in t :clock-resume t)
+         "* TODO %? %^G\n%U\n")
         ("w" "Wish todo" entry (file "~/Documents/org/someday.org")
-         "* PENDING %^{Make a wish: }\n%^G\n%?\n%U\n" :clock-in t :clock-resume t)))
+         "* TODO %? %^G\n%U\n")))
 
 ;; BBDB thing
 (setq bbdb-file "~/Documents/org/contacts.bbdb")
