@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-09-28 22:13:29 gongzhitaao>
+;;; Time-stamp: <2012-09-28 23:05:22 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
