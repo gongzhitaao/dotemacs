@@ -1,6 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
 
-;; Time-stamp: <2012-09-24 09:27:01 gongzhitaao>
+;; Time-stamp: <2012-10-05 20:41:10 gongzhitaao>
 
 (defconst my-emacs-dir
   (expand-file-name "~/Documents/dotemacs/")
@@ -14,6 +14,7 @@
 
 (add-to-list 'load-path my-emacs-config-dir)
 (add-to-list 'load-path my-emacs-plugin-dir)
+(add-to-list 'load-path (concat my-emacs-plugin-dir "emacs-color-theme-solarized/"))
 
 (load "basic")
 (load "bindings")

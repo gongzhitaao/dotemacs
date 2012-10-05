@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-09-28 23:05:22 gongzhitaao>
+;;; Time-stamp: <2012-09-29 20:44:44 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -23,27 +23,44 @@
                     org-w3m
                     org-wl))
 
-(setq org-agenda-files
-      '("~/Documents/org/todo.org"
-        "~/Documents/org/habits.org"
-        "~/Documents/org/someday.org"
-))
-
 (add-hook 'org-mode-hook
           (lambda ()
             (local-unset-key (kbd "C-c ["))
             (local-unset-key (kbd "C-c ]"))
             (local-unset-key (kbd "C-c ;"))))
 
+;; ----------------------------------------------------------------------
+;; Agenda
+;; ----------------------------------------------------------------------
+(setq org-agenda-files
+      '("~/Documents/org/todo.org"
+        "~/Documents/org/habits.org"
+        "~/Documents/org/someday.org"
+))
+
+(setq org-agenda-dim-blocked-task t)
+(setq org-agenda-compact-blocks t)
+
 (setq org-agenda-repeating-timestamp-show-all t)
 (setq org-agenda-show-all-dates t)
-(setq org-use-fast-todo-selection t)
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
-(setq org-use-fast-tag-selection nil)
+;; ----------------------------------------------------------------------
+;; Clock
+;; ----------------------------------------------------------------------
+;; (org-clock-persistence-insinuate t)
 
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-        (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "TERM(e@/!)")))
+(setq org-clock-history-length 32)
+(setq org-clock-in-resume t)
+
+;; ----------------------------------------------------------------------
+;; Log thing
+;; ----------------------------------------------------------------------
+(setq org-log-into-drawer t)
+(setq org-clock-into-drawer t)
+
+;; ----------------------------------------------------------------------
+;; Tags
+;; ----------------------------------------------------------------------
+(setq org-use-fast-tag-selection nil)
 
 (setq org-tag-alist
       '((:startgroup)
@@ -53,12 +70,22 @@
         ("HOLD" . ?H)
         ("NEXT" . ?N)
         ("WAIT" . ?W)
-        ("TERM" . ?T)
+        ("TERM" . ?K)
         ("code" . ?c)
         ("hobby" . ?h)
         ("social" . ?s) ; social activities, phone friends and etc.
         ("tianer" . ?t) ; tianer-related tasks
 ))
+
+;; ----------------------------------------------------------------------
+;; TODO
+;; ----------------------------------------------------------------------
+(setq org-use-fast-todo-selection t)
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+        (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@/!)")))
 
 (setq org-todo-keyword-faces
       '(("TODO" :foreground "red" :weight bold)
@@ -66,18 +93,21 @@
         ("DONE" :foreground "green" :weight bold)
         ("WAIT" :foreground "yellow" :weight bold)
         ("HOLD" :foreground "magenta" :weight bold)
-        ("TERM" :foreground "forest green" :weight bold)))
+        ("KILL" :foreground "forest green" :weight bold)))
 
 (setq org-todo-state-tags-triggers
-      '(("TODO" ("WAIT") ("TERM") ("HOLD"))
-        ("NEXT" ("WAIT") ("TERM") ("HOLD"))
-        ("DONE" ("WAIT") ("TERM") ("HOLD"))
+      '(("TODO" ("WAIT") ("KILL") ("HOLD"))
+        ("NEXT" ("WAIT") ("KILL") ("HOLD"))
+        ("DONE" ("WAIT") ("KILL") ("HOLD"))
         ("WAIT" ("WAIT" . t))
         ("HOLD" ("WAIT" . t) ("HOLD" . t))
-        ("TERM" ("TERM" . t))
+        ("KILL" ("KILL" . t))
         (done ("WAIT") ("HOLD"))
 ))
 
+;; ----------------------------------------------------------------------
+;; Capture
+;; ----------------------------------------------------------------------
 (setq org-capture-templates
       '(("n" "Note" entry (file "~/Documents/org/notes.org")
          "* %? :note:%^G\n%U\n")
@@ -86,7 +116,9 @@
         ("w" "Wish todo" entry (file "~/Documents/org/someday.org")
          "* TODO %? %^G\n%U\n")))
 
+;; ----------------------------------------------------------------------
 ;; BBDB thing
+;; ----------------------------------------------------------------------
 (setq bbdb-file "~/Documents/org/contacts.bbdb")
 (setq bbdb-north-american-phone-numbers-p nil)
 

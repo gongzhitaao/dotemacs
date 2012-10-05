@@ -1,7 +1,6 @@
 
 ;;; bindings.el
 
-(require 'browse-kill-ring)
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<f11>") 'ispell)

@@ -1,9 +1,9 @@
 
 ;;; basic.el
 
-(require 'color-theme)
-(color-theme-initialize)
-(color-theme-gnome2)
+(require 'color-theme-solarized)
+(color-theme-solarized-dark)
+(require 'browse-kill-ring)
 
 (setq inhibit-startup-message t)
 (tool-bar-mode 0)
@@ -36,7 +36,10 @@
 
 (add-hook 'write-file-hooks 'time-stamp)
 (add-hook 'write-file-hooks 'delete-trailing-whitespace)
-(add-hook 'find-file-hook 'turn-on-auto-fill)
+(add-hook 'find-file-hook
+          (lambda ()
+            (turn-on-auto-fill)
+            (hl-line-mode t)))
 
 (setq require-final-newline t)
 (setq x-select-enable-clipboard t)
