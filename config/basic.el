@@ -1,9 +1,16 @@
 
 ;;; basic.el
 
+(require 'color-theme)
+(color-theme-initialize)
 (require 'color-theme-solarized)
 (color-theme-solarized-dark)
+
 (require 'browse-kill-ring)
+(require 'rainbow-mode)
+
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
 
 (setq inhibit-startup-message t)
 (tool-bar-mode 0)
@@ -12,7 +19,7 @@
 (setq visible-bell t)
 (add-to-list 'default-frame-alist '(width . 120))
 
-(setq line-spacing 1)
+(setq line-spacing 2)
 (set-default-font "DejaVu Sans Mono:pixelsize=13")
 
 (setq frame-title-format "%b    %f")
