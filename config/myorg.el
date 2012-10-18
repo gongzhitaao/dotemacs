@@ -1,41 +1,33 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-10-17 22:28:54 gongzhitaao>
+;;; Time-stamp: <2012-10-18 18:12:19 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
 
-(setq org-modules '(org-bbdb
-                    org-bibtex
-                    org-crypt
-                    org-docview
-                    org-gnus
-                    org-habit
-                    org-id
-                    org-info
-                    org-jsinfo
-                    org-inlinetask
-                    org-irc
-                    org-mew
-                    org-mhe
-                    org-rmail
-                    org-vm
-                    org-w3m
-                    org-wl))
-
 (add-hook 'org-mode-hook
           (lambda ()
+            ;;
+            ;; prevent unindented adding or removal of agenda files
             (local-unset-key (kbd "C-c ["))
             (local-unset-key (kbd "C-c ]"))
-            (local-unset-key (kbd "C-c ;"))))
+            (local-unset-key (kbd "C-c ;"))
+            ;;
+            (let ((my-org-modules
+                   '(org-bbdb org-bibtex org-docview org-habit)))
+              (dolist (m my-org-modules)
+                (add-to-list 'org-modules m t))
+              (dolist (m org-modules)
+                (require m)))
+))
 
 ;; ----------------------------------------------------------------------
 ;; Agenda
 ;; ----------------------------------------------------------------------
 (setq org-agenda-files
-      '("~/Documents/org/todo.org"
-        "~/Documents/org/habits.org"
-        "~/Documents/org/someday.org"
+      '("~/Documents/org/gtd/todo.org"
+        "~/Documents/org/gtd/habits.org"
+        "~/Documents/org/gtd/someday.org"
 ))
 
 (setq org-agenda-dim-blocked-task t)
@@ -47,14 +39,13 @@
 (setq org-agenda-custom-commands
       '(("d" "Done" todo "DONE"
         ((org-agenda-overriding-header "To archive")
-         (org-tags-match-list-sublevels t)))
-        ("0" "Agenda"
-         ((agenda "" nil)
-          (tags-todo "STYLE=\"habit\""
-                     ((org-agenda-overriding-header "Habits")
-                      (org-agenda-sorting-strategy
-                       '(todo-state-down effort-up category-keep))))
-))))
+         (org-tags-match-list-sublevels nil)))
+))
+
+(setq org-agenda-tags-column -80
+      org-habit-graph-column 84
+)
+
 
 ;; ----------------------------------------------------------------------
 ;; Clock
@@ -122,12 +113,12 @@
 ;; Capture
 ;; ----------------------------------------------------------------------
 (setq org-capture-templates
-      '(("n" "Note" entry (file "~/Documents/org/notes.org")
+      '(("n" "Note" entry (file "~/Documents/org/gtd/notes.org")
          "* %? :note:%^G\n%U\n")
         ("t" "Todo" entry
-         (file+headline "~/Documents/org/todo.org" "Tasks")
+         (file+headline "~/Documents/org/gtd/todo.org" "Tasks")
          "* TODO %? %^G\n%U\n")
-        ("w" "Wish todo" entry (file "~/Documents/org/someday.org")
+        ("w" "Wish todo" entry (file "~/Documents/org/gtd/someday.org")
          "* TODO %? %^G\n%U\n")
 ))
 
@@ -138,7 +129,9 @@
 (let ((post-src "~/Documents/org/posts/")
       (post-des "~/Documents/gongzhitaao.github.com/_posts/")
       (image-src "~/Documents/org/posts/img/")
-      (image-des "~/Documents/gongzhitaao.github.com/assets/img/"))
+      (image-des "~/Documents/gongzhitaao.github.com/assets/img/")
+      (uva-src "~/Documents/org/uva/")
+      (uva-des "~/Documents/uva/gh-pages/_posts/"))
 
   (setq org-publish-project-alist
         '(("post"
@@ -151,7 +144,7 @@
            :email "zhitaao.gong@gmail.com"
            :style "<link rel=\"stylesheet\" type=\"text/css\"\
 href=\"/assets/css/org.css\" />")
-
+w
           ("image"
            :base-directory image-src
            :base-extension "jpg\\|gif\\|png"
@@ -159,12 +152,24 @@ href=\"/assets/css/org.css\" />")
            :publishing-function org-publish-attachment)
 
           ("blog" :components ("post" "image"))
+
+          ("uva"
+           :base-directory uva-src
+           :publishing-directory uva-des
+           :publishing-function org-publish-org-to-html
+           :secion-numbers t
+           :table-of-contents t
+           :sub-superscript "{}"
+           :email "zhitaao.gong@gmail.com"
+           :style "<link rel=\"stylesheet\" type=\"text/css\"\
+href=\"/assets/css/org.css\" />")
+
 )))
 
 ;; ----------------------------------------------------------------------
 ;; BBDB thing
 ;; ----------------------------------------------------------------------
-(setq bbdb-file "~/Documents/org/contacts.bbdb")
+(setq bbdb-file "~/Documents/org/gtd/contacts.bbdb")
 (setq bbdb-north-american-phone-numbers-p nil)
 
 ;; ----------------------------------------------------------------------
