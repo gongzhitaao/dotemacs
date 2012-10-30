@@ -1,18 +1,20 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-10-18 18:12:19 gongzhitaao>
+;;; Time-stamp: <2012-10-30 20:51:47 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
 
 (add-hook 'org-mode-hook
           (lambda ()
-            ;;
+            "Do some inits after org loaded"
+
             ;; prevent unindented adding or removal of agenda files
             (local-unset-key (kbd "C-c ["))
             (local-unset-key (kbd "C-c ]"))
             (local-unset-key (kbd "C-c ;"))
-            ;;
+
+            ;; load useful modules
             (let ((my-org-modules
                    '(org-bbdb org-bibtex org-docview org-habit)))
               (dolist (m my-org-modules)
@@ -44,6 +46,8 @@
 
 (setq org-agenda-tags-column -80
       org-habit-graph-column 84
+      org-habit-preceding-days 28
+      org-habit-following-days 0
 )
 
 
@@ -52,14 +56,16 @@
 ;; ----------------------------------------------------------------------
 ;; (org-clock-persistence-insinuate t)
 
-(setq org-clock-history-length 32)
-(setq org-clock-in-resume t)
+(setq org-clock-history-length 32
+      org-clock-in-resume t
+)
 
 ;; ----------------------------------------------------------------------
 ;; Log thing
 ;; ----------------------------------------------------------------------
-(setq org-log-into-drawer t)
-(setq org-clock-into-drawer t)
+(setq org-log-into-drawer t
+      org-clock-into-drawer t
+)
 
 ;; ----------------------------------------------------------------------
 ;; Tags
@@ -84,8 +90,8 @@
 ;; ----------------------------------------------------------------------
 ;; TODO
 ;; ----------------------------------------------------------------------
-(setq org-use-fast-todo-selection t)
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+(setq org-use-fast-todo-selection t
+      org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
@@ -126,51 +132,55 @@
 ;; Publishing
 ;; ----------------------------------------------------------------------
 (require 'org-publish)
-(let ((post-src "~/Documents/org/posts/")
-      (post-des "~/Documents/gongzhitaao.github.com/_posts/")
-      (image-src "~/Documents/org/posts/img/")
-      (image-des "~/Documents/gongzhitaao.github.com/assets/img/")
-      (uva-src "~/Documents/org/uva/")
-      (uva-des "~/Documents/uva/gh-pages/_posts/"))
 
-  (setq org-publish-project-alist
-        '(("post"
-           :base-directory post-src
-           :publishing-directory post-des
-           :publishing-function org-publish-org-to-html
-           :secion-numbers t
-           :table-of-contents t
-           :sub-superscript "{}"
-           :email "zhitaao.gong@gmail.com"
-           :style "<link rel=\"stylesheet\" type=\"text/css\"\
+(defun post-post (plist filename pub-dir)
+  (insert-file-contents)
+)
+
+(setq org-publish-project-alist
+      '(("post"
+         :base-directory post-src
+         :publishing-directory post-des
+         :publishing-function org-publish-org-to-html
+         :secion-numbers t
+         :table-of-contents t
+         :sub-superscript "{}"
+         :email "zhitaao.gong@gmail.com"
+         :style "<link rel=\"stylesheet\" type=\"text/css\"\
 href=\"/assets/css/org.css\" />")
-w
-          ("image"
-           :base-directory image-src
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory image-des
-           :publishing-function org-publish-attachment)
+        w
+        ("image"
+         :base-directory image-src
+         :base-extension "jpg\\|gif\\|png"
+         :publishing-directory image-des
+         :publishing-function org-publish-attachment)
 
-          ("blog" :components ("post" "image"))
+        ("blog" :components ("post" "image"))
 
-          ("uva"
-           :base-directory uva-src
-           :publishing-directory uva-des
-           :publishing-function org-publish-org-to-html
-           :secion-numbers t
-           :table-of-contents t
-           :sub-superscript "{}"
-           :email "zhitaao.gong@gmail.com"
-           :style "<link rel=\"stylesheet\" type=\"text/css\"\
+        ("oj"
+         :base-directory oj-src
+         :publishing-directory oj-des
+         :publishing-function org-publish-org-to-html
+         :secion-numbers t
+         :table-of-contents t
+         :sub-superscript "{}"
+         :email "zhitaao.gong@gmail.com"
+         :style "<link rel=\"stylesheet\" type=\"text/css\"\
 href=\"/assets/css/org.css\" />")
 
-)))
+        ("test"
+         :base-directory ""
+         :publishing-directory "~/Documents/org/tmp/"
+         :publishing-function org-publish-org-to-html post-post)
+
+))
 
 ;; ----------------------------------------------------------------------
 ;; BBDB thing
 ;; ----------------------------------------------------------------------
-(setq bbdb-file "~/Documents/org/gtd/contacts.bbdb")
-(setq bbdb-north-american-phone-numbers-p nil)
+(setq bbdb-file "~/Documents/org/gtd/contacts.bbdb"
+      bbdb-north-american-phone-numbers-p nil
+)
 
 ;; ----------------------------------------------------------------------
 ;; Miscellaneous
