@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-10-30 20:51:47 gongzhitaao>
+;;; Time-stamp: <2012-11-01 22:27:04 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -29,7 +29,6 @@
 (setq org-agenda-files
       '("~/Documents/org/gtd/todo.org"
         "~/Documents/org/gtd/habits.org"
-        "~/Documents/org/gtd/someday.org"
 ))
 
 (setq org-agenda-dim-blocked-task t)
@@ -49,7 +48,6 @@
       org-habit-preceding-days 28
       org-habit-following-days 0
 )
-
 
 ;; ----------------------------------------------------------------------
 ;; Clock
@@ -131,48 +129,21 @@
 ;; ----------------------------------------------------------------------
 ;; Publishing
 ;; ----------------------------------------------------------------------
-(require 'org-publish)
-
-(defun post-post (plist filename pub-dir)
-  (insert-file-contents)
-)
+(require 'org-jekyll)
 
 (setq org-publish-project-alist
-      '(("post"
-         :base-directory post-src
-         :publishing-directory post-des
-         :publishing-function org-publish-org-to-html
+      '(("oj"
+         :base-directory "~/Documents/org/oj/"
+         :publishing-directory "~/Documents/oj/gh-pages/_posts/"
+         :recursive t
          :secion-numbers t
+         :skip-before-1st-heading nil
          :table-of-contents t
          :sub-superscript "{}"
          :email "zhitaao.gong@gmail.com"
-         :style "<link rel=\"stylesheet\" type=\"text/css\"\
-href=\"/assets/css/org.css\" />")
-        w
-        ("image"
-         :base-directory image-src
-         :base-extension "jpg\\|gif\\|png"
-         :publishing-directory image-des
-         :publishing-function org-publish-attachment)
-
-        ("blog" :components ("post" "image"))
-
-        ("oj"
-         :base-directory oj-src
-         :publishing-directory oj-des
-         :publishing-function org-publish-org-to-html
-         :secion-numbers t
-         :table-of-contents t
-         :sub-superscript "{}"
-         :email "zhitaao.gong@gmail.com"
-         :style "<link rel=\"stylesheet\" type=\"text/css\"\
-href=\"/assets/css/org.css\" />")
-
-        ("test"
-         :base-directory ""
-         :publishing-directory "~/Documents/org/tmp/"
-         :publishing-function org-publish-org-to-html post-post)
-
+         :publishing-function org-publish-org-to-jekyll
+         ; custome properties
+         :jekyll-layout "post")
 ))
 
 ;; ----------------------------------------------------------------------
@@ -185,7 +156,6 @@ href=\"/assets/css/org.css\" />")
 ;; ----------------------------------------------------------------------
 ;; Miscellaneous
 ;; ----------------------------------------------------------------------
-
 (setq org-time-stamp-custom-formats
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
