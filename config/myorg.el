@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-11-01 22:27:04 gongzhitaao>
+;;; Time-stamp: <2012-11-02 16:41:41 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -139,7 +139,7 @@
          :secion-numbers t
          :skip-before-1st-heading nil
          :table-of-contents t
-         :sub-superscript "{}"
+         :sub-superscript {}
          :email "zhitaao.gong@gmail.com"
          :publishing-function org-publish-org-to-jekyll
          ; custome properties
@@ -158,5 +158,7 @@
 ;; ----------------------------------------------------------------------
 (setq org-time-stamp-custom-formats
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+
+(setq org-startup-indented t)
 
 (provide 'myorg)

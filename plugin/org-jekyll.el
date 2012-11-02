@@ -1,6 +1,8 @@
 
 ;;; org-jekyll.el
-;;; Time-stamp: <2012-11-01 22:06:54 gongzhitaao>
+;;; Time-stamp: <2012-11-02 15:50:00 gongzhitaao>
+
+(setq org-export-html-table-tag "<table>")
 
 (defun org-publish-org-to-jekyll (plist filename pub-dir)
   "Publish an org file to LaTeX.
@@ -257,7 +259,7 @@ PUB-DIR is set, use this as the publishing directory."
       (unless body-only
         ;; File header
         (insert (format
-                 "
+                 "\
 ---
 layout: %s
 title: %s
