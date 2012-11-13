@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-11-02 16:41:41 gongzhitaao>
+;;; Time-stamp: <2012-11-12 09:04:18 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -15,8 +15,8 @@
             (local-unset-key (kbd "C-c ;"))
 
             ;; load useful modules
-            (let ((my-org-modules
-                   '(org-bbdb org-bibtex org-docview org-habit)))
+            (let ((my-org-modules '(org-bbdb org-bibtex org-clock
+                   org-docview org-habit org-special-blocks)))
               (dolist (m my-org-modules)
                 (add-to-list 'org-modules m t))
               (dolist (m org-modules)
@@ -46,7 +46,7 @@
 (setq org-agenda-tags-column -80
       org-habit-graph-column 84
       org-habit-preceding-days 28
-      org-habit-following-days 0
+      org-habit-following-days 1
 )
 
 ;; ----------------------------------------------------------------------
@@ -92,7 +92,7 @@
       org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@/!)")
         (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@/!)")))
 
 (setq org-todo-keyword-faces
@@ -158,7 +158,5 @@
 ;; ----------------------------------------------------------------------
 (setq org-time-stamp-custom-formats
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-
-(setq org-startup-indented t)
 
 (provide 'myorg)

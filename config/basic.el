@@ -1,5 +1,6 @@
 
 ;;; basic.el
+;;; Time-stamp: <2012-11-13 19:35:30 CST gongzhitaao>
 
 (require 'color-theme)
 (color-theme-initialize)
@@ -41,6 +42,9 @@
 (mouse-avoidance-mode 'animate)
 (global-font-lock-mode t)
 
+(setq case-fold-search nil)
+
+(setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %Z %u")
 (add-hook 'write-file-hooks 'time-stamp)
 (add-hook 'write-file-hooks 'delete-trailing-whitespace)
 (add-hook 'find-file-hook
@@ -65,15 +69,24 @@
       c-ident-level 4)
 
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
 
 (blink-cursor-mode 0)
+(setq global-auto-revert-non-file-buffers t)
+
+(setq gnus-init-file "./config/mygnus.el")
+
+;; ---------------------------------------------------------------------
+;; mode
+;; ---------------------------------------------------------------------
 
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
 ;; ---------------------------------------------------------------------
-;; backup thing
+;; backup
 ;; ---------------------------------------------------------------------
 (unless (file-exists-p "~/.saves/") (make-directory "~/.saves/"))
 (setq backup-directory-alist '(("." . "~/.saves/")))
