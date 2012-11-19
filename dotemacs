@@ -1,6 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
 
-;; Time-stamp: <2012-11-13 19:18:42 CST gongzhitaao>
+;; Time-stamp: <2012-11-19 14:27:46 CST gongzhitaao>
 
 (defconst my-emacs-dir
   (expand-file-name "~/Documents/dotemacs/")
@@ -18,7 +18,7 @@
 
 (load "basic")
 (load "bindings")
-(load "myorg")
 (load "myibuffer")
+(load "myorg")
 
 (server-start)

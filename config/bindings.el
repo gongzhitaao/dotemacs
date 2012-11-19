@@ -1,6 +1,6 @@
 
 ;;; bindings.el
-;;; Time-stamp: <2012-11-07 19:00:30 CST gongzhitaao>
+;;; Time-stamp: <2012-11-14 14:49:18 CST gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -8,7 +8,7 @@
 
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
-(global-set-key (kbd "<f2>") 'isearch-repeat-forward)
+(global-set-key (kbd "<f3>") 'isearch-repeat-forward)
 (global-set-key (kbd "<f11>") 'ispell)
 
 (defun my-insert-time ()

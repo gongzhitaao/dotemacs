@@ -1,89 +1,106 @@
 
 ;;; basic.el
-;;; Time-stamp: <2012-11-13 19:35:30 CST gongzhitaao>
+;;; Time-stamp: <2012-11-19 14:26:06 CST gongzhitaao>
 
+;; ---------------------------------------------------------------------
+;; view
+;; ---------------------------------------------------------------------
 (require 'color-theme)
 (color-theme-initialize)
 (require 'color-theme-solarized)
 (color-theme-solarized-dark)
 
-(require 'browse-kill-ring)
-(require 'rainbow-mode)
-
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
 
-(setq inhibit-startup-message t)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
-(setq visible-bell t)
-(add-to-list 'default-frame-alist '(width . 120))
-
-(setq line-spacing 2)
 (set-default-font "DejaVu Sans Mono:pixelsize=13")
-
-(setq frame-title-format "%b    %f")
-(column-number-mode 1)
-(global-linum-mode t)
-
-(setq size-indication-mode t
-      display-time-24hr-format t
-      display-time-day-and-date t)
-(display-time)
-
-(setq kill-ring-max 1000)
-(setq mouse-yank-at-point t)
-(setq scroll-margin 7
-      scroll-conservatively 1000)
 
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
 (mouse-avoidance-mode 'animate)
 (global-font-lock-mode t)
+(blink-cursor-mode 0)
 
-(setq case-fold-search nil)
+(setq c-basic-offset 4
+      c-ident-level 4)
 
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+
+(setq scroll-margin 7
+      scroll-conservatively 1000)
+
+(setq require-final-newline t)
 (setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %Z %u")
-(add-hook 'write-file-hooks 'time-stamp)
-(add-hook 'write-file-hooks 'delete-trailing-whitespace)
+(add-hook 'write-file-hooks
+          (lambda ()
+            (delete-trailing-whitespace)
+            (time-stamp)))
 (add-hook 'find-file-hook
           (lambda ()
             (turn-on-auto-fill)
             (hl-line-mode t)))
 
-(setq require-final-newline t)
-(setq x-select-enable-clipboard t)
+;; ---------------------------------------------------------------------
+;; frame
+;; ---------------------------------------------------------------------
+(tool-bar-mode 0)
+(menu-bar-mode 0)
+(scroll-bar-mode 0)
+(global-linum-mode t)
+(add-to-list 'default-frame-alist '(width . 120))
+(setq inhibit-startup-message t
+      visible-bell t
+      resize-mini-windows t
+      frame-title-format "%b    %f")
 
-(partial-completion-mode t)
-(icomplete-mode t)
+(column-number-mode 1)
+(setq size-indication-mode t
+      display-time-24hr-format t
+      display-time-day-and-date t)
+(display-time)
 
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq resize-mini-windows t)
+;; ---------------------------------------------------------------------
+;; encoding
+;; ---------------------------------------------------------------------
+(let ((my-prefer-coding-system
+       '(cp950 gb2312 cp936 gb18030 utf-16-unix utf-8-unix)))
+  (dolist (c my-prefer-coding-system)
+    (prefer-coding-system c)))
 
-(put 'narrow-to-region 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
-(put 'narrow-to-defun 'disabled nil)
+;; ---------------------------------------------------------------------
+;; encrypt
+;; ---------------------------------------------------------------------
+(require 'epa-file)
 
-(setq c-basic-offset 4
-      c-ident-level 4)
+(defadvice epg--start (around advice-epg-disable-agent disable)
+  "Make epg--start not able to find a gpg-agent"
+  (let ((agent (getenv "GPG_AGENT_INFO")))
+    (setenv "GPG_AGENT_INFO" nil)
+    ad-do-it
+    (setenv "GPG_AGENT_INFO" agent)))
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(defun epg-disable-agent ()
+  "Make EasyPG bypass any gpg-agent"
+  (interactive)
+  (ad-enable-advice 'epg--start 'around 'advice-epg-disable-agent)
+  (ad-activate 'epg--start)
+  (message "EasyPG gpg-agent bypassed"))
 
-(blink-cursor-mode 0)
-(setq global-auto-revert-non-file-buffers t)
-
-(setq gnus-init-file "./config/mygnus.el")
+(defun epg-enable-agent ()
+  "Make EasyPG use a gpg-agent after having been disabled with epg-disable-agent"
+  (interactive)
+  (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
+  (ad-activate 'epg--start)
+  (message "EasyPG gpg-agent re-enabled"))
 
 ;; ---------------------------------------------------------------------
 ;; mode
 ;; ---------------------------------------------------------------------
-
-(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+(setq auto-mode-alist
+      (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
+                ("\\.md$" . markdown-mode))
+              auto-mode-alist))
 
 ;; ---------------------------------------------------------------------
 ;; backup
@@ -106,5 +123,25 @@
 		  week))
       (message "%s" file)
       (delete-file file))))
+
+;; ---------------------------------------------------------------------
+;; Miscellaneous
+;; ---------------------------------------------------------------------
+(require 'browse-kill-ring)
+(require 'rainbow-mode)
+
+(setq kill-ring-max 1000
+      mouse-yank-at-point t
+      case-fold-search nil
+      x-select-enable-clipboard t)
+
+(partial-completion-mode t)
+(icomplete-mode t)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
 
 (provide 'basic)

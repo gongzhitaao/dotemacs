@@ -1,6 +1,8 @@
 
 ;;; myibuffer.el
-;; Time-stamp: <2012-11-13 20:58:39 CST gongzhitaao>
+;; Time-stamp: <2012-11-15 20:08:20 CST gongzhitaao>
+
+(require 'ibuffer)
 
 (setq ibuffer-saved-filter-groups
       (quote (("default"
@@ -9,17 +11,20 @@
                            (filename . "Documents/org/gtd/")
                            (name . "^\\*Calendar\\*$")
                            (name . "^diary$")))
-               ("RichText" (or
+               ("Markup" (or
                             (mode . org-mode)
                             (mode . html-mode)
                             (mode . markdown-mode)))
+               ("Web" (or
+                       (mode . javascript-mode)
+                       (mode . js-mode)))
                ("C/C++" (or
                          (mode . c++-mode)
                          (mode . c-mode)))
                ("Emacs" (or
                          (mode . emacs-lisp-mode)
                          (name . "^\\*scratch\\*$")))
-               ("Gnus" (or
+               ("Mail" (or
                         (mode . message-mode)
                         (mode . mail-mode)
                         (mode . gnus-group-mode)
