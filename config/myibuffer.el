@@ -1,6 +1,6 @@
 
 ;;; myibuffer.el
-;; Time-stamp: <2012-11-15 20:08:20 CST gongzhitaao>
+;; Time-stamp: <2012-11-20 21:39:16 CST gongzhitaao>
 
 (require 'ibuffer)
 
@@ -9,21 +9,29 @@
                ("Planner" (or
                            (mode . org-agenda-mode)
                            (filename . "Documents/org/gtd/")
+                           (mode . bbdb-mode)
                            (name . "^\\*Calendar\\*$")
                            (name . "^diary$")))
                ("Markup" (or
                             (mode . org-mode)
                             (mode . html-mode)
                             (mode . markdown-mode)))
-               ("Web" (or
-                       (mode . javascript-mode)
-                       (mode . js-mode)))
-               ("C/C++" (or
+               ("1st Lang" (or
                          (mode . c++-mode)
-                         (mode . c-mode)))
+                         (mode . c-mode)
+                         (mode . python-mode)))
+               ("2st Lang" (or
+                       (mode . javascript-mode)
+                       (mode . js-mode)
+                       (mode . shell-script-mode)
+                       (mode . css-mode)))
                ("Emacs" (or
                          (mode . emacs-lisp-mode)
                          (name . "^\\*scratch\\*$")))
+               ("(La)Tex" (or
+                       (mode . LaTeX-mode)
+                       (mode . tex-mode)
+                       (mode . latex-mode)))
                ("Mail" (or
                         (mode . message-mode)
                         (mode . mail-mode)

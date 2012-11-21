@@ -1,6 +1,6 @@
 
 ;;; myorg.el
-;;; Time-stamp: <2012-11-12 09:04:18 CST gongzhitaao>
+;;; Time-stamp: <2012-11-21 22:05:45 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -41,6 +41,20 @@
       '(("d" "Done" todo "DONE"
         ((org-agenda-overriding-header "To archive")
          (org-tags-match-list-sublevels nil)))
+        (" " "Agenda"
+         ((agenda "" (org-agenda-goto-today))
+          (todo "TODO"
+                ((org-agenda-overriding-header "Tasks")
+                 (org-agenda-todo-ignore-with-date 'all)))
+          (todo "NEXT"
+                ((org-agenda-overriding-header "Projects")
+                 (org-agenda-todo-ignore-with-date 'all)
+                 (org-agenda-todo-list-sublevels nil)))
+          (tags-todo "+WAIT+HOLD"
+                     ((org-agenda-overriding-header "Delayed")
+                      (org-agenda-todo-ignore-with-date 'all)
+                      (org-agenda-todo-list-sublevels nil)))
+          ))
 ))
 
 (setq org-agenda-tags-column -80
@@ -48,6 +62,10 @@
       org-habit-preceding-days 28
       org-habit-following-days 1
 )
+
+;; (setq org-agenda-category-icon-alist
+;;       '(("Project" "~/Documents/dotemacs/config/img/icon-repeat.png")
+;; ))
 
 ;; ----------------------------------------------------------------------
 ;; Clock
@@ -92,24 +110,26 @@
       org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@/!)")
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@/!)" "LIVE(l@/!)")
         (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@/!)")))
 
 (setq org-todo-keyword-faces
       '(("TODO" :foreground "red" :weight bold)
         ("NEXT" :foreground "cyan" :weight bold)
         ("DONE" :foreground "green" :weight bold)
+        ("LIVE" :foreground "dark green" :weight bold)
         ("WAIT" :foreground "yellow" :weight bold)
         ("HOLD" :foreground "magenta" :weight bold)
         ("KILL" :foreground "forest green" :weight bold)))
 
 (setq org-todo-state-tags-triggers
-      '(("TODO" ("WAIT") ("KILL") ("HOLD"))
-        ("NEXT" ("WAIT") ("KILL") ("HOLD"))
-        ("DONE" ("WAIT") ("KILL") ("HOLD"))
+      '(("TODO" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
+        ("NEXT" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
+        ("DONE" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
         ("WAIT" ("WAIT" . t))
         ("HOLD" ("WAIT" . t) ("HOLD" . t))
         ("KILL" ("KILL" . t))
+        ("LIVE" ("LIVE" . t))
         (done ("WAIT") ("HOLD"))
 ))
 
