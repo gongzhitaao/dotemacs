@@ -1,6 +1,5 @@
-
-;;; myorg.el
-;;; Time-stamp: <2012-11-21 22:05:45 CST gongzhitaao>
+;;; org.conf.el
+;;; Time-stamp: <2012-12-01 08:00:47 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -21,6 +20,9 @@
                 (add-to-list 'org-modules m t))
               (dolist (m org-modules)
                 (require m)))
+
+            (setq org-enforce-todo-dependencies t)
+            (auto-fill-mode 1)
 ))
 
 ;; ----------------------------------------------------------------------
@@ -43,17 +45,34 @@
          (org-tags-match-list-sublevels nil)))
         (" " "Agenda"
          ((agenda "" (org-agenda-goto-today))
-          (todo "TODO"
-                ((org-agenda-overriding-header "Tasks")
-                 (org-agenda-todo-ignore-with-date 'all)))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Projects")
+          (todo ""
+           ((org-agenda-overriding-header "Tasks")
+            (org-agenda-prefix-format " %i %-12:T")
+            (org-agenda-todo-ignore-with-date 'all)
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'notodo
+                                        '("TODO" "NEXT" "LIVE")))
+            (org-agenda-todo-list-sublevels nil)))
+          ;; (tags-todo "+code-WAIT-HOLD"
+          ;;            ((org-agenda-overriding-header "Projects")
+          ;;             (org-agenda-skip-function
+          ;;              '(org-agenda-skip-entry-if 'scheduled
+          ;;                                         'deadline))
+          ;;             (org-agenda-prefix-format " %i  %-12:T")
+          ;;             (org-agenda-todo-list-sublevels nil)))
+          (todo "WAIT"
+                ((org-agenda-overriding-header "Waiting")
                  (org-agenda-todo-ignore-with-date 'all)
-                 (org-agenda-todo-list-sublevels nil)))
-          (tags-todo "+WAIT+HOLD"
-                     ((org-agenda-overriding-header "Delayed")
-                      (org-agenda-todo-ignore-with-date 'all)
-                      (org-agenda-todo-list-sublevels nil)))
+                 (org-agenda-prefix-format " %i %-12:T")
+                 (org-agenda-todo-list-sublevels t)))
+          (tags "code"
+                ((org-agenda-overriding-header "Someday")
+                 (org-agenda-todo-list-sublevels nil)
+                 (org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'todo
+                                             '("TODO" "NEXT" "WAIT"
+                                               "LIVE" "DONE")))
+                 (org-agenda-prefix-format " %i %-12:T")))
           ))
 ))
 
@@ -61,6 +80,7 @@
       org-habit-graph-column 84
       org-habit-preceding-days 28
       org-habit-following-days 1
+      org-agenda-start-with-log-mode t
 )
 
 ;; (setq org-agenda-category-icon-alist
@@ -88,27 +108,21 @@
 ;; ----------------------------------------------------------------------
 (setq org-use-fast-tag-selection nil)
 
-(setq org-tag-alist
-      '((:startgroup)
-        ("@computer" . ?C)
-        ("@afk" . ?A)
-        (:endgroup)
-        ("HOLD" . ?H)
-        ("NEXT" . ?N)
-        ("WAIT" . ?W)
-        ("KILL" . ?K)
-        ("code" . ?c)
-        ("hobby" . ?h)
-        ("social" . ?s) ; social activities, phone friends and etc.
-        ("tianer" . ?t) ; tianer-related tasks
-))
-
 ;; ----------------------------------------------------------------------
 ;; TODO
 ;; ----------------------------------------------------------------------
 (setq org-use-fast-todo-selection t
-      org-treat-S-cursor-todo-selection-as-state-change nil)
+      org-treat-S-cursor-todo-selection-as-state-change nil
+)
 
+;; Meaning for every state:
+;; TODO: tasks to to
+;; NEXT: tasks with subtasks ongoing
+;; WAIT: waiting for some conditions
+;; HOLD: delayed tasks
+;; DONE: finished tasks
+;; LIVE: finished but in maintance
+;; KILL: discarded,
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@/!)" "LIVE(l@/!)")
         (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@/!)")))
@@ -117,21 +131,10 @@
       '(("TODO" :foreground "red" :weight bold)
         ("NEXT" :foreground "cyan" :weight bold)
         ("DONE" :foreground "green" :weight bold)
-        ("LIVE" :foreground "dark green" :weight bold)
+        ("LIVE" :foreground "forest green" :weight bold)
         ("WAIT" :foreground "yellow" :weight bold)
         ("HOLD" :foreground "magenta" :weight bold)
-        ("KILL" :foreground "forest green" :weight bold)))
-
-(setq org-todo-state-tags-triggers
-      '(("TODO" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
-        ("NEXT" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
-        ("DONE" ("WAIT") ("KILL") ("HOLD") ("LIVE"))
-        ("WAIT" ("WAIT" . t))
-        ("HOLD" ("WAIT" . t) ("HOLD" . t))
-        ("KILL" ("KILL" . t))
-        ("LIVE" ("LIVE" . t))
-        (done ("WAIT") ("HOLD"))
-))
+        ("KILL" :foreground "dark green" :weight bold)))
 
 ;; ----------------------------------------------------------------------
 ;; Capture
@@ -179,4 +182,6 @@
 (setq org-time-stamp-custom-formats
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
-(provide 'myorg)
+(setq org-hierarchical-todo-statistics nil)
+
+(provide 'org.conf)

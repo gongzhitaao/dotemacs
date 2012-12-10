@@ -1,6 +1,6 @@
 
 ;;; bindings.el
-;;; Time-stamp: <2012-11-20 19:29:29 CST gongzhitaao>
+;;; Time-stamp: <2012-11-25 15:29:24 CST gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -28,5 +28,17 @@
 (global-set-key (kbd "s-s") 'save-buffer)
 
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
+
+(defun gzt/indent-buffer ()
+  "Indent the whole buffer"
+  (interactive)
+  (save-excursion (indent-region (point-min) (point-max) nil)))
+(global-set-key (kbd "s-\\") 'gzt/indent-buffer)
+
+(defun gzt/untabify-buffer ()
+  "Untabify the whole buffer"
+  (interactive)
+  (save-excursion (untabify (point-min) (point-max))))
+(global-set-key (kbd "s-u") 'gzt/untabify-buffer)
 
 (provide 'bindings)

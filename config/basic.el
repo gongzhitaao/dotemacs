@@ -1,14 +1,13 @@
 
 ;;; basic.el
-;;; Time-stamp: <2012-11-19 14:26:06 CST gongzhitaao>
+;;; Time-stamp: <2012-12-08 21:00:54 CST gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
 ;; ---------------------------------------------------------------------
 (require 'color-theme)
 (color-theme-initialize)
-(require 'color-theme-solarized)
-(color-theme-solarized-dark)
+(require 'naquadah-theme)
 
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
@@ -28,7 +27,7 @@
               tab-width 4)
 
 (setq scroll-margin 7
-      scroll-conservatively 1000)
+      scroll-conservatively 0)
 
 (setq require-final-newline t)
 (setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %Z %u")
@@ -38,8 +37,9 @@
             (time-stamp)))
 (add-hook 'find-file-hook
           (lambda ()
-            (turn-on-auto-fill)
-            (hl-line-mode t)))
+            (follow-mode t)))
+
+(global-hl-line-mode 1)
 
 ;; ---------------------------------------------------------------------
 ;; frame
@@ -99,8 +99,13 @@
 ;; ---------------------------------------------------------------------
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
-                ("\\.md$" . markdown-mode))
+                ("\\.md$" . markdown-mode)
+                ("\\.\\(html\\|htm\\)" . html-mode))
               auto-mode-alist))
+
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (auto-fill-mode 1)))
 
 ;; ---------------------------------------------------------------------
 ;; backup
@@ -143,5 +148,6 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 (provide 'basic)
