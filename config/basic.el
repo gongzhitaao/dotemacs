@@ -1,6 +1,6 @@
 
 ;;; basic.el
-;;; Time-stamp: <2012-12-08 21:00:54 CST gongzhitaao>
+;;; Time-stamp: <2013-01-01 21:22:36 CST gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
@@ -17,7 +17,7 @@
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
 (mouse-avoidance-mode 'animate)
-(global-font-lock-mode t)
+(global-font-lock-mode 1)
 (blink-cursor-mode 0)
 
 (setq c-basic-offset 4
@@ -35,11 +35,6 @@
           (lambda ()
             (delete-trailing-whitespace)
             (time-stamp)))
-(add-hook 'find-file-hook
-          (lambda ()
-            (follow-mode t)))
-
-(global-hl-line-mode 1)
 
 ;; ---------------------------------------------------------------------
 ;; frame
@@ -123,9 +118,9 @@
       (current (float-time (current-time))))
   (dolist (file (directory-files "~/.saves/" t))
     (when (and (backup-file-name-p file)
-	       (> (- current
-		     (float-time (fifth (file-attributes file))))
-		  week))
+               (> (- current
+                     (float-time (fifth (file-attributes file))))
+                  week))
       (message "%s" file)
       (delete-file file))))
 
@@ -142,6 +137,8 @@
 
 (partial-completion-mode t)
 (icomplete-mode t)
+
+(setq abbrev-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 

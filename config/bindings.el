@@ -1,6 +1,6 @@
 
 ;;; bindings.el
-;;; Time-stamp: <2012-11-25 15:29:24 CST gongzhitaao>
+;;; Time-stamp: <2012-12-14 11:17:05 CST gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -8,7 +8,8 @@
 
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
-(global-set-key (kbd "<f3>") 'isearch-repeat-forward)
+(global-set-key (kbd "<f9>") 'calendar)
+;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
 (global-set-key (kbd "<f12>") 'ibus-mode)
 
