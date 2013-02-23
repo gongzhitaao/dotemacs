@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2012-12-19 20:45:24 CST gongzhitaao>
+;;; Time-stamp: <2013-02-11 15:35:00 CST gongzhitaao>
 
 (require 'gnus)
 
@@ -11,12 +11,25 @@
 (setq gnus-secondary-select-methods
       '((nnimap "localhost" (nnimap-stream network))))
 
+(setq gnus-select-methods
+      '(nnimap "Mail"
+               (nnimap-address "localhost")
+               (nnimap-stream network)
+               (nnimap-authenticator login)))
+
+(setq gnus-use-trees t)
+
 (setq gnus-summary-line-format
       "%U%R%z%I%(%[%&user-date;  %-15,15f%] %)%s\n"
       gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M")))
-;;      gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject
 
-(setq gnus-thread-sort-functions '((not gnus-thread-sort-by-number)))
+(setq gnus-summary-make-false-root 'dummy
+      gnus-summary-gather-subject-limit 'fuzzy)
+
+(setq gnus-thread-sort-functions
+      '(gnus-thread-sort-by-date
+        gnus-thread-sort-by-author
+        gnus-thread-sort-by-number))
 
 ;; trn-style three three look
 (setq gnus-sum-thread-tree-false-root ""

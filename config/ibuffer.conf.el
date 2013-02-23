@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2012-12-07 20:35:44 CST gongzhitaao>
+;;; Time-stamp: <2013-02-23 10:56:31 CST gongzhitaao>
 
 (require 'ibuffer)
 
@@ -32,7 +32,8 @@
                     (mode . latex-mode)
                     (mode . tex-mode)
                     (mode . TeX-mode)
-                    (mode . plain-tex-mode)))
+                    (mode . plain-tex-mode)
+                    (mode . bibtex-mode)))
                ("Mail"
                 (or (mode . message-mode)
                     (mode . mail-mode)
@@ -51,7 +52,9 @@
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
-            (ibuffer-switch-to-saved-filter-groups "default")))
+            (ibuffer-switch-to-saved-filter-groups "default")
+            (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
+            (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)))
 
 (define-ibuffer-column size-h
   (:name "Size" :inline t)

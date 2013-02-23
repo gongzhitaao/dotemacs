@@ -1,18 +1,15 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-01-01 21:22:36 CST gongzhitaao>
+;;; Time-stamp: <2013-02-23 12:37:49 CST gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
 ;; ---------------------------------------------------------------------
-(require 'color-theme)
-(color-theme-initialize)
-(require 'naquadah-theme)
 
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
 
-(set-default-font "DejaVu Sans Mono:pixelsize=13")
+(set-default-font "Monospace:pixelsize=14")
 
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
@@ -26,7 +23,7 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-(setq scroll-margin 7
+(setq scroll-margin 3
       scroll-conservatively 0)
 
 (setq require-final-newline t)
@@ -43,7 +40,7 @@
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
 (global-linum-mode t)
-(add-to-list 'default-frame-alist '(width . 120))
+
 (setq inhibit-startup-message t
       visible-bell t
       resize-mini-windows t
@@ -95,10 +92,14 @@
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
                 ("\\.md$" . markdown-mode)
-                ("\\.\\(html\\|htm\\)" . html-mode))
+                ("\\.\\(html\\|htm\\)" . html-mode)
+                ("rc$" . conf-mode))
               auto-mode-alist))
 
 (add-hook 'markdown-mode-hook
+          (lambda ()
+            (auto-fill-mode 1)))
+(add-hook 'latex-mode-hook
           (lambda ()
             (auto-fill-mode 1)))
 
@@ -135,7 +136,7 @@
       case-fold-search nil
       x-select-enable-clipboard t)
 
-(partial-completion-mode t)
+; (partial-completion-mode t)
 (icomplete-mode t)
 
 (setq abbrev-mode t)

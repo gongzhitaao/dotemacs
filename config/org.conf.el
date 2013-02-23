@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-01-07 16:42:25 CST gongzhitaao>
+;;; Time-stamp: <2013-02-18 22:37:41 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -104,8 +104,8 @@
 
 ;;          )))
 
-(setq org-agenda-tags-column -80
-      org-habit-graph-column 84
+(setq org-agenda-tags-column -100
+      org-habit-graph-column 45
       org-habit-preceding-days 28
       org-habit-following-days 1
       org-agenda-start-with-log-mode t
@@ -185,5 +185,6 @@
 (setq org-hierarchical-todo-statistics nil)
 (setq org-directory "~/Documents/org/gtd")
 (setq org-agenda-include-diary t)
+(setq org-clock-idle-time 10)
 
 (provide 'org.conf)

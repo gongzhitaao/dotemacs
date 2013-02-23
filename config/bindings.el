@@ -1,6 +1,6 @@
 
 ;;; bindings.el
-;;; Time-stamp: <2012-12-14 11:17:05 CST gongzhitaao>
+;;; Time-stamp: <2013-02-07 14:05:43 CST gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -8,6 +8,7 @@
 
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
+(global-set-key (kbd "<f7>") 'compile)
 (global-set-key (kbd "<f9>") 'calendar)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
@@ -27,8 +28,12 @@
 (global-set-key (kbd "s-g") 'goto-line)
 (global-set-key (kbd "s-r") 'set-visited-file-name)
 (global-set-key (kbd "s-s") 'save-buffer)
-
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
+
+(global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "M-<down>") 'shrink-window)
+(global-set-key (kbd "M-<up>") 'enlarge-window)
 
 (defun gzt/indent-buffer ()
   "Indent the whole buffer"
