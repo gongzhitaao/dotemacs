@@ -1,6 +1,6 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-02-23 12:37:49 CST gongzhitaao>
+;;; Time-stamp: <2013-03-04 17:32:52 CST gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
@@ -89,10 +89,11 @@
 ;; ---------------------------------------------------------------------
 ;; mode
 ;; ---------------------------------------------------------------------
+(setq default-major-mode 'org-mode)
+
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
-                ("\\.md$" . markdown-mode)
-                ("\\.\\(html\\|htm\\)" . html-mode)
+                ("\\.txt" . org-mode)
                 ("rc$" . conf-mode))
               auto-mode-alist))
 

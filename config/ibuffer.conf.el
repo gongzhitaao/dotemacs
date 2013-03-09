@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-02-23 10:56:31 CST gongzhitaao>
+;;; Time-stamp: <2013-03-02 14:46:45 CST gongzhitaao>
 
 (require 'ibuffer)
 
@@ -44,7 +44,8 @@
                     (mode . gnus-browse-mode)
                     (name . "^\\.newsrc-dribble")))
                ("Helper"
-                (or (mode . calc-mode)
+                (or (mode . makefile-mode)
+                    (mode . calc-mode)
                     (mode . info-mode)
                     (mode . Info-mode)
                     (mode . help-mode)
@@ -54,7 +55,8 @@
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")
             (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
-            (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)))
+            (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
+            (hl-line-mode 1)))
 
 (define-ibuffer-column size-h
   (:name "Size" :inline t)
