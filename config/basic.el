@@ -1,6 +1,6 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-03-04 17:32:52 CST gongzhitaao>
+;;; Time-stamp: <2013-04-26 19:32:34 CDT gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
@@ -94,7 +94,8 @@
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
                 ("\\.txt" . org-mode)
-                ("rc$" . conf-mode))
+                ("rc$" . conf-mode)
+                ("\\.md" . markdown-mode))
               auto-mode-alist))
 
 (add-hook 'markdown-mode-hook
@@ -137,7 +138,6 @@
       case-fold-search nil
       x-select-enable-clipboard t)
 
-; (partial-completion-mode t)
 (icomplete-mode t)
 
 (setq abbrev-mode t)
@@ -148,5 +148,13 @@
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  )
+
+(load-theme 'solarized-dark t)
 
 (provide 'basic)

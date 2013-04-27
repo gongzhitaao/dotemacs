@@ -1,6 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
-
-;; Time-stamp: <2012-12-14 17:45:28 CST gongzhitaao>
+;; Time-stamp: <2013-04-25 09:14:15 CDT gongzhitaao>
 
 (defconst my-emacs-dir
   (expand-file-name "~/Documents/dotemacs/")
