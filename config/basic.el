@@ -1,6 +1,6 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-04-26 19:32:34 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-05 23:29:28 CDT gongzhitaao>
 
 ;; ---------------------------------------------------------------------
 ;; view
@@ -91,11 +91,15 @@
 ;; ---------------------------------------------------------------------
 (setq default-major-mode 'org-mode)
 
+(require 'js2-mode)
+
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
-                ("\\.txt" . org-mode)
+                ("\\.txt$" . org-mode)
                 ("rc$" . conf-mode)
-                ("\\.md" . markdown-mode))
+                ("\\.md$" . markdown-mode)
+                ("\\(Makefile.*\\)\\(\\.make$\\)?$" . makefile-mode)
+                ("\\.js\\'" . js2-mode))
               auto-mode-alist))
 
 (add-hook 'markdown-mode-hook
