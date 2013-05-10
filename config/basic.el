@@ -1,10 +1,10 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-05-05 23:29:28 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-09 14:37:47 CDT gongzhitaao>
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; view
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
@@ -28,14 +28,14 @@
 
 (setq require-final-newline t)
 (setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %Z %u")
-(add-hook 'write-file-hooks
+(add-hook 'write-file-functions
           (lambda ()
             (delete-trailing-whitespace)
             (time-stamp)))
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; frame
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
@@ -52,17 +52,17 @@
       display-time-day-and-date t)
 (display-time)
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; encoding
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (let ((my-prefer-coding-system
        '(cp950 gb2312 cp936 gb18030 utf-16-unix utf-8-unix)))
   (dolist (c my-prefer-coding-system)
     (prefer-coding-system c)))
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; encrypt
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (require 'epa-file)
 
 (defadvice epg--start (around advice-epg-disable-agent disable)
@@ -80,15 +80,18 @@
   (message "EasyPG gpg-agent bypassed"))
 
 (defun epg-enable-agent ()
-  "Make EasyPG use a gpg-agent after having been disabled with epg-disable-agent"
+  "Make EasyPG use a gpg-agent after having been disabled with
+epg-disable-agent"
   (interactive)
   (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
   (ad-activate 'epg--start)
   (message "EasyPG gpg-agent re-enabled"))
 
-;; ---------------------------------------------------------------------
+(epg-disable-agent)
+
+;; -------------------------------------------------------------------
 ;; mode
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq default-major-mode 'org-mode)
 
 (require 'js2-mode)
@@ -99,19 +102,22 @@
                 ("rc$" . conf-mode)
                 ("\\.md$" . markdown-mode)
                 ("\\(Makefile.*\\)\\(\\.make$\\)?$" . makefile-mode)
-                ("\\.js\\'" . js2-mode))
+                ("\\.js$" . js2-mode)
+                ("\\.m$" . octave-mode)
+                ("\\.h$" . c++-mode))
               auto-mode-alist))
 
 (add-hook 'markdown-mode-hook
           (lambda ()
             (auto-fill-mode 1)))
+
 (add-hook 'latex-mode-hook
           (lambda ()
             (auto-fill-mode 1)))
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; backup
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (unless (file-exists-p "~/.saves/") (make-directory "~/.saves/"))
 (setq backup-directory-alist '(("." . "~/.saves/")))
 (setq backup-by-copying t
@@ -131,11 +137,17 @@
       (message "%s" file)
       (delete-file file))))
 
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Miscellaneous
-;; ---------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (require 'browse-kill-ring)
 (require 'rainbow-mode)
+(require 'fill-column-indicator)
+
+(add-hook 'find-file-hook
+          (lambda ()
+            (setq fci-rule-color "darkgreen")
+            (fci-mode t)))
 
 (setq kill-ring-max 1000
       mouse-yank-at-point t
@@ -156,8 +168,8 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  )
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.milkbox.net/packages/") t))
 
 (load-theme 'solarized-dark t)
 
