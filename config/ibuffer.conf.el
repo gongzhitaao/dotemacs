@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-03-02 14:46:45 CST gongzhitaao>
+;;; Time-stamp: <2013-05-19 21:33:46 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -7,33 +7,21 @@
       (quote (("default"
                ("Planner"
                 (or (mode . org-agenda-mode)
-                    (mode . org-mode)
                     (filename . "Documents/org/gtd/")
                     (mode . bbdb-mode)
                     (name . "^\\*Calendar\\*$")
                     (name . "^diary$")))
-               ("Programming"
-                (or (mode . emacs-lisp-mode)
-                    (mode . c++-mode)
-                    (mode . c-mode)
-                    (mode . python-mode)
-                    (mode . shell-script-mode)
-                    (mode . html-mode)
-                    (mode . markdown-mode)
-                    (mode . javascript-mode)
-                    (mode . js-mode)
-                    (mode . css-mode)
-                    (mode . yaml-mode)
-                    (mode . xml-mode)
-                    (mode . nxml-mode)))
                ("Dired" (mode . dired-mode))
+               ("Programming"
+                (or (mode . shell-script-mode)
+                    (mode . markdown-mode)
+                    (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
+                    (name . "\\.py")
+                    (name . "\\.\\(html?\\|xml\\|js\\|css\\)")
+                    (name . "\\.ya?ml")
+                    (name . "\\.el")))
                ("TeX"
-                (or (mode . LaTeX-mode)
-                    (mode . latex-mode)
-                    (mode . tex-mode)
-                    (mode . TeX-mode)
-                    (mode . plain-tex-mode)
-                    (mode . bibtex-mode)))
+                (or (name . "\\.\\(tex\\|bib\\)")))
                ("Mail"
                 (or (mode . message-mode)
                     (mode . mail-mode)

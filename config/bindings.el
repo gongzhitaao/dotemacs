@@ -1,23 +1,19 @@
-
 ;;; bindings.el
-;;; Time-stamp: <2013-02-07 14:05:43 CST gongzhitaao>
+;;; Time-stamp: <2013-05-20 14:44:27 CDT gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-<tab>") 'other-window)
 
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
+(global-set-key (kbd "<f6>") 'highlight-changes-visible-mode)
 (global-set-key (kbd "<f7>") 'compile)
 (global-set-key (kbd "<f9>") 'calendar)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
 (global-set-key (kbd "<f12>") 'ibus-mode)
-
-;; (defun my-insert-time ()
-;;   (interactive)
-;;   (insert (format-time-string "%Y-%m-%d %H:%M:%S %Z" (current-time))))
-;; (global-set-key (kbd "<f12>") 'my-insert-time)
 
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -34,6 +30,9 @@
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
+
+(global-set-key (kbd "M-n") 'highlight-changes-next-change)
+(global-set-key (kbd "M-p") 'highlight-changes-previous-change)
 
 (defun gzt/indent-buffer ()
   "Indent the whole buffer"

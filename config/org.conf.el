@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-02-18 22:37:41 CST gongzhitaao>
+;;; Time-stamp: <2013-05-19 20:54:45 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -29,9 +29,9 @@
             (auto-fill-mode 1)
             ))
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; TODO
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-use-fast-todo-selection t
       org-treat-S-cursor-todo-selection-as-state-change nil
       )
@@ -48,9 +48,9 @@
         ("HOLD" :foreground "magenta" :weight bold)
         ("KILL" :foreground "forest green" :weight bold)))
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Agenda
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-agenda-files
       '("~/Documents/org/gtd/todo.org"
         "~/Documents/org/gtd/habits.org"
@@ -69,76 +69,42 @@
         (tags . " %i %-12:T")
         (search . " %i %-12:T")))
 
-;; (setq org-agenda-custom-commands
-;;       '(("d" "Done" todo "DONE"
-;;          ((org-agenda-overriding-header "To archive")
-;;           (org-tags-match-list-sublevels nil)))
-
-;;         (" " "Agenda"
-;;          ((agenda "")
-
-;;           ;; tasks on agenda, i.e., need to handle
-;;           (tags-todo "-code"
-;;                      ((org-agenda-overriding-header "Active Tasks")
-;;                       (org-agenda-skip-function
-;;                        '(org-agenda-skip-entry-if 'notodo '("TODO" "NEXT")
-;;                                                   'timestamp))
-;;                       (org-agenda-todo-list-sublevels nil)))
-
-;;           ;; waiting tasks
-;;           (todo "WAIT"
-;;                 ((org-agenda-overriding-header "Waiting Tasks")
-;;                  (org-agenda-todo-ignore-with-date 'all)
-;;                  (org-agenda-todo-list-sublevels t)))
-
-;;           ;; Coding
-;;           (tags "code"
-;;                 ((org-agenda-overriding-header "Coding")
-;;                  (org-agenda-todo-list-sublevels nil)
-;;                  (org-agenda-skip-function
-;;                   '(org-agenda-skip-entry-if 'timestamp))
-;;                  )))
-
-;;          ;; common options
-;;          ((org-agenda-prefix-format " %i %-12:T%?-12t% s"))
-
-;;          )))
-
 (setq org-agenda-tags-column -100
       org-habit-graph-column 45
       org-habit-preceding-days 28
       org-habit-following-days 1
       org-agenda-start-with-log-mode t
+      org-tags-column -70
       )
 
 ;; (setq org-agenda-category-icon-alist
 ;;       '(("Project" "~/Documents/dotemacs/config/img/icon-repeat.png")
 ;; ))
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Clock
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; (org-clock-persistence-insinuate t)
 
 (setq org-clock-history-length 32
       org-clock-in-resume t
       )
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Log thing
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-log-into-drawer t
       org-clock-into-drawer t
       )
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Tags
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-use-fast-tag-selection nil)
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Capture
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-capture-templates
       '(("n" "Note" entry (file "~/Documents/org/gtd/notes.org")
          "* %? :note:%^G\n%U\n")
@@ -149,11 +115,9 @@
          "* TODO %? %^G\n%U\n")
         ))
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Publishing
-;; ----------------------------------------------------------------------
-(require 'org-jekyll)
-
+;; -------------------------------------------------------------------
 (setq org-publish-project-alist
       '(("oj"
          :base-directory "~/Documents/org/oj/"
@@ -169,16 +133,16 @@
          :jekyll-layout "post")
         ))
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; BBDB thing
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq bbdb-file "~/Documents/org/gtd/contacts.bbdb"
       bbdb-north-american-phone-numbers-p nil
       )
 
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; Miscellaneous
-;; ----------------------------------------------------------------------
+;; -------------------------------------------------------------------
 (setq org-time-stamp-custom-formats
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 

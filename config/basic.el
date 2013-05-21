@@ -1,15 +1,20 @@
 
 ;;; basic.el
-;;; Time-stamp: <2013-05-09 14:37:47 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-20 14:47:18 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
 ;; -------------------------------------------------------------------
 
-(require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode)
-
 (set-default-font "Monospace:pixelsize=14")
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.milkbox.net/packages/") t))
+
+(load-theme 'solarized-dark t)
 
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
@@ -17,17 +22,12 @@
 (global-font-lock-mode 1)
 (blink-cursor-mode 0)
 
-(setq c-basic-offset 4
-      c-ident-level 4)
-
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
 (setq scroll-margin 3
       scroll-conservatively 0)
 
 (setq require-final-newline t)
 (setq time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S %Z %u")
+
 (add-hook 'write-file-functions
           (lambda ()
             (delete-trailing-whitespace)
@@ -37,7 +37,7 @@
 ;; frame
 ;; -------------------------------------------------------------------
 (tool-bar-mode 0)
-(menu-bar-mode 0)
+(menu-bar-mode 1)
 (scroll-bar-mode 0)
 (global-linum-mode t)
 
@@ -61,35 +61,6 @@
     (prefer-coding-system c)))
 
 ;; -------------------------------------------------------------------
-;; encrypt
-;; -------------------------------------------------------------------
-(require 'epa-file)
-
-(defadvice epg--start (around advice-epg-disable-agent disable)
-  "Make epg--start not able to find a gpg-agent"
-  (let ((agent (getenv "GPG_AGENT_INFO")))
-    (setenv "GPG_AGENT_INFO" nil)
-    ad-do-it
-    (setenv "GPG_AGENT_INFO" agent)))
-
-(defun epg-disable-agent ()
-  "Make EasyPG bypass any gpg-agent"
-  (interactive)
-  (ad-enable-advice 'epg--start 'around 'advice-epg-disable-agent)
-  (ad-activate 'epg--start)
-  (message "EasyPG gpg-agent bypassed"))
-
-(defun epg-enable-agent ()
-  "Make EasyPG use a gpg-agent after having been disabled with
-epg-disable-agent"
-  (interactive)
-  (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
-  (ad-activate 'epg--start)
-  (message "EasyPG gpg-agent re-enabled"))
-
-(epg-disable-agent)
-
-;; -------------------------------------------------------------------
 ;; mode
 ;; -------------------------------------------------------------------
 (setq default-major-mode 'org-mode)
@@ -97,7 +68,7 @@ epg-disable-agent"
 (require 'js2-mode)
 
 (setq auto-mode-alist
-      (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefiles$" . ruby-mode)
+      (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefile$" . ruby-mode)
                 ("\\.txt$" . org-mode)
                 ("rc$" . conf-mode)
                 ("\\.md$" . markdown-mode)
@@ -140,15 +111,6 @@ epg-disable-agent"
 ;; -------------------------------------------------------------------
 ;; Miscellaneous
 ;; -------------------------------------------------------------------
-(require 'browse-kill-ring)
-(require 'rainbow-mode)
-(require 'fill-column-indicator)
-
-(add-hook 'find-file-hook
-          (lambda ()
-            (setq fci-rule-color "darkgreen")
-            (fci-mode t)))
-
 (setq kill-ring-max 1000
       mouse-yank-at-point t
       case-fold-search nil
@@ -165,12 +127,6 @@ epg-disable-agent"
 (put 'narrow-to-defun 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives
-               '("melpa" . "http://melpa.milkbox.net/packages/") t))
-
-(load-theme 'solarized-dark t)
+(setq delete-by-moving-to-trash t)
 
 (provide 'basic)
