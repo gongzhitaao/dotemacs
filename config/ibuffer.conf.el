@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-05-19 21:33:46 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-23 10:33:29 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -19,7 +19,9 @@
                     (name . "\\.py")
                     (name . "\\.\\(html?\\|xml\\|js\\|css\\)")
                     (name . "\\.ya?ml")
-                    (name . "\\.el")))
+                    (name . "\\.el")
+                    (mode . emacs-lisp-mode)
+                    (name . "\\.sql")))
                ("TeX"
                 (or (name . "\\.\\(tex\\|bib\\)")))
                ("Mail"

@@ -1,5 +1,5 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-05-20 17:19:15 CDT gongzhitaao>
+;; Time-stamp: <2013-05-21 10:03:50 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
@@ -39,11 +39,11 @@
 (add-hook 'bibtex-mode-hook
           '(lambda ()
              (local-set-key (kbd "s-\\") 'bibtex-fill-entry)
-             (set-fill-column 120)))
+             (set-fill-column 120)
+             (bibtex-set-dialect 'biblatex)))
 
 (setq bibtex-text-indentation 20)
 (setq bibtex-align-at-equal-sign t)
-(bibtex-set-dialect 'biblatex)
 
 ;; -------------------------------------------------------------------
 ;; calendar
