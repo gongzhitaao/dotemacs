@@ -1,5 +1,5 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-05-21 10:03:50 CDT gongzhitaao>
+;; Time-stamp: <2013-05-29 23:11:02 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
@@ -21,11 +21,11 @@
 ;; -------------------------------------------------------------------
 ;; fci-mode
 ;; -------------------------------------------------------------------
-(require 'fill-column-indicator)
-(add-hook 'find-file-hook
-          (lambda ()
-            (setq fci-rule-color "darkgreen")
-            (fci-mode t)))
+;; (require 'fill-column-indicator)
+;; (add-hook 'find-file-hook
+;;           (lambda ()
+;;             (setq fci-rule-color "darkgreen")
+;;             (fci-mode t)))
 
 ;; -------------------------------------------------------------------
 ;; rainbow-delimiters-mode
@@ -66,7 +66,6 @@
 (setq diary-file "~/Documents/dotemacs/diary")
 
 (calendar-set-date-style 'iso)
-
 
 ;; -------------------------------------------------------------------
 ;; encrypt

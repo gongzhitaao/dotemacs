@@ -1,5 +1,5 @@
 ;;; bindings.el
-;;; Time-stamp: <2013-05-20 14:44:27 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-29 20:39:12 CDT gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -15,10 +15,12 @@
 (global-set-key (kbd "<f11>") 'ispell)
 (global-set-key (kbd "<f12>") 'ibus-mode)
 
-(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-`") 'hs-toggle-hiding)
+
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
+(global-set-key (kbd "C-c l") 'org-store-link)
 
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
 (global-set-key (kbd "s-g") 'goto-line)

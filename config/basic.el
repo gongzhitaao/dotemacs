@@ -1,12 +1,11 @@
-
 ;;; basic.el
-;;; Time-stamp: <2013-05-20 14:47:18 CDT gongzhitaao>
+;;; Time-stamp: <2013-05-29 20:53:18 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
 ;; -------------------------------------------------------------------
 
-(set-default-font "Monospace:pixelsize=14")
+(set-frame-font "Monospace:pixelsize=14" t t)
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -63,8 +62,6 @@
 ;; -------------------------------------------------------------------
 ;; mode
 ;; -------------------------------------------------------------------
-(setq default-major-mode 'org-mode)
-
 (require 'js2-mode)
 
 (setq auto-mode-alist
@@ -78,13 +75,10 @@
                 ("\\.h$" . c++-mode))
               auto-mode-alist))
 
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (auto-fill-mode 1)))
-
-(add-hook 'latex-mode-hook
-          (lambda ()
-            (auto-fill-mode 1)))
+(gzt/add-hooks
+ '(lambda ()
+    (auto-fill-mode 1))
+ '(markdown-mode-hook latex-mode-hook))
 
 ;; -------------------------------------------------------------------
 ;; backup
@@ -103,7 +97,7 @@
   (dolist (file (directory-files "~/.saves/" t))
     (when (and (backup-file-name-p file)
                (> (- current
-                     (float-time (fifth (file-attributes file))))
+                     (float-time (nth 5 (file-attributes file))))
                   week))
       (message "%s" file)
       (delete-file file))))

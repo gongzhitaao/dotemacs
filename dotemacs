@@ -1,8 +1,8 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2013-05-23 18:30:06 CDT gongzhitaao>
+;; Time-stamp: <2013-05-29 20:52:09 CDT gongzhitaao>
 
 (defconst my-emacs-dir
-  (expand-file-name "~/Documents/dotemacs/")
+  (expand-file-name "~/Documents/dotemacs/master/")
   "my emacs load path")
 (defconst my-emacs-config-dir
   (concat my-emacs-dir "config/")
@@ -14,12 +14,12 @@
 (add-to-list 'load-path my-emacs-config-dir)
 (add-to-list 'load-path my-emacs-plugin-dir)
 
+(load "gzt")
 (load "basic")
 (load "bindings")
 
 ;; load name.conf.el
-(let ((files (directory-files
-              "~/Documents/dotemacs/config"
+(let ((files (directory-files my-emacs-config-dir
               nil ".*\\.conf\\.el" t)))
   (dolist (file files)
     (load (substring file 0 (string-match "\\.el" file)))))
