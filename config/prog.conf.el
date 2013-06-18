@@ -1,5 +1,5 @@
 ;;; prog.conf.el
-;;; Time-stamp: <2013-05-29 20:53:32 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-16 14:26:47 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -14,10 +14,11 @@
 (add-hook 'c++-mode-hook
           '(lambda ()
              (local-set-key "\C-n" 'next-error)
-             (local-set-key "\C-p" 'previous-error)))
+             (local-set-key "\C-p" 'previous-error)
+             (electric-pair-mode 1)))
 
 ;; -------------------------------------------------------------------
-;; Compilation
+;; Compilation & Debug
 ;; -------------------------------------------------------------------
 (require 'compile)
 
@@ -26,11 +27,23 @@
              (setq compilation-scroll-output 'first-error)
              ))
 
+(setq gdb-many-windows t)
+
 ;; -------------------------------------------------------------------
 ;; Miscellaneous
 ;; -------------------------------------------------------------------
+(defun doxymacs-conf ()
+  (interactive)
+  (font-lock-add-keywords nil doxymacs-doxygen-keywords)
+  (font-lock-add-keywords nil '(("\\([@\\\\]\\(details\\)\\)\\>" (0 font-lock-keyword-face prepend))))
+  (setq doxymacs-doxygen-style "Qt"))
+
 (add-hook 'prog-mode-hook
-	  '(lambda ()
-	     (hs-minor-mode 1)))
+          '(lambda ()
+             (hs-minor-mode 1)
+             (doxymacs-mode 1)
+             (doxymacs-conf)
+             ))
+
 
 (provide 'prog.conf)

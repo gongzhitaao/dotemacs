@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-05-19 20:54:45 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-08 09:19:13 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -119,18 +119,26 @@
 ;; Publishing
 ;; -------------------------------------------------------------------
 (setq org-publish-project-alist
-      '(("oj"
-         :base-directory "~/Documents/org/oj/"
-         :publishing-directory "~/Documents/oj/gh-pages/_posts/"
+      '(("poj"
+         :base-directory "~/Documents/oj/gh-pages/report/poj"
+         :publishing-directory "~/Documents/oj/gh-pages/_includes/poj"
          :recursive t
-         :secion-numbers t
+         :section-numbers t
          :skip-before-1st-heading nil
-         :table-of-contents t
+         :table-of-contents nil
+         :body-only t
          :sub-superscript {}
-         :email "zhitaao.gong@gmail.com"
-         :publishing-function org-publish-org-to-jekyll
-                                        ; custome properties
-         :jekyll-layout "post")
+         :email "me@gongzhitaao.org")
+        ("uva"
+         :base-directory "~/Documents/oj/gh-pages/report/uva"
+         :publishing-directory "~/Documents/oj/gh-pages/_includes/uva"
+         :recursive t
+         :section-numbers t
+         :skip-before-1st-heading nil
+         :table-of-contents nil
+         :body-only t
+         :sub-superscript {}
+         :email "me@gongzhitaao.org")
         ))
 
 ;; -------------------------------------------------------------------

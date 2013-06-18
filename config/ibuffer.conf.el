@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-05-23 22:22:47 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-08 15:50:27 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -14,17 +14,18 @@
                ("Dired" (mode . dired-mode))
                ("Programming"
                 (or (mode . shell-script-mode)
-                    (mode . markdown-mode)
                     (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
                     (name . "\\.py")
-                    (name . "\\.\\(html?\\|xml\\|js\\|css\\)")
+                    (name . "\\.\\(xml\\|js\\|css\\)")
                     (name . "\\.ya?ml")
                     (name . "\\.el")
                     (mode . emacs-lisp-mode)
                     (name . "\\.sql")))
                ("Text"
                 (or (name . "\\.\\(tex\\|bib\\)")
-                    (name . "\\.\\org")))
+                    (name . "\\.\\org")
+                    (name . "\\.\\html?")
+                    (mode . markdown-mode)))
                ("Mail"
                 (or (mode . message-mode)
                     (mode . mail-mode)

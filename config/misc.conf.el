@@ -1,5 +1,5 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-05-29 23:11:02 CDT gongzhitaao>
+;; Time-stamp: <2013-06-15 15:08:18 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
@@ -95,3 +95,27 @@ epg-disable-agent"
   (message "EasyPG gpg-agent re-enabled"))
 
 (epg-disable-agent)
+
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+
+(custom-set-variables
+ '(term-bind-key-alist
+   (quote (("C-c C-c" . term-interrupt-subjob)
+           ("C-p" . multi-term-prev)
+           ("C-n" . multi-term-next)
+           ("C-s" . isearch-forward-regexp)
+           ("C-r" . isearch-backward-regexp)
+           ("C-m" . term-send-raw)
+           ("M-f" . term-send-forward-word)
+           ("M-b" . term-send-backward-word)
+           ("M-o" . term-send-backspace)
+           ("M-p" . term-send-up)
+           ("M-n" . term-send-down)
+           ("M-M" . term-send-forward-kill-word)
+           ("M-N" . term-send-backward-kill-word)
+           ("M-r" . term-send-reverse-search-history)
+           ("M-," . term-send-input)
+           ("M-." . completion-at-point)))))
+
+(provide 'misc.conf)

@@ -1,5 +1,5 @@
 ;; hs.conf.el
-;; Time-stamp: <2013-05-29 23:10:05 CDT gongzhitaao>
+;; Time-stamp: <2013-06-07 14:28:26 CDT gongzhitaao>
 
 (defface collapsed-face '((t (:background "#e0cf9f" :foreground "#5f5f5f"))) "Collapsed Overlay")
 (defvar collapsed-face 'collapsed-face)
@@ -21,3 +21,5 @@
                          'face 'collapsed-face display-string)
       (overlay-put ov 'display display-string))))
 (setq hs-set-up-overlay 'display-code-line-counts)
+
+(provide 'hs.conf)
