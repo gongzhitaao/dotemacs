@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-06-08 09:19:13 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-19 19:21:30 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -51,10 +51,7 @@
 ;; -------------------------------------------------------------------
 ;; Agenda
 ;; -------------------------------------------------------------------
-(setq org-agenda-files
-      '("~/Documents/org/gtd/todo.org"
-        "~/Documents/org/gtd/habits.org"
-        ))
+(setq org-agenda-files "~/Documents/dotemacs/org/orgfile")
 
 (setq org-agenda-dim-blocked-task t)
 (setq org-agenda-compact-blocks t)
@@ -106,12 +103,12 @@
 ;; Capture
 ;; -------------------------------------------------------------------
 (setq org-capture-templates
-      '(("n" "Note" entry (file "~/Documents/org/gtd/notes.org")
+      '(("n" "Note" entry (file "~/Documents/dotemacs/org/notes.org")
          "* %? :note:%^G\n%U\n")
         ("t" "Todo" entry
-         (file+headline "~/Documents/org/gtd/todo.org" "Tasks")
+         (file+headline "~/Documents/dotemacs/org/todo.org" "Tasks")
          "* TODO %? %^G\n")
-        ("w" "Wish todo" entry (file "~/Documents/org/gtd/someday.org")
+        ("w" "Wish todo" entry (file "~/Documents/doteamcs/org/someday.org")
          "* TODO %? %^G\n%U\n")
         ))
 
@@ -144,7 +141,7 @@
 ;; -------------------------------------------------------------------
 ;; BBDB thing
 ;; -------------------------------------------------------------------
-(setq bbdb-file "~/Documents/org/gtd/contacts.bbdb"
+(setq bbdb-file "~/Documents/dotemacs/org/contacts.bbdb"
       bbdb-north-american-phone-numbers-p nil
       )
 
@@ -155,8 +152,23 @@
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
 (setq org-hierarchical-todo-statistics nil)
-(setq org-directory "~/Documents/org/gtd")
+(setq org-directory "~/Documents/dotemacs/org")
 (setq org-agenda-include-diary t)
 (setq org-clock-idle-time 10)
+
+;; -------------------------------------------------------------------
+;; Appt
+;; -------------------------------------------------------------------
+(appt-activate 1)
+
+(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
+(defun gzt/appt-display (mins-till-appt cur-time msg)
+  "Convinient wrapper for appt popup display"
+  (gzt/popup (format "Appointment in %s minute(s)" mins-till-appt) msg
+             "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
+             "/usr/share/sounds/ubuntu/stereo/phone-incoming-call.ogg"))
+
+(setq appt-disp-window-function (function gzt/appt-display))
 
 (provide 'org.conf)

@@ -1,5 +1,5 @@
 ;;; gzt.el
-;;; Time-stamp: <2013-06-15 15:29:48 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-19 20:24:45 CDT gongzhitaao>
 ;;;
 ;;; Convinient custome functions
 
@@ -24,5 +24,18 @@ is active"
       (comment-or-uncomment-region (region-beginning) (region-end))
     (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
   )
+
+(defun gzt/popup (title msg &optional icon sound)
+  "Show a popup if on X, or echo it otherwise; TITLE is the title
+of the message, MSG is the context. Optionally, ICON and SOUND
+could be customized, default null"
+  (interactive)
+  (if (display-graphic-p)
+      (shell-command (concat "notify-send "
+                             (if icon (concat "-i " icon) "")
+                             " '" title "' '" msg "'"))
+    (message (concat title ": " msg)))
+  (when sound (shell-command
+               (concat "mplayer -really-quiet " sound " 2> /dev/null"))))
 
 (provide 'gzt)

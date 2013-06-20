@@ -1,15 +1,9 @@
 ;;; basic.el
-;;; Time-stamp: <2013-06-18 00:01:03 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-19 16:46:27 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
 ;; -------------------------------------------------------------------
-
-
-                                        ;(require 'eide)
-                                        ;(eide-start)
-
-(set-frame-font "Monospace:pixelsize=14" t t)
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -54,14 +48,6 @@
       display-time-24hr-format t
       display-time-day-and-date t)
 (display-time)
-
-;; -------------------------------------------------------------------
-;; encoding
-;; -------------------------------------------------------------------
-(let ((my-prefer-coding-system
-       '(cp950 gb2312 cp936 gb18030 utf-16-unix utf-8-unix)))
-  (dolist (c my-prefer-coding-system)
-    (prefer-coding-system c)))
 
 ;; -------------------------------------------------------------------
 ;; mode
@@ -127,5 +113,9 @@
 (put 'dired-find-alternate-file 'disabled nil)
 
 (setq delete-by-moving-to-trash t)
+
+(setq debug-on-error t)
+
+(require 'dired+)
 
 (provide 'basic)
