@@ -1,5 +1,5 @@
 ;;; basic.el
-;;; Time-stamp: <2013-06-19 16:46:27 CDT gongzhitaao>
+;;; Time-stamp: <2013-06-29 17:06:29 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
@@ -68,7 +68,7 @@
 (gzt/add-hooks
  '(lambda ()
     (auto-fill-mode 1))
- '(markdown-mode-hook latex-mode-hook))
+ '(markdown-mode-hook LaTeX-mode-hook latex-mode-hook))
 
 (recentf-mode 1)
 ;; -------------------------------------------------------------------
@@ -115,7 +115,5 @@
 (setq delete-by-moving-to-trash t)
 
 (setq debug-on-error t)
-
-(require 'dired+)
 
 (provide 'basic)

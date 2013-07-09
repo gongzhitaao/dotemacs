@@ -1,5 +1,5 @@
 ;;; bindings.el
-;;; Time-stamp: <2013-06-18 00:03:39 CDT gongzhitaao>
+;;; Time-stamp: <2013-07-08 19:54:41 CDT gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -39,6 +39,11 @@
 
 (global-set-key (kbd "M-n") 'highlight-changes-next-change)
 (global-set-key (kbd "M-p") 'highlight-changes-previous-change)
+
+(global-unset-key (kbd "M-w"))
+(global-set-key (kbd "M-w") 'gzt/kill-ring-save)
+(global-unset-key (kbd "C-w"))
+(global-set-key (kbd "C-w") 'gzt/kill-region)
 
 (defun gzt/indent-buffer ()
   "Indent the whole buffer"

@@ -1,5 +1,5 @@
 ;;; prog.conf.el
-;;; Time-stamp: <2013-06-18 16:53:08 CDT gongzhitaao>
+;;; Time-stamp: <2013-07-07 22:10:21 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -43,6 +43,7 @@
              (doxymacs-mode 1)
              (doxymacs-conf)
              (electric-pair-mode 1)
+             (hl-line-mode 1)
              ))
 
 
