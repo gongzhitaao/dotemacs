@@ -1,5 +1,5 @@
 ;;; font.conf.el
-;;; Time-stamp: <2013-06-19 19:10:05 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-04 15:54:51 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; encoding

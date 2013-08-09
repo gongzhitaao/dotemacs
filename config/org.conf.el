@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-06-19 19:21:30 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-08 23:40:52 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -26,15 +26,13 @@
               (dolist (m org-modules)
                 (require m)))
 
-            (auto-fill-mode 1)
-            ))
+            (auto-fill-mode 1)))
 
 ;; -------------------------------------------------------------------
 ;; TODO
 ;; -------------------------------------------------------------------
 (setq org-use-fast-todo-selection t
-      org-treat-S-cursor-todo-selection-as-state-change nil
-      )
+      org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@)")
@@ -71,8 +69,7 @@
       org-habit-preceding-days 28
       org-habit-following-days 1
       org-agenda-start-with-log-mode t
-      org-tags-column -70
-      )
+      org-tags-column -70)
 
 ;; (setq org-agenda-category-icon-alist
 ;;       '(("Project" "~/Documents/dotemacs/config/img/icon-repeat.png")
@@ -84,15 +81,13 @@
 ;; (org-clock-persistence-insinuate t)
 
 (setq org-clock-history-length 32
-      org-clock-in-resume t
-      )
+      org-clock-in-resume t)
 
 ;; -------------------------------------------------------------------
 ;; Log thing
 ;; -------------------------------------------------------------------
 (setq org-log-into-drawer t
-      org-clock-into-drawer t
-      )
+      org-clock-into-drawer t)
 
 ;; -------------------------------------------------------------------
 ;; Tags
@@ -103,14 +98,12 @@
 ;; Capture
 ;; -------------------------------------------------------------------
 (setq org-capture-templates
-      '(("n" "Note" entry (file "~/Documents/dotemacs/org/notes.org")
-         "* %? :note:%^G\n%U\n")
-        ("t" "Todo" entry
-         (file+headline "~/Documents/dotemacs/org/todo.org" "Tasks")
-         "* TODO %? %^G\n")
-        ("w" "Wish todo" entry (file "~/Documents/doteamcs/org/someday.org")
-         "* TODO %? %^G\n%U\n")
-        ))
+      '(("t" "New TODO" entry
+         (file+headline "todo.org" "Someday")
+         "* %^{Title} %^G\n   %u\n   %?\n\n")
+        ("j" "New journal" entry
+         (file+datetree (format "~/Documents/dailydigest/%s.org" (format-time-string "%Y")))
+         "* %^{Brief} %^G\n%?\n\n")))
 
 ;; -------------------------------------------------------------------
 ;; Publishing
@@ -135,15 +128,13 @@
          :table-of-contents nil
          :body-only t
          :sub-superscript {}
-         :email "me@gongzhitaao.org")
-        ))
+         :email "me@gongzhitaao.org")))
 
 ;; -------------------------------------------------------------------
 ;; BBDB thing
 ;; -------------------------------------------------------------------
 (setq bbdb-file "~/Documents/dotemacs/org/contacts.bbdb"
-      bbdb-north-american-phone-numbers-p nil
-      )
+      bbdb-north-american-phone-numbers-p nil)
 
 ;; -------------------------------------------------------------------
 ;; Miscellaneous
@@ -155,6 +146,7 @@
 (setq org-directory "~/Documents/dotemacs/org")
 (setq org-agenda-include-diary t)
 (setq org-clock-idle-time 10)
+(setq org-use-property-inheritance t)
 
 ;; -------------------------------------------------------------------
 ;; Appt

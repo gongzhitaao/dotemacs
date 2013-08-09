@@ -1,5 +1,5 @@
 ;;; basic.el
-;;; Time-stamp: <2013-06-29 17:06:29 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-08 15:51:24 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
@@ -53,16 +53,17 @@
 ;; mode
 ;; -------------------------------------------------------------------
 (require 'js2-mode)
+(require 'cmake-mode)
 
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefile$" . ruby-mode)
-                ("\\.txt$" . org-mode)
                 ("rc$" . conf-mode)
                 ("\\.md$" . markdown-mode)
                 ("\\(Makefile.*\\)\\(\\.make$\\)?$" . makefile-mode)
                 ("\\.js$" . js2-mode)
                 ("\\.m$" . octave-mode)
-                ("\\.h$" . c++-mode))
+                ("\\.h$" . c++-mode)
+                ("CMake.*\\.txt$" . cmake-mode))
               auto-mode-alist))
 
 (gzt/add-hooks
@@ -71,6 +72,7 @@
  '(markdown-mode-hook LaTeX-mode-hook latex-mode-hook))
 
 (recentf-mode 1)
+(setq view-read-only t)
 ;; -------------------------------------------------------------------
 ;; backup
 ;; -------------------------------------------------------------------

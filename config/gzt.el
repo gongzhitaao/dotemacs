@@ -1,5 +1,5 @@
 ;;; gzt.el
-;;; Time-stamp: <2013-07-08 19:54:29 CDT gongzhitaao>
+;;; Time-stamp: <2013-07-15 14:51:50 CDT gongzhitaao>
 ;;;
 ;;; Convinient custome functions
 

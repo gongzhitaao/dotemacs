@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-06-08 15:50:27 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-08 21:11:37 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -7,7 +7,7 @@
       (quote (("default"
                ("Planner"
                 (or (mode . org-agenda-mode)
-                    (filename . "Documents/org/gtd/")
+                    (filename . "Documents/dotemacs/org/")
                     (mode . bbdb-mode)
                     (name . "^\\*Calendar\\*$")
                     (name . "^diary$")))
@@ -37,6 +37,7 @@
                     (name . "^\\.newsrc-dribble")))
                ("Helper"
                 (or (mode . makefile-mode)
+                    (mode . cmake-mode)
                     (mode . calc-mode)
                     (mode . info-mode)
                     (mode . Info-mode)

@@ -1,35 +1,25 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2013-06-26 19:20:58 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-05 18:03:22 CDT gongzhitaao>
 
 (require 'gnus)
 
 (setq user-full-name "Zhitao Gong")
-(setq user-mail-address "me@gongzhitaao.org")
+(setq user-mail-address "zzg0009@auburn.edu")
 
 (setq gnus-init-file "~/Documents/dotemacs/master/config/gnus.conf.el")
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
-(setq gnus-select-method
-      '(nnimap "Mail"
-               (nnimap-address "localhost")
-               (nnimap-stream network)
-               (nnimap-authenticator login)
-               (nnimap-authinfo-file "~/.authinfo")))
-
-(setq gnus-check-new-newsgroups nil)
+(setq gnus-select-method '(nntp "news.gmane.org"))
+(setq gnus-secondary-select-method
+      '((nntp "news.gnus.org")
+        (nnimap "tigermail"
+                (nnimap-address "pod51004.outlook.com")
+                (nnimap-server-port 995)
+                (nnimap-stream ssl))))
 
 (setq sendmail-program "msmtp")
 (setq send-mail-function 'mailclient-send-it)
-
-(setq gnus-summary-same-subject "")
-(setq gnus-sum-thread-tree-indent " ")
-(setq gnus-sum-thread-tree-single-indent "◎ ")
-(setq gnus-sum-thread-tree-root "● ")
-(setq gnus-sum-thread-tree-false-root "☆")
-(setq gnus-sum-thread-tree-vertical "│")
-(setq gnus-sum-thread-tree-leaf-with-other "├─► ")
-(setq gnus-sum-thread-tree-single-leaf "╰─► ")
 
 (add-hook 'gnus-article-prepare-hook 'gnus-article-date-local)
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
