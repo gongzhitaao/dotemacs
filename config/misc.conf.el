@@ -1,5 +1,5 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-06-15 15:08:18 CDT gongzhitaao>
+;; Time-stamp: <2013-08-09 23:11:53 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
