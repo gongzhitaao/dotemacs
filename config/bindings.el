@@ -1,5 +1,5 @@
 ;;; bindings.el
-;;; Time-stamp: <2013-07-08 19:54:41 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-10 10:24:15 CDT gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -12,6 +12,7 @@
 (global-set-key (kbd "<f4>") 'multi-term)
 (global-set-key (kbd "<f6>") 'highlight-changes-visible-mode)
 (global-set-key (kbd "<f7>") 'compile)
+(global-set-key (kbd "<f8>") 'deft)
 (global-set-key (kbd "<f9>") 'calendar)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
