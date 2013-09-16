@@ -1,5 +1,5 @@
 ;;; bindings.el
-;;; Time-stamp: <2013-08-10 10:24:15 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-05 17:04:06 CDT gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -8,17 +8,14 @@
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
-(require 'multi-term)
-(global-set-key (kbd "<f4>") 'multi-term)
+(global-set-key (kbd "<f5>") 'undo-tree-visualize)
 (global-set-key (kbd "<f6>") 'highlight-changes-visible-mode)
 (global-set-key (kbd "<f7>") 'compile)
 (global-set-key (kbd "<f8>") 'deft)
-(global-set-key (kbd "<f9>") 'calendar)
+(global-set-key (kbd "<f9>") 'recentf-open-files)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
 (global-set-key (kbd "<f12>") 'ibus-mode)
-
-(global-set-key (kbd "C-<f12>") 'recentf-open-files)
 
 (global-set-key (kbd "C-`") 'hs-toggle-hiding)
 
@@ -41,10 +38,14 @@
 (global-set-key (kbd "M-n") 'highlight-changes-next-change)
 (global-set-key (kbd "M-p") 'highlight-changes-previous-change)
 
+(global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
+
 (global-unset-key (kbd "M-w"))
 (global-set-key (kbd "M-w") 'gzt/kill-ring-save)
 (global-unset-key (kbd "C-w"))
 (global-set-key (kbd "C-w") 'gzt/kill-region)
+
+(global-set-key (kbd "s-=") 'align-regexp)
 
 (defun gzt/indent-buffer ()
   "Indent the whole buffer"

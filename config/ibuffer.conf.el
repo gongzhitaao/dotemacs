@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-08-08 21:11:37 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-02 11:33:06 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -20,7 +20,8 @@
                     (name . "\\.ya?ml")
                     (name . "\\.el")
                     (mode . emacs-lisp-mode)
-                    (name . "\\.sql")))
+                    (name . "\\.sql")
+                    (name . "\\.m")))
                ("Text"
                 (or (name . "\\.\\(tex\\|bib\\)")
                     (name . "\\.\\org")

@@ -1,5 +1,5 @@
 ;;; basic.el
-;;; Time-stamp: <2013-08-10 10:21:53 CDT gongzhitaao>
+;;; Time-stamp: <2013-08-24 09:58:28 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
@@ -11,7 +11,9 @@
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.milkbox.net/packages/") t))
 
-(load-theme 'solarized-dark t)
+(when (display-graphic-p)
+  (load-theme 'naquadah t))
+; (load-theme 'solarized-dark t)
 
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
@@ -38,8 +40,11 @@
 (scroll-bar-mode 0)
 (global-linum-mode t)
 
+(when (display-graphic-p)
+  (progn
+    (setq visible-bell t)))
+
 (setq inhibit-startup-message t
-      visible-bell t
       resize-mini-windows t
       frame-title-format "%b    %f")
 
@@ -54,6 +59,7 @@
 ;; -------------------------------------------------------------------
 (require 'js2-mode)
 (require 'cmake-mode)
+(require 'undo-tree)
 
 (setq auto-mode-alist
       (append '(("\\.\\(rake\\|gemspec\\)$\\|Rakefile$" . ruby-mode)
@@ -73,6 +79,10 @@
 
 (recentf-mode 1)
 (setq view-read-only t)
+
+(when (not (display-graphic-p))
+  (ido-mode 1))
+
 ;; -------------------------------------------------------------------
 ;; backup
 ;; -------------------------------------------------------------------
