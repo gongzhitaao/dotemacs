@@ -1,27 +1,29 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2013-06-19 16:36:06 CDT gongzhitaao>
+;; Time-stamp: <2013-09-26 17:04:54 CDT gongzhitaao>
 
-(defconst my-emacs-dir
-  (expand-file-name "~/Documents/dotemacs/master/")
+(defconst gzt/emacs-dir
+  (expand-file-name "~/Documents/dotemacs/")
   "my emacs load path")
-(defconst my-emacs-config-dir
-  (concat my-emacs-dir "config/")
+(defconst gzt/emacs-config-dir
+  (concat gzt/emacs-dir "config/")
   "My emacs config path")
-(defconst my-emacs-plugin-dir
-  (concat my-emacs-dir "plugin/")
+(defconst gzt/emacs-plugin-dir
+  (concat gzt/emacs-dir "plugin/")
   "My emacs plugin path")
+(defconst gzt/emacs-elc-dir
+  (concat gzt/emacs-dir "elc/")
+  "Compiled elisp files to speedup init")
 
-(add-to-list 'load-path my-emacs-config-dir)
-(add-to-list 'load-path my-emacs-plugin-dir)
+(add-to-list 'load-path gzt/emacs-elc-dir)
 
 (load "gzt")
 (load "basic")
 (load "bindings")
 
 ;; load name.conf.el
-(let ((files (directory-files my-emacs-config-dir
-              nil ".*\\.conf\\.el" t)))
+(let ((files (directory-files gzt/emacs-elc-dir
+              nil ".*\\.conf\\.elc")))
   (dolist (file files)
-    (load (substring file 0 (string-match "\\.el" file)))))
+    (load (substring file 0 (string-match "\\.elc" file)))))
 
 (server-start)

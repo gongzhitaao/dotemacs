@@ -1,12 +1,12 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2013-08-05 18:03:22 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 17:20:02 CDT gongzhitaao>
 
 (require 'gnus)
 
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "zzg0009@auburn.edu")
 
-(setq gnus-init-file "~/Documents/dotemacs/master/config/gnus.conf.el")
+(setq gnus-init-file "~/Documents/dotemacs/elc/gnus.conf.elc")
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 

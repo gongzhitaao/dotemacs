@@ -1,5 +1,5 @@
 ;;; gzt.el
-;;; Time-stamp: <2013-07-15 14:51:50 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 17:04:13 CDT gongzhitaao>
 ;;;
 ;;; Convinient custome functions
 
@@ -9,21 +9,26 @@
           (add-hook hook func))
         hooks))
 
+(defun gzt/dest-function (filename)
+  (concat (file-name-directory filename)
+          "../elc/"
+          (file-name-sans-extension (file-name-nondirectory filename))
+          ".elc"))
+(setq byte-compile-dest-file-function 'gzt/dest-function)
+
 (defun gzt/byte-recompile-directory ()
   "Convinient function for recompiling my config and plugin lisp
 files"
   (interactive)
-  (byte-recompile-directory my-emacs-config-dir 0)
-  (byte-recompile-directory my-emacs-plugin-dir 0))
+  (byte-recompile-directory gzt/emacs-config-dir 0)
+  (byte-recompile-directory gzt/emacs-plugin-dir 0))
 
 (defun gzt/apply-region-or-line (func)
   "Apply FUNC to a region, or current line if mark is not
   active."
   (if (region-active-p)
       (funcall func (region-beginning) (region-end))
-    (funcall func (line-beginning-position) (line-end-position))
-    )
-  )
+    (funcall func (line-beginning-position) (line-end-position))))
 
 (defun gzt/toggle-comment-region-or-line ()
   "Toggle comment on active region or current line if no region

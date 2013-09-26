@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-09-17 21:28:28 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 17:19:01 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -7,7 +7,7 @@
       (quote (("default"
                ("Planner"
                 (or (mode . org-agenda-mode)
-                    (filename . "Documents/dotemacs/org/")
+                    (filename . "Documents/dotemacs/emacs.d/org/")
                     (mode . bbdb-mode)
                     (name . "^\\*Calendar\\*$")
                     (name . "^diary$")))

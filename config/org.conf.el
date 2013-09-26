@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-08-13 23:08:15 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 17:13:20 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -29,6 +29,18 @@
             (auto-fill-mode 1)))
 
 ;; -------------------------------------------------------------------
+;; Miscellaneous
+;; -------------------------------------------------------------------
+(setq org-time-stamp-custom-formats
+      '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+
+(setq org-hierarchical-todo-statistics nil)
+(setq org-directory (concat gzt/emacs-dir "emacs.d/org"))
+(setq org-agenda-include-diary t)
+(setq org-clock-idle-time 10)
+(setq org-use-property-inheritance t)
+
+;; -------------------------------------------------------------------
 ;; TODO
 ;; -------------------------------------------------------------------
 (setq org-use-fast-todo-selection t
@@ -49,7 +61,7 @@
 ;; -------------------------------------------------------------------
 ;; Agenda
 ;; -------------------------------------------------------------------
-(setq org-agenda-files "~/Documents/dotemacs/org/orgfile")
+(setq org-agenda-files "orgfile")
 
 (setq org-agenda-dim-blocked-task t)
 (setq org-agenda-compact-blocks t)
@@ -133,20 +145,8 @@
 ;; -------------------------------------------------------------------
 ;; BBDB thing
 ;; -------------------------------------------------------------------
-(setq bbdb-file "~/Documents/dotemacs/org/contacts.bbdb"
+(setq bbdb-file "contacts.bbdb"
       bbdb-north-american-phone-numbers-p nil)
-
-;; -------------------------------------------------------------------
-;; Miscellaneous
-;; -------------------------------------------------------------------
-(setq org-time-stamp-custom-formats
-      '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-
-(setq org-hierarchical-todo-statistics nil)
-(setq org-directory "~/Documents/dotemacs/org")
-(setq org-agenda-include-diary t)
-(setq org-clock-idle-time 10)
-(setq org-use-property-inheritance t)
 
 ;; -------------------------------------------------------------------
 ;; Appt

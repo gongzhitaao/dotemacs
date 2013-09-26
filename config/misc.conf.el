@@ -1,5 +1,5 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-08-09 23:11:53 CDT gongzhitaao>
+;; Time-stamp: <2013-09-26 17:16:17 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
@@ -63,7 +63,7 @@
           (lambda ()
             (diary-sort-entries)))
 
-(setq diary-file "~/Documents/dotemacs/diary")
+(setq diary-file "~/Documents/dotemacs/emacs.d/diary")
 
 (calendar-set-date-style 'iso)
 

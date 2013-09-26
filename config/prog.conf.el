@@ -1,5 +1,5 @@
 ;;; prog.conf.el
-;;; Time-stamp: <2013-09-17 17:49:29 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 17:16:37 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -28,8 +28,7 @@
 
 (add-hook 'compilation-mode-hook
           '(lambda ()
-             (setq compilation-scroll-output 'first-error)
-             ))
+             (setq compilation-scroll-output 'first-error)))
 
 (setq gdb-many-windows t)
 
