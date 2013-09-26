@@ -1,5 +1,5 @@
 ;;; prog.conf.el
-;;; Time-stamp: <2013-09-15 08:40:58 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-17 17:49:29 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -32,6 +32,18 @@
              ))
 
 (setq gdb-many-windows t)
+
+
+;; -------------------------------------------------------------------
+;; Multi web mode
+;; -------------------------------------------------------------------
+(require 'multi-web-mode)
+(setq mweb-default-major-mode 'html-mode)
+(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                  (js2-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+(multi-web-global-mode 1)
 
 ;; -------------------------------------------------------------------
 ;; Miscellaneous

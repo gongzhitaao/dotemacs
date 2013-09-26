@@ -1,5 +1,5 @@
 ;;; basic.el
-;;; Time-stamp: <2013-08-24 09:58:28 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-23 16:45:14 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
@@ -127,5 +127,11 @@
 (setq delete-by-moving-to-trash t)
 
 (setq debug-on-error t)
+
+(require 'tramp)
+(add-to-list 'tramp-default-proxies-alist
+             '("mallard.auburn.edu" nil "/ssh:zzg0009@131.204.27.140:"))
+
+(subword-mode 1)
 
 (provide 'basic)
