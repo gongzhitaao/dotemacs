@@ -1,5 +1,5 @@
 ;;; prog.conf.el
-;;; Time-stamp: <2013-09-26 17:16:37 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-27 22:57:31 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -53,11 +53,13 @@
   (font-lock-add-keywords nil '(("\\([@\\\\]\\(details\\)\\)\\>" (0 font-lock-keyword-face prepend))))
   (setq doxymacs-doxygen-style "Qt"))
 
+(require 'fill-column-indicator)
 (add-hook 'prog-mode-hook
           '(lambda ()
              (hs-minor-mode 1)
              (doxymacs-mode 1)
              (doxymacs-conf)
+             (fci-mode 1)
              (electric-pair-mode 1)
              (hl-line-mode 1)
              (if (display-graphic-p)

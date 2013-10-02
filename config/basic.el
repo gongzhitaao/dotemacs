@@ -1,5 +1,5 @@
 ;;; basic.el
-;;; Time-stamp: <2013-09-26 17:46:39 CDT gongzhitaao>
+;;; Time-stamp: <2013-10-01 16:06:58 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; view
@@ -132,6 +132,6 @@
 (add-to-list 'tramp-default-proxies-alist
              '("mallard.auburn.edu" nil "/ssh:zzg0009@131.204.27.140:"))
 
-(subword-mode 1)
+(global-subword-mode 1)
 
 (provide 'basic)

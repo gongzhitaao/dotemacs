@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-09-26 17:19:01 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-26 21:09:20 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -19,11 +19,11 @@
                     (name . "\\.php")))
                ("Coding"
                 (or (mode . shell-script-mode)
+                    (mode . sh-mode)
+                    (mode . emacs-lisp-mode)
                     (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
                     (name . "\\.py")
                     (name . "\\.ya?ml")
-                    (name . "\\.el")
-                    (mode . emacs-lisp-mode)
                     (name . "\\.sql")
                     (name . "\\.m")))
                ("Text"

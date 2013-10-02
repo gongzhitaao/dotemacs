@@ -1,5 +1,5 @@
 ;;; font.conf.el
-;;; Time-stamp: <2013-08-24 09:29:26 CDT gongzhitaao>
+;;; Time-stamp: <2013-10-01 20:16:24 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; encoding
@@ -19,6 +19,6 @@
       (set-fontset-font
        (frame-parameter nil 'font)
        charset (font-spec :family "WenQuanYi Zen Hei Mono"
-                          :size 16)))))
+                            :size 16)))))
 
 (provide 'font.conf)

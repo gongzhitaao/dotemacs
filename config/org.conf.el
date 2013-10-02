@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-09-26 17:13:20 CDT gongzhitaao>
+;;; Time-stamp: <2013-09-30 22:21:58 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -35,9 +35,9 @@
       '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
 (setq org-hierarchical-todo-statistics nil)
-(setq org-directory (concat gzt/emacs-dir "emacs.d/org"))
 (setq org-agenda-include-diary t)
 (setq org-clock-idle-time 10)
+(setq org-directory (concat gzt/emacs-dir "emacs.d/org"))
 (setq org-use-property-inheritance t)
 
 ;; -------------------------------------------------------------------
@@ -61,7 +61,7 @@
 ;; -------------------------------------------------------------------
 ;; Agenda
 ;; -------------------------------------------------------------------
-(setq org-agenda-files "orgfile")
+(setq org-agenda-files "~/Documents/dotemacs/emacs.d/org/orgfile")
 
 (setq org-agenda-dim-blocked-task t)
 (setq org-agenda-compact-blocks t)
@@ -111,7 +111,7 @@
 ;; -------------------------------------------------------------------
 (setq org-capture-templates
       '(("t" "New TODO" entry
-         (file+headline "todo.org" "Someday")
+         (file+headline "todo.org" "Tasks")
          "* %^{Title} %^G\n  %u\n  %?\n\n")
         ("j" "New journal" entry
          (file+datetree (format "~/Documents/dailydigest/%s.org" (format-time-string "%Y")))
