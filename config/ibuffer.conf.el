@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-09-26 21:09:20 CDT gongzhitaao>
+;;; Time-stamp: <2013-11-20 22:04:30 CST gongzhitaao>
 
 (require 'ibuffer)
 
@@ -17,6 +17,10 @@
                     (mode . css-mode)
                     (name . "\\.js")
                     (name . "\\.php")))
+               ("Text"
+                (or (name . "\\.\\(tex\\|bib\\|csv\\)")
+                    (mode . org-mode)
+                    (mode . markdown-mode)))
                ("Coding"
                 (or (mode . shell-script-mode)
                     (mode . sh-mode)
@@ -26,10 +30,6 @@
                     (name . "\\.ya?ml")
                     (name . "\\.sql")
                     (name . "\\.m")))
-               ("Text"
-                (or (name . "\\.\\(tex\\|bib\\)")
-                    (name . "\\.\\org")
-                    (mode . markdown-mode)))
                ("Mail"
                 (or (mode . message-mode)
                     (mode . mail-mode)
@@ -53,6 +53,7 @@
             (ibuffer-switch-to-saved-filter-groups "default")
             (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
             (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
+            (substitute-key-definition 'ibuffer-find-file 'ido-find-file (current-local-map))
             (hl-line-mode 1)))
 
 (define-ibuffer-column size-h

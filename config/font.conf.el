@@ -1,11 +1,11 @@
 ;;; font.conf.el
-;;; Time-stamp: <2013-10-01 20:16:24 CDT gongzhitaao>
+;;; Time-stamp: <2013-11-19 22:19:06 CST gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; encoding
 ;; -------------------------------------------------------------------
 (let ((my-prefer-coding-system
-       '(cp950 gb2312 cp936 gb18030 utf-16-unix utf-8-unix)))
+       '(cp950 gb2312 cp936 gb18030 utf-16 utf-8)))
   (dolist (c my-prefer-coding-system)
     (prefer-coding-system c)))
 

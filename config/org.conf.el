@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-09-30 22:21:58 CDT gongzhitaao>
+;;; Time-stamp: <2013-10-30 19:43:50 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -112,7 +112,7 @@
 (setq org-capture-templates
       '(("t" "New TODO" entry
          (file+headline "todo.org" "Tasks")
-         "* %^{Title} %^G\n  %u\n  %?\n\n")
+         "* %^{Title} %^G\n  %u\n  %?\n\n\n")
         ("j" "New journal" entry
          (file+datetree (format "~/Documents/dailydigest/%s.org" (format-time-string "%Y")))
          "* %^{Brief} %^G\n%?\n\n")))

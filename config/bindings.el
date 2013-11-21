@@ -1,5 +1,5 @@
 ;;; bindings.el
-;;; Time-stamp: <2013-09-05 17:04:06 CDT gongzhitaao>
+;;; Time-stamp: <2013-11-19 22:15:37 CST gongzhitaao>
 
 (global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -25,9 +25,7 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
-(global-set-key (kbd "s-g") 'goto-line)
 (global-set-key (kbd "s-r") 'set-visited-file-name)
-(global-set-key (kbd "s-s") 'save-buffer)
 (global-set-key (kbd "s-/") 'gzt/toggle-comment-region-or-line)
 
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
@@ -35,15 +33,10 @@
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
 
-(global-set-key (kbd "M-n") 'highlight-changes-next-change)
-(global-set-key (kbd "M-p") 'highlight-changes-previous-change)
+;; (global-set-key (kbd "M-n") 'highlight-changes-next-change)
+;; (global-set-key (kbd "M-p") 'highlight-changes-previous-change)
 
 (global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
-
-(global-unset-key (kbd "M-w"))
-(global-set-key (kbd "M-w") 'gzt/kill-ring-save)
-(global-unset-key (kbd "C-w"))
-(global-set-key (kbd "C-w") 'gzt/kill-region)
 
 (global-set-key (kbd "s-=") 'align-regexp)
 

@@ -1,22 +1,22 @@
 ;; misc.conf.el
-;; Time-stamp: <2013-09-26 17:16:17 CDT gongzhitaao>
+;; Time-stamp: <2013-10-24 22:02:41 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; highlight-changes-mode
 ;; -------------------------------------------------------------------
-(global-highlight-changes-mode t)
-(setq highlight-changes-visibility-initial-state nil)
+;; (global-highlight-changes-mode t)
+;; (setq highlight-changes-visibility-initial-state nil)
 
 ;; already defined in `bindings.el'
 ;;(global-set-key (kbd "<f6>") 'highlight-changes-visible-mode)
 ;;(global-set-key (kbd "M-n") 'highlight-changes-next-change)
 ;;(global-set-key (kbd "M-p") 'highlight-changes-previous-change)
 
-(global-highlight-changes-mode)
-(set-face-foreground 'highlight-changes nil)
-(set-face-background 'highlight-changes "gray13")
-(set-face-foreground 'highlight-changes-delete nil)
-(set-face-background 'highlight-changes-delete "gray18")
+;; (global-highlight-changes-mode)
+;; (set-face-foreground 'highlight-changes nil)
+;; (set-face-background 'highlight-changes "gray13")
+;; (set-face-foreground 'highlight-changes-delete nil)
+;; (set-face-background 'highlight-changes-delete "gray18")
 
 ;; -------------------------------------------------------------------
 ;; fci-mode
@@ -96,26 +96,26 @@ epg-disable-agent"
 
 (epg-disable-agent)
 
-(require 'multi-term)
-(setq multi-term-program "/bin/bash")
+;; (require 'multi-term)
+;; (setq multi-term-program "/bin/bash")
 
-(custom-set-variables
- '(term-bind-key-alist
-   (quote (("C-c C-c" . term-interrupt-subjob)
-           ("C-p" . multi-term-prev)
-           ("C-n" . multi-term-next)
-           ("C-s" . isearch-forward-regexp)
-           ("C-r" . isearch-backward-regexp)
-           ("C-m" . term-send-raw)
-           ("M-f" . term-send-forward-word)
-           ("M-b" . term-send-backward-word)
-           ("M-o" . term-send-backspace)
-           ("M-p" . term-send-up)
-           ("M-n" . term-send-down)
-           ("M-M" . term-send-forward-kill-word)
-           ("M-N" . term-send-backward-kill-word)
-           ("M-r" . term-send-reverse-search-history)
-           ("M-," . term-send-input)
-           ("M-." . completion-at-point)))))
+;; (custom-set-variables
+;;  '(term-bind-key-alist
+;;    (quote (("C-c C-c" . term-interrupt-subjob)
+;;            ("C-p" . multi-term-prev)
+;;            ("C-n" . multi-term-next)
+;;            ("C-s" . isearch-forward-regexp)
+;;            ("C-r" . isearch-backward-regexp)
+;;            ("C-m" . term-send-raw)
+;;            ("M-f" . term-send-forward-word)
+;;            ("M-b" . term-send-backward-word)
+;;            ("M-o" . term-send-backspace)
+;;            ("M-p" . term-send-up)
+;;            ("M-n" . term-send-down)
+;;            ("M-M" . term-send-forward-kill-word)
+;;            ("M-N" . term-send-backward-kill-word)
+;;            ("M-r" . term-send-reverse-search-history)
+;;            ("M-," . term-send-input)
+;;            ("M-." . completion-at-point)))))
 
 (provide 'misc.conf)
