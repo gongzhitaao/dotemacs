@@ -20,7 +20,7 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 
 (global-set-key (kbd "s-r") 'set-visited-file-name)
-(global-set-key (kbd "s-/") 'gzt/toggle-comment-region-or-line)
+(global-set-key (kbd "s-/") 'my-toggle-comment-region-or-line)
 
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)

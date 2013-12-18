@@ -1,5 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2013-12-18 17:15:09 CST gongzhitaao>
+;; Time-stamp: <2013-12-18 17:33:13 CST gongzhitaao>
 
 (defconst my-emacs-root
   (expand-file-name "~/Documents/dotemacs/")
@@ -26,10 +26,6 @@
           (file-name-sans-extension (file-name-nondirectory filename))
           ".elc"))
 (setq byte-compile-dest-file-function 'my-dest-function)
-
-;; recompile config files if needed
-
-(byte-recompile-directory my-emacs-root 0)
 
 (add-to-list 'load-path my-emacs-elc)
 

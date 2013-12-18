@@ -1,5 +1,5 @@
 ;;; misc.conf.el --- Extensive configuration for Emacs
-;;; Time-stamp: <2013-12-18 17:09:33 CST gongzhitaao>
+;;; Time-stamp: <2013-12-18 17:33:44 CST gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; font and encoding system
@@ -251,6 +251,7 @@ epg-disable-agent"
 		 (local-set-key "\C-p" 'previous-error))
 	      '(c++-mode-hook c-mode-hook python-mode-hook emacs-lisp-mode-hook))
 
+(require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 
 (add-hook 'c-mode-hook
@@ -295,6 +296,9 @@ epg-disable-agent"
 ;; -------------------------------------------------------------------
 ;; byte compile source if needed when killing emacs
 ;; -------------------------------------------------------------------
+(add-hook 'kill-emacs-hook
+          (lambda ()
+            (byte-recompile-directory my-emacs-root 0)))
 
 (provide 'misc.conf)
 ;;; misc.config.el ends here
