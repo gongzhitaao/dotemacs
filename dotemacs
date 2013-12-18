@@ -1,29 +1,53 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2013-09-26 17:04:54 CDT gongzhitaao>
+;; Time-stamp: <2013-12-18 17:15:09 CST gongzhitaao>
 
-(defconst gzt/emacs-dir
+(defconst my-emacs-root
   (expand-file-name "~/Documents/dotemacs/")
   "my emacs load path")
-(defconst gzt/emacs-config-dir
-  (concat gzt/emacs-dir "config/")
-  "My emacs config path")
-(defconst gzt/emacs-plugin-dir
-  (concat gzt/emacs-dir "plugin/")
-  "My emacs plugin path")
-(defconst gzt/emacs-elc-dir
-  (concat gzt/emacs-dir "elc/")
+
+(defconst my-emacs-elc
+  (concat my-emacs-root "elc/")
   "Compiled elisp files to speedup init")
 
-(add-to-list 'load-path gzt/emacs-elc-dir)
+;; create this directory is not exist
+(unless (file-exists-p my-emacs-elc) (make-directory my-emacs-elc))
 
-(load "gzt")
+;; add link to the uncompiled file to this directory
+(let ((confs (directory-files my-emacs-root nil ".*\\.el")))
+  (dolist (conf confs)
+    (unless (file-exists-p conf)
+      (message (expand-file-name conf my-emacs-root))
+      (make-symbolic-link (expand-file-name conf my-emacs-root)
+			  (expand-file-name conf my-emacs-elc) t))))
+
+;; put all the compiled files in MY-EMACS-ELC folder to keep clean
+(defun my-dest-function (filename)
+  (concat my-emacs-elc
+          (file-name-sans-extension (file-name-nondirectory filename))
+          ".elc"))
+(setq byte-compile-dest-file-function 'my-dest-function)
+
+;; recompile config files if needed
+
+(byte-recompile-directory my-emacs-root 0)
+
+(add-to-list 'load-path my-emacs-elc)
+
+(defconst my-emacs-cache
+  (concat my-emacs-root "cache/")
+  "Emacs cache files")
+(unless (file-exists-p my-emacs-cache) (make-directory my-emacs-cache))
+
+(defconst my-emacs-data
+  (concat my-emacs-root "emacs.d/")
+  "Data files for emacs, like orgmode, diary and etc.")
+
 (load "basic")
-(load "bindings")
+(load "helper")
+(load "keybinding")
 
 ;; load name.conf.el
-(let ((files (directory-files gzt/emacs-elc-dir
-              nil ".*\\.conf\\.elc")))
-  (dolist (file files)
-    (load (substring file 0 (string-match "\\.elc" file)))))
+(let ((files (directory-files my-emacs-root nil ".*\\.conf\\.el")))
+  (dolist (file files) (load (file-name-sans-extension file))))
 
 (server-start)

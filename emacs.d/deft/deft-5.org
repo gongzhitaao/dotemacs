@@ -1,0 +1,8 @@
+symmetrically connected networks
+
+There are just like the recurrent neural networks, but the
+connections between units are symmetrical, i.e., they have same
+weight in both directions.
+
+Symmectrically connected neural networks without hidden units are
+called "Hopfield nets"

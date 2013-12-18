@@ -1,0 +1,1779 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/gongzhitaao/Documents/org/todo.org
+
+
+* DONE 去学车                                                          :@afk:
+SCHEDULED: <2012-10-02 Tue>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-02 Tue 18:12]
+:END:
+CLOCK: [2012-09-26 Wed 18:39]--[2012-09-26 Wed 18:40] =>  0:01
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-10-06 Sat 21:33
+  :ARCHIVE_FILE: ~/Documents/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Anniv
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-26 Wed 18:39]
+
+* DONE 给我妹补课                                               :@afk:social:
+SCHEDULED: <2012-10-01 Mon>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-01 Mon 19:38]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-10-06 Sat 21:33
+  :ARCHIVE_FILE: ~/Documents/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Anniv
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-28 Fri 22:25]
+
+
+* DONE Machine Learning                                  :@computer:coursera:
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2012-10-10 Wed 21:48]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-10-11 Thu 19:41
+  :ARCHIVE_FILE: ~/Documents/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Anniv
+  :ARCHIVE_TODO: DONE
+  :END:
+<2012-09-29 Sat .+1>
+[2012-09-29 Sat 10:58]
+
+* DONE 中英文成绩单
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-22 Thu 10:52]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:11
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks/出国手续/其它
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: visa
+  :END:
+
+* DONE Machine Learning                                  :@computer:coursera:
+DEADLINE: <2012-10-23 Tue>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2012-11-08 Thu 22:05]
+CLOCK: [2012-11-08 Thu 19:45]--[2012-11-08 Thu 22:05] =>  2:20
+CLOCK: [2012-11-08 Thu 07:56]--[2012-11-08 Thu 10:27] =>  2:31
+CLOCK: [2012-10-22 Mon 20:46]--[2012-10-22 Mon 21:27] =>  0:41
+CLOCK: [2012-10-16 Tue 20:53]--[2012-10-16 Tue 21:21] =>  0:28
+CLOCK: [2012-10-14 Sun 21:45]--[2012-10-14 Sun 21:57] =>  0:12
+CLOCK: [2012-10-13 Sat 11:47]--[2012-10-13 Sat 12:44] =>  0:57
+- State "NEXT"       from "DONE"       [2012-10-10 Wed 21:47]
+- State "DONE"       from "NEXT"       [2012-10-10 Wed 21:39]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+:END:
+[2012-09-29 Sat 10:58]
+
+* DONE Update myorg.el                                 :@computer:code:emacs:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-07 Wed 14:24]
+- State "DONE"       from "NEXT"       [2012-11-02 Fri 17:22]
+- State "DONE"       from "NEXT"       [2012-10-11 Thu 21:27]
+CLOCK: [2012-10-11 Thu 19:19]--[2012-10-11 Thu 19:55] =>  0:36
+CLOCK: [2012-10-11 Thu 16:58]--[2012-10-11 Thu 19:19] =>  2:21
+:END:
+<2012-11-02 Sat>
+:PROPERTIES:
+:Effort: 3:00
+:LAST_REPEAT: [2012-11-02 Fri 17:22]
+:ARCHIVE_TIME: 2012-12-15 Sat 21:12
+:ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+:ARCHIVE_OLPATH: Tasks
+:ARCHIVE_CATEGORY: Tasks
+:ARCHIVE_TODO: DONE
+:END:
+[2012-09-28 Fri 18:24]
+
+
+* DONE Hack into org-publish                                :@computer:emacs:
+SCHEDULED: <2012-10-20 Sat>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-02 Fri 07:55]
+CLOCK: [2012-11-01 Thu 21:25]--[2012-11-01 Thu 23:15] =>  1:50
+CLOCK: [2012-11-01 Thu 21:24]--[2012-11-01 Thu 21:24] =>  0:00
+CLOCK: [2012-11-01 Thu 19:10]--[2012-11-01 Thu 19:10] =>  0:00
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+Create a publishing-function =org-publish-org-to-jekyll=
+[2012-10-19 Fri 21:43]
+
+* DONE modify the agenda look                          :emacs:code:@computer:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-19 Fri 17:29]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+<2012-09-29 Sat>
+[2012-09-28 Fri 22:11]
+
+
+* DONE Machine Learning                                  :@computer:coursera:
+DEADLINE: <2012-10-16 Tue>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2012-10-19 Fri 16:14]
+CLOCK: [2012-10-19 Fri 08:21]--[2012-10-19 Fri 15:07] =>  6:46
+CLOCK: [2012-10-18 Thu 18:18]--[2012-10-18 Thu 22:24] =>  4:06
+CLOCK: [2012-10-16 Tue 20:53]--[2012-10-16 Tue 21:21] =>  0:28
+CLOCK: [2012-10-14 Sun 21:45]--[2012-10-14 Sun 21:57] =>  0:12
+CLOCK: [2012-10-13 Sat 11:47]--[2012-10-13 Sat 12:44] =>  0:57
+- State "NEXT"       from "DONE"       [2012-10-10 Wed 21:47]
+- State "DONE"       from "NEXT"       [2012-10-10 Wed 21:39]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+:END:
+[2012-09-29 Sat 10:58]
+
+* DONE [#A] 给崔佳买结婚礼物                                    :@afk:social:
+DEADLINE: <2012-10-04 Thu>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-09-30 Sun 09:22]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-26 Wed 18:38]
+
+* DONE [#A] 带月饼去老婆大人家                                  :@afk:social:
+DEADLINE: <2012-09-30 Sun>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-09-30 Sun 09:22]
+:END:
+CLOCK: [2012-09-26 Wed 18:42]--[2012-09-26 Wed 18:42] =>  0:00
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-26 Wed 18:42]
+
+* DONE [#A] 去老婆大人家                                        :@afk:social:
+SCHEDULED: <2012-09-29 Sat 15:00>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-09-30 Sun 09:21]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-28 Fri 18:04]
+
+
+* DONE [#A] Tidy up coursera                       :coursera:@computer:emacs:
+:LOGBOOK:
+CLOCK: [2012-09-29 Sat 11:50]--[2012-09-29 Sat 11:50] =>  0:00
+:END:
+- State "DONE"       from "NEXT"       [2012-09-29 Sat 11:49]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+<2012-09-29 Sat>
+[2012-09-29 Sat 10:04]
+
+* DONE [#A] transcript to USC                               :@computer:apply:
+SCHEDULED: <2012-10-08 Mon>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-08 Mon 17:50]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-09-28 Fri 14:48]
+让小cd帮我寄成绩单，同时发给我一份scan copy。
+
+* DONE [#A] 统计参加崔佳婚礼的同学                         :@computer:social:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-08 Mon 22:12]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-01 Mon 21:19]
+** 王凌
+** 祁放
+** 高丽
+
+* DONE [#A] 下载二次曝光                                             :tianer:
+DEADLINE: <2012-10-12 Fri>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-12 Fri 20:53]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-12 Fri 12:09]
+
+* DONE [#A] 去老婆大人家修电脑                           :@afk:social:tianer:
+SCHEDULED: <2012-10-15 Mon>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-16 Tue 12:16]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-13 Sat 16:41]
+
+* DONE 夏目友人帐第二季                                              :tianer:
+DEADLINE: <2012-10-16 Tue>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-16 Tue 19:49]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-14 Sun 12:58]
+
+* DONE [#A] 给老婆大人画图e                                :@computer:tianer:
+DEADLINE: <2012-10-15 Mon>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-16 Tue 13:26]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-15 Mon 12:49]
+
+* DONE [#A] 还小cd钱                                              :@computer:
+SCHEDULED: <2012-10-17 Wed>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-18 Thu 17:14]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-16 Tue 21:00]
+
+* DONE [#A] 问大侃馆两个人答证问题                         :@computer:tianer:
+SCHEDULED: <2012-10-17 Wed>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-17 Wed 20:41]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-16 Tue 21:01]
+
+* DONE [#A] 银魂歌                                         :@computer:tianer:
+DEADLINE: <2012-10-19 Fri>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-17 Wed 12:52]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-17 Wed 09:28]
+
+* DONE [#A] Translation                                    :@computer:tianer:
+SCHEDULED: <2012-10-20 Sat>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-20 Sat 20:32]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-20 Sat 11:59]
+
+* DONE [#A] 零之轨迹                                       :@computer:tianer:
+SCHEDULED: <2012-10-23 Tue>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-25 Thu 11:01]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-23 Tue 12:16]
+
+* DONE [#A] 给田叔叔写简历                                 :@computer:tianer:
+SCHEDULED: <2012-10-24 Wed>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-10-25 Thu 16:31]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-10-24 Wed 12:31]
+
+* DONE Step 1                                               :@computer:yyets:
+DEADLINE: <2012-11-11 Sun>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-11 Sun 20:46]
+CLOCK: [2012-11-11 Sun 18:48]--[2012-11-11 Sun 20:46] =>  1:58
+CLOCK: [2012-11-11 Sun 08:04]--[2012-11-11 Sun 08:45] =>  0:41
+CLOCK: [2012-11-10 Sat 22:23]--[2012-11-10 Sat 22:40] =>  0:17
+CLOCK: [2012-11-10 Sat 15:42]--[2012-11-10 Sat 16:43] =>  1:01
+CLOCK: [2012-11-10 Sat 14:20]--[2012-11-10 Sat 14:57] =>  0:37
+CLOCK: [2012-11-09 Fri 18:14]--[2012-11-09 Fri 22:26] =>  4:12
+CLOCK: [2012-11-09 Fri 14:01]--[2012-11-09 Fri 16:42] =>  2:41
+CLOCK: [2012-11-09 Fri 12:31]--[2012-11-09 Fri 13:27] =>  0:56
+CLOCK: [2012-11-09 Fri 10:00]--[2012-11-09 Fri 12:05] =>  2:05
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-11-09 Fri 09:59]
+
+* DONE [#A] bones download                                 :@computer:tianer:
+SCHEDULED: <2012-11-13 Tue>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-15 Thu 18:20]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-11-13 Tue 13:08]
+
+* DONE [#A] STEP 1                                          :@computer:yyets:
+DEADLINE: <2012-11-18 Sun 22:00>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-11-18 Sun 22:00] \\
+  free堆塔老大给过吧，Special Victim Unit(SVU)
+CLOCK: [2012-11-18 Sun 20:58]--[2012-11-18 Sun 22:00] =>  1:02
+CLOCK: [2012-11-18 Sun 07:58]--[2012-11-18 Sun 14:02] =>  6:04
+CLOCK: [2012-11-17 Sat 15:52]--[2012-11-17 Sat 21:38] =>  5:46
+CLOCK: [2012-11-17 Sat 12:20]--[2012-11-17 Sat 13:58] =>  1:38
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-11-17 Sat 08:24]
+
+* DONE [#A] 出国手续                                                   :visa:
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2012-12-13 Thu 19:06]
+   :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2012-12-15 Sat 21:12
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :END:
+[2012-11-22 Thu 10:20]
+** DONE visa and ticket
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-13 Thu 19:06]
+    :END:
+:PROPERTIES:
+:ORDERED: t
+:END:
+*** DONE make visa interview appt
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-07 Fri 20:38]
+    :END:
+*** DONE book ticket
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-07 Fri 20:38]
+    :END:
+*** DONE accpetance letter
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-13 Thu 18:37]
+    :END:
+
+** DONE 其它
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2012-12-13 Thu 19:06]
+   :END:
+*** DONE 学位证、毕业证英文
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-13 Thu 18:38]
+    :END:
+*** DONE 体检
+    :LOGBOOK:
+    - State "DONE"       from "WAIT"       [2012-11-28 Wed 20:18]
+    - State "WAIT"       from "TODO"       [2012-11-26 Mon 11:39] \\
+      等待体检结果
+    :END:
+*** DONE 驾照、国际驾照
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2012-12-07 Fri 20:37]
+    :END:
+*** DONE 档案、户口
+:LOGBOOK:
+- State "DONE"       from "WAIT"       [2012-12-13 Thu 18:38]
+- State "WAIT"       from "TODO"       [2012-11-22 Thu 10:45] \\
+  小cd在处理户口迁出
+:END:
+[[http://cundang.cscse.edu.cn/reglogin.asp]]
+
+
+* DONE Collect friends info [0%]                                   :contacts:
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-01-07 Mon 16:08]
+   :END:
+:PROPERTIES:
+:CATEGORY: Social
+:ARCHIVE_TIME: 2013-01-07 Mon 16:14
+:ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+:ARCHIVE_OLPATH: Active tasks
+:ARCHIVE_CATEGORY: Social
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: tasks
+:END:
+[2012-09-26 Wed 18:40]
+** 237 [46/54]
+- [-] 陈琛
+- [X] 李上元
+- [X] 孙璐
+- [-] 王洁
+- [-] 王嫘
+- [X] 王世玉
+- [-] 杨纲
+- [-] 张璨青
+- [-] 张婷
+- [X] 常琛
+- [X] 仝玉章
+- [X] 高莉
+- [X] 胡坚
+- [X] 田蓉
+- [X] 田艳华
+- [X] 张磊
+- [X] 段然
+- [X] 闫岩
+- [X] 阴豪
+- [X] 朱腾飞
+- [X] 刘越
+- [X] 康洪
+- [X] 杨阳朝
+- [X] 郭晓云
+- [X] 王天乐
+- [X] 崔佳
+- [X] 郝君
+- [X] 黄炎
+- [X] 李妙竹
+- [X] 李妤
+- [X] 孟德
+- [X] 牛浩
+- [X] 王凌
+- [X] 于惊洲
+- [X] 张慧恿
+- [X] 任锋
+- [X] 祁放
+- [X] 戚本刚
+- [X] 杨舒心
+- [X] 姒洁
+- [X] 刘婕（小）
+- [X] 范洋
+- [X] 葛亚东
+- [X] 李曼
+- [X] 李增锐
+- [X] 刘婕（大）
+- [X] 续斐
+- [X] 李慧
+- [X] 李妙君
+- [X] 张旭
+- [X] 元宝
+- [ ] 李江波
+- [X] 李文龙
+- [ ] 林森
+** 267 [1/56]
+- [X] 马艺桠
+- [ ] 魏文庭
+- [ ] 马姣
+- [ ] 韩芳宇
+- [ ] 韩家骏
+- [ ] 陈偲
+- [ ] 郭睿
+- [ ] 郭玉常
+- [ ] 郭开阳
+- [ ] 郝剑龙
+- [ ] 郑键伟
+- [ ] 连梦可
+- [ ] 赵宇坤
+- [ ] 赵丽
+- [ ] 许志远
+- [ ] 袁承轩
+- [ ] 薛瑞
+- [ ] 蔡达
+- [ ] 胡晓辉
+- [ ] 石凝
+- [ ] 田舒婷
+- [ ] 王萱
+- [ ] 王汉星
+- [ ] 王欣
+- [ ] 王星鹏
+- [ ] 王昕
+- [ ] 王文钰
+- [ ] 王思哲
+- [ ] 王姝婷
+- [ ] 殷一丹
+- [ ] 段志豪
+- [ ] 杨春雪
+- [ ] 杨宇琨
+- [ ] 李融
+- [ ] 李子文
+- [ ] 彭一朋
+- [ ] 张经纬
+- [ ] 张玉良
+- [ ] 张率
+- [ ] 张煊镜
+- [ ] 张波
+- [ ] 张帅
+- [ ] 张婧
+- [ ] 孙晨
+- [ ] 吕帅
+- [ ] 刘赫
+- [ ] 刘炜炜
+- [ ] 冯静
+- [ ] 冯晨霞
+- [ ] 冯哲元
+- [ ] 党媛
+- [ ] 侯杰
+- [ ] 侯惠文
+- [ ] 任煊
+- [ ] 乔坚栗
+- [ ] 严顺凯
+** NJU.CS [0/15]
+- [ ] 陈栋（小）
+- [ ] 陈飞宇
+- [ ] 刘华艇
+- [ ] 程盼
+- [ ] 冯汉元
+- [ ] 郭万威
+- [ ] 丛洗
+- [ ] 龚力
+- [ ] 范剑锋
+- [ ] 董家鸣
+- [ ] 杜少云
+- [ ] 丁文彪
+- [ ] 金浩明
+- [ ] 丛宁韫
+- [ ] 彭洋
+** NJU.Friend [1/9]
+- [X] 林佩莹
+- [ ] 陆恬
+- [ ] 段照琨
+- [ ] 范忆阳
+- [ ] 孔繁宇
+- [ ] 李泉秀
+- [ ] 李哲
+- [ ] 吴妍姝
+- [ ] 闫鹏
+** NK.CS [3/11]
+- [X] 侯铁
+- [X] 何立军
+- [X] 姜超
+- [ ] 王绥德
+- [ ] 高文学
+- [ ] 高昊
+- [ ] 扶艳军
+- [ ] 潘宜然
+- [ ] 刘少礼
+- [ ] 崔世良
+- [ ] 刘桂涛
+** TAOBAO [3/7]
+- [X] 席家翌
+- [X] 赵越
+- [X] 王雅然
+- [ ] 赵哲焕
+- [ ] 赵海明
+- [ ] 高玄
+- [ ] 苏竟为
+** OTHER [1/22]
+- [ ] 郑伊
+- [ ] 喻冶
+- [ ] 郝博渊
+- [ ] 华金茹
+- [ ] 邵驾慧
+- [ ] 王沁宇
+- [ ] 辛彦
+- [ ] 闫妍
+- [ ] 杨雅筑
+- [ ] 曹阳（因明）
+- [ ] 翟萧梦
+- [ ] 胡文文
+- [ ] 杜杨超
+- [ ] 郭雅婷
+- [ ] 李国军
+- [ ] 李锦
+- [ ] 梁骁骏
+- [ ] 张智晗
+- [X] Ricky Poon
+- [ ] Wai Ping Cherry Sun
+- [ ] Cheuk Sum Wong
+- [ ] Yin Nan Nancy Zheng
+
+* DONE [#A] book flight and shuttle                                 :journey:
+DEADLINE: <2012-12-06 Thu>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2012-12-17 Mon 08:52]
+:END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-01-07 Mon 16:14
+  :ARCHIVE_FILE: ~/Documents/org/gtd/todo.org
+  :ARCHIVE_OLPATH: Active tasks
+  :ARCHIVE_CATEGORY: Tasks
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: tasks
+  :END:
+[2012-12-05 Wed 22:02]
+* DONE Graduate Orientation
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-10 Thu 09:02]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-06-21 Fri 16:28
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  <2013-01-08 Thu 07:30>-<2013-01-08 Thu 12:00>
+
+* DONE [#A] autobio to Dr Ku
+  DEADLINE: <2013-01-09 Wed>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-10 Thu 16:27]
+  CLOCK: [2013-01-10 Thu 16:02]--[2013-01-10 Thu 16:27] =>  0:25
+  CLOCK: [2013-01-10 Thu 09:59]--[2013-01-10 Thu 10:44] =>  0:45
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-06-21 Fri 16:28
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+* Homework
+  :PROPERTIES:
+  :CATEGORY: homework
+  :ARCHIVE_TIME: 2013-06-21 Fri 16:28
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: homework
+  :END:
+** DONE Instructure Canvas                          :COMP7970:gamedev:
+   DEADLINE: <2013-01-12 Sat>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-01-11 Fri 15:59]
+   :END:
+
+   Submit a video, hyperlink, or snapshot of your favorite game due
+   Tuesday before Midnight.   Also plan to bring printout of screenshot of
+   game and supply a link for us to review during class on Wednesday
+   Jan 16.   Also include a 1 paragraph short description of why you find
+   this game intriguing.
+
+   [[http://auburn.instructure.com/courses/755297/announcements]]
+
+   Possible videos
+   http://www.youtube.com/watch?v=Ls9rPc892Q8
+   http://www.youtube.com/watch?v=8why96GhSU0
+
+** DONE Assignment 1                                :COMP7970:gamedev:
+   DEADLINE: <2013-01-13 Sun>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-01-15 Tue 23:36]
+   :END:
+
+   Create a short game that will provide a couple of mintes of game
+   play to an elementary or middle school student.  This assignment is
+   to begin thinking about game and scenario development.
+
+   *Part I* of submission should include the following:
+   1. Title of game.
+   2. Content: math, physical science, computer science, earth
+      science, other...
+   3. Description: Submit a brief 1-2 paragraph description of the
+      game that you plan to create utilizing Alice3D, Agentsheets,
+      Flash or HTML5 & Javascipt or other approved envirnment.
+   4. State the environment that you will utilize for your creation.
+
+** DONE [#A] Assignment 1.B                         :COMP7970:gamedev:
+   DEADLINE: <2013-01-26 Sat>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-01-27 Sun 09:59]
+   :END:
+   Create a short game that will provide a couple of minutes of game
+   play to an elementary or middle school student.  This assignment
+   will give you practice as a creative thinker and begin
+   introductory game development.
+
+   - [X] Storage format: coordinates
+   - [ ] Snap to other shape
+   - [ ] Sticky move
+
+** DONE Assignment 2                                :COMP7970:gamedev:
+   DEADLINE: <2013-01-29 Tue>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-01-29 Tue 08:59]
+   :END:
+
+   Teach a classmate to play a new (to them) game and then write an
+   approximately 5 page, double-spaced paper about the game.
+
+   1. Explain the game and the genre(s) that it fits into.
+   2. Compare this game to other games in its genre.
+   3. Why do people play this game? What makes it fun?
+   4. How was computer technology (e.g. graphics, AI, animation) used
+      to make this game more fun?
+   5. Did the lack of or excessive use of technology ever hurt the
+      playability of the game?
+   6. What did your classmate think of the game? Did he enjoy
+      learning the game?
+   7. How long did it take your trainee to get good enough at the
+      game to have fun?
+   8. What aspects of the game did your classmate find easy to learn
+      or confusing?
+
+** DONE Assignment 3                                :COMP7970:gamedev:
+   DEADLINE: <2013-02-09 Sat>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-02-09 Sat 11:06]
+   :END:
+
+   This assignment is a structured to find your understanding of the
+   assigned readings.Please complete all of the assigned questions
+   and submit in full expository form (paragraph style).
+
+   Page 41
+   #1
+   #3
+   #4
+
+   Page 56
+   #1
+   #2
+   #3
+   #4
+
+   Page 135
+   #1
+   #2
+
+** DONE Assignment 1 XML                                    :COMP6000:
+    DEADLINE: <2013-02-17 Sun>
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2013-02-13 Wed 10:33]
+    :END:
+
+    Superstar Movies Alberto Delgado, the manager of the Superstar
+    Movies video store, is attempting to use XML to develop a catalog
+    of all of the stores’ information about movies and actors.  Alberto
+    has already developed a way to structure an XML document of this
+    type, and he has given you a sample file that uses this
+    structure.  However, he is worried that he and the other employees
+    may fail to enter catalog entries in a consistent
+    manner.  Initially, he considered using a DTD to validate catalog
+    documents, but he has recently learned that XML Schema enables
+    more precise validation.  Therefore, he has asked you to help him
+    develop a schema for the catalog.  You will construct two XML
+    Schema documents: one for a library of user-defined data types,
+    and one for the catalog itself.
+
+    To complete this task:
+
+1.Using your text editor, open catalogtxt.xsd, libtxt.xsd, and
+   catalogtxt.xml from the _______________ folder.  Enter your name and
+   the date in the comment section of each file and save them as
+   catalog.xsd, lib.xsd, and catalog.xml respectively.
+2. Go to the lib.xsd file in your text editor.  Within this schema
+   you’ll create a library of data types.  Add the root schema element
+   and insert the declaration for the XML Schema namespace using the
+   xs prefix.  Set the default namespace and target of the schema to
+   the URI http://www.superstarmovies.com/library.
+3. Create the following data types:
+   1) actorID, based on the ID data type and following the pattern
+      a####, where # is any digit (e.g., “a0101”)
+   2) actorIDREF, based on the IDREF data type and following the same
+      pattern as the actorID type
+   3) movieID, based on the ID data type and following the pattern
+      m####–###, where # is any digit (e.g., “m1996-101”)
+   4) movieIDREF, based on the IDREF data type and following the same
+      pattern as the movieID type
+   5) rankType, based on the integer data type and with values between
+      1 and 50 inclusive
+4. Create a list type named actorIDREFlist for lists that contain
+   values of type actorIDREF
+5. Create the following enumerated types, both of which are based on
+   the string type:
+   1) yes_no, which has possible values “yes” and “no”
+   2) genreType, which has possible values “action”, “comedy”, “drama”
+      and “fantasy”
+6. Create a complex type named roleType for an empty element with two
+   attributes, both of which are required:
+   1) character, which has the string type
+   2) movie, which has the movieIDREF type
+7. Close the lib.xsd file, saving your changes and go to the
+   catalog.xsd file in your text editor.  Within this file you’ll
+   create the schema for the catalog of movie and actor data.
+8. Insert the root schema element, declaring the XML Schema namespace
+   with the xs prefix.  Declare the library namespace using the URI
+   http://www.superstarmovies.com/library and the prefix lib.  Set the
+   default namespace and the schema target to the URI
+   http://www.superstarmovies.com/catalog.
+9. Import the lib.xsd schema file using the URI of the library
+   namespace.
+10. Insert a declaration for the complex type element catalog.  This
+    element can contain an arbitrary number (possibly 0) of actor
+    and/or movie child elements, in any order.  You should use a flat
+    catalog design, and thus the declarations of the child elements
+    should not be included within the scope of the catalog element’s
+    declaration.  Rather, you should employ references to the
+    declarations of these elements.
+11. The actor element is also a complex type element containing the
+    following sequence of child elements: name, date, and birthplace,
+    followed by one or more role elements.  It also has the attributes
+    id and oscarWinner.  The date and birthplace elements are optional,
+    as is the oscarWinner attribute; the id attribute is required.  The
+    oscarWinner attribute should have a default value of “no”.
+12. Set the data types of the elements and attributes of the actor
+    element as follows:
+    1) The name and birthplace elements contain string data.
+    2) The date element contains dates of the form yyyy-mm-dd.
+    3) The role element is of type roleType (taken from the library
+       namespace).
+    4) The id attribute contains actorID data (taken from the library
+       namespace).
+    5) The oscarWinner attribute contains yes_no data (taken from the
+       library namespace).
+13. The movie element is also a complex type element containing the
+    following sequence of child elements: title, year, length, and
+    topBilledActors.  It also has the required attributes id and genre,
+    and the optional attribute earningsRank.
+14. Set the data types of the elements and attributes of the movie
+    element as follows:
+    1) The title element contains string data.
+    2) The year element contains a year of the form yyyy.
+    3) The length element contains a duration of the form hh:mm:ss.
+    4) The topBilledActors element contains actorIDREFlist data (taken
+       from the library namespace).  There is an error with XML Spy,
+       to solve the problem, please change topBilledActors to type
+       xs:string, not actorIDREFlist.
+    5) The id attribute contains movieID data (taken from the library
+       namespace).
+    6) The genre attribute contains genreType data (taken from the
+       library namespace).
+    7) The earningsRank attribute contains rankType data (taken from
+       the library namespace).
+15. Close the file, saving your changes; and then go to the
+    catalog.xml file in your text editor.
+16. Within the root catalog element, declare the XML Schema instance
+    namespace using the prefix xsi.  Declare the catalog namespace
+    using the prefix catalog.  Attach the schema from the catalog.xsd
+    file using the appropriate namespace.
+17. Change the opening and closing tags of the catalog element to a
+    qualified name using the catalog prefix.
+18. Save your changes to the catalog.xml file and then validate the
+    file using XMLSpy or another validating parser.  Correct any
+    mistakes found by the parser in the catalog.xml document.
+19. Submit the completed and validated project to your instructor.
+
+** DONE Semester Project Proposal                           :COMP6000:
+   DEADLINE: <2013-02-18 Mon>
+   :LOGBOOK:
+   - State "WAIT"       from "TODO"       [2013-02-18 Mon 10:52] \\
+     wait for WU Xing's response
+   :END:
+
+** DONE Read Paper for paper presentation           :COMP7970:spatial:
+   DEADLINE: <2013-02-14 Thu>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-02-14 Thu 14:27]
+   CLOCK: [2013-02-14 Thu 13:13]--[2013-02-14 Thu 14:27] =>  1:14
+   CLOCK: [2013-02-13 Wed 17:16]--[2013-02-13 Wed 17:44] =>  0:28
+   :END:
+
+** DONE [#A] Paper presentation 1 slides            :COMP7970:spatial:
+   DEADLINE: <2013-02-28 Thu -14d>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-02-28 Thu 20:48]
+   - State "DONE"       from "TODO"       [2013-02-23 Sat 20:24]
+   CLOCK: [2013-02-23 Sat 19:02]--[2013-02-23 Sat 20:24] =>  1:22
+   CLOCK: [2013-02-23 Sat 11:27]--[2013-02-23 Sat 12:31] =>  1:04
+   CLOCK: [2013-02-22 Fri 10:02]--[2013-02-22 Fri 11:22] =>  1:20
+   CLOCK: [2013-02-20 Wed 09:33]--[2013-02-20 Wed 10:59] =>  1:26
+   CLOCK: [2013-02-19 Tue 09:00]--[2013-02-19 Tue 09:44] =>  0:44
+   CLOCK: [2013-02-19 Tue 08:25]--[2013-02-19 Tue 09:00] =>  0:35
+   CLOCK: [2013-02-18 Mon 10:57]--[2013-02-18 Mon 11:21] =>  0:24
+   :END:
+
+** DONE Paper presentation 2 slides                 :COMP7970:spatial:
+   DEADLINE: <2013-03-30 Sat -14d>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-03-29 Fri 23:00]
+   :END:
+
+** DONE Midterm Presentation                        :COMP7970:spatial:
+   DEADLINE: <2013-03-05 Sat -14d>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-03-02 Sat 23:46]
+   CLOCK: [2013-03-02 Sat 23:13]--[2013-03-02 Sat 23:46] =>  0:33
+   CLOCK: [2013-03-02 Sat 14:36]--[2013-03-02 Sat 15:36] =>  1:00
+   :END:
+
+** DONE Term Report Presentation                    :COMP7970:spatial:
+   DEADLINE: <2013-04-21 Sun -14d>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-05-01 Wed 22:28]
+   :END:
+
+** DONE Final Report                                :COMP7970:spatial:
+   DEADLINE: <2013-05-02 Thu>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-05-02 Thu 18:50]
+   :END:
+** DONE Chapter Presentation                        :COMP7970:gamedev:
+   DEADLINE: <2013-03-10 Sun>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-04-02 Tue 22:18]
+   :END:
+** DONE Game presentation                           :COMP7970:gamedev:
+   DEADLINE: <2013-02-22 Fri>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-02-23 Sat 12:48]
+   :END:
+
+** DONE Assignment 2 XML                                    :COMP6000:
+   DEADLINE: <2013-03-05 Tue>
+   :LOGBOOK:
+   - State "DONE"       from "TODO"       [2013-03-03 Sun 11:06]
+   CLOCK: [2013-03-03 Sun 09:37]--[2013-03-03 Sun 11:06] =>  1:29
+   :END:
+
+* DONE [#A] Assignment 1.B                          :COMP7970:gamedev:
+  DEADLINE: <2013-01-26 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-27 Sun 09:59]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+  Create a short game that will provide a couple of minutes of game
+  play to an elementary or middle school student.  This assignment
+  will give you practice as a creative thinker and begin
+  introductory game development.
+
+  - [X] Storage format: coordinates
+  - [ ] Snap to other shape
+  - [ ] Sticky move
+* DONE Assignment 1
+  DEADLINE: <2013-01-09 Wed 22:59>
+  :LOGBOOK:
+ - State "DONE"       from "TODO"       [2013-01-16 Wed 20:11]
+   CLOCK: [2013-01-13 Sun 18:17]--[2013-01-13 Sun 18:34] =>  0:17
+   CLOCK: [2013-01-10 Thu 16:45]--[2013-01-10 Thu 17:17] =>  0:32
+   CLOCK: [2013-01-06 Sun 20:58]--[2013-01-06 Sun 21:13] =>  0:15
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Coursera/Computing for Data Analysis
+  :ARCHIVE_CATEGORY: Coursera
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: coursera DataAnalysis
+  :END:
+  3:02
+* DONE Assignment 1
+  DEADLINE: <2013-01-28 Mon>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Coursera/Image and Video Processing
+  :ARCHIVE_CATEGORY: Coursera
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: coursera ImageProcessing
+  :END:
+* DONE Instructure Canvas                           :COMP7970:gamedev:
+  DEADLINE: <2013-01-12 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-11 Fri 15:59]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  Submit a video, hyperlink, or snapshot of your favorite game due
+  Tuesday before Midnight.   Also plan to bring printout of screenshot of
+  game and supply a link for us to review during class on Wednesday
+  Jan 16.   Also include a 1 paragraph short description of why you find
+  this game intriguing.
+
+  [[http://auburn.instructure.com/courses/755297/announcements]]
+
+  Possible videos
+  http://www.youtube.com/watch?v=Ls9rPc892Q8
+  http://www.youtube.com/watch?v=8why96GhSU0
+
+* DONE Assignment 1                                 :COMP7970:gamedev:
+  DEADLINE: <2013-01-13 Sun>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-15 Tue 23:36]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  Create a short game that will provide a couple of mintes of game
+  play to an elementary or middle school student.  This assignment is
+  to begin thinking about game and scenario development.
+
+  *Part I* of submission should include the following:
+  1. Title of game.
+  2. Content: math, physical science, computer science, earth
+     science, other...
+  3. Description: Submit a brief 1-2 paragraph description of the
+     game that you plan to create utilizing Alice3D, Agentsheets,
+     Flash or HTML5 & Javascipt or other approved envirnment.
+  4. State the environment that you will utilize for your creation.
+
+* DONE Assignment 2                                 :COMP7970:gamedev:
+  DEADLINE: <2013-01-29 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-01-29 Tue 08:59]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  Teach a classmate to play a new (to them) game and then write an
+  approximately 5 page, double-spaced paper about the game.
+
+  1. Explain the game and the genre(s) that it fits into.
+  2. Compare this game to other games in its genre.
+  3. Why do people play this game? What makes it fun?
+  4. How was computer technology (e.g. graphics, AI, animation) used
+     to make this game more fun?
+  5. Did the lack of or excessive use of technology ever hurt the
+     playability of the game?
+  6. What did your classmate think of the game? Did he enjoy
+     learning the game?
+  7. How long did it take your trainee to get good enough at the
+     game to have fun?
+  8. What aspects of the game did your classmate find easy to learn
+     or confusing?
+
+* DONE Assignment 3                                 :COMP7970:gamedev:
+  DEADLINE: <2013-02-09 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-09 Sat 11:06]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  This assignment is a structured to find your understanding of the
+  assigned readings.Please complete all of the assigned questions
+  and submit in full expository form (paragraph style).
+
+  Page 41
+  #1
+  #3
+  #4
+
+  Page 56
+  #1
+  #2
+  #3
+  #4
+
+  Page 135
+  #1
+  #2
+
+* DONE Assignment 1 XML                                     :COMP6000:
+    DEADLINE: <2013-02-17 Sun>
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2013-02-13 Wed 10:33]
+    :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+    Superstar Movies Alberto Delgado, the manager of the Superstar
+    Movies video store, is attempting to use XML to develop a catalog
+    of all of the stores’ information about movies and actors.  Alberto
+    has already developed a way to structure an XML document of this
+    type, and he has given you a sample file that uses this
+    structure.  However, he is worried that he and the other employees
+    may fail to enter catalog entries in a consistent
+    manner.  Initially, he considered using a DTD to validate catalog
+    documents, but he has recently learned that XML Schema enables
+    more precise validation.  Therefore, he has asked you to help him
+    develop a schema for the catalog.  You will construct two XML
+    Schema documents: one for a library of user-defined data types,
+    and one for the catalog itself.
+
+    To complete this task:
+
+1.Using your text editor, open catalogtxt.xsd, libtxt.xsd, and
+   catalogtxt.xml from the _______________ folder.  Enter your name and
+   the date in the comment section of each file and save them as
+   catalog.xsd, lib.xsd, and catalog.xml respectively.
+2. Go to the lib.xsd file in your text editor.  Within this schema
+   you’ll create a library of data types.  Add the root schema element
+   and insert the declaration for the XML Schema namespace using the
+   xs prefix.  Set the default namespace and target of the schema to
+   the URI http://www.superstarmovies.com/library.
+3. Create the following data types:
+   1) actorID, based on the ID data type and following the pattern
+      a####, where # is any digit (e.g., “a0101”)
+   2) actorIDREF, based on the IDREF data type and following the same
+      pattern as the actorID type
+   3) movieID, based on the ID data type and following the pattern
+      m####–###, where # is any digit (e.g., “m1996-101”)
+   4) movieIDREF, based on the IDREF data type and following the same
+      pattern as the movieID type
+   5) rankType, based on the integer data type and with values between
+      1 and 50 inclusive
+4. Create a list type named actorIDREFlist for lists that contain
+   values of type actorIDREF
+5. Create the following enumerated types, both of which are based on
+   the string type:
+   1) yes_no, which has possible values “yes” and “no”
+   2) genreType, which has possible values “action”, “comedy”, “drama”
+      and “fantasy”
+6. Create a complex type named roleType for an empty element with two
+   attributes, both of which are required:
+   1) character, which has the string type
+   2) movie, which has the movieIDREF type
+7. Close the lib.xsd file, saving your changes and go to the
+   catalog.xsd file in your text editor.  Within this file you’ll
+   create the schema for the catalog of movie and actor data.
+8. Insert the root schema element, declaring the XML Schema namespace
+   with the xs prefix.  Declare the library namespace using the URI
+   http://www.superstarmovies.com/library and the prefix lib.  Set the
+   default namespace and the schema target to the URI
+   http://www.superstarmovies.com/catalog.
+9. Import the lib.xsd schema file using the URI of the library
+   namespace.
+10. Insert a declaration for the complex type element catalog.  This
+    element can contain an arbitrary number (possibly 0) of actor
+    and/or movie child elements, in any order.  You should use a flat
+    catalog design, and thus the declarations of the child elements
+    should not be included within the scope of the catalog element’s
+    declaration.  Rather, you should employ references to the
+    declarations of these elements.
+11. The actor element is also a complex type element containing the
+    following sequence of child elements: name, date, and birthplace,
+    followed by one or more role elements.  It also has the attributes
+    id and oscarWinner.  The date and birthplace elements are optional,
+    as is the oscarWinner attribute; the id attribute is required.  The
+    oscarWinner attribute should have a default value of “no”.
+12. Set the data types of the elements and attributes of the actor
+    element as follows:
+    1) The name and birthplace elements contain string data.
+    2) The date element contains dates of the form yyyy-mm-dd.
+    3) The role element is of type roleType (taken from the library
+       namespace).
+    4) The id attribute contains actorID data (taken from the library
+       namespace).
+    5) The oscarWinner attribute contains yes_no data (taken from the
+       library namespace).
+13. The movie element is also a complex type element containing the
+    following sequence of child elements: title, year, length, and
+    topBilledActors.  It also has the required attributes id and genre,
+    and the optional attribute earningsRank.
+14. Set the data types of the elements and attributes of the movie
+    element as follows:
+    1) The title element contains string data.
+    2) The year element contains a year of the form yyyy.
+    3) The length element contains a duration of the form hh:mm:ss.
+    4) The topBilledActors element contains actorIDREFlist data (taken
+       from the library namespace).  There is an error with XML Spy,
+       to solve the problem, please change topBilledActors to type
+       xs:string, not actorIDREFlist.
+    5) The id attribute contains movieID data (taken from the library
+       namespace).
+    6) The genre attribute contains genreType data (taken from the
+       library namespace).
+    7) The earningsRank attribute contains rankType data (taken from
+       the library namespace).
+15. Close the file, saving your changes; and then go to the
+    catalog.xml file in your text editor.
+16. Within the root catalog element, declare the XML Schema instance
+    namespace using the prefix xsi.  Declare the catalog namespace
+    using the prefix catalog.  Attach the schema from the catalog.xsd
+    file using the appropriate namespace.
+17. Change the opening and closing tags of the catalog element to a
+    qualified name using the catalog prefix.
+18. Save your changes to the catalog.xml file and then validate the
+    file using XMLSpy or another validating parser.  Correct any
+    mistakes found by the parser in the catalog.xml document.
+19. Submit the completed and validated project to your instructor.
+
+* DONE Semester Project Proposal                            :COMP6000:
+  DEADLINE: <2013-02-18 Mon>
+  :LOGBOOK:
+  - State "WAIT"       from "TODO"       [2013-02-18 Mon 10:52] \\
+    wait for WU Xing's response
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Read Paper for paper presentation            :COMP7970:spatial:
+  DEADLINE: <2013-02-14 Thu>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-14 Thu 14:27]
+  CLOCK: [2013-02-14 Thu 13:13]--[2013-02-14 Thu 14:27] =>  1:14
+  CLOCK: [2013-02-13 Wed 17:16]--[2013-02-13 Wed 17:44] =>  0:28
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE [#A] Paper presentation 1 slides             :COMP7970:spatial:
+  DEADLINE: <2013-02-28 Thu -14d>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-28 Thu 20:48]
+  - State "DONE"       from "TODO"       [2013-02-23 Sat 20:24]
+  CLOCK: [2013-02-23 Sat 19:02]--[2013-02-23 Sat 20:24] =>  1:22
+  CLOCK: [2013-02-23 Sat 11:27]--[2013-02-23 Sat 12:31] =>  1:04
+  CLOCK: [2013-02-22 Fri 10:02]--[2013-02-22 Fri 11:22] =>  1:20
+  CLOCK: [2013-02-20 Wed 09:33]--[2013-02-20 Wed 10:59] =>  1:26
+  CLOCK: [2013-02-19 Tue 09:00]--[2013-02-19 Tue 09:44] =>  0:44
+  CLOCK: [2013-02-19 Tue 08:25]--[2013-02-19 Tue 09:00] =>  0:35
+  CLOCK: [2013-02-18 Mon 10:57]--[2013-02-18 Mon 11:21] =>  0:24
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Paper presentation 2 slides                  :COMP7970:spatial:
+  DEADLINE: <2013-03-30 Sat -14d>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-03-29 Fri 23:00]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Midterm Presentation                         :COMP7970:spatial:
+  DEADLINE: <2013-03-05 Sat -14d>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-03-02 Sat 23:46]
+  CLOCK: [2013-03-02 Sat 23:13]--[2013-03-02 Sat 23:46] =>  0:33
+  CLOCK: [2013-03-02 Sat 14:36]--[2013-03-02 Sat 15:36] =>  1:00
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Term Report Presentation                     :COMP7970:spatial:
+  DEADLINE: <2013-04-21 Sun -14d>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-05-01 Wed 22:28]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Final Report                                 :COMP7970:spatial:
+  DEADLINE: <2013-05-02 Thu>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-05-02 Thu 18:50]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE Chapter Presentation                         :COMP7970:gamedev:
+  DEADLINE: <2013-03-10 Sun>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-04-02 Tue 22:18]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE Game presentation                            :COMP7970:gamedev:
+  DEADLINE: <2013-02-22 Fri>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-23 Sat 12:48]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Assignment 2 XML                                     :COMP6000:
+  DEADLINE: <2013-03-05 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-03-03 Sun 11:06]
+  CLOCK: [2013-03-03 Sun 09:37]--[2013-03-03 Sun 11:06] =>  1:29
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Homework
+  :ARCHIVE_CATEGORY: homework
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE ACM Sigspatial Cup 2013                      :COMP7970:spatial:
+  DEADLINE: <2013-08-01 Thu> SCHEDULED: <2013-02-12 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-02 Fri 13:58]
+  CLOCK: [2013-02-18 Mon 17:20]--[2013-02-18 Mon 20:10] =>  2:50
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  - Problem Definition :: [[http://dmlab.cs.umn.edu/GISCUP2013/index.php]]
+  - Data format :: [[http://docs.openlayers.org/library/spherical_mercator.html]]
+
+* DONE Web Development                                      :COMP6000:
+  SCHEDULED: <2013-02-12 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-05-05 Sun 21:48]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  [[http://pca.eng.auburn.edu/]]
+
+* DONE Game Development                             :COMP7970:gamedev:
+  SCHEDULED: <2013-03-02 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-05-05 Sun 21:48]
+  CLOCK: [2013-02-18 Mon 14:11]--[2013-02-18 Mon 14:44] =>  0:33
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  [[http://gamvas.com/en/][gamevas]], [[http://gamequeryjs.com/][gameQuery]],
+
+* DONE Personal Website
+  SCHEDULED: <2013-02-13 Wed>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-05-10 Fri 22:17]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* DONE Game Website                                 :COMP7970:gamedev:
+  DEADLINE: <2013-02-24 Sun>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-27 Wed 15:53]
+  CLOCK: [2013-02-27 Wed 15:53]--[2013-02-27 Wed 15:53] =>  0:00
+  CLOCK: [2013-02-27 Wed 13:55]--[2013-02-27 Wed 15:05] =>  1:10
+  CLOCK: [2013-02-27 Wed 13:06]--[2013-02-27 Wed 13:55] =>  0:49
+  CLOCK: [2013-02-27 Wed 08:00]--[2013-02-27 Wed 11:20] =>  3:20
+  CLOCK: [2013-02-26 Tue 20:23]--[2013-02-26 Tue 21:23] =>  1:00
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE [#A] Game Timetable Site                     :COMP7970:gamedev:
+  DEADLINE: <2013-02-23 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-02-26 Tue 13:28]
+  CLOCK: [2013-02-25 Mon 22:38]--[2013-02-25 Mon 23:54] =>  1:16
+  CLOCK: [2013-02-25 Mon 20:40]--[2013-02-25 Mon 21:40] =>  1:00
+  CLOCK: [2013-02-23 Sat 22:14]--[2013-02-23 Sat 22:17] =>  0:03
+  CLOCK: [2013-02-23 Sat 20:41]--[2013-02-23 Sat 21:41] =>  1:00
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Project
+  :ARCHIVE_CATEGORY: project
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE Programming Pearls
+  DEADLINE: <2013-04-09 Tue>
+  :LOGBOOK:
+  - State "DONE"       from ""           [2013-04-07 Sun 21:30]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Library
+  :ARCHIVE_CATEGORY: lib
+  :ARCHIVE_TODO: DONE
+  :END:
+* DONE Driver Licence Test
+  DEADLINE: <2013-02-23 Sat>
+  :LOGBOOK:
+  - State "KILL"       from "WAIT"       [2013-03-01 Fri 15:56]
+  - State "WAIT"       from ""           [2013-02-18 Mon 10:52] \\
+    wait for my glasses
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:44
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Errands
+  :ARCHIVE_CATEGORY: errand
+  :ARCHIVE_TODO: DONE
+  :END:
+* KILL Assignment 2
+  DEADLINE: <2013-01-16 Wed>
+  :LOGBOOK:
+  - State "KILL"       from "DONE"       [2013-02-09 Sat 11:05]
+  - State "DONE"       from "TODO"       [2013-01-17 Thu 10:37]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:45
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Coursera/Computing for Data Analysis
+  :ARCHIVE_CATEGORY: Coursera
+  :ARCHIVE_TODO: KILL
+  :ARCHIVE_ITAGS: coursera DataAnalysis
+  :END:
+* KILL Assignment 3
+  DEADLINE: <2013-01-23 Wed 22:59>
+  :LOGBOOK:
+  - State "KILL"       from "TODO"       [2013-02-09 Sat 11:05]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-08-04 Sun 17:45
+  :ARCHIVE_FILE: ~/Documents/dotemacs/org/todo.org
+  :ARCHIVE_OLPATH: Tasks/Coursera/Computing for Data Analysis
+  :ARCHIVE_CATEGORY: Coursera
+  :ARCHIVE_TODO: KILL
+  :ARCHIVE_ITAGS: coursera DataAnalysis
+  :END:
+* DONE [#A] Geofence Optimization                :cpp:code:sigspatial:
+  SCHEDULED: <2013-08-05 Mon>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-14 Wed 14:59]
+  CLOCK: [2013-08-06 Tue 11:40]--[2013-08-06 Tue 11:46] =>  0:06
+  CLOCK: [2013-08-06 Tue 10:59]--[2013-08-06 Tue 11:40] =>  0:41
+  CLOCK: [2013-08-05 Mon 15:38]--[2013-08-05 Mon 17:11] =>  1:33
+  CLOCK: [2013-08-05 Mon 11:02]--[2013-08-05 Mon 13:07] =>  2:05
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:41
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-04 Sun]
+  polygon rasterization
+* DONE [#A] Paper Review                                         :lab:
+  DEADLINE: <2013-08-31 Sat> SCHEDULED: <2013-08-20 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-09-06 Fri 20:59]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:41
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+   [2013-08-10 Sat]
+   [[file:~/Downloads/review_form_182.txt::<!--][review form 182]]
+   [[file:~/Downloads/review_form_185.txt::<!--][review form 185]]
+* DONE Video for 文龍
+  DEADLINE: <2013-08-16 Fri>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-15 Thu 12:14]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-07 Wed]
+  給李文龍和李睿的结婚視頻
+* DONE reference                                                 :lab:
+  SCHEDULED: <2013-08-17 Sat>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-19 Mon 19:33]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-17 Sat]
+
+  Collect reference for my paper
+  [[file:~/Documents/dotemacs/deft/deft-2.org::*Geofence][Geofence]]
+* DONE YuJiao Paper                                              :lab:
+  DEADLINE: <2013-08-29 Thu> SCHEDULED: <2013-08-20 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-29 Thu 09:33]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-19 Mon]
+  Read YuJiao's paper and think about the implementation
+* DONE poj1015 report                                             :oj:
+  SCHEDULED: <2013-08-21 Wed>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-21 Wed 15:15]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-21 Wed]
+* DONE material reading                                     :comp6700:
+  DEADLINE: <2013-08-26 Mon>
+  :LOGBOOK:
+  - State "DONE"       from "DONE"       [2013-08-26 Mon 16:31]
+  - State "DONE"       from "TODO"       [2013-08-25 Sun 22:03]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-21 Wed]
+  Canvas:
+  Read: "No Silver Bullet"
+  Read: "The Power of Process"
+* DONE poj 1016 1017                                              :oj:
+  SCHEDULED: <2013-08-23 Fri>
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2013-08-24 Sat 20:17]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-22 Thu]
+* DONE projects details                                 :comp6120:lab:
+  DEADLINE: <2013-09-02 Mon> SCHEDULED: <2013-08-26 Mon>
+  :LOGBOOK:
+  - State "DONE"       from ""           [2013-09-24 Tue 23:07]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-25 Sun]
+  knock out details for COMP 6120 term projects
+* DONE ssh server setup
+  SCHEDULED: <2013-08-13 Tue>
+  :LOGBOOK:
+  - State "DONE"       from "KILL"       [2013-09-30 Mon 18:42]
+  - State "KILL"       from "TODO"       [2013-08-14 Wed 14:59]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: DONE
+  :END:
+  [2013-08-13 Tue]
+* KILL [#A] Database Interactive Grading System      :db:web:code:lab:
+  DEADLINE: <2013-09-06 Fri> SCHEDULED: <2013-08-16 Fri>
+  :LOGBOOK:
+  - State "KILL"       from "TODO"       [2013-08-19 Mon 19:33]
+  :END:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2013-09-30 Mon 18:42
+  :ARCHIVE_FILE: ~/Documents/dotemacs/emacs.d/org/todo.org
+  :ARCHIVE_OLPATH: Tasks
+  :ARCHIVE_CATEGORY: todo
+  :ARCHIVE_TODO: KILL
+  :END:
+  [2013-08-16 Fri]
+
+  Create a interactive db system for COMP5/6120.  Some possible
+  solutions are:
+  - Google AppEngine
+  - Lab Server
+  - Amazon EC2

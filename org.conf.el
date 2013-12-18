@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-10-30 19:43:50 CDT gongzhitaao>
+;;; Time-stamp: <2013-12-18 16:42:15 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -37,7 +37,7 @@
 (setq org-hierarchical-todo-statistics nil)
 (setq org-agenda-include-diary t)
 (setq org-clock-idle-time 10)
-(setq org-directory (concat gzt/emacs-dir "emacs.d/org"))
+(setq org-directory (concat my-emacs-root "emacs.d/org"))
 (setq org-use-property-inheritance t)
 
 ;; -------------------------------------------------------------------
@@ -155,12 +155,12 @@
 
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-(defun gzt/appt-display (mins-till-appt cur-time msg)
+(defun my-appt-display (mins-till-appt cur-time msg)
   "Convinient wrapper for appt popup display"
-  (gzt/popup (format "Appointment in %s minute(s)" mins-till-appt) msg
+  (my-popup (format "Appointment in %s minute(s)" mins-till-appt) msg
              "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
              "/usr/share/sounds/ubuntu/stereo/phone-incoming-call.ogg"))
 
-(setq appt-disp-window-function (function gzt/appt-display))
+(setq appt-disp-window-function (function my-appt-display))
 
 (provide 'org.conf)
