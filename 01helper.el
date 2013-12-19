@@ -13,12 +13,6 @@
       (funcall func (region-beginning) (region-end))
     (funcall func (line-beginning-position) (line-end-position))))
 
-(defun my-toggle-comment-region-or-line ()
-  "Toggle comment on active region or current line if no region
-is active"
-  (interactive)
-  (my-apply-region-or-line 'comment-or-uncomment-region))
-
 (defun my-popup (title msg &optional icon sound)
   "Show a popup if on X, or echo it otherwise; TITLE is the title
 of the message, MSG is the context. Optionally, ICON and SOUND

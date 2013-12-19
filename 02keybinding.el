@@ -20,7 +20,10 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 
 (global-set-key (kbd "s-r") 'set-visited-file-name)
-(global-set-key (kbd "s-/") 'my-toggle-comment-region-or-line)
+(global-set-key (kbd "s-/")
+                (function (lambda ()
+                            (interactive)
+                            (my-apply-region-or-line 'comment-or-uncomment-region))))
 
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
@@ -29,6 +32,10 @@
 
 (global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
 (global-set-key (kbd "s-=") 'align-regexp)
+(global-set-key (kbd "s-\\")
+                (function (lambda ()
+                            (interactive)
+                            (my-apply-region-or-line 'indent-region))))
 
 (provide 'keybinding)
 ;;; keybinding.el ends here
