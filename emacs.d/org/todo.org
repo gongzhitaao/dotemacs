@@ -443,8 +443,9 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2013-11-28 Thu .+1d>
+    SCHEDULED: <2013-12-19 Thu .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2013-12-18 Wed 22:11]
     - State "DONE"       from "TODO"       [2013-11-27 Wed 18:43]
     - State "DONE"       from "TODO"       [2013-11-26 Tue 18:00]
     - State "DONE"       from "TODO"       [2013-11-25 Mon 18:29]
@@ -510,7 +511,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2013-11-27 Wed 18:43]
+    :LAST_REPEAT: [2013-12-18 Wed 22:11]
     :END:
 
 *** TODO Capital Journey
