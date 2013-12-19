@@ -1,5 +1,5 @@
 ;;; misc.conf.el --- Extensive configuration for Emacs
-;;; Time-stamp: <2013-12-18 21:03:00 CST gongzhitaao>
+;;; Time-stamp: <2013-12-18 17:33:44 CST gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; font and encoding system
@@ -77,10 +77,10 @@
 ;; save recently used files
 (let ((my-recent-file (concat my-emacs-cache "recentf")))
   (require 'recentf)
+  (recentf-mode 1)
   (setq recentf-save-file my-recent-file
         recentf-max-saved-items 100
-        recentf-max-menu-items 15)
-  (recentf-mode 1))
+        recentf-max-menu-items 15))
 
 (let ((my-abbrev-file (concat my-emacs-cache "abbrev_defs")))
   (setq abbrev-file-name my-abbrev-file)
