@@ -25,6 +25,4 @@ could be customized, default null"
     (message (concat title ": " msg)))
   (when sound (shell-command
                (concat "mplayer -really-quiet " sound " 2> /dev/null"))))
-
-(provide 'helper)
 ;;; helper.el ends here

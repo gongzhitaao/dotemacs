@@ -36,6 +36,4 @@
                 (function (lambda ()
                             (interactive)
                             (my-apply-region-or-line 'indent-region))))
-
-(provide 'keybinding)
 ;;; keybinding.el ends here

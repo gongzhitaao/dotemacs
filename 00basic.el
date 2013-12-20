@@ -108,6 +108,4 @@ line instead."
 (load-theme 'naquadah t)
 
 (server-start)
-
-(provide 'basic)
 ;;; basic.el ends here

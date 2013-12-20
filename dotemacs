@@ -38,9 +38,9 @@
   (concat my-emacs-root "emacs.d/")
   "Data files for emacs, like orgmode, diary and etc.")
 
-(load "basic")
-(load "helper")
-(load "keybinding")
+(load "00basic")
+(load "01helper")
+(load "02keybinding")
 
 ;; load name.conf.el
 (let ((files (directory-files my-emacs-root nil ".*\\.conf\\.el")))
