@@ -79,6 +79,26 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-01-02 Thu 18:01]
+   CLOCK: [2014-01-02 Thu 17:30]--[2014-01-02 Thu 18:01] =>  0:31
+   - State "DONE"       from "TODO"       [2014-01-01 Wed 18:12]
+   CLOCK: [2014-01-01 Wed 17:43]--[2014-01-01 Wed 18:12] =>  0:29
+   - State "DONE"       from "TODO"       [2013-12-30 Mon 17:44]
+   CLOCK: [2013-12-30 Mon 17:17]--[2013-12-30 Mon 17:44] =>  0:27
+   - State "DONE"       from "TODO"       [2013-12-29 Sun 17:38]
+   CLOCK: [2013-12-29 Sun 17:02]--[2013-12-29 Sun 17:38] =>  0:36
+   - State "DONE"       from "TODO"       [2013-12-28 Sat 19:00]
+   CLOCK: [2013-12-28 Sat 18:32]--[2013-12-28 Sat 19:00] =>  0:28
+   - State "DONE"       from "TODO"       [2013-12-27 Fri 18:38]
+   CLOCK: [2013-12-27 Fri 18:00]--[2013-12-27 Fri 18:38] =>  0:38
+   - State "DONE"       from "TODO"       [2013-12-26 Thu 19:01]
+   CLOCK: [2013-12-26 Thu 18:30]--[2013-12-26 Thu 19:01] =>  0:31
+   - State "DONE"       from "TODO"       [2013-12-25 Wed 19:27]
+   CLOCK: [2013-12-25 Wed 18:56]--[2013-12-25 Wed 19:27] =>  0:31
+   - State "DONE"       from "TODO"       [2013-12-23 Mon 17:36]
+   CLOCK: [2013-12-23 Mon 17:01]--[2013-12-23 Mon 17:36] =>  0:35
+   - State "DONE"       from "TODO"       [2013-12-22 Sun 19:22]
+   CLOCK: [2013-12-22 Sun 18:55]--[2013-12-22 Sun 19:22] =>  0:27
    - State "DONE"       from "TODO"       [2013-12-19 Thu 17:49]
    CLOCK: [2013-12-19 Thu 17:20]--[2013-12-19 Thu 17:49] =>  0:29
    - State "DONE"       from "TODO"       [2013-11-27 Wed 19:20]
@@ -420,10 +440,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2013-12-19 Thu 17:49]
+   :LAST_REPEAT: [2014-01-02 Thu 18:01]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2013-12-20 Fri .+1d>
+   SCHEDULED: <2014-01-03 Fri .+1d>
 
 *** TODO OJ
     SCHEDULED: <2013-08-31 Sat +1d>
@@ -445,8 +465,16 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2013-12-19 Thu .+1d>
+    SCHEDULED: <2014-01-03 Fri .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-02 Thu 21:00]
+    - State "DONE"       from "TODO"       [2014-01-01 Wed 17:43]
+    - State "DONE"       from "TODO"       [2013-12-30 Mon 17:17]
+    - State "DONE"       from "TODO"       [2013-12-28 Sat 18:32]
+    - State "DONE"       from "TODO"       [2013-12-27 Fri 18:00]
+    - State "DONE"       from "TODO"       [2013-12-26 Thu 18:30]
+    - State "DONE"       from "TODO"       [2013-12-25 Wed 18:56]
+    - State "DONE"       from "TODO"       [2013-12-23 Mon 17:01]
     - State "DONE"       from "TODO"       [2013-12-18 Wed 22:11]
     - State "DONE"       from "TODO"       [2013-11-27 Wed 18:43]
     - State "DONE"       from "TODO"       [2013-11-26 Tue 18:00]
@@ -513,7 +541,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2013-12-18 Wed 22:11]
+    :LAST_REPEAT: [2014-01-02 Thu 21:00]
     :END:
 
 *** TODO Capital Journey

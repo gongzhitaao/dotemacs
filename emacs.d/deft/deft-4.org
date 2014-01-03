@@ -1,8 +1,0 @@
-recurrent nn
-
-recurrent neural network has the ability to remember the information
-in the hidden layer for quite a long time.  But currently we don't
-have a very efficient method to train it.
-
-IIya Sutskever's recurrent neural network could generate pretty good
-English sentences after fed with English Wikipedia billions of times.

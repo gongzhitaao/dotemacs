@@ -1,4 +1,4 @@
-* Geofence
+Misc
 
-- http://www.quirks.com/articles/2013/20130711.aspx
-  Some insight into geofencing
+* Frank Medrano
+  Planche pushup

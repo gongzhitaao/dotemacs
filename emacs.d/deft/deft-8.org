@@ -1,0 +1,8 @@
+ssh-key-gen
+
+ssh-keygen -t rsa -b 2048
+
+Host dmc
+     Hostname dmc.asc.edu
+     User zzg0009@auburn.edu
+     IdentifyFile ~/Documents/dotfiles/dmc.key

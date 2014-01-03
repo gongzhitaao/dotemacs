@@ -1,5 +1,5 @@
 ;;; misc.conf.el --- Extensive configuration for Emacs
-;;; Time-stamp: <2013-12-19 11:24:32 CST gongzhitaao>
+;;; Time-stamp: <2013-12-30 09:50:37 CST gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; font and encoding system
@@ -18,7 +18,7 @@
   (set-fontset-font
    (frame-parameter nil 'font)
    charset (font-spec :family "WenQuanYi Zen Hei Mono"
-		      :size 16)))
+                      :size 16)))
 
 (setq auto-mode-alist
       (append '((".*rc$" . conf-mode)
@@ -148,21 +148,36 @@
 
 (require 'auto-complete)
 (global-auto-complete-mode 1)
+
 (require 'auto-complete-c-headers)
 (add-to-list 'ac-sources 'ac-source-c-headers)
+
+(require 'ac-c-headers)
+(add-hook 'c-mode-hook
+          (lambda ()
+            (add-to-list 'ac-sources 'ac-source-c-headers)
+            (add-to-list 'ac-sources 'ac-source-c-header-symbols t)))
 
 (require 'ac-math)
 (add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
 (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
   (setq ac-sources
-	(append '(ac-source-math-unicode
-		  ac-source-math-latex
-		  ac-source-latex-commands)
-		ac-sources)))
+        (append '(ac-source-math-unicode
+                  ac-source-math-latex
+                  ac-source-latex-commands)
+                ac-sources)))
 (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+(add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
+(setq ac-math-unicode-in-math-p t)
 
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (setq ac-js2-evaluate-calls t)
+
+(setq ac-use-fuzzy t)
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+(add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+(global-ede-mode 1)
+;; (semantic-mode 1)
 
 ;; -------------------------------------------------------------------
 ;; rainbow-delimiters-mode
@@ -176,10 +191,10 @@
 ;; -------------------------------------------------------------------
 
 (add-hook 'bibtex-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "s-\\") 'bibtex-fill-entry)
-	     (set-fill-column 120)
-	     (bibtex-set-dialect 'biblatex)))
+          '(lambda ()
+             (local-set-key (kbd "s-\\") 'bibtex-fill-entry)
+             (set-fill-column 120)
+             (bibtex-set-dialect 'biblatex)))
 
 (setq bibtex-text-indentation 20)
 (setq bibtex-align-at-equal-sign t)
@@ -191,15 +206,15 @@
 (require 'appt)
 
 (add-hook 'calendar-load-hook
-	  (lambda ()
-	    (calendar-mark-holidays)
-	    (diary-mark-entries)))
+          (lambda ()
+            (calendar-mark-holidays)
+            (diary-mark-entries)))
 (add-hook 'calendar-today-visible-hook
-	  (lambda ()
-	    (calendar-mark-today)))
+          (lambda ()
+            (calendar-mark-today)))
 (add-hook 'diary-list-entries-hook
-	  (lambda ()
-	    (diary-sort-entries)))
+          (lambda ()
+            (diary-sort-entries)))
 (setq diary-file (concat my-emacs-data "diary"))
 (calendar-set-date-style 'iso)
 
@@ -238,37 +253,32 @@ epg-disable-agent"
 (require 'cc-mode)
 
 (add-hook 'prog-mode-hook
-	  (lambda ()
-	    (electric-pair-mode 1)
-	    (hl-line-mode 1)
-	    (set-face-attribute hl-line-face nil :background "#3B3D3A")))
+          (lambda ()
+            (electric-pair-mode 1)
+            (hl-line-mode 1)
+            (set-face-attribute hl-line-face nil :background "#3B3D3A")))
 
 (setq-default indent-tabs-mode nil
-	      tab-width 4)
+              tab-width 4)
 
 (my-add-hooks '(lambda ()
-		 (local-set-key "\C-n" 'next-error)
-		 (local-set-key "\C-p" 'previous-error))
-	      '(c++-mode-hook c-mode-hook python-mode-hook emacs-lisp-mode-hook))
+                 (local-set-key "\C-n" 'next-error)
+                 (local-set-key "\C-p" 'previous-error))
+              '(c++-mode-hook c-mode-hook python-mode-hook emacs-lisp-mode-hook))
 
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 
-(add-hook 'c-mode-hook
-	  (lambda ()
-	    (add-to-list 'ac-sources 'ac-source-c-headers)
-	    (add-to-list 'ac-sources 'ac-source-c-header-symbols t)))
-
 (add-hook 'python-mode-hook
-	  '(lambda ()
-	     (local-unset-key (kbd "<f7>"))
-	     (local-set-key (kbd "<f7>") 'pylint)))
+          '(lambda ()
+             (local-unset-key (kbd "<f7>"))
+             (local-set-key (kbd "<f7>") 'pylint)))
 
 (require 'compile)
 
 (add-hook 'compilation-mode-hook
-	  '(lambda ()
-	     (setq compilation-scroll-output 'first-error)))
+          '(lambda ()
+             (setq compilation-scroll-output 'first-error)))
 
 (setq gdb-many-windows t)
 
@@ -279,8 +289,8 @@ epg-disable-agent"
 (require 'multi-web-mode)
 (setq mweb-default-major-mode 'html-mode)
 (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-		  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")
-		  (js2-mode "<script\\( +type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")))
+                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")
+                  (js2-mode "<script\\( +type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")))
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
 
@@ -290,8 +300,8 @@ epg-disable-agent"
 
 (when (require 'deft nil 'noerror)
   (setq deft-extension "org"
-	deft-directory (concat my-emacs-data "deft")
-	deft-text-mode 'org-mode))
+        deft-directory (concat my-emacs-data "deft")
+        deft-text-mode 'org-mode))
 
 ;; -------------------------------------------------------------------
 ;; byte compile source if needed when killing emacs

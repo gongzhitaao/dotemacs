@@ -1,8 +1,19 @@
-symmetrically connected networks
+Neural Network
 
-There are just like the recurrent neural networks, but the
-connections between units are symmetrical, i.e., they have same
-weight in both directions.
+* Symmetrically Connected Networks
 
-Symmectrically connected neural networks without hidden units are
-called "Hopfield nets"
+  There are just like the recurrent neural networks, but the
+  connections between units are symmetrical, i.e., they have same
+  weight in both directions.
+
+  Symmectrically connected neural networks without hidden units are
+  called "Hopfield nets"
+
+* Recurrent NN
+
+  recurrent neural network has the ability to remember the information
+  in the hidden layer for quite a long time.  But currently we don't
+  have a very efficient method to train it.
+
+  IIya Sutskever's recurrent neural network could generate pretty good
+  English sentences after fed with English Wikipedia billions of times.
