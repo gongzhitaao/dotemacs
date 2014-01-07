@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2013-11-20 22:04:30 CST gongzhitaao>
+;;; Time-stamp: <2014-01-06 09:28:43 CST gongzhitaao>
 
 (require 'ibuffer)
 
@@ -20,7 +20,8 @@
                ("Text"
                 (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                     (mode . org-mode)
-                    (mode . markdown-mode)))
+                    (mode . markdown-mode)
+                    (mode . text-mode)))
                ("Coding"
                 (or (mode . shell-script-mode)
                     (mode . sh-mode)

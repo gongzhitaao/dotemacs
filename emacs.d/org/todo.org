@@ -79,6 +79,12 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-01-06 Mon 22:00]
+   CLOCK: [2014-01-06 Mon 21:30]--[2014-01-06 Mon 22:00] =>  0:30
+   - State "DONE"       from "TODO"       [2014-01-05 Sun 18:38]
+   CLOCK: [2014-01-05 Sun 18:05]--[2014-01-05 Sun 18:38] =>  0:33
+   - State "DONE"       from "TODO"       [2014-01-04 Sat 17:57]
+   CLOCK: [2014-01-04 Sat 17:22]--[2014-01-04 Sat 17:57] =>  0:35
    - State "DONE"       from "TODO"       [2014-01-02 Thu 18:01]
    CLOCK: [2014-01-02 Thu 17:30]--[2014-01-02 Thu 18:01] =>  0:31
    - State "DONE"       from "TODO"       [2014-01-01 Wed 18:12]
@@ -440,10 +446,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-01-02 Thu 18:01]
+   :LAST_REPEAT: [2014-01-06 Mon 22:00]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-01-03 Fri .+1d>
+   SCHEDULED: <2014-01-07 Tue .+1d>
 
 *** TODO OJ
     SCHEDULED: <2013-08-31 Sat +1d>
@@ -465,8 +471,11 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-01-03 Fri .+1d>
+    SCHEDULED: <2014-01-07 Tue .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-06 Mon 21:30]
+    - State "DONE"       from "TODO"       [2014-01-05 Sun 18:05]
+    - State "DONE"       from "TODO"       [2014-01-04 Sat 17:22]
     - State "DONE"       from "TODO"       [2014-01-02 Thu 21:00]
     - State "DONE"       from "TODO"       [2014-01-01 Wed 17:43]
     - State "DONE"       from "TODO"       [2013-12-30 Mon 17:17]
@@ -541,28 +550,30 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-01-02 Thu 21:00]
+    :LAST_REPEAT: [2014-01-06 Mon 21:30]
     :END:
 
 *** TODO Capital Journey
-    DEADLINE: <2014-01-12 Sun +1m>
+    DEADLINE: <2014-02-12 Wed +1m>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-03 Fri 09:39]
     - State "DONE"       from "TODO"       [2013-12-17 Tue 14:23]
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2013-12-17 Tue 14:23]
+    :LAST_REPEAT: [2014-01-03 Fri 09:39]
     :END:
 
 *** TODO Discover Card
-    DEADLINE: <2014-01-04 Sat +1m>
+    DEADLINE: <2014-02-04 Tue +1m>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-03 Fri 09:39]
     - State "DONE"       from "TODO"       [2013-12-17 Tue 14:23]
     - State "DONE"       from "TODO"       [2013-11-17 Sun 09:54]
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2013-12-17 Tue 14:23]
+    :LAST_REPEAT: [2014-01-03 Fri 09:39]
     :END:
 
 
