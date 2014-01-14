@@ -79,6 +79,16 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-01-13 Mon 19:15]
+   CLOCK: [2014-01-13 Mon 18:44]--[2014-01-13 Mon 19:15] =>  0:31
+   - State "DONE"       from "TODO"       [2014-01-12 Sun 18:53]
+   CLOCK: [2014-01-12 Sun 18:18]--[2014-01-12 Sun 18:53] =>  0:35
+   - State "DONE"       from "TODO"       [2014-01-11 Sat 18:30]
+   CLOCK: [2014-01-11 Sat 18:08]--[2014-01-11 Sat 18:30] =>  0:22
+   - State "DONE"       from "TODO"       [2014-01-09 Thu 18:57]
+   CLOCK: [2014-01-09 Thu 18:17]--[2014-01-09 Thu 18:57] =>  0:40
+   - State "DONE"       from "TODO"       [2014-01-08 Wed 18:16]
+   CLOCK: [2014-01-08 Wed 17:45]--[2014-01-08 Wed 18:16] =>  0:31
    - State "DONE"       from "TODO"       [2014-01-06 Mon 22:00]
    CLOCK: [2014-01-06 Mon 21:30]--[2014-01-06 Mon 22:00] =>  0:30
    - State "DONE"       from "TODO"       [2014-01-05 Sun 18:38]
@@ -446,10 +456,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-01-06 Mon 22:00]
+   :LAST_REPEAT: [2014-01-13 Mon 19:15]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-01-07 Tue .+1d>
+   SCHEDULED: <2014-01-14 Tue .+1d>
 
 *** TODO OJ
     SCHEDULED: <2013-08-31 Sat +1d>
@@ -471,8 +481,10 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-01-07 Tue .+1d>
+    SCHEDULED: <2014-01-12 Sun .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-11 Sat 18:08]
+    - State "DONE"       from "TODO"       [2014-01-08 Wed 17:16]
     - State "DONE"       from "TODO"       [2014-01-06 Mon 21:30]
     - State "DONE"       from "TODO"       [2014-01-05 Sun 18:05]
     - State "DONE"       from "TODO"       [2014-01-04 Sat 17:22]
@@ -550,7 +562,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-01-06 Mon 21:30]
+    :LAST_REPEAT: [2014-01-11 Sat 18:08]
     :END:
 
 *** TODO Capital Journey

@@ -1,11 +1,6 @@
-* why are things creepy
+* dataset
 
-https://www.youtube.com/watch?v=PEikGKDVsCc
+Summarize the datasets for testing neural network.
 
-vague and ambiguity
-
-uncanny valley
-An urge to jump affirms the urge live by Hames JL.
-
-Horrible--Horrific
-Terrible--Terrific
+1. CIFAR
+2. SVHN
