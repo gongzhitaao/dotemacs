@@ -1,0 +1,79 @@
+* Neural Network Papers
+
+This is a the notes of papers I read about neural network.
+
+** Understanding the difficulty of training deep feed-forward neural networks
+
+*** Assumptions
+
+Implicit assumptions for its theoretical derivation is:
+
+1. Input of the network has expectation of zero.
+2. All random variables, i.e., the weights, derivatives and etc.,
+   have expectation of zero.
+
+The reason for the above is that:
+
+Var(XY) = Var(X) * Var(Y) + Var(X) * E(Y)**2 + Var(Y) * E(X) ** 2
+
+For independent X, Y, in order to obtain:
+
+Var(XY) = Var(X) * Var(Y)
+
+We need E(X) = E(Y) = 0.
+
+*** Normalized initialization
+
+The weights with normalized initialization have a constant variance
+irrelevant to the depth of the network.
+
+** Efficient Backprop
+
+Tricks for improving convergence.
+
+1. Empirical risk minimization 40, 41
+2. Decomposing the generalization error to two terms: bias and
+   variance 12. It can be shown that the minimum total error will
+   occur when the sum of bias and variance are minimal.
+3. Advantages of stochastic training over batch training:
+   1) stochastic training is usually much faster.
+   2) stochastic training often results in better solutions.
+   3) stochastic training can be used for tracking changes.
+4. Advantages of batch training over stochastic training:
+   1) conditions of convergence is well understood.
+   2) many acceleration techniques only operate in batch mode.
+   3) theoretical analysis of the weight dynamics and convergence
+      rates are much simpler.
+5. Shuffling the examples and choose examples with maximum
+   information content.  But this might learn the features of the
+   *data outliers*.
+   1) Shuffle the training set so that successive training examples
+      rarely belong to the same class
+   2) Present input examples that produce a large error more
+      frequently than examples that produce a small error.
+6. Transforming the inputs.
+   1) The average of each input variable over the training set should
+      be close to zero.
+   2) Scale input variables to that their convariance are about the same.
+   3) Input variables should be uncorrelated if possible.
+7. Sigmoid:
+   1) Recommended sigmoid 19: f(x) = 1.7159 tanh(2/3 x)
+   2) Choose target tangent values at the point of the maximum second
+      derivative on the sigmoid so as to avoid saturating the output
+      units.
+8. Initializing weights.
+   1) weights should be chosen *randomly* and in such way that the
+      sigmoid is primarily *activated in its linear range*.
+   2) randomly distributed with *mean zero* and *standard deviation*
+      \sigma = m^{-1/2}, where m is the fan-in (the number of
+      connections feeding into the node), assuming the inputs to a
+      unit are uncorrelated with variance 1.
+9. Equalize the learning speed.
+   1) Give each weight its own learning rate.
+   2) learning rate should be proportional to the square root of the
+      number of inputs to the unit
+   3) weights in lowers layers should typically be larger than in the
+      higher layers.
+10. Section 5, reasoning behind Hessian. Needs further experimenting.
+
+#  LocalWords:  XY Backprop outliers convariance Sigmoid sigmoid tanh
