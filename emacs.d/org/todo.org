@@ -79,6 +79,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-01-27 Mon 18:22]
+   CLOCK: [2014-01-27 Mon 17:51]--[2014-01-27 Mon 18:22] =>  0:31
+   - State "DONE"       from "TODO"       [2014-01-25 Sat 18:32]
+   CLOCK: [2014-01-25 Sat 17:48]--[2014-01-25 Sat 18:32] =>  0:44
    - State "DONE"       from "TODO"       [2014-01-24 Fri 19:01]
    CLOCK: [2014-01-24 Fri 18:29]--[2014-01-24 Fri 19:01] =>  0:32
    - State "DONE"       from "TODO"       [2014-01-13 Mon 19:15]
@@ -458,14 +462,15 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-01-24 Fri 19:01]
+   :LAST_REPEAT: [2014-01-27 Mon 18:22]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-01-25 Sat .+1d>
+   SCHEDULED: <2014-01-28 Tue .+1d>
 
 *** TODO OJ
-    SCHEDULED: <2013-08-31 Sat +1d>
+    SCHEDULED: <2014-01-26 Sun .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-25 Sat 18:43]
     - State "DONE"       from "TODO"       [2013-09-04 Wed 22:09]
     - State "DONE"       from "TODO"       [2013-09-01 Sun 00:21]
     - State "DONE"       from "TODO"       [2013-08-31 Sat 00:31]
@@ -479,12 +484,14 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2013-09-04 Wed 22:09]
+    :LAST_REPEAT: [2014-01-25 Sat 18:43]
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-01-25 Sat .+1d>
+    SCHEDULED: <2014-01-28 Tue .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-01-27 Mon 17:50]
+    - State "DONE"       from "TODO"       [2014-01-25 Sat 17:48]
     - State "DONE"       from "TODO"       [2014-01-24 Fri 18:29]
     - State "DONE"       from "TODO"       [2014-01-11 Sat 18:08]
     - State "DONE"       from "TODO"       [2014-01-08 Wed 17:16]
@@ -565,7 +572,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-01-24 Fri 18:29]
+    :LAST_REPEAT: [2014-01-27 Mon 17:50]
     :END:
 
 *** TODO Capital Journey

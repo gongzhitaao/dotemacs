@@ -76,4 +76,47 @@ Tricks for improving convergence.
       higher layers.
 10. Section 5, reasoning behind Hessian. Needs further experimenting.
 
+** Accelerated Learning in Layered Neural Networks
+
+Compare two error functions: quadratic and cross entropy (logarithm).
+
+*** Conclusions
+
+1. Logarithm does not improve the generalization ability of the
+   resulting network.  Its advantage resides in systemic reductions
+   in learning time, as large as an order of magnitude for large
+   receptive field, /p/.
+2. *Conjecture*: A larger density of local minima that are not global
+   minima in quadratic error surface is responsible for the more
+   frequent failure.  It's supported that learning constant for
+   logarithm is much smaller than quadratic function.
+3. It *remains open* that logarithm is always better than quadratic
+   function.
+
+*** Test Methods
+
+1. Data set: *Contiguity problem*, which is a classification of
+   binary input patterns I = (I_1, I_2, I_3, ..., I_n), I_i = 0, 1
+   for all 1 <= i <= n, into classes according to the number k of
+   blocks of +1's in the pattern.  For example, for N = 10, I =
+   (0110011100) corresponds to k = 2, while I = (0101101111)
+   corresponds to k = 3.  This classification leads to (1 + k_{max})
+   categories corresponding to 0 <= k <= k_{max}, where k_{max}
+   =ceil(N/2).  A simpler classification task used is the dichotomy
+   into two classes corresponding to k < k_0 and k > k_0.
+
+   Here, the author used k = 2 and k = 3, 330 and 462 total available
+   patterns.  Out of which, 50 examples of each case is selected.
+   Here N = 10.
+
+2. Network parameters:
+
+   1) 3-layer network, 10-10-1, the first being input layers.
+   2) Network is not fully connected, each unit in layers 1 receives
+      input from only the /p/ subsequent units below it. the parameter
+      /p/ can be interpreted as the width of a receptive field.
+
+3. Training error and generalization error are monitored.
+
 #  LocalWords:  XY Backprop outliers convariance Sigmoid sigmoid tanh
+#  LocalWords:  minima
