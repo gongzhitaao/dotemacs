@@ -1,53 +1,53 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-01-06 09:28:43 CST gongzhitaao>
+;;; Time-stamp: <2014-02-03 15:25:26 CST gongzhitaao>
 
 (require 'ibuffer)
 
 (setq ibuffer-saved-filter-groups
-      (quote (("default"
-               ("Planner"
-                (or (mode . org-agenda-mode)
-                    (filename . "Documents/dotemacs/emacs.d/org/")
-                    (mode . bbdb-mode)
-                    (name . "^\\*Calendar\\*$")
-                    (name . "^diary$")))
-               ("Dired" (mode . dired-mode))
-               ("Web"
-                (or (mode . html-mode)
-                    (mode . css-mode)
-                    (name . "\\.js")
-                    (name . "\\.php")))
-               ("Text"
-                (or (name . "\\.\\(tex\\|bib\\|csv\\)")
-                    (mode . org-mode)
-                    (mode . markdown-mode)
-                    (mode . text-mode)))
-               ("Coding"
-                (or (mode . shell-script-mode)
-                    (mode . sh-mode)
-                    (mode . emacs-lisp-mode)
-                    (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
-                    (name . "\\.py")
-                    (name . "\\.ya?ml")
-                    (name . "\\.sql")
-                    (name . "\\.m")))
-               ("Mail"
-                (or (mode . message-mode)
-                    (mode . mail-mode)
-                    (mode . gnus-group-mode)
-                    (mode . gnus-summary-mode)
-                    (mode . gnus-article-mode)
-                    (mode . gnus-server-mode)
-                    (mode . gnus-browse-mode)
-                    (name . "^\\.newsrc-dribble")))
-               ("Helper"
-                (or (mode . makefile-mode)
-                    (mode . cmake-mode)
-                    (mode . calc-mode)
-                    (mode . info-mode)
-                    (mode . Info-mode)
-                    (mode . help-mode)
-                    (name . "^\\*scratch\\*$")))))))
+      `(("default"
+         ("Planner"
+          (or (mode . org-agenda-mode)
+              (filename . ,(concat my-emacs-root "emacs.d/org/"))
+              (mode . bbdb-mode)
+              (name . "^\\*Calendar\\*$")
+              (name . "^diary$")))
+         ("Dired" (mode . dired-mode))
+         ("Web"
+          (or (mode . html-mode)
+              (mode . css-mode)
+              (name . "\\.js")
+              (name . "\\.php")))
+         ("Text"
+          (or (name . "\\.\\(tex\\|bib\\|csv\\)")
+              (mode . org-mode)
+              (mode . markdown-mode)
+              (mode . text-mode)))
+         ("Coding"
+          (or (mode . shell-script-mode)
+              (mode . sh-mode)
+              (mode . emacs-lisp-mode)
+              (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
+              (name . "\\.py")
+              (name . "\\.ya?ml")
+              (name . "\\.sql")
+              (name . "\\.m")))
+         ("Mail"
+          (or (mode . message-mode)
+              (mode . mail-mode)
+              (mode . gnus-group-mode)
+              (mode . gnus-summary-mode)
+              (mode . gnus-article-mode)
+              (mode . gnus-server-mode)
+              (mode . gnus-browse-mode)
+              (name . "^\\.newsrc-dribble")))
+         ("Helper"
+          (or (mode . makefile-mode)
+              (mode . cmake-mode)
+              (mode . calc-mode)
+              (mode . info-mode)
+              (mode . Info-mode)
+              (mode . help-mode)
+              (name . "^\\*scratch\\*$"))))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
