@@ -118,5 +118,9 @@ Compare two error functions: quadratic and cross entropy (logarithm).
 
 3. Training error and generalization error are monitored.
 
+** A Regularization term to avoid the saturation of the sigmoids in multilayer neural network
+
+
+
 #  LocalWords:  XY Backprop outliers convariance Sigmoid sigmoid tanh
 #  LocalWords:  minima

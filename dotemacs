@@ -2,7 +2,7 @@
 ;; Time-stamp: <2013-12-30 09:53:56 CST gongzhitaao>
 
 (defconst my-emacs-root
-  (expand-file-name "~/Documents/dotemacs/")
+  (expand-file-name "~/Documents/dotfiles/dotemacs/")
   "my emacs load path")
 
 (defconst my-emacs-elc

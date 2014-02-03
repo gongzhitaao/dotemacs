@@ -61,7 +61,7 @@
 ;; -------------------------------------------------------------------
 ;; Agenda
 ;; -------------------------------------------------------------------
-(setq org-agenda-files "~/Documents/dotemacs/emacs.d/org/orgfile")
+(setq org-agenda-files (concat my-emacs-root "emacs.d/org/orgfile"))
 
 (setq org-agenda-dim-blocked-task t)
 (setq org-agenda-compact-blocks t)
