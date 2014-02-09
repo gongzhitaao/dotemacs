@@ -79,6 +79,13 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-02-08 Sat 18:50]
+   CLOCK: [2014-02-08 Sat 18:12]--[2014-02-08 Sat 18:50] =>  0:38
+   - State "DONE"       from "TODO"       [2014-02-05 Wed 18:12]
+   CLOCK: [2014-02-05 Wed 17:38]--[2014-02-05 Wed 18:12] =>  0:34
+   - State "DONE"       from "TODO"       [2014-02-04 Tue 22:01]
+   - State "DONE"       from "TODO"       [2014-02-03 Mon 18:20]
+   CLOCK: [2014-02-03 Mon 17:33]--[2014-02-03 Mon 18:20] =>  0:47
    - State "DONE"       from "TODO"       [2014-01-30 Thu 18:22]
    CLOCK: [2014-01-30 Thu 17:29]--[2014-01-30 Thu 18:22] =>  0:53
    - State "DONE"       from "TODO"       [2014-01-28 Tue 18:22]
@@ -466,10 +473,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-01-30 Thu 18:22]
+   :LAST_REPEAT: [2014-02-08 Sat 18:50]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-01-31 Fri .+1d>
+   SCHEDULED: <2014-02-09 Sun .+1d>
 
 *** TODO OJ
     SCHEDULED: <2014-01-26 Sun .+1d>
@@ -492,8 +499,11 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-01-31 Fri .+1d>
+    SCHEDULED: <2014-02-09 Sun .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-02-08 Sat 18:08]
+    - State "DONE"       from "TODO"       [2014-02-05 Wed 17:14]
+    - State "DONE"       from "TODO"       [2014-02-03 Mon 17:25]
     - State "DONE"       from "TODO"       [2014-01-30 Thu 17:22]
     - State "DONE"       from "TODO"       [2014-01-28 Tue 17:36]
     - State "DONE"       from "TODO"       [2014-01-27 Mon 17:50]
@@ -578,7 +588,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-01-30 Thu 17:22]
+    :LAST_REPEAT: [2014-02-08 Sat 18:08]
     :END:
 
 *** TODO Capital Journey

@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2013-12-18 16:42:15 CST gongzhitaao>
+;;; Time-stamp: <2014-02-08 08:10:20 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -145,7 +145,7 @@
 ;; -------------------------------------------------------------------
 ;; BBDB thing
 ;; -------------------------------------------------------------------
-(setq bbdb-file "contacts.bbdb"
+(setq bbdb-file (concat my-emacs-root "emacs.d/org/contacts.bbdb")
       bbdb-north-american-phone-numbers-p nil)
 
 ;; -------------------------------------------------------------------
