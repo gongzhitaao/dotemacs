@@ -1,5 +1,5 @@
 ;;; misc.conf.el --- Extensive configuration for Emacs
-;;; Time-stamp: <2013-12-30 09:50:37 CST gongzhitaao>
+;;; Time-stamp: <2014-03-06 22:17:24 CST gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; font and encoding system
@@ -252,6 +252,9 @@ epg-disable-agent"
 ;; -------------------------------------------------------------------
 (require 'cc-mode)
 
+(when (require 'fill-column-indicator nil 'noerror)
+  (setq fci-limit fill-column))
+
 (add-hook 'prog-mode-hook
           (lambda ()
             (electric-pair-mode 1)
@@ -309,6 +312,12 @@ epg-disable-agent"
 (add-hook 'kill-emacs-hook
           (lambda ()
             (byte-recompile-directory my-emacs-root 0)))
+
+(ecb-activate)
+(setq ecb-layout-name "left3")
+(ecb-redraw-layout)
+(setq ecb-tip-of-the-day nil)
+(setq ecb-show-sources-in-directories-buffer 'always)
 
 (provide 'misc.conf)
 ;;; misc.config.el ends here

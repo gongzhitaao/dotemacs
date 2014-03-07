@@ -30,10 +30,22 @@
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
 
+(global-set-key (kbd "C-|") 'fci-mode)
+
 (global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
 (global-set-key (kbd "s-=") 'align-regexp)
 (global-set-key (kbd "s-\\")
                 (function (lambda ()
                             (interactive)
                             (my-apply-region-or-line 'indent-region))))
+
+(global-set-key (kbd "C-x C-;") 'ecb-activate)
+(global-set-key (kbd "C-x C-'") 'ecb-deactivate)
+(global-set-key (kbd "C-;") 'ecb-toggle-ecb-windows)
+
+(global-set-key (kbd "C-)") 'ecb-goto-window-edit1)
+(global-set-key (kbd "C-!") 'ecb-goto-window-directories)
+(global-set-key (kbd "C-@") 'ecb-goto-window-sources)
+(global-set-key (kbd "C-#") 'ecb-goto-window-methods)
+
 ;;; keybinding.el ends here

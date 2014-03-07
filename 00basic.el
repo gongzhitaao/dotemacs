@@ -1,5 +1,5 @@
 ;;; basic.el --- Basic configuration for Emacs
-;;; Time-stamp: <2013-12-18 17:05:36 CST gongzhitaao>
+;;; Time-stamp: <2014-02-22 11:26:38 CST gongzhitaao>
 
 ;; highlight parenthesis
 (show-paren-mode t)
@@ -95,6 +95,8 @@ line instead."
 
 ;; CamelCase will behave like two words
 (global-subword-mode 1)
+
+(setq fill-column 80)
 
 ;; so you won't accidentally close emacs.
 (setq confirm-kill-emacs 'yes-or-no-p)
