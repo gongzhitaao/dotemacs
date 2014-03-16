@@ -1,5 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2014-03-06 22:16:56 CST gongzhitaao>
+;; Time-stamp: <2014-03-08 15:14:48 CST gongzhitaao>
 
 (defconst my-emacs-root
   (expand-file-name "~/Documents/dotfiles/dotemacs/")
@@ -47,6 +47,11 @@
   (dolist (file files) (load (file-name-sans-extension file))))
 
 (custom-set-variables
- '(ecb-options-version "2.40"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ecb-options-version "2.40")
+ '(ecb-layout-name "left3"))
 
 (server-start)
