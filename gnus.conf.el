@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-03-16 10:13:04 CDT gongzhitaao>
+;;; Time-stamp: <2014-03-17 22:48:08 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -19,9 +19,105 @@
                (nnimap-stream network)
                (nnimap-server-port 143)))
 
+(defun header-age-level (header)
+  "Return the age of the header
+
+The age are divided into three levels:
+0: no more than one day old
+1: no more than one week old
+2: otherwise
+
+Based on the age of the header, I set different foreground color
+for the header string.
+"
+  (let* ((now (float-time (current-time)))
+         (one-day (* 24 60 60))
+         (one-week (* 7 24 60 60))
+         (header-date-time (float-time (safe-date-to-time
+                                        (mail-header-date header))))
+         (header-date-time-string (format-time-string
+                                   "%Y-%m-%d %H:%M"
+                                   (seconds-to-time header-date-time)))
+         (mail-age (- now header-date-time)))
+    (cond
+     ((<= mail-age one-day) 0)
+     ((<= mail-age one-week) 1)
+     (t 2))))
+
+
+(copy-face 'default 'my-date-one-day-old-face)
+(copy-face 'default 'my-date-one-week-old-face)
+(copy-face 'default 'my-date-more-than-one-week-old-face)
+(set-face-foreground 'my-date-one-day-old-face "#ADFF2F")
+(set-face-foreground 'my-date-one-week-old-face "#79B221")
+(set-face-foreground 'my-date-more-than-one-week-old-face "#456613")
+
+(copy-face 'default 'my-author-one-day-old-face)
+(copy-face 'default 'my-author-one-week-old-face)
+(copy-face 'default 'my-author-more-than-one-week-old-face)
+(set-face-foreground 'my-author-one-day-old-face "#FFD700")
+(set-face-foreground 'my-author-one-week-old-face "#B29600")
+(set-face-foreground 'my-author-more-than-one-week-old-face "#665600")
+
+(defun gnus-user-format-function-color-date (header)
+  (let ((header-date-time-string (format-time-string
+                                  "%Y-%m-%d %H:%M"
+                                  (safe-date-to-time
+                                   (mail-header-date header))))
+        (age-level (header-age-level header)))
+    (case age-level
+      (0 (propertize header-date-time-string
+                     'face 'my-date-one-day-old-face
+                     'gnus-face t))
+      (1 (propertize header-date-time-string
+                     'face 'my-date-one-week-old-face
+                     'gnus-face t))
+      (otherwise (propertize header-date-time-string
+                             'face 'my-date-more-than-one-week-old-face
+                             'gnus-face t)))))
+
+(defun s-trim-left (s)
+  "Remove whitespace at the beginning of S."
+  (if (string-match "\\`[ \t\n\r]+" s)
+      (replace-match "" t t s)
+    s))
+
+(defun s-trim-right (s)
+  "Remove whitespace at the end of S."
+  (if (string-match "[ \t\n\r]+\\'" s)
+      (replace-match "" t t s)
+    s))
+
+(defun s-trim (s)
+  "Remove whitespace at the beginning and end of S."
+  (s-trim-left (s-trim-right s)))
+
+(defun extract-author (str)
+  "Extract author from a string formated as `Author Name <email
+address>'"
+  (let ((author (s-trim (substring str 0 (string-match "<" str)))))
+    (if (string= "" author)
+        str
+      author)))
+
+(defun gnus-user-format-function-color-author (header)
+  (let ((header-author-string (extract-author (mail-header-from header)))
+        (age-level (header-age-level header)))
+    (case age-level
+      (0 (propertize header-author-string
+                     'face 'my-author-one-day-old-face
+                     'gnus-face t))
+      (1 (propertize header-author-string
+                     'face 'my-author-one-week-old-face
+                     'gnus-face t))
+      (otherwise (propertize header-author-string
+                             'face 'my-author-more-than-one-week-old-face
+                             'gnus-face t)))))
+
 (setq-default
- gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B%s%)\n"
- gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
+ ;; gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B%s%)\n"
+ ;; gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
+ gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30u&color-author;  %B%s%)\n"
  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
  gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
  gnus-sum-thread-tree-false-root ""

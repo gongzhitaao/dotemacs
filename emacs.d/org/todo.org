@@ -85,6 +85,8 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-03-17 Mon 19:10]
+   CLOCK: [2014-03-17 Mon 18:30]--[2014-03-17 Mon 19:10] =>  0:40
    - State "DONE"       from "TODO"       [2014-03-14 Fri 18:02]
    CLOCK: [2014-03-14 Fri 17:36]--[2014-03-14 Fri 18:02] =>  0:26
    - State "DONE"       from "TODO"       [2014-03-13 Thu 09:01]
@@ -512,10 +514,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-03-14 Fri 18:02]
+   :LAST_REPEAT: [2014-03-17 Mon 19:10]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-03-15 Sat .+1d>
+   SCHEDULED: <2014-03-18 Tue .+1d>
 
 *** TODO OJ
     SCHEDULED: <2014-01-26 Sun .+1d>
@@ -538,8 +540,9 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-03-15 Sat .+1d>
+    SCHEDULED: <2014-03-18 Tue .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-03-17 Mon 18:30]
     - State "DONE"       from "TODO"       [2014-03-14 Fri 17:12]
     - State "DONE"       from "TODO"       [2014-03-10 Mon 18:47]
     - State "DONE"       from "TODO"       [2014-03-09 Sun 18:20]
@@ -639,7 +642,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-03-14 Fri 17:12]
+    :LAST_REPEAT: [2014-03-17 Mon 18:30]
     :END:
 
 *** TODO Capital Journey
