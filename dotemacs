@@ -1,33 +1,9 @@
 ;; -*- mode: emacs-lisp -*-
-;; Time-stamp: <2014-03-08 15:14:48 CST gongzhitaao>
+;; Time-stamp: <2014-04-06 21:10:03 CDT gongzhitaao>
 
 (defconst my-emacs-root
   (expand-file-name "~/Documents/dotfiles/dotemacs/")
   "my emacs load path")
-
-(defconst my-emacs-elc
-  (concat my-emacs-root "elc/")
-  "Compiled elisp files to speedup init")
-
-;; create this directory is not exist
-(unless (file-exists-p my-emacs-elc) (make-directory my-emacs-elc))
-
-;; add link to the uncompiled file to this directory
-(let ((confs (directory-files my-emacs-root nil ".*\\.el")))
-  (dolist (conf confs)
-    (unless (file-exists-p conf)
-      (message (expand-file-name conf my-emacs-root))
-      (make-symbolic-link (expand-file-name conf my-emacs-root)
-			  (expand-file-name conf my-emacs-elc) t))))
-
-;; put all the compiled files in MY-EMACS-ELC folder to keep clean
-(defun my-dest-function (filename)
-  (concat my-emacs-elc
-          (file-name-sans-extension (file-name-nondirectory filename))
-          ".elc"))
-(setq byte-compile-dest-file-function 'my-dest-function)
-
-(add-to-list 'load-path my-emacs-elc)
 
 (defconst my-emacs-cache
   (concat my-emacs-root "cache/")
@@ -37,6 +13,8 @@
 (defconst my-emacs-data
   (concat my-emacs-root "emacs.d/")
   "Data files for emacs, like orgmode, diary and etc.")
+
+(add-to-list 'load-path "/home/gongzhitaao/Documents/dotfiles/dotemacs")
 
 (load "00basic")
 (load "01helper")

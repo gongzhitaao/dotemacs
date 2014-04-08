@@ -1,5 +1,5 @@
 ;;; misc.conf.el --- Extensive configuration for Emacs
-;;; Time-stamp: <2014-03-09 15:47:25 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-07 19:17:43 CDT gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; font and encoding system
@@ -146,37 +146,37 @@
 (require 'yasnippet)
 (auto-insert-mode 1)
 
-(require 'auto-complete)
-(global-auto-complete-mode 1)
+;; (require 'auto-complete)
+;; (global-auto-complete-mode 1)
 
-(require 'auto-complete-c-headers)
-(add-to-list 'ac-sources 'ac-source-c-headers)
+;; (require 'auto-complete-c-headers)
+;; (add-to-list 'ac-sources 'ac-source-c-headers)
 
-(require 'ac-c-headers)
-(add-hook 'c-mode-hook
-          (lambda ()
-            (add-to-list 'ac-sources 'ac-source-c-headers)
-            (add-to-list 'ac-sources 'ac-source-c-header-symbols t)))
+;; (require 'ac-c-headers)
+;; (add-hook 'c-mode-hook
+;;           (lambda ()
+;;             (add-to-list 'ac-sources 'ac-source-c-headers)
+;;             (add-to-list 'ac-sources 'ac-source-c-header-symbols t)))
 
-(require 'ac-math)
-(add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
-(defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
-  (setq ac-sources
-        (append '(ac-source-math-unicode
-                  ac-source-math-latex
-                  ac-source-latex-commands)
-                ac-sources)))
-(add-hook 'latex-mode-hook 'ac-latex-mode-setup)
-(add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
-(setq ac-math-unicode-in-math-p t)
+;; (require 'ac-math)
+;; (add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
+;; (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
+;;   (setq ac-sources
+;;         (append '(ac-source-math-unicode
+;;                   ac-source-math-latex
+;;                   ac-source-latex-commands)
+;;                 ac-sources)))
+;; (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+;; (add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
+;; (setq ac-math-unicode-in-math-p t)
 
-(add-hook 'js2-mode-hook 'ac-js2-mode)
-(setq ac-js2-evaluate-calls t)
+;; (add-hook 'js2-mode-hook 'ac-js2-mode)
+;; (setq ac-js2-evaluate-calls t)
 
-(setq ac-use-fuzzy t)
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
-(add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
-(global-ede-mode 1)
+;; (setq ac-use-fuzzy t)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+;; (global-ede-mode 1)
 ;; (semantic-mode 1)
 
 ;; -------------------------------------------------------------------
@@ -269,8 +269,8 @@ epg-disable-agent"
                  (local-set-key "\C-p" 'previous-error))
               '(c++-mode-hook c-mode-hook python-mode-hook emacs-lisp-mode-hook))
 
-(require 'google-c-style)
-(add-hook 'c-mode-common-hook 'google-set-c-style)
+;; (require 'google-c-style)
+;; (add-hook 'c-mode-common-hook 'google-set-c-style)
 
 (add-hook 'python-mode-hook
           '(lambda ()
@@ -289,13 +289,13 @@ epg-disable-agent"
 ;; Multi web mode
 ;; -------------------------------------------------------------------
 
-(require 'multi-web-mode)
-(setq mweb-default-major-mode 'html-mode)
-(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")
-                  (js2-mode "<script\\( +type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")))
-(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
-(multi-web-global-mode 1)
+;; (require 'multi-web-mode)
+;; (setq mweb-default-major-mode 'html-mode)
+;; (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+;;                   (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")
+;;                   (js2-mode "<script\\( +type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")))
+;; (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+;; (multi-web-global-mode 1)
 
 ;; -------------------------------------------------------------------
 ;; deft

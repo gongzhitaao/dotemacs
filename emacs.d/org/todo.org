@@ -85,6 +85,13 @@ http://www.imdb.com/title/tt1323594/
    :END:
 *** TODO Excercise
    :LOGBOOK:
+   - State "DONE"       from "TODO"       [2014-04-06 Sun 19:27]
+   CLOCK: [2014-04-06 Sun 18:56]--[2014-04-06 Sun 19:27] =>  0:31
+   - State "DONE"       from "TODO"       [2014-04-05 Sat 18:43]
+   - State "DONE"       from "TODO"       [2014-04-02 Wed 18:46]
+   CLOCK: [2014-04-02 Wed 18:18]--[2014-04-02 Wed 18:46] =>  0:28
+   - State "DONE"       from "TODO"       [2014-03-31 Mon 18:34]
+   CLOCK: [2014-03-31 Mon 18:01]--[2014-03-31 Mon 18:34] =>  0:33
    - State "DONE"       from "TODO"       [2014-03-17 Mon 19:10]
    CLOCK: [2014-03-17 Mon 18:30]--[2014-03-17 Mon 19:10] =>  0:40
    - State "DONE"       from "TODO"       [2014-03-14 Fri 18:02]
@@ -514,10 +521,10 @@ http://www.imdb.com/title/tt1323594/
    :END:
    :PROPERTIES:
    :Effort:   0:30
-   :LAST_REPEAT: [2014-03-17 Mon 19:10]
+   :LAST_REPEAT: [2014-04-06 Sun 19:27]
    :STYLE:    habit
    :END:
-   SCHEDULED: <2014-03-18 Tue .+1d>
+   SCHEDULED: <2014-04-07 Mon .+1d>
 
 *** TODO OJ
     SCHEDULED: <2014-01-26 Sun .+1d>
@@ -540,8 +547,12 @@ http://www.imdb.com/title/tt1323594/
     :END:
 
 *** TODO Dota Video
-    SCHEDULED: <2014-03-18 Tue .+1d>
+    SCHEDULED: <2014-04-07 Mon .+1d>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-04-06 Sun 18:56]
+    - State "DONE"       from "TODO"       [2014-04-05 Sat 18:43]
+    - State "DONE"       from "TODO"       [2014-04-02 Wed 18:18]
+    - State "DONE"       from "TODO"       [2014-03-31 Mon 18:01]
     - State "DONE"       from "TODO"       [2014-03-17 Mon 18:30]
     - State "DONE"       from "TODO"       [2014-03-14 Fri 17:12]
     - State "DONE"       from "TODO"       [2014-03-10 Mon 18:47]
@@ -642,12 +653,13 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-03-17 Mon 18:30]
+    :LAST_REPEAT: [2014-04-06 Sun 18:56]
     :END:
 
 *** TODO Capital Journey
-    DEADLINE: <2014-04-12 Sat +1m>
+    DEADLINE: <2014-05-12 Mon +1m>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-04-02 Wed 18:18]
     - State "DONE"       from "TODO"       [2014-02-26 Wed 18:30]
     - State "DONE"       from "TODO"       [2014-01-30 Thu 17:22]
     - State "DONE"       from "TODO"       [2014-01-03 Fri 09:39]
@@ -655,12 +667,13 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-02-26 Wed 18:30]
+    :LAST_REPEAT: [2014-04-02 Wed 18:18]
     :END:
 
 *** TODO Discover Card
-    DEADLINE: <2014-04-04 Fri +1m>
+    DEADLINE: <2014-05-04 Sun +1m>
     :LOGBOOK:
+    - State "DONE"       from "TODO"       [2014-04-02 Wed 18:18]
     - State "DONE"       from "TODO"       [2014-02-19 Wed 08:52]
     - State "DONE"       from "TODO"       [2014-02-01 Sat 11:01]
     - State "DONE"       from "TODO"       [2014-01-03 Fri 09:39]
@@ -669,7 +682,7 @@ http://www.imdb.com/title/tt1323594/
     :END:
     :PROPERTIES:
     :STYLE:    habit
-    :LAST_REPEAT: [2014-02-19 Wed 08:52]
+    :LAST_REPEAT: [2014-04-02 Wed 18:18]
     :END:
 
 
