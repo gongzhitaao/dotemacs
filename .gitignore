@@ -1,2 +1,6 @@
 elc
-cache/
+ac-comphist.dat
+ede-projects.el
+elpa/
+personal/
+savefile/

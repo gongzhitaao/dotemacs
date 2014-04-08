@@ -7,7 +7,7 @@
       `(("default"
          ("Planner"
           (or (mode . org-agenda-mode)
-              (filename . ,(concat my-emacs-root "emacs.d/org/"))
+              (filename . "/home/gongzhitaao/.emacs.d/personal/org/")
               (mode . bbdb-mode)
               (name . "^\\*Calendar\\*$")
               (name . "^diary$")))

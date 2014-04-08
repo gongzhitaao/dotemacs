@@ -1,6 +1,0 @@
-* dataset
-
-Summarize the datasets for testing neural network.
-
-1. CIFAR
-2. SVHN

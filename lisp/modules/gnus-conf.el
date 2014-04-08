@@ -1,17 +1,14 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-03-17 22:48:08 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-06 21:46:51 CDT gongzhitaao>
 
 (require 'gnus)
 
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "zzg0009@auburn.edu")
 
-(setq gnus-init-file (concat my-emacs-root "gnus.conf.el"))
+(setq gnus-init-file "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
-
-;; (setq gnus-select-method
-;;       '(nnimap "outlook.office365.com"))
 
 (setq gnus-select-method
       '(nnimap "Tigermail"
@@ -127,15 +124,13 @@ address>'"
  gnus-sum-thread-tree-single-leaf "╰► "
  gnus-sum-thread-tree-vertical "│")
 
+(setq message-confirm-send t)
+
 (setq gnus-posting-styles
       '((".*"
          (signature-file "~/.sig")
          (name "Zhitao Gong")
          (organization "Department of Computer Science & Software Engineering, Auburn University"))))
-
-(setq gnus-parameters
-  '(("nnimap.*"
-     (display . all))))
 
 (setq send-mail-function 'message-send-mail-with-sendmail)
 (setq sendmail-program "msmtp")
@@ -157,4 +152,4 @@ address>'"
 ;; content (that is, part of the message), not as MIME.
 (setq message-forward-as-mime nil)
 
-(provide 'gnus.conf)
+(provide 'gnus-conf)

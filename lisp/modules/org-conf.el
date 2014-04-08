@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-02-08 08:10:20 CST gongzhitaao>
+;;; Time-stamp: <2014-04-07 18:54:38 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -37,7 +37,7 @@
 (setq org-hierarchical-todo-statistics nil)
 (setq org-agenda-include-diary t)
 (setq org-clock-idle-time 10)
-(setq org-directory (concat my-emacs-root "emacs.d/org"))
+(setq org-directory (expand-file-name "org" my-personal-dir))
 (setq org-use-property-inheritance t)
 
 ;; -------------------------------------------------------------------
@@ -61,7 +61,7 @@
 ;; -------------------------------------------------------------------
 ;; Agenda
 ;; -------------------------------------------------------------------
-(setq org-agenda-files (concat my-emacs-root "emacs.d/org/orgfile"))
+(setq org-agenda-files (expand-file-name "orgfile" org-directory))
 
 (setq org-agenda-dim-blocked-task t)
 (setq org-agenda-compact-blocks t)
@@ -82,10 +82,6 @@
       org-habit-following-days 1
       org-agenda-start-with-log-mode t
       org-tags-column -70)
-
-;; (setq org-agenda-category-icon-alist
-;;       '(("Project" "~/Documents/dotemacs/config/img/icon-repeat.png")
-;; ))
 
 ;; -------------------------------------------------------------------
 ;; Clock
@@ -112,55 +108,5 @@
 (setq org-capture-templates
       '(("t" "New TODO" entry
          (file+headline "todo.org" "Tasks")
-         "* %^{Title} %^G\n  %u\n  %?\n\n\n")
-        ("j" "New journal" entry
-         (file+datetree (format "~/Documents/dailydigest/%s.org" (format-time-string "%Y")))
-         "* %^{Brief} %^G\n%?\n\n")))
-
-;; -------------------------------------------------------------------
-;; Publishing
-;; -------------------------------------------------------------------
-(setq org-publish-project-alist
-      '(("poj"
-         :base-directory "~/Documents/oj/gh-pages/report/poj"
-         :publishing-directory "~/Documents/oj/gh-pages/_includes/poj"
-         :recursive t
-         :section-numbers t
-         :skip-before-1st-heading nil
-         :table-of-contents nil
-         :body-only t
-         :sub-superscript {}
-         :email "me@gongzhitaao.org")
-        ("uva"
-         :base-directory "~/Documents/oj/gh-pages/report/uva"
-         :publishing-directory "~/Documents/oj/gh-pages/_includes/uva"
-         :recursive t
-         :section-numbers t
-         :skip-before-1st-heading nil
-         :table-of-contents nil
-         :body-only t
-         :sub-superscript {}
-         :email "me@gongzhitaao.org")))
-
-;; -------------------------------------------------------------------
-;; BBDB thing
-;; -------------------------------------------------------------------
-(setq bbdb-file (concat my-emacs-root "emacs.d/org/contacts.bbdb")
-      bbdb-north-american-phone-numbers-p nil)
-
-;; -------------------------------------------------------------------
-;; Appt
-;; -------------------------------------------------------------------
-(appt-activate 1)
-
-(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-
-(defun my-appt-display (mins-till-appt cur-time msg)
-  "Convinient wrapper for appt popup display"
-  (my-popup (format "Appointment in %s minute(s)" mins-till-appt) msg
-             "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
-             "/usr/share/sounds/ubuntu/stereo/phone-incoming-call.ogg"))
-
-(setq appt-disp-window-function (function my-appt-display))
-
-(provide 'org.conf)
+         "* %^{Title} %^G\n  %u\n  %?\n\n\n")))
+(provide 'org-conf)
