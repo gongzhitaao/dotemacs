@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-06 21:46:51 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-08 10:46:38 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -11,7 +11,7 @@
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
 (setq gnus-select-method
-      '(nnimap "Tigermail"
+      '(nnimap "LocalMail"
                (nnimap-address "localhost")
                (nnimap-stream network)
                (nnimap-server-port 143)))
@@ -73,22 +73,6 @@ for the header string.
                              'face 'my-date-more-than-one-week-old-face
                              'gnus-face t)))))
 
-(defun s-trim-left (s)
-  "Remove whitespace at the beginning of S."
-  (if (string-match "\\`[ \t\n\r]+" s)
-      (replace-match "" t t s)
-    s))
-
-(defun s-trim-right (s)
-  "Remove whitespace at the end of S."
-  (if (string-match "[ \t\n\r]+\\'" s)
-      (replace-match "" t t s)
-    s))
-
-(defun s-trim (s)
-  "Remove whitespace at the beginning and end of S."
-  (s-trim-left (s-trim-right s)))
-
 (defun extract-author (str)
   "Extract author from a string formated as `Author Name <email
 address>'"
@@ -131,6 +115,13 @@ address>'"
          (signature-file "~/.sig")
          (name "Zhitao Gong")
          (organization "Department of Computer Science & Software Engineering, Auburn University"))))
+
+(setq
+ gnus-parameters
+ '(("Tiger/*"
+    (comment . "This is TigerMail with Auburn"))
+   ("Gmail/*"
+    (comment . "This is my personal Gmail"))))
 
 (setq send-mail-function 'message-send-mail-with-sendmail)
 (setq sendmail-program "msmtp")
