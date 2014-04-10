@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-08 10:46:38 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-10 11:09:19 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -7,8 +7,6 @@
 (setq user-mail-address "zzg0009@auburn.edu")
 
 (setq gnus-init-file "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
-
-(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
 (setq gnus-select-method
       '(nnimap "LocalMail"
@@ -110,18 +108,21 @@ address>'"
 
 (setq message-confirm-send t)
 
+(setq message-signature-directory (expand-file-name "signature" my-personal-dir))
 (setq gnus-posting-styles
-      '((".*"
-         (signature-file "~/.sig")
-         (name "Zhitao Gong")
-         (organization "Department of Computer Science & Software Engineering, Auburn University"))))
+      '(("Tiger.*"
+         (address "zzg0009@auburn.edu")
+         (name "Zhitao Gong <鞏志燾>")
+         (signature-file "tiger")
+         (organization "Department of Computer Science & Software Engineering"))
+        ("Gmail.*"
+         (address "zhitaao.gong@gmail.com")
+         (name "Zhitao")
+         (signature-file "gmail")
+         (organization "Auburn University"))))
 
-(setq
- gnus-parameters
- '(("Tiger/*"
-    (comment . "This is TigerMail with Auburn"))
-   ("Gmail/*"
-    (comment . "This is my personal Gmail"))))
+(add-hook 'message-send-hook 'ispell-message)
+(add-hook 'mail-send-hook  'ispell-message)
 
 (setq send-mail-function 'message-send-mail-with-sendmail)
 (setq sendmail-program "msmtp")
