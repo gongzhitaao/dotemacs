@@ -332,4 +332,6 @@ indent yanked text (with prefix arg don't indent)."
             (hl-line-mode 1)
             (set-face-attribute hl-line-face nil :background "#3B3D3A")))
 
+(require 'chinese-wubi nil t)
+
 (provide 'my-editor)

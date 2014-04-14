@@ -1,5 +1,6 @@
 
 (require 'bbdb)
+(require 'bbdb-autoloads)
 (require 'timezone)
 (require 'bbdb-site)
 

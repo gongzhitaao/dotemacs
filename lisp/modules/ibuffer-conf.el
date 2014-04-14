@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-02-03 15:25:26 CST gongzhitaao>
+;;; Time-stamp: <2014-04-10 19:39:33 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -8,6 +8,7 @@
          ("Planner"
           (or (mode . org-agenda-mode)
               (filename . "/home/gongzhitaao/.emacs.d/personal/org/")
+              (name . "\\.bbdb")
               (mode . bbdb-mode)
               (name . "^\\*Calendar\\*$")
               (name . "^diary$")))
@@ -44,7 +45,6 @@
           (or (mode . makefile-mode)
               (mode . cmake-mode)
               (mode . calc-mode)
-              (mode . info-mode)
               (mode . Info-mode)
               (mode . help-mode)
               (name . "^\\*scratch\\*$"))))))
