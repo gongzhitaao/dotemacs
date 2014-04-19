@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-19 15:22:31 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-19 15:56:16 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -120,6 +120,9 @@ address>'"
          (name "Zhitao")
          (signature-file "gmail")
          (organization "Auburn University"))))
+
+(setq gnus-permanently-visible-groups
+      "\\(Tiger\\|Gmail\\)/INBOX\\'")
 
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
