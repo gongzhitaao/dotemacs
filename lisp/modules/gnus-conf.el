@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-10 11:09:19 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-19 15:22:31 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -74,7 +74,7 @@ for the header string.
 (defun extract-author (str)
   "Extract author from a string formated as `Author Name <email
 address>'"
-  (let ((author (s-trim (substring str 0 (string-match "<" str)))))
+  (let ((author (s-trim (substring str 0 (string-match "<" str)) "[[:space:]\"]+")))
     (if (string= "" author)
         str
       author)))
@@ -129,7 +129,6 @@ address>'"
 
 (add-hook 'gnus-article-prepare-hook 'gnus-article-date-local)
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
-(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
 (setq mm-text-html-renderer 'w3m)
 (setq mm-inline-large-images t)

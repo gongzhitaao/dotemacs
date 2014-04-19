@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-04-10 16:23:14 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-19 08:52:28 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -48,7 +48,7 @@
       org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d@)")
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
         (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
 
 (setq org-todo-keyword-faces
@@ -109,5 +109,5 @@
 (setq org-capture-templates
       '(("t" "New TODO" entry
          (file+headline "todo.org" "Tasks")
-         "* %^{Title} %^G\n  %u\n  %?\n\n\n")))
+         "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")))
 (provide 'org-conf)
