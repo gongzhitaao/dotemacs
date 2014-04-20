@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-19 15:56:16 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-19 20:51:16 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -126,6 +126,12 @@ address>'"
 
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
+
+(gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
+(gnus-demon-init)
+
+;; (require 'gnus-desktop-notify)
+;; (gnus-desktop-notify-mode)
 
 (setq send-mail-function 'message-send-mail-with-sendmail)
 (setq sendmail-program "msmtp")

@@ -32,7 +32,7 @@
   "Module configuration.")
 (defvar my-personal-dir (expand-file-name "personal" my-dir)
   "My personal data.")
-(defvar my-vender-dir (expand-file-name "lisp/vender" my-dir)
+(defvar my-vender-dir (expand-file-name "lisp/vendors" my-dir)
   "Packages not mananged by package.el yet..")
 (defvar my-savefile-dir (expand-file-name "savefile" my-dir)
   "Where all the automatically generated save/histry files rest.")
