@@ -25,7 +25,8 @@
 (global-set-key (kbd "s-/")
                 (function (lambda ()
                             (interactive)
-                            (my-apply-region-or-line 'comment-or-uncomment-region))))
+                            (my-apply-region-or-line
+                             'comment-or-uncomment-region))))
 
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
@@ -39,7 +40,8 @@
 (global-set-key (kbd "s-\\")
                 (function (lambda ()
                             (interactive)
-                            (my-apply-region-or-line 'indent-region))))
+                            (my-apply-region-or-line
+                             'indent-region))))
 
 ;; (global-set-key (kbd "C-x C-;") 'ecb-activate)
 ;; (global-set-key (kbd "C-x C-'") 'ecb-deactivate)

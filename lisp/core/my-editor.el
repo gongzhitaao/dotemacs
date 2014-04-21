@@ -34,16 +34,17 @@
 ;; delete the selection with a keypress
 (delete-selection-mode t)
 
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-all-abbrevs
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
 
 (setq tab-always-indent 'complete)
 
@@ -87,10 +88,7 @@
 
 ;; status bar
 (column-number-mode 1)
-(setq size-indication-mode t
-      display-time-24hr-format t
-      display-time-day-and-date t)
-(display-time)
+(setq size-indication-mode t)
 
 (setq scroll-margin 0
       scroll-conservatively 100000
@@ -117,8 +115,10 @@ line instead."
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 (setq uniquify-separator "/")
-(setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
-(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+(setq uniquify-after-kill-buffer-p t)    ; rename after killing
+                                         ; uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special
+                                         ; buffers
 
 ;; saveplace remembers your location in a file when saving files
 (require 'saveplace)
@@ -176,10 +176,12 @@ line instead."
 
 ;; bookmarks
 (require 'bookmark)
-(setq bookmark-default-file (expand-file-name "bookmarks" my-savefile-dir)
+(setq bookmark-default-file (expand-file-name "bookmarks"
+                                              my-savefile-dir)
       bookmark-save-flag 1)
 
-;; anzu-mode enhances isearch by showing total matches and current match position
+;; anzu-mode enhances isearch by showing total matches and current
+;; match position
 (require 'anzu)
 (diminish 'anzu-mode)
 (global-anzu-mode)
@@ -316,7 +318,8 @@ indent yanked text (with prefix arg don't indent)."
 (setq fci-rule-color "white")
 
 ;; en
-(set-face-attribute 'default nil :font "Dejavu Sans Mono:pixelsize=14")
+(set-face-attribute 'default nil
+                    :font "Dejavu Sans Mono:pixelsize=14")
 
 ;; zh
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -330,7 +333,8 @@ indent yanked text (with prefix arg don't indent)."
 (add-hook 'prog-mode-hook
           (lambda ()
             (hl-line-mode 1)
-            (set-face-attribute hl-line-face nil :background "#3B3D3A")))
+            (set-face-attribute hl-line-face nil
+                                :background "#3B3D3A")))
 
 (require 'chinese-wubi nil t)
 

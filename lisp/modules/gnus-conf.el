@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-19 20:51:16 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-20 21:14:48 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -39,7 +39,6 @@ for the header string.
      ((<= mail-age one-week) 1)
      (t 2))))
 
-
 (copy-face 'default 'my-date-one-day-old-face)
 (copy-face 'default 'my-date-one-week-old-face)
 (copy-face 'default 'my-date-more-than-one-week-old-face)
@@ -67,20 +66,23 @@ for the header string.
       (1 (propertize header-date-time-string
                      'face 'my-date-one-week-old-face
                      'gnus-face t))
-      (otherwise (propertize header-date-time-string
-                             'face 'my-date-more-than-one-week-old-face
-                             'gnus-face t)))))
+      (otherwise
+       (propertize header-date-time-string
+                   'face 'my-date-more-than-one-week-old-face
+                   'gnus-face t)))))
 
 (defun extract-author (str)
   "Extract author from a string formated as `Author Name <email
 address>'"
-  (let ((author (s-trim (substring str 0 (string-match "<" str)) "[[:space:]\"]+")))
+  (let ((author (s-trim (substring str 0 (string-match "<" str))
+                        "[[:space:]\"]+")))
     (if (string= "" author)
         str
       author)))
 
 (defun gnus-user-format-function-color-author (header)
-  (let ((header-author-string (extract-author (mail-header-from header)))
+  (let ((header-author-string
+         (extract-author (mail-header-from header)))
         (age-level (header-age-level header)))
     (case age-level
       (0 (propertize header-author-string
@@ -89,37 +91,71 @@ address>'"
       (1 (propertize header-author-string
                      'face 'my-author-one-week-old-face
                      'gnus-face t))
-      (otherwise (propertize header-author-string
-                             'face 'my-author-more-than-one-week-old-face
-                             'gnus-face t)))))
+      (otherwise
+       (propertize header-author-string
+                   'face 'my-author-more-than-one-week-old-face
+                   'gnus-face t)))))
 
 (setq-default
  ;; gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B%s%)\n"
  ;; gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
  gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30u&color-author;  %B%s%)\n"
  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
- gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
- gnus-sum-thread-tree-false-root ""
- gnus-sum-thread-tree-indent " "
- gnus-sum-thread-tree-leaf-with-other "├► "
- gnus-sum-thread-tree-root ""
- gnus-sum-thread-tree-single-leaf "╰► "
- gnus-sum-thread-tree-vertical "│")
+ gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
+
+(setq gnus-summary-to-prefix "→"
+      gnus-summary-newsgroup-prefix "⇶"
+      ;; Marks
+      gnus-ticked-mark ?⚑
+      gnus-dormant-mark ?⚐
+      gnus-expirable-mark ?♻
+      gnus-read-mark ?✓
+      gnus-del-mark ?✗
+      gnus-killed-mark ?☠
+      gnus-replied-mark ?↺
+      gnus-forwarded-mark ?↪
+      gnus-cached-mark ?☍
+      gnus-recent-mark ?✩
+      gnus-unseen-mark ?★
+      gnus-unread-mark ?✉
+      gnus-score-over-mark ?↑           ; ↑ ☀
+      gnus-score-below-mark ?↓         ; ↓ ☂
+      gnus-sum-thread-tree-false-root " ◌ "
+      gnus-sum-thread-tree-single-indent "◎ "
+      gnus-sum-thread-tree-indent "   "
+      gnus-sum-thread-tree-root "● "
+      gnus-sum-thread-tree-leaf-with-other "├─▶ "
+      gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
+      gnus-sum-thread-tree-vertical        "│ ")
+
+(setq gnus-gcc-mark-as-read t)
+(setq gnus-face-properties-alist
+      '((pbm . (:face gnus-x-face :ascent center))
+        (png . (:ascent center))))
+(setq gnus-treat-from-gravatar 'head)
+(setq gnus-treat-mail-gravatar 'head)
 
 (setq message-confirm-send t)
 
-(setq message-signature-directory (expand-file-name "signature" my-personal-dir))
-(setq gnus-posting-styles
+(setq message-signature-directory
+      (expand-file-name "signature" my-personal-dir))
+
+(setq gnus-parameters
       '(("Tiger.*"
-         (address "zzg0009@auburn.edu")
-         (name "Zhitao Gong <鞏志燾>")
-         (signature-file "tiger")
-         (organization "Department of Computer Science & Software Engineering"))
+         (charset . utf-8)
+         (posting-style
+          (address "zzg0009@auburn.edu")
+          (name "Zhitao Gong <鞏志燾>")
+          (signature-file "tiger")
+          (organization "Department of Computer Science & \
+Software Engineering")))
         ("Gmail.*"
-         (address "zhitaao.gong@gmail.com")
-         (name "Zhitao")
-         (signature-file "gmail")
-         (organization "Auburn University"))))
+         (charset . utf-8)
+         (posting-style
+          (address "zhitaao.gong@gmail.com")
+          (name "Zhitao")
+          (signature-file "gmail")
+          (organization "Auburn University")))))
 
 (setq gnus-permanently-visible-groups
       "\\(Tiger\\|Gmail\\)/INBOX\\'")
@@ -129,6 +165,8 @@ address>'"
 
 (gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
 (gnus-demon-init)
+
+(add-hook 'gnus-after-getting-new-news-hook 'gnus-notifications)
 
 ;; (require 'gnus-desktop-notify)
 ;; (gnus-desktop-notify-mode)

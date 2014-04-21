@@ -6,4 +6,5 @@ personal/
 savefile/
 url/
 semanticdb/
-lisp/vendors/
+lisp/vendors
+*.plstore
