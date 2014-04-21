@@ -1,8 +1,8 @@
 ;;; display-time-conf.el --- display-time modebar config
-;;; Time-stamp: <2014-04-20 21:14:02 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-21 10:33:14 CDT gongzhitaao>
 
 (setq display-time-24hr-format t
-      display-time-day-and-date t)
+      display-time-day-and-date nil)
 
 (setq display-time-mail-function
       (lambda ()
@@ -19,7 +19,7 @@
 (setq display-time-use-mail-icon t)
 (setq display-time-mail-icon
       '(image :type png
-              :file "/usr/share/icons/gnome/24x24/status/mail-unread.png"
+              :file "/usr/share/icons/gnome/16x16/status/mail-unread.png"
               :ascent center))
 (display-time)
 

@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-20 21:14:48 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-21 10:14:33 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -106,6 +106,7 @@ address>'"
 (setq gnus-summary-to-prefix "→"
       gnus-summary-newsgroup-prefix "⇶"
       ;; Marks
+      gnus-ancient-mark ?✓
       gnus-ticked-mark ?⚑
       gnus-dormant-mark ?⚐
       gnus-expirable-mark ?♻
@@ -167,9 +168,6 @@ Software Engineering")))
 (gnus-demon-init)
 
 (add-hook 'gnus-after-getting-new-news-hook 'gnus-notifications)
-
-;; (require 'gnus-desktop-notify)
-;; (gnus-desktop-notify-mode)
 
 (setq send-mail-function 'message-send-mail-with-sendmail)
 (setq sendmail-program "msmtp")
