@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-21 10:14:33 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-23 09:52:00 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -112,6 +112,7 @@ address>'"
       gnus-expirable-mark ?♻
       gnus-read-mark ?✓
       gnus-del-mark ?✗
+      gnus-canceled-mark ?✗
       gnus-killed-mark ?☠
       gnus-replied-mark ?↺
       gnus-forwarded-mark ?↪
