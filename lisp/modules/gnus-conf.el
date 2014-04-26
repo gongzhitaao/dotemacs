@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-23 09:52:00 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-25 19:20:35 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -175,6 +175,12 @@ Software Engineering")))
 
 (add-hook 'gnus-article-prepare-hook 'gnus-article-date-local)
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
+
+(setq message-forward-ignored-headers
+      "^Received:\\|^Content-Transfer-Encoding:\\|^DKIM-\\|^X-\\|^Message-ID:\\|^Received-\\|^In-Reply-To\\|References:\\|^Return-Path:")
+
+(setq mail-user-agent 'gnus-user-agent)
+(setq read-mail-command 'gnus)
 
 (setq mm-text-html-renderer 'w3m)
 (setq mm-inline-large-images t)

@@ -290,15 +290,11 @@ indent yanked text (with prefix arg don't indent)."
 (setq-default
  frame-title-format
  '(:eval
-   (format "%s%s< %s@%s >"
-           (concat (file-name-nondirectory
-                    (or (buffer-file-name) (buffer-name)))
-                   (make-string 8 ? ))
-           (concat (file-name-directory
-                    (or (buffer-file-name) default-directory))
-                   (make-string 8 ? ))
-           (or (file-remote-p default-directory 'user) user-login-name)
-           (or (file-remote-p default-directory 'host) system-name))))
+   (format "%s\t\t%s"
+           (file-name-nondirectory
+            (or (buffer-file-name) (buffer-name)))
+           (file-name-directory
+            (or (buffer-file-name) default-directory)))))
 
 (global-rainbow-delimiters-mode 1)
 

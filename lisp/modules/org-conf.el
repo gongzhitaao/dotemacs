@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-04-19 08:52:28 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-25 19:18:04 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -40,6 +40,8 @@
 (setq org-clock-idle-time 10)
 (setq org-directory (expand-file-name "org" my-personal-dir))
 (setq org-use-property-inheritance t)
+(setq org-src-fontify-natively t)
+(setq org-src-preserve-indentation t)
 
 ;; -------------------------------------------------------------------
 ;; TODO
