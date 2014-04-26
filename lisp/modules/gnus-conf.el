@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-25 19:20:35 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-26 09:38:38 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -127,7 +127,7 @@ address>'"
       gnus-sum-thread-tree-indent "   "
       gnus-sum-thread-tree-root "● "
       gnus-sum-thread-tree-leaf-with-other "├─▶ "
-      gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
+      gnus-sum-thread-tree-single-leaf     "└─▶ "
       gnus-sum-thread-tree-vertical        "│ ")
 
 (setq gnus-gcc-mark-as-read t)

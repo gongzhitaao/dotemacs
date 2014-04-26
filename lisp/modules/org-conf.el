@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-04-25 19:18:04 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-26 09:45:19 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -42,6 +42,7 @@
 (setq org-use-property-inheritance t)
 (setq org-src-fontify-natively t)
 (setq org-src-preserve-indentation t)
+(setq org-return-follows-link t)
 
 ;; -------------------------------------------------------------------
 ;; TODO
