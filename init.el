@@ -32,17 +32,19 @@
   "Module configuration.")
 (defvar my-personal-dir (expand-file-name "personal" my-dir)
   "My personal data.")
-(defvar my-vender-dir (expand-file-name "lisp/vendors" my-dir)
+(defvar my-vendors-dir (expand-file-name "lisp/vendors" my-dir)
   "Packages not mananged by package.el yet..")
 (defvar my-savefile-dir (expand-file-name "savefile" my-dir)
   "Where all the automatically generated save/histry files rest.")
+(defvar my-icons-dir (expand-file-name "icons" my-dir)
+  "Where All the icons are stored.")
 
 (unless (file-exists-p my-savefile-dir)
   (make-directory my-savefile-dir))
 
 (let ((default-directory (expand-file-name "lisp" my-dir)))
   (normal-top-level-add-subdirs-to-load-path))
-(let ((default-directory my-vender-dir))
+(let ((default-directory my-vendors-dir))
   (normal-top-level-add-subdirs-to-load-path))
 
 (require 'my-core)
@@ -54,7 +56,7 @@
 (setq custome-file (expand-file-name "lisp/custom.el" my-dir))
 (when (file-exists-p my-modules-dir)
   (mapc 'load (directory-files my-modules-dir 't "^[^#].*-conf\.el$")))
-(when (file-exists-p my-vender-dir)
+(when (file-exists-p my-vendors-dir)
   (mapc 'load (directory-files my-modules-dir 't "^[^#].*\.el$")))
 
 (server-start)

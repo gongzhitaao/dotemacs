@@ -1,5 +1,5 @@
 ;;; appt-conf.el --- Appt config
-;;; Time-stamp: <2014-04-20 18:25:29 CDT gongzhitaao>
+;;; Time-stamp: <2014-04-27 08:29:07 CDT gongzhitaao>
 
 (appt-activate 1)
 
@@ -10,7 +10,7 @@
   (notifications-notify
    :title (format "Appt in %s minute(s)" mins-till-appt)
    :body msg
-   :app-icon "/usr/share/icons/gnome/48x48/status/appointment-soon.png"))
+   :app-icon (expand-file-name "appointment-soon.png" my-icons-dir)))
 
 (setq appt-disp-window-function (function my-appt-display))
 
