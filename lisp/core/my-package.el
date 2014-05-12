@@ -38,7 +38,7 @@
     dash deft diminish elisp-slime-nav
     epl expand-region fill-column-indicator flycheck gist
     gitconfig-mode gitignore-mode google-c-style grizzl
-    guru-mode naquadah-theme projectile
+    guru-mode multi-web-mode naquadah-theme projectile
     magit move-text rainbow-mode rainbow-delimiters
     smartparens undo-tree
     volatile-highlights zenburn-theme)

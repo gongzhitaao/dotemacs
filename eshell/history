@@ -1,0 +1,32 @@
+jekyll serve
+jekyll serve
+jekyll serve --watch
+jekyll serve --watch
+cd ..
+jekyll serve --watch
+jekyll serve --watch
+cd ..
+jekyll serve --watch
+exit
+cd ..
+git stat
+git status
+jekyll serve --watch
+exit
+jekyll serve --watch
+cd ..
+jekyll serve --watch
+cd Documents/gist/
+ls
+cd master/
+l
+jekyll serve --watch
+exit
+jekyll serve --watch
+jekyll serve --watch
+cd ~/Documents/gongzhitaao.org/
+jekyll serve --watch
+jekyll serve --watch
+jekyll serve --watch
+jekyll serve --watch
+jekyll serve --watch

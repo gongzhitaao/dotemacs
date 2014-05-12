@@ -16,7 +16,8 @@
             (set-face-attribute hl-line-face nil
                                 :background "#3B3D3A")))
 
-;; open .h in c++-mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+(setq tab-stop-list (number-sequence 2 120 2))

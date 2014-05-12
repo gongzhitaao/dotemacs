@@ -7,6 +7,7 @@
 (bbdb-initialize 'gnus 'mail 'message)
 (setq bbdb-complete-mail-allow-cycling t)
 
+(setq bbdb-allow-duplicates t)
 (setq bbdb-message-all-addresses t)
 (add-hook 'message-setup-hook 'bbdb-mail-aliases)
 

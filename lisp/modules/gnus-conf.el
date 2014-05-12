@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-04-26 09:38:38 CDT gongzhitaao>
+;;; Time-stamp: <2014-05-12 09:45:41 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -194,5 +194,12 @@ Software Engineering")))
 ;; When I hit "forward as mail", Gnus will forward articles as inline
 ;; content (that is, part of the message), not as MIME.
 (setq message-forward-as-mime nil)
+
+(add-hook 'gnus-summary-mode-hook
+          (lambda ()
+            (hl-line-mode 1)))
+(add-hook 'gnus-group-mode-hook
+          (lambda ()
+            (hl-line-mode 1)))
 
 (provide 'gnus-conf)
