@@ -17,6 +17,7 @@
                                 :background "#3B3D3A")))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 

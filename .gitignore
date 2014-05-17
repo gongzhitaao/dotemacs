@@ -6,6 +6,7 @@ eshell/
 personal/
 savefile/
 url/
+eshell/
 semanticdb/
 lisp/vendors
 *.plstore

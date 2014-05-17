@@ -37,7 +37,7 @@
     bbdb org browse-kill-ring
     dash deft diminish elisp-slime-nav
     epl expand-region fill-column-indicator flycheck gist
-    gitconfig-mode gitignore-mode google-c-style grizzl
+    gitconfig-mode gitignore-mode glsl-mode google-c-style grizzl
     guru-mode multi-web-mode naquadah-theme projectile
     magit move-text rainbow-mode rainbow-delimiters
     smartparens undo-tree
