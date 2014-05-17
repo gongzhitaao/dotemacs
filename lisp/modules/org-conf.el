@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-05-13 16:39:11 CDT gongzhitaao>
+;;; Time-stamp: <2014-05-14 15:10:11 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -86,8 +86,7 @@
       org-habit-graph-column 45
       org-habit-preceding-days 28
       org-habit-following-days 1
-      org-agenda-start-with-log-mode t
-      org-tags-column -70)
+      org-agenda-start-with-log-mode t)
 
 ;; -------------------------------------------------------------------
 ;; Clock
