@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-04-10 19:39:33 CDT gongzhitaao>
+;;; Time-stamp: <2014-05-19 17:12:06 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -43,6 +43,7 @@
               (name . "^\\.newsrc-dribble")))
          ("Helper"
           (or (mode . makefile-mode)
+              (mode . makefile-gmake-mode)
               (mode . cmake-mode)
               (mode . calc-mode)
               (mode . Info-mode)
