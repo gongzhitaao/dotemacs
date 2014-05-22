@@ -1,5 +1,5 @@
 ;;; multi-web-conf.el --- multi-web-mode conf
-;;; Time-stamp: <2014-05-16 17:07:55 CDT gongzhitaao>
+;;; Time-stamp: <2014-05-21 21:27:59 CDT gongzhitaao>
 
 (require 'multi-web-mode)
 (setq mweb-default-major-mode 'html-mode)
@@ -9,6 +9,8 @@
         (css-mode "<style\\(\\s-+type=\"text/css\"[^>]*\\)?>" "</style>")))
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
+
+(setq mweb-submode-indent-offset 0)
 
 (provide 'multi-web-conf)
 ;;; multi-web-conf.el ends here

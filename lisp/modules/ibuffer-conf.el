@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-05-19 17:12:06 CDT gongzhitaao>
+;;; Time-stamp: <2014-05-21 21:40:27 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -15,8 +15,9 @@
          ("Dired" (mode . dired-mode))
          ("Web"
           (or (mode . html-mode)
-              (mode . css-mode)
               (name . "\\.js")
+              (name . "\\.css")
+              (name . "\\.html")
               (name . "\\.php")))
          ("Text"
           (or (name . "\\.\\(tex\\|bib\\|csv\\)")
