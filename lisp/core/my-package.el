@@ -35,6 +35,7 @@
 (defvar my-packages
   '(ace-jump-mode ack-and-a-half anzu
     bbdb org browse-kill-ring
+    color-identifiers-mode
     dash deft diminish elisp-slime-nav
     epl expand-region fill-column-indicator flycheck gist
     gitconfig-mode gitignore-mode glsl-mode google-c-style grizzl

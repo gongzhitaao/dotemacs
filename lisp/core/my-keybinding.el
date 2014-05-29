@@ -13,6 +13,9 @@
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
 
+(global-set-key (kbd "C-|") 'fci-mode)
+(global-set-key (kbd "C-,") 'color-identifiers-mode)
+
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
@@ -32,8 +35,6 @@
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
-
-(global-set-key (kbd "C-|") 'fci-mode)
 
 (global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
 (global-set-key (kbd "s-=") 'align-regexp)
