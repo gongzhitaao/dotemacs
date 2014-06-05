@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-05-13 14:58:52 CDT gongzhitaao>
+;;; Time-stamp: <2014-06-05 10:19:20 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -161,6 +161,11 @@ Software Engineering")))
 
 (setq gnus-permanently-visible-groups
       "\\(Tiger\\|Gmail\\)/INBOX\\'")
+
+(let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
+                       "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
+                       "\\(me@gongzhitaao\.org\\)")))
+  (setq message-dont-reply-to-names my-mails))
 
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
