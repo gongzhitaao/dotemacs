@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-05-21 21:40:27 CDT gongzhitaao>
+;;; Time-stamp: <2014-06-12 15:42:57 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -53,6 +53,7 @@
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
+            (ibuffer-auto-mode 1)
             (ibuffer-switch-to-saved-filter-groups "default")
             (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
             (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
