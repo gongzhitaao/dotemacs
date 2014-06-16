@@ -15,6 +15,11 @@
 
 (global-set-key (kbd "C-|") 'fci-mode)
 (global-set-key (kbd "C-,") 'color-identifiers-mode)
+(global-set-key (kbd "C-`")
+                (function (lambda ()
+                            (interactive)
+                            (setq buffer-display-table (make-display-table))
+                            (aset buffer-display-table ?\^M []))))
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
