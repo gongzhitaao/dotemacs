@@ -12,6 +12,7 @@
 (global-set-key (kbd "<f9>") 'recentf-open-files)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
+(global-set-key (kbd "<f12>") 'gnus)
 
 (global-set-key (kbd "C-|") 'fci-mode)
 (global-set-key (kbd "C-,") 'color-identifiers-mode)
