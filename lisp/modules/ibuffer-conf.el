@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-06-12 15:42:57 CDT gongzhitaao>
+;;; Time-stamp: <2014-06-23 15:49:53 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -28,11 +28,12 @@
           (or (mode . shell-script-mode)
               (mode . sh-mode)
               (mode . emacs-lisp-mode)
-              (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)*")
+              (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
               (name . "\\.py")
               (name . "\\.ya?ml")
               (name . "\\.sql")
-              (name . "\\.m")))
+              (name . "\\.m")
+              (name . "\\.\\(R\\|r\\)")))
          ("Mail"
           (or (mode . message-mode)
               (mode . mail-mode)
@@ -42,6 +43,9 @@
               (mode . gnus-server-mode)
               (mode . gnus-browse-mode)
               (name . "^\\.newsrc-dribble")))
+         ("Console"
+          (or (mode . inferior-ess-mode)
+              (mode . eshell-mode)))
          ("Helper"
           (or (mode . makefile-mode)
               (mode . makefile-gmake-mode)
@@ -49,6 +53,7 @@
               (mode . calc-mode)
               (mode . Info-mode)
               (mode . help-mode)
+              (mode . ess-help-mode)
               (name . "^\\*scratch\\*$"))))))
 
 (add-hook 'ibuffer-mode-hook
