@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-06-23 15:49:53 CDT gongzhitaao>
+;;; Time-stamp: <2014-07-06 10:55:32 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -45,6 +45,7 @@
               (name . "^\\.newsrc-dribble")))
          ("Console"
           (or (mode . inferior-ess-mode)
+              (mode . inferior-python-mode)
               (mode . eshell-mode)))
          ("Helper"
           (or (mode . makefile-mode)
