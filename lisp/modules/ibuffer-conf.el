@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-07-06 10:55:32 CDT gongzhitaao>
+;;; Time-stamp: <2014-07-06 10:58:25 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -29,7 +29,7 @@
               (mode . sh-mode)
               (mode . emacs-lisp-mode)
               (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
-              (name . "\\.py")
+              (mode . python-mode)
               (name . "\\.ya?ml")
               (name . "\\.sql")
               (name . "\\.m")
