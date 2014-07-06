@@ -1,5 +1,5 @@
 ;;; my-core.el --- Core functionality
-;;; Time-stamp: <2014-04-19 15:20:37 CDT gongzhitaao>
+;;; Time-stamp: <2014-06-26 17:04:08 CDT gongzhitaao>
 
 ;;; Code:
 
@@ -30,6 +30,13 @@ end of S."
   (if (region-active-p)
       (funcall func (region-beginning) (region-end))
     (funcall func (line-beginning-position) (line-end-position))))
+
+(defun my-clear-shell ()
+  (interactive)
+  (let ((old-max comint-buffer-maximum-size))
+    (setq comint-buffer-maximum-size 0)
+    (comint-truncate-buffer)
+    (setq comint-buffer-maximum-size old-max)))
 
 (provide 'my-core)
 ;;; my-core.el ends here
