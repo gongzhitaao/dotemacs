@@ -1,7 +1,8 @@
 ;;; python-conf.el --- Python intepreter
-;;; Time-stamp: <2014-07-06 14:50:02 CDT gongzhitaao>
+;;; Time-stamp: <2014-07-11 10:47:30 CDT gongzhitaao>
 
-(require 'python)
+(require 'python-mode)
+(when (featurep 'python) (unload-feature 'python t))
 
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args ""
