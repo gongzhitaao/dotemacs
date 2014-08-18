@@ -9,4 +9,5 @@ url/
 eshell/
 semanticdb/
 lisp/vendors
+request/
 *.plstore
