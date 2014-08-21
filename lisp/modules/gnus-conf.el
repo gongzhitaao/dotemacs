@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-06-05 10:19:20 CDT gongzhitaao>
+;;; Time-stamp: <2014-08-20 08:30:27 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -197,6 +197,7 @@ Software Engineering")))
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
 (add-hook 'message-mode-hook 'turn-on-orgstruct)
 (add-hook 'message-mode-hook 'turn-on-orgstruct++)
+(add-hook 'message-mode-hook 'turn-on-orgtbl)
 
 ;; When I hit "forward as mail", Gnus will forward articles as inline
 ;; content (that is, part of the message), not as MIME.

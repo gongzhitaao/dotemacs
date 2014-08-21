@@ -324,8 +324,14 @@ indent yanked text (with prefix arg don't indent)."
    charset (font-spec :family "WenQuanYi Zen Hei Mono"
                       :size 16)))
 
+;; -------------------------------------------------------------------
+;; Misc
+;; -------------------------------------------------------------------
 (load-theme 'naquadah t)
+
+(setq initial-scratch-message nil)
 
 (require 'chinese-wubi nil t)
 
 (provide 'my-editor)
+;;; my-editor.el ends here
