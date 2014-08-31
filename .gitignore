@@ -11,3 +11,4 @@ semanticdb/
 lisp/vendors
 request/
 *.plstore
+.mc-lists.el

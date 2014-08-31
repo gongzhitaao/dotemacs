@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-08-20 08:30:27 CDT gongzhitaao>
+;;; Time-stamp: <2014-08-31 09:11:57 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -77,7 +77,7 @@ address>'"
   (let ((author (s-trim (substring str 0 (string-match "<" str))
                         "[[:space:]\"]+")))
     (if (string= "" author)
-        str
+        (s-trim str "<\\|>")
       author)))
 
 (defun gnus-user-format-function-color-author (header)

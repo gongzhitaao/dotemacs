@@ -1,0 +1,17 @@
+# -*- mode: snippet; require-final-newline: nil; indent-tabs-mode: t -*-
+# name: simple
+# key: simple
+# --
+GXX=g++
+PROG=main
+FLGS=-O2
+
+all : $(PROG)
+
+$(PROG) : $0
+	$(GXX) -o $@ $< $(FLGS)
+
+clean :
+	rm -rf $(PROG)
+
+.PHONY : all clean
