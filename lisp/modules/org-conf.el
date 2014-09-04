@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-05-15 22:04:20 CDT gongzhitaao>
+;;; Time-stamp: <2014-09-03 15:54:24 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -46,6 +46,16 @@
 (setq org-return-follows-link t)
 
 (setq org-list-description-max-indent 0)
+
+(setq org-html-doctype "html5"
+      org-html-html5-fancy t
+      org-html-head-include-default-style nil
+      org-html-head-include-scripts nil)
+
+(setq
+ org-html-postamble t
+ org-html-postamble-format
+      '(("en" "<a class=\"author\" href=\"http://gongzhitaao.org\">%a</a> / <span class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
 ;; -------------------------------------------------------------------
 ;; TODO

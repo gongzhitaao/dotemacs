@@ -90,10 +90,6 @@
 (column-number-mode 1)
 (setq size-indication-mode t)
 
-(setq scroll-margin 0
-      scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
-
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -192,16 +188,6 @@ line instead."
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
-;; dired - reuse current buffer by pressing 'a'
-(put 'dired-find-alternate-file 'disabled nil)
-
-;; always delete and copy recursively
-(setq dired-recursive-deletes 'always)
-(setq dired-recursive-copies 'always)
-
-;; enable some really cool extensions like C-x C-j(dired-jump)
-(require 'dired-x)
-
 ;; ediff - don't start another frame
 (require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -273,7 +259,6 @@ indent yanked text (with prefix arg don't indent)."
       version-control t)
 
 (setq scroll-margin 0
-      scroll-conservatively 100000
       scroll-preserve-screen-position 1)
 
 (setq delete-by-moving-to-trash t)
@@ -295,8 +280,6 @@ indent yanked text (with prefix arg don't indent)."
             (or (buffer-file-name) (buffer-name)))
            (file-name-directory
             (or (buffer-file-name) default-directory)))))
-
-(global-rainbow-delimiters-mode 1)
 
 (eval-after-load "ace-jump-mode"
   '(ace-jump-mode-enable-mark-sync))

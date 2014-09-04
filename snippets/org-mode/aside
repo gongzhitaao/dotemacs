@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: aside
+# key: aside
+# --
+#+BEGIN_ASIDE
+$0
+#+END_ASIDE

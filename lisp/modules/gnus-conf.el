@@ -59,14 +59,16 @@ for the header string.
                                   (safe-date-to-time
                                    (mail-header-date header))))
         (age-level (header-age-level header)))
-    (case age-level
-      (0 (propertize header-date-time-string
-                     'face 'my-date-one-day-old-face
-                     'gnus-face t))
-      (1 (propertize header-date-time-string
-                     'face 'my-date-one-week-old-face
-                     'gnus-face t))
-      (otherwise
+    (cond
+      ((= 0 age-level)
+       (propertize header-date-time-string
+		   'face 'my-date-one-day-old-face
+		   'gnus-face t))
+      ((= 1 age-level)
+       (propertize header-date-time-string
+		   'face 'my-date-one-week-old-face
+		   'gnus-face t))
+      (t
        (propertize header-date-time-string
                    'face 'my-date-more-than-one-week-old-face
                    'gnus-face t)))))
@@ -84,14 +86,16 @@ address>'"
   (let ((header-author-string
          (extract-author (mail-header-from header)))
         (age-level (header-age-level header)))
-    (case age-level
-      (0 (propertize header-author-string
-                     'face 'my-author-one-day-old-face
-                     'gnus-face t))
-      (1 (propertize header-author-string
-                     'face 'my-author-one-week-old-face
-                     'gnus-face t))
-      (otherwise
+    (cond
+      ((= 0 age-level)
+       (propertize header-author-string
+		   'face 'my-author-one-day-old-face
+		   'gnus-face t))
+      ((= 1 age-level)
+       (propertize header-author-string
+		   'face 'my-author-one-week-old-face
+		   'gnus-face t))
+      (t
        (propertize header-author-string
                    'face 'my-author-more-than-one-week-old-face
                    'gnus-face t)))))
