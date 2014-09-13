@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-08-31 09:11:57 CDT gongzhitaao>
+;;; Time-stamp: <2014-09-10 16:43:24 CDT gongzhitaao>
 
 (require 'gnus)
 
@@ -192,9 +192,9 @@ Software Engineering")))
 (setq read-mail-command 'gnus)
 
 (setq mm-text-html-renderer 'w3m)
-(setq mm-inline-large-images t)
+(setq mm-inline-large-images nil)
 (auto-image-file-mode t)
-(setq mm-inline-text-html-with-images t)
+(setq mm-inline-text-html-with-images nil)
 (setq mm-w3m-safe-url-regexp nil)
 
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)

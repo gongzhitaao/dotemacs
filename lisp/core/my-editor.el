@@ -78,7 +78,8 @@
 (scroll-bar-mode 0)
 
 ;; line number
-(global-linum-mode t)
+;; (global-linum-mode t)
+;; (global-nlinum-mode 1)
 
 ;; visible blink if I do something bad or wrong
 (setq visible-bell t)
