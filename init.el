@@ -29,7 +29,7 @@
 (require 'my-editor)
 
 ;; load the personal settings
-(setq custome-file (expand-file-name "lisp/custom.el" my-dir))
+(setq custom-file (expand-file-name "lisp/custom.el" my-dir))
 (when (file-exists-p my-modules-dir)
   (mapc 'load (directory-files my-modules-dir 't "^[^#].*-conf\.el$")))
 (when (file-exists-p my-vendors-dir)
