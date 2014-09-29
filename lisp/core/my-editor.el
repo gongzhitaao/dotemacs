@@ -311,6 +311,15 @@ indent yanked text (with prefix arg don't indent)."
 ;; -------------------------------------------------------------------
 ;; Misc
 ;; -------------------------------------------------------------------
+(defun load-random-theme ()
+  "Load any random theme from the available ones."
+  (interactive)
+
+  (let* ((theme-list (custom-available-themes))
+         (theme-of-the-day (nth (random (length theme-list))
+				theme-list)))
+    (load-theme (princ theme-of-the-day) t)))
+;; (load-random-theme)
 (load-theme 'naquadah t)
 
 (setq initial-scratch-message nil)

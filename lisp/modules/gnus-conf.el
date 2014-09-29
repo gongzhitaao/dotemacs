@@ -1,7 +1,8 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-09-10 16:43:24 CDT gongzhitaao>
+;;; Time-stamp: <2014-09-20 18:24:42 CDT gongzhitaao>
 
 (require 'gnus)
+(require 'gnus-diary)
 
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "zzg0009@auburn.edu")
