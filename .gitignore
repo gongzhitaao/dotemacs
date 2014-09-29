@@ -4,3 +4,5 @@
 !init.el
 !lisp/
 !icons/
+!snippets/
+!org-template/
