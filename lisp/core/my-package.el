@@ -11,35 +11,36 @@
 
 (package-initialize)
 
-(defun save-packages ()
-  "Save to saved-packages.txt the currently activated packages,
+(defvar my-package-file (expand-file-name "package.txt" my-core-dir)
+  "Where all my installed packages are stored.  During Emacs
+  startup, any package listed here but not installed in the
+  system will be installed.")
+
+(defun my-save-package-list ()
+  "Save to package.txt the currently activated packages,
   i.e., packages listed in `package-activated-list'"
   (interactive)
   (with-temp-buffer
-    (pp ())))
+    (let ((my-sorted-package-list (sort package-activated-list 'string<)))
+      (pp my-sorted-package-list (current-buffer)))
+    (write-region (point-max) (point-min) my-package-file)))
 
-(defvar my-packages
-  '(ace-jump-mode                 ;quick cursor location jump
-    ack-and-a-half                ;front-end for ack
-    anzu                          ;show number of matches in mode-line
-    auctex                        ;integrated env for *Tex*
-    auto-complete                 ;auto completion
-    bbdb                          ;The Insidious Big Brother Database
-    org browse-kill-ring
-    color-identifiers-mode
-    dash deft diminish elisp-slime-nav
-    epl expand-region fill-column-indicator flycheck gist
-    gitconfig-mode gitignore-mode glsl-mode google-c-style grizzl
-    guru-mode multi-web-mode naquadah-theme projectile
-    magit move-text rainbow-mode rainbow-delimiters
-    smartparens undo-tree
-    volatile-highlights zenburn-theme)
-  "A list of packages to ensure are installed at launch.")
+(defun my-read-n-install-missing ()
+  "Read package list from package.txt, if exists.  And install
+missing packages when neccessary."
+  (interactive)
+    (with-temp-buffer
+      (insert-file-contents my-package-file)
+      (let* ((saved-sorted-package-list
+              (car (read-from-string (buffer-string))))
+             (missing-package-list
+              (remove-if 'package-installed-p saved-sorted-package-list)))
+        (if missing-package-list
+            (message "%s" missing-package-list)
+            (mapc 'package-install missing-package-list)))))
 
-(mapc #'(lambda (pkg)
-          (unless (package-installed-p pkg)
-            (package-install pkg)))
-      my-packages)
+(add-hook 'kill-emacs-hook 'my-save-package-list)
+(add-hook 'emacs-startup-hook 'my-read-n-install-missing)
 
 (provide 'my-package)
 ;;; my-package.el ends here

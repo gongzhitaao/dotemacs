@@ -270,6 +270,8 @@ indent yanked text (with prefix arg don't indent)."
 ;; so you won't accidentally close Emacs.
 (setq confirm-kill-emacs 'yes-or-no-p)
 
+(setq view-read-only t)
+
 (yas-global-mode 1)
 
 ;; frame title: filename filepath user@machine

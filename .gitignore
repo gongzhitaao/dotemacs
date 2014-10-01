@@ -1,8 +1,20 @@
 *
 
 !README.md
+!.gitignore
+
 !init.el
-!lisp/
-!icons/
-!snippets/
-!org-template/
+
+!lisp
+!lisp/*
+!lisp/core/*
+!lisp/modules/*
+
+!icons
+!icons/*
+
+!snippets
+!snippets/*
+
+!org-template
+!org-template/*
