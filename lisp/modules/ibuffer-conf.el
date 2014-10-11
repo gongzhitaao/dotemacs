@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-07-06 10:58:25 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-11 11:07:20 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -24,6 +24,10 @@
               (mode . org-mode)
               (mode . markdown-mode)
               (mode . text-mode)))
+         ("Data"
+          (or (mode . gnuplot-mode)
+              (mode . octave-mode)
+              (mode . R-mode)))
          ("Coding"
           (or (mode . shell-script-mode)
               (mode . sh-mode)
@@ -31,9 +35,7 @@
               (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
               (mode . python-mode)
               (name . "\\.ya?ml")
-              (name . "\\.sql")
-              (name . "\\.m")
-              (name . "\\.\\(R\\|r\\)")))
+              (name . "\\.sql")))
          ("Mail"
           (or (mode . message-mode)
               (mode . mail-mode)
@@ -46,7 +48,9 @@
          ("Console"
           (or (mode . inferior-ess-mode)
               (mode . inferior-python-mode)
-              (mode . eshell-mode)))
+              (mode . eshell-mode)
+              (mode . gnuplot-comint-mode)
+              (mode . comint-mode)))
          ("Helper"
           (or (mode . makefile-mode)
               (mode . makefile-gmake-mode)
