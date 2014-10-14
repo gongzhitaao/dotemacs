@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-09-20 18:24:42 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-14 16:20:58 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -142,6 +142,11 @@ address>'"
 (setq gnus-treat-from-gravatar 'head)
 (setq gnus-treat-mail-gravatar 'head)
 
+(setq gnus-message-archive-group
+      `(("^Tiger/INBOX" "nnimap+zzg0009@auburn.edu:Tiger/Sent Items")
+        ("^Gmail/INBOX" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
+        (".*" ,(format-time-string "sent.%Y-%m"))))
+
 (setq message-confirm-send t)
 
 (setq message-signature-directory
@@ -165,7 +170,10 @@ Software Engineering")))
           (organization "Auburn University")))))
 
 (setq gnus-permanently-visible-groups
-      "\\(Tiger\\|Gmail\\)/INBOX\\'")
+      (concat "^\\(Tiger\\|Gmail\\)/INBOX\\'\\|"
+              "^Tiger/Sent Items\\'\\|"
+              "^Gmail/\\[Gmail\\]/Sent Mail\\'\\|"
+              "^archive\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
                        "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
