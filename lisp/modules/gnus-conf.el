@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-10-16 19:07:49 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-17 08:24:01 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -116,7 +116,7 @@ for the header string.
          (charset . utf-8)
          (posting-style
           (address "zzg0009@auburn.edu")
-          (name "Zhitao Gong <鞏志燾>")
+          (name "Zhitao Gong")
           (signature-file "tiger")
           (organization "Department of Computer Science & \
 Software Engineering")))
