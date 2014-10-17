@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-10-14 16:20:58 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-16 19:07:49 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -26,18 +26,14 @@ The age are divided into three levels:
 Based on the age of the header, I set different foreground color
 for the header string.
 "
-  (let* ((now (float-time (current-time)))
-         (one-day (* 24 60 60))
-         (one-week (* 7 24 60 60))
-         (header-date-time (float-time (safe-date-to-time
-                                        (mail-header-date header))))
-         (header-date-time-string (format-time-string
-                                   "%Y-%m-%d %H:%M"
-                                   (seconds-to-time header-date-time)))
+  (let* ((now (time-to-day-in-year (current-time)))
+         (header-date-time
+          (time-to-day-in-year (safe-date-to-time
+                                (mail-header-date header))))
          (mail-age (- now header-date-time)))
     (cond
-     ((<= mail-age one-day) 0)
-     ((<= mail-age one-week) 1)
+     ((< mail-age 1) 0)
+     ((< mail-age 7) 1)
      (t 2))))
 
 (copy-face 'default 'my-date-one-day-old-face)
@@ -47,18 +43,10 @@ for the header string.
 (set-face-foreground 'my-date-one-week-old-face "#79B221")
 (set-face-foreground 'my-date-more-than-one-week-old-face "#456613")
 
-(copy-face 'default 'my-author-one-day-old-face)
-(copy-face 'default 'my-author-one-week-old-face)
-(copy-face 'default 'my-author-more-than-one-week-old-face)
-(set-face-foreground 'my-author-one-day-old-face "#FFD700")
-(set-face-foreground 'my-author-one-week-old-face "#B29600")
-(set-face-foreground 'my-author-more-than-one-week-old-face "#665600")
-
 (defun gnus-user-format-function-color-date (header)
-  (let ((header-date-time-string (format-time-string
-                                  "%Y-%m-%d %H:%M"
-                                  (safe-date-to-time
-                                   (mail-header-date header))))
+  (let ((header-date-time-string
+         (format-time-string
+          "%Y-%m-%d %H:%M" (safe-date-to-time (mail-header-date header))))
         (age-level (header-age-level header)))
     (cond
       ((= 0 age-level)
@@ -74,37 +62,8 @@ for the header string.
                    'face 'my-date-more-than-one-week-old-face
                    'gnus-face t)))))
 
-(defun extract-author (str)
-  "Extract author from a string formated as `Author Name <email
-address>'"
-  (let ((author (s-trim (substring str 0 (string-match "<" str))
-                        "[[:space:]\"]+")))
-    (if (string= "" author)
-        (s-trim str "<\\|>")
-      author)))
-
-(defun gnus-user-format-function-color-author (header)
-  (let ((header-author-string
-         (extract-author (mail-header-from header)))
-        (age-level (header-age-level header)))
-    (cond
-      ((= 0 age-level)
-       (propertize header-author-string
-		   'face 'my-author-one-day-old-face
-		   'gnus-face t))
-      ((= 1 age-level)
-       (propertize header-author-string
-		   'face 'my-author-one-week-old-face
-		   'gnus-face t))
-      (t
-       (propertize header-author-string
-                   'face 'my-author-more-than-one-week-old-face
-                   'gnus-face t)))))
-
 (setq-default
- ;; gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B%s%)\n"
- ;; gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
- gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30u&color-author;  %B%s%)\n"
+ gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30f  %B%s%)\n"
  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
  gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
 
@@ -165,7 +124,7 @@ Software Engineering")))
          (charset . utf-8)
          (posting-style
           (address "zhitaao.gong@gmail.com")
-          (name "Zhitao")
+          (name "Zhitao Gong")
           (signature-file "gmail")
           (organization "Auburn University")))))
 
@@ -173,12 +132,14 @@ Software Engineering")))
       (concat "^\\(Tiger\\|Gmail\\)/INBOX\\'\\|"
               "^Tiger/Sent Items\\'\\|"
               "^Gmail/\\[Gmail\\]/Sent Mail\\'\\|"
-              "^archive\\'"))
+              "^archive\\'\\|"
+              "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
                        "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
                        "\\(me@gongzhitaao\.org\\)")))
   (setq message-dont-reply-to-names my-mails))
+(setq gnus-ignored-from-addresses "Zhitao\\( Gong\\)?")
 
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
@@ -194,8 +155,12 @@ Software Engineering")))
 (add-hook 'gnus-article-prepare-hook 'gnus-article-date-local)
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
-(setq message-forward-ignored-headers
-      "^Received:\\|^Content-Transfer-Encoding:\\|^DKIM-\\|^X-\\|^Message-ID:\\|^Received-\\|^In-Reply-To\\|References:\\|^Return-Path:")
+(setq message-forward-ignored-headers ""
+      message-make-forward-subject-function 'message-forward-subject-fwd
+      message-forward-as-mime nil)
+
+(add-to-list 'mm-discouraged-alternatives "text/html")
+(add-to-list 'mm-discouraged-alternatives "image/.*")
 
 (setq mail-user-agent 'gnus-user-agent)
 (setq read-mail-command 'gnus)
@@ -211,10 +176,6 @@ Software Engineering")))
 (add-hook 'message-mode-hook 'turn-on-orgstruct)
 (add-hook 'message-mode-hook 'turn-on-orgstruct++)
 (add-hook 'message-mode-hook 'turn-on-orgtbl)
-
-;; When I hit "forward as mail", Gnus will forward articles as inline
-;; content (that is, part of the message), not as MIME.
-(setq message-forward-as-mime nil)
 
 (add-hook 'gnus-summary-mode-hook
           (lambda ()
