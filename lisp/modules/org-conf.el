@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-10-17 19:06:26 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-21 09:50:14 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -126,4 +126,41 @@
       '(("t" "New TODO" entry
          (file+headline "todo.org" "Tasks")
          "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")))
+
+(require 'ox-latex)
+(setq org-latex-listings 'minted)
+(setq org-latex-pdf-process
+      (quote
+       ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+        "bibtex $(basename %b)"
+        "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+        "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")))
+
+(add-to-list 'org-latex-packages-alist
+             '("" "minted"))
+
+(add-to-list 'org-latex-classes
+             '("scrartcl"
+               "\\documentclass{scrartcl}
+                [DEFAULT-PACKAGES]
+                [PACKAGES]
+                [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("scrreprt"
+               "\\documentclass{scrreprt}
+                [DEFAULT-PACKAGES]
+                [PACKAGES]
+                [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
 (provide 'org-conf)

@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-10-17 08:24:01 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-18 22:35:18 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -102,8 +102,8 @@ for the header string.
 (setq gnus-treat-mail-gravatar 'head)
 
 (setq gnus-message-archive-group
-      `(("^Tiger/INBOX" "nnimap+zzg0009@auburn.edu:Tiger/Sent Items")
-        ("^Gmail/INBOX" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
+      `(("Tiger" "nnimap+zzg0009@auburn.edu:Tiger/Sent Items")
+        ("Gmail" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
         (".*" ,(format-time-string "sent.%Y-%m"))))
 
 (setq message-confirm-send t)
