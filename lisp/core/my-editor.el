@@ -313,16 +313,24 @@ indent yanked text (with prefix arg don't indent)."
 ;; -------------------------------------------------------------------
 ;; Misc
 ;; -------------------------------------------------------------------
-(defun load-random-theme ()
-  "Load any random theme from the available ones."
-  (interactive)
+;; (defun load-random-theme ()
+;;   "Load any random theme from the available ones."
+;;   (interactive)
 
-  (let* ((theme-list (custom-available-themes))
-         (theme-of-the-day (nth (random (length theme-list))
-				theme-list)))
-    (load-theme (princ theme-of-the-day) t)))
+;;   (let* ((theme-list '(sanityinc-tomorrow-bright
+;;                        sanityinc-tomorrow-eighties
+;;                        sanityinc-tomorrow-night
+;;                        naquadah))
+;;          (theme-of-the-day (nth (random (length theme-list))
+;; 				theme-list)))
+;;     (load-theme (princ theme-of-the-day) t)))
 ;; (load-random-theme)
+
 (load-theme 'naquadah t)
+
+(global-hl-line-mode 1)
+(set-face-attribute hl-line-face nil
+                    :background "#3B3D3A")
 
 (setq initial-scratch-message nil)
 

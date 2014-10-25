@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-10-18 22:35:18 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-25 17:58:10 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -36,12 +36,15 @@ for the header string.
      ((< mail-age 7) 1)
      (t 2))))
 
-(copy-face 'default 'my-date-one-day-old-face)
-(copy-face 'default 'my-date-one-week-old-face)
-(copy-face 'default 'my-date-more-than-one-week-old-face)
-(set-face-foreground 'my-date-one-day-old-face "#ADFF2F")
-(set-face-foreground 'my-date-one-week-old-face "#79B221")
-(set-face-foreground 'my-date-more-than-one-week-old-face "#456613")
+(defface my-date-one-day-old-face
+  '((default (:foreground "#ADFF2F")))
+  "...")
+(defface my-date-one-week-old-face
+  '((default (:foreground "#79B221")))
+  "...")
+(defface my-date-more-than-one-week-old-face
+  '((default (:foreground "#456613")))
+  "...")
 
 (defun gnus-user-format-function-color-date (header)
   (let ((header-date-time-string

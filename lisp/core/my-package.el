@@ -19,7 +19,7 @@
 (defun my-save-package-list ()
   "Save to package.txt the currently activated packages,
   i.e., packages listed in `package-activated-list'"
-  (interactive)
+  ;; (interactive)
   (with-temp-buffer
     (let ((my-sorted-package-list (sort package-activated-list 'string<)))
       (pp my-sorted-package-list (current-buffer)))

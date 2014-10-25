@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-10-21 09:50:14 CDT gongzhitaao>
+;;; Time-stamp: <2014-10-24 11:52:08 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -21,8 +21,6 @@
                      org-docview
                      org-gnus
                      org-habit
-                     org-latex
-                     org-special-blocks
                      org-table)))
               (dolist (m my-org-modules)
                 (add-to-list 'org-modules m t))

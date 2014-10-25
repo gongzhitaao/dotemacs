@@ -5,17 +5,6 @@
 
 ;; (semantic-mode 1)
 
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (hl-line-mode 1)
-            (set-face-attribute hl-line-face nil
-                                :background "#3B3D3A")))
-(add-hook 'text-mode-hook
-          (lambda ()
-            (hl-line-mode 1)
-            (set-face-attribute hl-line-face nil
-                                :background "#3B3D3A")))
-
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
