@@ -1,11 +1,11 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-10-25 17:58:10 CDT gongzhitaao>
+;;; Time-stamp: <2014-11-07 18:51:37 CST gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
 
 (setq user-full-name "Zhitao Gong")
-(setq user-mail-address "zzg0009@auburn.edu")
+(setq user-mail-address "me@gongzhitaao.org")
 
 (setq gnus-init-file "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
 
@@ -54,15 +54,15 @@ for the header string.
     (cond
       ((= 0 age-level)
        (propertize header-date-time-string
-		   'face 'my-date-one-day-old-face
+		   'face '(my-date-one-day-old-face default)
 		   'gnus-face t))
       ((= 1 age-level)
        (propertize header-date-time-string
-		   'face 'my-date-one-week-old-face
+		   'face '(my-date-one-week-old-face default)
 		   'gnus-face t))
       (t
        (propertize header-date-time-string
-                   'face 'my-date-more-than-one-week-old-face
+                   'face '(my-date-more-than-one-week-old-face default)
                    'gnus-face t)))))
 
 (setq-default

@@ -39,8 +39,8 @@ missing packages when neccessary."
             (message "%s" missing-package-list)
             (mapc 'package-install missing-package-list)))))
 
-(add-hook 'kill-emacs-hook 'my-save-package-list)
-(add-hook 'emacs-startup-hook 'my-read-n-install-missing)
+;;(add-hook 'kill-emacs-hook 'my-save-package-list)
+;; (add-hook 'emacs-startup-hook 'my-read-n-install-missing)
 
 (provide 'my-package)
 ;;; my-package.el ends here

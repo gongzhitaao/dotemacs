@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-10-24 11:52:08 CDT gongzhitaao>
+;;; Time-stamp: <2014-11-07 19:13:40 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -126,22 +126,13 @@
          "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")))
 
 (require 'ox-latex)
-(setq org-latex-listings 'minted)
-(setq org-latex-pdf-process
-      (quote
-       ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-        "bibtex $(basename %b)"
-        "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-        "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")))
-
-(add-to-list 'org-latex-packages-alist
-             '("" "minted"))
+(setq org-latex-pdf-process (list "latexmk -pdf -outdir=%o %f"))
 
 (add-to-list 'org-latex-classes
              '("scrartcl"
                "\\documentclass{scrartcl}
-                [DEFAULT-PACKAGES]
-                [PACKAGES]
+                [NO-DEFAULT-PACKAGES]
+                [NO-PACKAGES]
                 [EXTRA]"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -152,8 +143,8 @@
 (add-to-list 'org-latex-classes
              '("scrreprt"
                "\\documentclass{scrreprt}
-                [DEFAULT-PACKAGES]
-                [PACKAGES]
+                [NO-DEFAULT-PACKAGES]
+                [NO-PACKAGES]
                 [EXTRA]"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
