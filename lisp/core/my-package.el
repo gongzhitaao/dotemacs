@@ -11,6 +11,9 @@
 
 (package-initialize)
 
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+
 (defvar my-package-file (expand-file-name "package.txt" my-core-dir)
   "Where all my installed packages are stored.  During Emacs
   startup, any package listed here but not installed in the
@@ -28,7 +31,7 @@
 (defun my-read-n-install-missing ()
   "Read package list from package.txt, if exists.  And install
 missing packages when neccessary."
-  (interactive)
+    (interactive)
     (with-temp-buffer
       (insert-file-contents my-package-file)
       (let* ((saved-sorted-package-list
@@ -36,8 +39,10 @@ missing packages when neccessary."
              (missing-package-list
               (remove-if 'package-installed-p saved-sorted-package-list)))
         (if missing-package-list
-            (message "%s" missing-package-list)
-            (mapc 'package-install missing-package-list)))))
+            (progn (message "%s" missing-package-list)
+	           (mapc 'package-install missing-package-list))))))
+
+(my-read-n-install-missing)
 
 ;;(add-hook 'kill-emacs-hook 'my-save-package-list)
 ;; (add-hook 'emacs-startup-hook 'my-read-n-install-missing)

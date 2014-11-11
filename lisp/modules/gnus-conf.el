@@ -54,15 +54,15 @@ for the header string.
     (cond
       ((= 0 age-level)
        (propertize header-date-time-string
-		   'face '(my-date-one-day-old-face default)
+		   'face 'my-date-one-day-old-face
 		   'gnus-face t))
       ((= 1 age-level)
        (propertize header-date-time-string
-		   'face '(my-date-one-week-old-face default)
+		   'face 'my-date-one-week-old-face
 		   'gnus-face t))
       (t
        (propertize header-date-time-string
-                   'face '(my-date-more-than-one-week-old-face default)
+                   'face 'my-date-more-than-one-week-old-face
                    'gnus-face t)))))
 
 (setq-default
