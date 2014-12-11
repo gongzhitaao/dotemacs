@@ -11,5 +11,5 @@
 (setq bbdb-message-all-addresses t)
 (add-hook 'message-setup-hook 'bbdb-mail-aliases)
 
-(setq bbdb-file (expand-file-name "contacts.bbdb" my-personal-dir)
+(setq bbdb-file (expand-file-name "contacts.bbdb.gz" my-personal-dir)
       bbdb-north-american-phone-numbers-p nil)

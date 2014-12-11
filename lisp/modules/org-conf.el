@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-11-07 19:13:40 CST gongzhitaao>
+;;; Time-stamp: <2014-11-21 07:38:01 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -126,7 +126,7 @@
          "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")))
 
 (require 'ox-latex)
-(setq org-latex-pdf-process (list "latexmk -pdf -outdir=%o %f"))
+;; (setq org-latex-pdf-process (list "latexmk -pdf -outdir=%o %f"))
 
 (add-to-list 'org-latex-classes
              '("scrartcl"

@@ -6,7 +6,7 @@
   "My core functionality.")
 (defvar my-modules-dir (expand-file-name "lisp/modules" my-dir)
   "Module configuration.")
-(defvar my-personal-dir (expand-file-name "personal" my-dir)
+(defvar my-personal-dir (expand-file-name "~/Dropbox/emacs/personal")
   "My personal data.")
 (defvar my-vendors-dir (expand-file-name "lisp/vendors" my-dir)
   "Packages not mananged by package.el yet..")

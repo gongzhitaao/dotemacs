@@ -1,10 +1,10 @@
-# -*- mode: snippet; require-final-newline: nil; indent-tabs-mode: t -*-
+# -*- mode: snippet;-*-
 # name: simple
 # key: simple
 # --
 GXX=g++
 PROG=main
-FLGS=-O2
+FLGS=-O2 -Wall
 
 all : $(PROG)
 
