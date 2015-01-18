@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2014-11-07 18:51:37 CST gongzhitaao>
+;;; Time-stamp: <2015-01-15 09:41:17 CST gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -7,7 +7,8 @@
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "me@gongzhitaao.org")
 
-(setq gnus-init-file "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
+(setq gnus-init-file
+      "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
 
 (setq gnus-select-method
       '(nnimap "LocalMail"
@@ -26,10 +27,9 @@ The age are divided into three levels:
 Based on the age of the header, I set different foreground color
 for the header string.
 "
-  (let* ((now (time-to-day-in-year (current-time)))
-         (header-date-time
-          (time-to-day-in-year (safe-date-to-time
-                                (mail-header-date header))))
+  (let* ((now (time-to-days (current-time)))
+         (header-date-time (time-to-days (safe-date-to-time
+                                          (mail-header-date header))))
          (mail-age (- now header-date-time)))
     (cond
      ((< mail-age 1) 0)
@@ -107,6 +107,7 @@ for the header string.
 (setq gnus-message-archive-group
       `(("Tiger" "nnimap+zzg0009@auburn.edu:Tiger/Sent Items")
         ("Gmail" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
+        ("Ymail" "nnimap+gongzhitaao@yahoo.com:Ymail/Sent")
         (".*" ,(format-time-string "sent.%Y-%m"))))
 
 (setq message-confirm-send t)
@@ -129,18 +130,25 @@ Software Engineering")))
           (address "zhitaao.gong@gmail.com")
           (name "Zhitao Gong")
           (signature-file "gmail")
+          (organization "Auburn University")))
+        ("Ymail.*"
+         (charset . utf-8)
+         (posting-style
+          (address "gongzhitaao@yahoo.com")
+          (name "Zhitao Gong")
+          (signature-file "yahoo")
           (organization "Auburn University")))))
 
 (setq gnus-permanently-visible-groups
-      (concat "^\\(Tiger\\|Gmail\\)/INBOX\\'\\|"
-              "^Tiger/Sent Items\\'\\|"
-              "^Gmail/\\[Gmail\\]/Sent Mail\\'\\|"
-              "^archive\\'\\|"
+      (concat "^Tiger/\\(INBOX\\|Sent Items\\)\\'\\|"
+              "^Gmail/\\(INBOX\\|\\[Gmail\\]/Sent Mail\\)\\'\\|"
+              "^Ymail/\\(Inbox\\|Sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
                        "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
-                       "\\(me@gongzhitaao\.org\\)")))
+                       "\\(me@gongzhitaao\.org\\)\\|"
+                       "\\(gongzhitaao@yahoo\.com\\)")))
   (setq message-dont-reply-to-names my-mails))
 (setq gnus-ignored-from-addresses "Zhitao\\( Gong\\)?")
 

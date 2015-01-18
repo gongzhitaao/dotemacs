@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2014-12-03 14:54:47 CST gongzhitaao>
+;;; Time-stamp: <2015-01-15 09:02:03 CST gongzhitaao>
 
 ;; don't use tables to indent
 (setq-default indent-tabs-mode nil)
@@ -273,16 +273,16 @@ indent yanked text (with prefix arg don't indent)."
     (prefer-coding-system c)))
 
 ;; en
-;; (set-face-attribute 'default nil
-;;                     :font "Dejavu Sans Mono:pixelsize=14")
-(set-face-attribute 'default nil :height 120)
+(set-face-attribute 'default nil
+                    :font "Ubuntu Mono:pixelsize=16")
+;; (set-face-attribute 'default nil :height 120)
 
 ;; zh
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
    charset (font-spec :family "WenQuanYi Zen Hei Mono"
-                      :size 14)))
+                      :size 16)))
 
 (setq jit-lock-stealth-time 16)
 (setq-default font-lock-multiline t)
