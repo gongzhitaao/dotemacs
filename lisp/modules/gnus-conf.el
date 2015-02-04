@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2015-01-15 09:41:17 CST gongzhitaao>
+;;; Time-stamp: <2015-02-02 11:20:31 CST gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -105,7 +105,7 @@ for the header string.
 (setq gnus-treat-mail-gravatar 'head)
 
 (setq gnus-message-archive-group
-      `(("Tiger" "nnimap+zzg0009@auburn.edu:Tiger/Sent Items")
+      `(("Tiger" "nnimap+zzg0009@auburn.edu:Tiger/Sent")
         ("Gmail" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
         ("Ymail" "nnimap+gongzhitaao@yahoo.com:Ymail/Sent")
         (".*" ,(format-time-string "sent.%Y-%m"))))
@@ -140,7 +140,7 @@ Software Engineering")))
           (organization "Auburn University")))))
 
 (setq gnus-permanently-visible-groups
-      (concat "^Tiger/\\(INBOX\\|Sent Items\\)\\'\\|"
+      (concat "^Tiger/\\(INBOX\\|Sent\\)\\'\\|"
               "^Gmail/\\(INBOX\\|\\[Gmail\\]/Sent Mail\\)\\'\\|"
               "^Ymail/\\(Inbox\\|Sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
@@ -150,7 +150,8 @@ Software Engineering")))
                        "\\(me@gongzhitaao\.org\\)\\|"
                        "\\(gongzhitaao@yahoo\.com\\)")))
   (setq message-dont-reply-to-names my-mails))
-(setq gnus-ignored-from-addresses "Zhitao\\( Gong\\)?")
+(setq gnus-ignored-from-addresses (concat "\\(Zhitao\\( Gong\\)?\\)\\|"
+                                          "\\(gongzhitaao\\)"))
 
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
