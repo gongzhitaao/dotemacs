@@ -22,6 +22,11 @@
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 (global-set-key (kbd "C-c g") 'ace-jump-mode)
 (global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c <left>") 'decrease-left-margin)
+(global-set-key (kbd "C-c C-<left>") 'decrease-left-margin)
+(global-set-key (kbd "C-c <right>") 'increase-left-margin)
+(global-set-key (kbd "C-c C-<right>") 'increase-left-margin)
+
 
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 (global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
@@ -32,19 +37,18 @@
                             (interactive)
                             (my-apply-region-or-line
                              'comment-or-uncomment-region))))
-
-(global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "M-<down>") 'shrink-window)
-(global-set-key (kbd "M-<up>") 'enlarge-window)
-
-(global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
 (global-set-key (kbd "s-=") 'align-regexp)
 (global-set-key (kbd "s-\\")
                 (function (lambda ()
                             (interactive)
                             (my-apply-region-or-line
                              'indent-region))))
+
+(global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "M-<down>") 'shrink-window)
+(global-set-key (kbd "M-<up>") 'enlarge-window)
+(global-set-key (kbd "M-]") 'rainbow-delimiters-mode)
 
 ;; (global-set-key (kbd "C-x C-;") 'ecb-activate)
 ;; (global-set-key (kbd "C-x C-'") 'ecb-deactivate)
