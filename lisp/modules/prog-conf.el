@@ -12,4 +12,6 @@
 
 (setq tab-stop-list (number-sequence 2 120 2))
 
+(add-hook 'prog-mode-hook 'which-function-mode)
+
 (setq sgml-basic-offset 0)

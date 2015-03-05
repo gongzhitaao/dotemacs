@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2014-11-21 07:38:01 CST gongzhitaao>
+;;; Time-stamp: <2015-03-02 18:02:13 CST gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -127,6 +127,9 @@
 
 (require 'ox-latex)
 ;; (setq org-latex-pdf-process (list "latexmk -pdf -outdir=%o %f"))
+
+(setq org-latex-pdf-process
+      (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
 (add-to-list 'org-latex-classes
              '("scrartcl"

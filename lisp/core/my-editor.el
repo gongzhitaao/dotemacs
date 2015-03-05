@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-01-15 09:02:03 CST gongzhitaao>
+;;; Time-stamp: <2015-03-05 09:07:38 CST gongzhitaao>
 
 ;; don't use tables to indent
 (setq-default indent-tabs-mode nil)
@@ -290,6 +290,18 @@ indent yanked text (with prefix arg don't indent)."
 ;; -------------------------------------------------------------------
 ;; Misc
 ;; -------------------------------------------------------------------
+
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
+
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line
+number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
 
 (require 'fill-column-indicator)
 (setq fci-rule-color "white")
