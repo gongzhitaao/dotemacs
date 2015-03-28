@@ -1,5 +1,5 @@
 ;;; js2-conf.el --- js2-mode conf
-;;; Time-stamp: <2014-12-05 19:58:17 CST gongzhitaao>
+;;; Time-stamp: <2015-03-08 17:45:11 CDT gongzhitaao>
 
 (setq js-indent-level 2)
 
@@ -10,7 +10,7 @@
 (setq js2-mode-indent-ignore-first-tab t)
 
 (setq-default js2-global-externs
-              '("module" "require" "assert" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "console" "JSON" "Infinity" "d3" "window" "document" "describe" "jQuery" "hljs"))
+              '("assert" "clearInterval" "clearTimeout" "console" "d3" "describe" "document" "google" "hljs" "Infinity" "jQuery" "JSON" "localStorage" "module" "require" "setInterval" "setTimeout" "window"))
 
 (provide 'js2-conf)
 ;;; js2-conf.el ends here

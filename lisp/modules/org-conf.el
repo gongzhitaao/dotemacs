@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2015-03-02 18:02:13 CST gongzhitaao>
+;;; Time-stamp: <2015-03-27 09:01:30 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -122,7 +122,7 @@
 ;; -------------------------------------------------------------------
 (setq org-capture-templates
       '(("t" "New TODO" entry
-         (file+headline "todo.org" "Tasks")
+         (file+headline "todo.org.gz" "Tasks")
          "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")))
 
 (require 'ox-latex)
