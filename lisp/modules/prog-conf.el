@@ -14,4 +14,8 @@
 
 (add-hook 'prog-mode-hook 'which-function-mode)
 
+(add-hook 'prog-mode-hook
+          '(lambda ()
+             (orgstruct++-mode)))
+
 (setq sgml-basic-offset 0)
