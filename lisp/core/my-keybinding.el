@@ -27,11 +27,9 @@
 (global-set-key (kbd "C-c <right>") 'increase-left-margin)
 (global-set-key (kbd "C-c C-<right>") 'increase-left-margin)
 
-
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 (global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
-(global-set-key (kbd "s-r") 'set-visited-file-name)
 (global-set-key (kbd "s-/")
                 (function (lambda ()
                             (interactive)
