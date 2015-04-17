@@ -42,6 +42,57 @@
                             (my-apply-region-or-line
                              'indent-region))))
 
+(defun my/sp-keymap()
+  "My sp-keymap"
+  (define-key sp-keymap (kbd "M-s f") 'sp-forward-sexp)
+  (define-key sp-keymap (kbd "M-s b") 'sp-backward-sexp)
+
+  (define-key sp-keymap (kbd "M-s d") 'sp-down-sexp)
+  (define-key sp-keymap (kbd "M-s D") 'sp-backward-down-sexp)
+  (define-key sp-keymap (kbd "M-s a") 'sp-beginning-of-sexp)
+  (define-key sp-keymap (kbd "M-s e") 'sp-end-of-sexp)
+
+  (define-key sp-keymap (kbd "M-s u") 'sp-up-sexp)
+  ;; (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+  (define-key sp-keymap (kbd "M-s U") 'sp-backward-up-sexp)
+  (define-key sp-keymap (kbd "M-s t") 'sp-transpose-sexp)
+
+  (define-key sp-keymap (kbd "M-s n") 'sp-next-sexp)
+  (define-key sp-keymap (kbd "M-s p") 'sp-previous-sexp)
+
+  (define-key sp-keymap (kbd "M-s k") 'sp-kill-sexp)
+  (define-key sp-keymap (kbd "M-s w") 'sp-copy-sexp)
+
+  (define-key sp-keymap (kbd "M-s s") 'sp-forward-slurp-sexp)
+  (define-key sp-keymap (kbd "M-s r") 'sp-forward-barf-sexp)
+  (define-key sp-keymap (kbd "M-s S") 'sp-backward-slurp-sexp)
+  (define-key sp-keymap (kbd "M-s R") 'sp-backward-barf-sexp)
+  (define-key sp-keymap (kbd "M-s F") 'sp-forward-symbol)
+  (define-key sp-keymap (kbd "M-s B") 'sp-backward-symbol)
+
+  (define-key sp-keymap (kbd "M-s [") 'sp-select-previous-thing)
+  (define-key sp-keymap (kbd "M-s ]") 'sp-select-next-thing)
+
+  (define-key sp-keymap (kbd "M-s M-i") 'sp-splice-sexp)
+  (define-key sp-keymap (kbd "M-s <delete>") 'sp-splice-sexp-killing-forward)
+  (define-key sp-keymap (kbd "M-s <backspace>") 'sp-splice-sexp-killing-backward)
+  (define-key sp-keymap (kbd "M-s M-<backspace>") 'sp-splice-sexp-killing-around)
+
+  (define-key sp-keymap (kbd "M-s M-w") 'sp-wrap)
+  (define-key sp-keymap (kbd "M-s M-u") 'sp-unwrap-sexp)
+  (define-key sp-keymap (kbd "M-s M-b") 'sp-backward-unwrap-sexp)
+
+  (define-key sp-keymap (kbd "M-s M-t") 'sp-prefix-tag-object)
+  (define-key sp-keymap (kbd "M-s M-p") 'sp-prefix-pair-object)
+  (define-key sp-keymap (kbd "M-s M-c") 'sp-convolute-sexp)
+  (define-key sp-keymap (kbd "M-s M-a") 'sp-absorb-sexp)
+  (define-key sp-keymap (kbd "M-s M-e") 'sp-emit-sexp)
+  (define-key sp-keymap (kbd "M-s M-p") 'sp-add-to-previous-sexp)
+  (define-key sp-keymap (kbd "M-s M-n") 'sp-add-to-next-sexp)
+  (define-key sp-keymap (kbd "M-s M-j") 'sp-join-sexp)
+  (define-key sp-keymap (kbd "M-s M-s") 'sp-split-sexp)
+  (define-key sp-keymap (kbd "M-s M-r") 'sp-raise-sexp))
+
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "M-<down>") 'shrink-window)

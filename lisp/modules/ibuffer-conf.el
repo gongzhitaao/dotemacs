@@ -1,5 +1,5 @@
 ;;; ibuffer.conf.el
-;;; Time-stamp: <2014-10-11 11:07:20 CDT gongzhitaao>
+;;; Time-stamp: <2015-04-16 09:30:13 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -7,7 +7,7 @@
       `(("default"
          ("Planner"
           (or (mode . org-agenda-mode)
-              (filename . "/home/gongzhitaao/.emacs.d/personal/org/")
+              (filename . "/home/gongzhitaao/Dropbox/emacs/personal/org/")
               (name . "\\.bbdb")
               (mode . bbdb-mode)
               (name . "^\\*Calendar\\*$")

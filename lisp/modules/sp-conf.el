@@ -1,10 +1,15 @@
 ;;; sp-conf.el --- Smartparens config
-;;; Time-stamp: <2015-04-10 08:48:25 CDT gongzhitaao>
+;;; Time-stamp: <2015-04-16 09:01:41 CDT gongzhitaao>
 
 (require 'smartparens-config)
 (smartparens-global-mode t)
-
-;; highlights matching pairs
 (show-smartparens-global-mode t)
+(setq sp-navigate-close-if-unbalanced t)
+
+(sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+  (sp-local-tag "i" "\"<" "\">")
+  (sp-local-tag "i" "\"[" "\"]"))
+
+(my/sp-keymap)
 
 ;;; sp-conf.el ends here
