@@ -1,5 +1,5 @@
 ;;; display-time-conf.el --- display-time modebar config
-;;; Time-stamp: <2014-04-27 08:26:45 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 20:22:15 CDT gongzhitaao>
 
 (setq display-time-24hr-format t
       display-time-day-and-date nil)
@@ -23,5 +23,4 @@
               :ascent center))
 (display-time)
 
-(provide 'display-time-conf)
 ;;; display-time-conf.el ends here

@@ -1,5 +1,5 @@
 ;;; ess.conf.el
-;;; Time-stamp: <2014-06-23 15:57:16 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 20:50:50 CDT gongzhitaao>
 
 (require 'ess-site)
 
@@ -16,5 +16,4 @@
           (lambda ()
             (smartparens-mode 1)))
 
-(provide 'ess-conf)
 ;;; ess.conf.el ends here

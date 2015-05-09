@@ -1,5 +1,5 @@
 ;;; rainbow-conf.el --- Rainbow mode config
-;;; Time-stamp: <2014-08-23 21:57:57 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 21:03:11 CDT gongzhitaao>
 
 (require 'rainbow-mode)
 
@@ -9,5 +9,4 @@
       rainbow-latex-colors t
       rainbow-x-colors t)
 
-(provide 'rainbow-conf)
 ;;; rainbow-conf.el ends here

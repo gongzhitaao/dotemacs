@@ -1,3 +1,5 @@
+;;; prog-conf.el --- General prog configuration
+;;; Time-stamp: <2015-05-06 22:07:01 gongzhitaao>
 
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
@@ -13,9 +15,10 @@
 (setq tab-stop-list (number-sequence 2 120 2))
 
 (add-hook 'prog-mode-hook 'which-function-mode)
-
 (add-hook 'prog-mode-hook
           '(lambda ()
              (orgstruct++-mode)))
 
-(setq sgml-basic-offset 0)
+(setq sgml-basic-offset 1)
+
+;;; prog-conf.el ends here

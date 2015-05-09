@@ -1,5 +1,5 @@
 ;;; dired-conf.el --- Dired config
-;;; Time-stamp: <2014-08-31 17:04:09 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 20:21:57 CDT gongzhitaao>
 
 ;; dired - reuse current buffer by pressing 'a'
 (put 'dired-find-alternate-file 'disabled nil)
@@ -13,5 +13,4 @@
 
 (setq dired-listing-switches "-alh")
 
-(provide 'dired-conf)
 ;;; dired-conf.el ends here

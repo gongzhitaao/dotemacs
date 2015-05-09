@@ -1,5 +1,5 @@
-;;; ibuffer.conf.el
-;;; Time-stamp: <2015-04-16 09:30:13 CDT gongzhitaao>
+;;; ibuffer-conf.el
+;;; Time-stamp: <2015-05-05 20:53:38 CDT gongzhitaao>
 
 (require 'ibuffer)
 
@@ -14,11 +14,12 @@
               (name . "^diary$")))
          ("Dired" (mode . dired-mode))
          ("Web"
-          (or (mode . html-mode)
-              (name . "\\.js")
+          (or (name . "\\.js")
               (name . "\\.css")
               (name . "\\.html")
-              (name . "\\.php")))
+              (name . "\\.php")
+              (name . "\\.xml")
+              (mode . yaml-mode)))
          ("Text"
           (or (name . "\\.\\(tex\\|bib\\|csv\\)")
               (mode . org-mode)
@@ -87,4 +88,4 @@
               " "
               filename-and-process)))
 
-(provide 'ibuffer.conf)
+;;; ibuffer-conf.el ends here

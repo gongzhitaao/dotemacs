@@ -1,5 +1,5 @@
 ;;; gnus.conf.el
-;;; Time-stamp: <2015-02-02 11:20:31 CST gongzhitaao>
+;;; Time-stamp: <2015-05-06 21:59:34 CDT gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -8,7 +8,7 @@
 (setq user-mail-address "me@gongzhitaao.org")
 
 (setq gnus-init-file
-      "/home/gongzhitaao/.emacs.d/lisp/modules/gnus-conf.el")
+      "/home/gongzhitaao/.emacs.d/misc/gnus-conf.el")
 
 (setq gnus-select-method
       '(nnimap "LocalMail"
@@ -54,15 +54,15 @@ for the header string.
     (cond
       ((= 0 age-level)
        (propertize header-date-time-string
-		   'face 'my-date-one-day-old-face
+		   'face '(my-date-one-day-old-face default)
 		   'gnus-face t))
       ((= 1 age-level)
        (propertize header-date-time-string
-		   'face 'my-date-one-week-old-face
+		   'face '(my-date-one-week-old-face default)
 		   'gnus-face t))
       (t
        (propertize header-date-time-string
-                   'face 'my-date-more-than-one-week-old-face
+                   'face '(my-date-more-than-one-week-old-face default)
                    'gnus-face t)))))
 
 (setq-default
@@ -177,11 +177,9 @@ Software Engineering")))
 (setq mail-user-agent 'gnus-user-agent)
 (setq read-mail-command 'gnus)
 
-(setq mm-text-html-renderer 'w3m)
 (setq mm-inline-large-images nil)
 (auto-image-file-mode t)
 (setq mm-inline-text-html-with-images nil)
-(setq mm-w3m-safe-url-regexp nil)
 
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
@@ -196,4 +194,4 @@ Software Engineering")))
           (lambda ()
             (hl-line-mode 1)))
 
-(provide 'gnus-conf)
+;;; gnus-conf.el ends here

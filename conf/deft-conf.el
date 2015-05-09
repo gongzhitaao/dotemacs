@@ -1,6 +1,5 @@
-;;; deft-conf.el --- Deft configuration
-;;; Time-stamp: <2015-04-12 08:57:11 CDT gongzhitaao>
-;;; Code:
+;;; deft-conf.el
+;;; Time-stamp: <2015-05-05 20:20:43 CDT gongzhitaao>
 
 (require 'deft)
 
@@ -13,5 +12,4 @@
       (concat deft-strip-title-regexp
               "\\|\\(?:\\+TITLE:[[:space:]]+\\)"))
 
-(provide 'deft-conf)
 ;;; deft-conf.el ends here

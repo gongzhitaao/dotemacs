@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2015-04-12 08:48:28 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 21:02:00 CDT gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -21,7 +21,8 @@
                      org-docview
                      org-gnus
                      org-habit
-                     org-table)))
+                     org-table
+                     ox-bibtex)))
               (dolist (m my-org-modules)
                 (add-to-list 'org-modules m t))
               (dolist (m org-modules)
@@ -158,4 +159,4 @@
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-(provide 'org-conf)
+;;; org-conf.el ends here

@@ -1,6 +1,9 @@
+;;; ido-conf.el
+;;; Time-stamp: <2015-05-06 22:05:10 gongzhitaao>
+
 (require 'ido)
 (ido-mode 'both) ;; for buffers and files
-(setq ido-save-directory-list-file (expand-file-name "ido.last" my-savefile-dir)
+(setq ido-save-directory-list-file (expand-file-name "ido.last" my-tmp)
       ;; ignore these buffers during completion
       ido-ignore-buffers '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
                            "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
@@ -15,12 +18,10 @@
       ido-max-prospects 6
       ido-confirm-unique-completion t)
 
-(setq confirm-nonexistent-file-or-buffer nil)
-
 ;; increase minibuffer size when ido completion is active
 (add-hook 'ido-minibuffer-setup-hook
           (function
            (lambda ()
              (make-local-variable 'resize-minibuffer-window-max-height))))
 
-(provide 'ido-conf)
+;;; ido-conf.el ends here

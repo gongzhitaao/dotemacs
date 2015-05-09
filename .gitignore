@@ -5,18 +5,10 @@
 
 !init.el
 
-!lisp
-!lisp/*
-!lisp/core
-!lisp/core/*
-!lisp/modules
-!lisp/modules/*
+!conf
+!conf/*
+!conf/chinese-wubi
+!conf/chinese-wubi/*
 
 !icons
 !icons/*
-
-!snippets
-!snippets/*
-
-!org-template
-!org-template/*

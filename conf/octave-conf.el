@@ -1,5 +1,5 @@
 ;;; octave-conf.el --- Octave mode config
-;;; Time-stamp: <2014-10-21 15:27:04 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-05 21:10:05 CDT gongzhitaao>
 
 (setq octave-continuation-string "...")
 
@@ -8,6 +8,4 @@
  (lambda ()
    (local-set-key (kbd "C-c C-v") 'octave-help)))
 
-
-(provide 'octave-conf)
 ;;; octave-conf.el ends here

@@ -1,8 +1,7 @@
-;;; appt-conf.el --- Appt config
-;;; Time-stamp: <2014-04-27 08:29:07 CDT gongzhitaao>
+;;; appt-conf.el
+;;; Time-stamp: <2015-05-05 20:15:01 CDT gongzhitaao>
 
 (appt-activate 1)
-
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
 (defun my-appt-display (mins-till-appt cur-time msg)
@@ -14,5 +13,4 @@
 
 (setq appt-disp-window-function (function my-appt-display))
 
-(provide 'appt-conf)
 ;;; appt-conf.el ends here
