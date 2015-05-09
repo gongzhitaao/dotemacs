@@ -1,5 +1,5 @@
 ;;; prog-conf.el --- General prog configuration
-;;; Time-stamp: <2015-05-06 22:07:01 gongzhitaao>
+;;; Time-stamp: <2015-05-08 22:32:16 gongzhitaao>
 
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
@@ -16,8 +16,8 @@
 
 (add-hook 'prog-mode-hook 'which-function-mode)
 (add-hook 'prog-mode-hook
-          '(lambda ()
-             (orgstruct++-mode)))
+          (lambda ()
+            (hs-minor-mode)))
 
 (setq sgml-basic-offset 1)
 

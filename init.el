@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-08 21:53:23 gongzhitaao>
+;;; Time-stamp: <2015-05-08 23:02:14 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -82,6 +82,7 @@ missing packages when neccessary."
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
 (delete-selection-mode t)
+(setq colon-double-space t)
 
 (add-hook 'write-file-functions
 	  (lambda ()
@@ -153,6 +154,8 @@ line instead."
 
 (require 'recentf)
 (add-to-list 'recentf-exclude (expand-file-name ".*" my-tmp))
+(add-to-list 'recentf-exclude (expand-file-name "elpa/.*" my-dir))
+(add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
 (setq recentf-save-file (expand-file-name "recentf" my-tmp))
 (recentf-mode +1)
 
@@ -348,13 +351,17 @@ number input"
 (global-set-key (kbd "C-r") 'query-replace-regexp)
 
 (global-set-key (kbd "<f7>") 'compile)
+(global-set-key (kbd "<f8>") 'deft)
 (global-set-key (kbd "<f9>") 'recentf-open-files)
 ;; f10 - menu
 (global-set-key (kbd "<f11>") 'ispell)
 (global-set-key (kbd "<f12>") 'gnus-other-frame)
 
-(global-set-key (kbd "C-c k") 'browse-kill-ring)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
+(global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c g") 'ace-jump-mode)
+(global-set-key (kbd "C-c k") 'browse-kill-ring)
 (global-set-key (kbd "C-c |") 'fci-mode)
 (global-set-key (kbd "C-c ,") 'color-identifiers-mode)
 (global-set-key (kbd "C-c =") 'align-regexp)
@@ -371,7 +378,6 @@ number input"
 
 (global-set-key (kbd "C-c <left>") 'decrease-left-margin)
 (global-set-key (kbd "C-c <right>") 'increase-left-margin)
-(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 
 (global-set-key (kbd "C-c C-<left>") 'decrease-left-margin)
 (global-set-key (kbd "C-c C-<right>") 'increase-left-margin)
