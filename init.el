@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-08 23:02:14 gongzhitaao>
+;;; Time-stamp: <2015-05-09 09:06:51 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -73,7 +73,7 @@ missing packages when neccessary."
 	(if missing-package-list
 	    (progn (message "%s" missing-package-list)
 		   (mapc 'package-install missing-package-list))))))
-(my-read-n-install-missing)
+;; (my-read-n-install-missing)
 
 ;; -------------------------------------------------------------------
 ;; Editor
@@ -254,7 +254,6 @@ indent yanked text (with prefix arg don't indent)."
 (eval-after-load "ace-jump-mode" '(ace-jump-mode-enable-mark-sync))
 
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
-
 (defun goto-line-with-feedback ()
     "Show line numbers temporarily, while prompting for the line
 number input"
@@ -269,77 +268,7 @@ number input"
 (require 'fill-column-indicator)
 (setq fci-rule-color "white")
 
-(global-hl-line-mode 1)
-(set-face-attribute hl-line-face nil :background "#3B3D3A")
-
-(require 'ido)
-(ido-mode 'both) ;; for buffers and files
-(setq ido-save-directory-list-file (expand-file-name "idolast" my-tmp)
-      ;; ignore these buffers during completion
-      ido-ignore-buffers '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-                           "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
-      ;; case insensitive
-      ido-case-fold t
-      ;; remember last directory
-      ido-enable-last-directory-history t
-      ido-max-work-file-list 50
-      ido-use-filename-at-point nil
-      ido-use-url-at-point nil
-      ido-enable-flex-matching nil
-      ido-max-prospects 6
-      ido-confirm-unique-completion t)
-
 (setq confirm-nonexistent-file-or-buffer nil)
-
-;; increase minibuffer size when ido completion is active
-(add-hook 'ido-minibuffer-setup-hook
-          (function
-           (lambda ()
-             (make-local-variable 'resize-minibuffer-window-max-height))))
-
-(setq js-indent-level 2)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(setq js2-basic-offset 2
-      js2-bounce-indent-p nil)
-(setq js2-mode-indent-ignore-first-tab t)
-(setq-default js2-global-externs
-              '("assert" "clearInterval" "clearTimeout" "console" "d3" "describe" "document" "google" "hljs" "Infinity" "jQuery" "JSON" "localStorage" "module" "require" "setInterval" "setTimeout" "window"))
-
-;; annoying mode, dont like it
-;; (require 'multi-web-mode)
-;; (setq mweb-default-major-mode 'html-mode)
-;; (setq mweb-tags
-;;       '((js-mode  "<script\\(\\s-+type=\"text/javascript\"\\|language=\"javascript\"[^>]*\\)?>" "</script>")
-;;         (css-mode "<style\\(\\s-+type=\"text/css\"[^>]*\\)?>" "</style>")
-;;         (php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")))
-;; (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
-;; (multi-web-global-mode 1)
-
-(require 'web-mode)
-(setq web-mode-enable-engine-detection t)
-(add-hook 'web-mode-hook
-          (lambda ()
-            (setq web-mode-markup-indent-offset 1)
-            (setq web-mode-css-indent-offset 2)
-            (setq web-mode-code-indent-offset 2)
-            (smartparens-mode t)))
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
-(setq sgml-basic-offset 0)
-
-(setq mweb-submode-indent-offset 2)
-(setq sql-indent-offset 1)
-
-(setq tab-stop-list (number-sequence 2 120 2))
-(add-hook 'prog-mode-hook 'which-function-mode)
-
-(eval-after-load "sql"
-  '(load-library "sql-indent"))
-(setq sql-indent-offset 1)
 
 ;; -------------------------------------------------------------------
 ;; Keymap
@@ -464,6 +393,9 @@ number input"
   (dolist (c my-prefer-coding-system)
     (prefer-coding-system c)))
 
+(set-face-attribute 'default nil
+                    :font "Ubuntu Mono:pixelsize=16")
+
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
@@ -472,8 +404,8 @@ number input"
 
 (load-theme 'naquadah t)
 (global-hl-line-mode 1)
-
 (set-face-attribute hl-line-face nil :background "#3B3D3A")
+
 (set-face-attribute 'sp-pair-overlay-face nil :background "#005500")
 
 (when (file-exists-p my-conf-dir)

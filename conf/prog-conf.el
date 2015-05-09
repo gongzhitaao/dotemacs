@@ -1,5 +1,5 @@
 ;;; prog-conf.el --- General prog configuration
-;;; Time-stamp: <2015-05-08 22:32:16 gongzhitaao>
+;;; Time-stamp: <2015-05-09 09:02:15 gongzhitaao>
 
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)

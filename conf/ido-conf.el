@@ -1,9 +1,9 @@
 ;;; ido-conf.el
-;;; Time-stamp: <2015-05-06 22:05:10 gongzhitaao>
+;;; Time-stamp: <2015-05-09 09:31:47 gongzhitaao>
 
 (require 'ido)
 (ido-mode 'both) ;; for buffers and files
-(setq ido-save-directory-list-file (expand-file-name "ido.last" my-tmp)
+(setq ido-save-directory-list-file (expand-file-name "idolast" my-tmp)
       ;; ignore these buffers during completion
       ido-ignore-buffers '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
                            "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
