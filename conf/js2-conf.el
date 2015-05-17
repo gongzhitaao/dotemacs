@@ -1,5 +1,5 @@
 ;;; js2-conf.el --- js2-mode conf
-;;; Time-stamp: <2015-05-05 21:00:46 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-17 08:36:45 gongzhitaao>
 
 (setq js-indent-level 2)
 
@@ -12,6 +12,6 @@
 (rename-modeline "js2-mode" js2-mode "JS2")
 
 (setq-default js2-global-externs
-              '("assert" "clearInterval" "clearTimeout" "console" "d3" "describe" "document" "google" "hljs" "Infinity" "jQuery" "JSON" "localStorage" "module" "require" "setInterval" "setTimeout" "window"))
+              '("assert" "clearInterval" "clearTimeout" "console" "d3" "describe" "document" "google" "hljs" "Infinity" "io" "jQuery" "JSON" "localStorage" "module" "process" "require" "setInterval" "setTimeout" "window"))
 
 ;;; js2-conf.el ends here
