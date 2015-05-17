@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-09 09:06:51 gongzhitaao>
+;;; Time-stamp: <2015-05-12 22:31:45 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -297,7 +297,7 @@ number input"
 (global-set-key (kbd "C-c /")
                 (function (lambda ()
                             (interactive)
-                            (my-apply-region-or-para
+                            (my-apply-region-or-line
                              'comment-or-uncomment-region))))
 (global-set-key (kbd "C-c \\")
                 (function (lambda ()
@@ -310,11 +310,6 @@ number input"
 
 (global-set-key (kbd "C-c C-<left>") 'decrease-left-margin)
 (global-set-key (kbd "C-c C-<right>") 'increase-left-margin)
-(global-set-key (kbd "C-c C-c")
-                (function (lambda ()
-                            (interactive)
-                            (my-apply-region-or-line
-                             'comment-or-uncomment-region))))
 
 (global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
