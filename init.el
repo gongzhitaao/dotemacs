@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-12 22:31:45 gongzhitaao>
+;;; Time-stamp: <2015-05-17 08:42:23 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -112,6 +112,12 @@ missing packages when neccessary."
 (tool-bar-mode 0)
 (menu-bar-mode 1)
 (scroll-bar-mode 0)
+
+(setq frame-title-format
+      '("emacs%@" (:eval (system-name)) ": "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b")) " [%*]"))
 
 (setq visilble-bell t)
 
