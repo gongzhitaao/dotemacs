@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-17 08:42:23 gongzhitaao>
+;;; Time-stamp: <2015-05-17 23:21:35 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -316,6 +316,11 @@ number input"
 
 (global-set-key (kbd "C-c C-<left>") 'decrease-left-margin)
 (global-set-key (kbd "C-c C-<right>") 'increase-left-margin)
+(global-set-key (kbd "C-c C-/")
+                (function (lambda ()
+                            (interactive)
+                            (my-apply-region-or-line
+                             'comment-or-uncomment-region))))
 
 (global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
