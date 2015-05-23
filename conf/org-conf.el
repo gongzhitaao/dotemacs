@@ -1,5 +1,5 @@
 ;;; org.conf.el
-;;; Time-stamp: <2015-05-05 21:02:00 CDT gongzhitaao>
+;;; Time-stamp: <2015-05-21 17:40:35 gongzhitaao>
 
 (require 'org-install)
 (require 'org)
@@ -102,20 +102,15 @@
 ;; -------------------------------------------------------------------
 ;; Clock
 ;; -------------------------------------------------------------------
-;; (org-clock-persistence-insinuate t)
 
 (setq org-clock-history-length 32
       org-clock-in-resume t)
-
-;; -------------------------------------------------------------------
-;; Log thing
-;; -------------------------------------------------------------------
 (setq org-log-into-drawer t
       org-clock-into-drawer t)
 
-;; -------------------------------------------------------------------
-;; Tags
-;; -------------------------------------------------------------------
+(setq org-clock-persist 't)
+(org-clock-persistence-insinuate)
+
 (setq org-use-fast-tag-selection nil)
 
 ;; -------------------------------------------------------------------
