@@ -1,5 +1,5 @@
-;;; gnus.conf.el
-;;; Time-stamp: <2015-05-06 21:59:34 CDT gongzhitaao>
+;;; gnus-conf.el
+;;; Time-stamp: <2015-06-02 15:26:07 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -8,7 +8,7 @@
 (setq user-mail-address "me@gongzhitaao.org")
 
 (setq gnus-init-file
-      "/home/gongzhitaao/.emacs.d/misc/gnus-conf.el")
+      "/home/gongzhitaao/.emacs.d/conf/gnus-conf.el")
 
 (setq gnus-select-method
       '(nnimap "LocalMail"

@@ -1,5 +1,5 @@
 ;;; my-editor.el --- My Editor configuration.
-;;; Time-stamp: <2015-05-17 23:21:35 gongzhitaao>
+;;; Time-stamp: <2015-06-02 08:37:59 gongzhitaao>
 (require 'cl)
 
 ;; -------------------------------------------------------------------
@@ -162,6 +162,7 @@ line instead."
 (add-to-list 'recentf-exclude (expand-file-name ".*" my-tmp))
 (add-to-list 'recentf-exclude (expand-file-name "elpa/.*" my-dir))
 (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
+(add-to-list 'recentf-exclude (expand-file-name my-personal-dir))
 (setq recentf-save-file (expand-file-name "recentf" my-tmp))
 (recentf-mode +1)
 
