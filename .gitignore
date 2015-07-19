@@ -5,10 +5,13 @@
 
 !init.el
 
-!conf
-!conf/*
-!conf/chinese-wubi
-!conf/chinese-wubi/*
+!Cask
+
+!conf.org
+
+!conf.d
+!conf.d/
+!conf.d/*
 
 !icons
 !icons/*
