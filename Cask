@@ -39,6 +39,7 @@
 (depends-on "fuzzy")
 (depends-on "ggtags")
 (depends-on "git")
+(depends-on "gitignore-mode")
 (depends-on "git-annex")
 (depends-on "git-gutter")
 (depends-on "git-timemachine")
