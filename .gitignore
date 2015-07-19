@@ -9,9 +9,7 @@
 
 !conf.org
 
-!conf.d
-!conf.d/
-!conf.d/*
+!gnus-conf.el
 
 !icons
 !icons/*
