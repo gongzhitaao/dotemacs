@@ -618,6 +618,22 @@ createfolders = False
 
 *** Appt
 
+    #+BEGIN_QUOTE
+    The Emacs diary keeps track of appointments or other events on a
+    daily basis, in conjunction with the calendar.
+    #+END_QUOTE
+
+    #+BEGIN_SRC emacs-lisp
+(when (display-graphic-p)
+  (setq diary-file (expand-file-name "diary" my-personal-dir)))
+    #+END_SRC
+
+    Show diary when I view the calendar.
+
+    #+BEGIN_SRC emacs-lisp
+(setq calendar-view-diary-initially-flag t)
+    #+END_SRC
+
     Activate appointment management and remind Org agenda as appoinment,
     only in GUI mode.
 
@@ -692,17 +708,6 @@ createfolders = False
         deft-strip-title-regexp
         (concat deft-strip-title-regexp
                 "\\|\\(?:\\+TITLE:[[:space:]]+\\)")))
-    #+END_SRC
-
-*** Diary
-
-    #+BEGIN_QUOTE
-    The Emacs diary keeps track of appointments or other events on a
-    daily basis, in conjunction with the calendar.
-    #+END_QUOTE
-
-    #+BEGIN_SRC emacs-lisp
-(setq diary-file (expand-file-name "diary" my-personal-dir))
     #+END_SRC
 
 *** Dired
@@ -1242,7 +1247,7 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 (use-package writeroom-mode
   :bind ("C-c w" . writeroom-mode)
-  :config (setq writeroom-width fill-column))
+  :config (setq writeroom-width (+ fill-column 10)))
     #+END_SRC
 
 * Editor Setting
@@ -1471,6 +1476,7 @@ createfolders = False
     Keybindings for {{{kbd(Fn)}}} keys.
 
     #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f6>") 'calendar)
 (global-set-key (kbd "<f7>") 'compile)
 (global-set-key (kbd "<f8>") 'deft)
 ;; f9 -- helm-recentf
@@ -1533,7 +1539,9 @@ createfolders = False
     configuration files.
 
     #+BEGIN_SRC emacs-lisp
-(open-dribble-file (expand-file-name ".key.log.gz" my-dir))
+(open-dribble-file
+ (expand-file-name
+  (format-time-string "~/.emacs.d/.keylog/key-%FT%H%M%S.log")))
     #+END_SRC
 
 * End
