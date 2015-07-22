@@ -1,6 +1,8 @@
 #+TITLE: Emacs Configurations
 #+AUTHOR: Zhitao Gong
 #+EMAIL: me@gongzhitaao.org
+#+HTML_HEAD: <meta name="description" content="Emacs configurations written in Orgmode.">
+#+HTML_HEAD: <meta name="keywords" content="emacs,orgmode,literal programming,emacs-lisp,org">
 #+HTML_HEAD: <link rel="stylesheet" href="normalize.css" type="text/css" />
 #+HTML_HEAD: <link rel="stylesheet" href="https://gongzhitaao.github.io/orgcss/org.css" type="text/css" />
 #+OPTIONS: H:4 num:3 toc:nil num:t
@@ -23,9 +25,9 @@ after a while.
 :END:
 
   This is my Emacs configuration, stored in =conf.org= file with all
-  these texts and loaded by =org-babel-load-file= from =init.el=.
-  This is inspired by [[http://writequit.org/][Matthew Lee Hinman]][fn:1] in his [[http://writequit.org/org/settings.html][settings]].  This
-  project is hosted with ♥ by Github, here is the [[https://github.com/gongzhitaao/dotemacs][repo]].
+  these texts and loaded by =org-babel-load-file= from =init.el=.  This
+  is inspired by [[http://writequit.org/][Matthew Lee Hinman]][fn:1] in his [[http://writequit.org/org/settings.html][settings]].  This project
+  is hosted with ♥ by Github, here is the [[https://github.com/gongzhitaao/dotemacs][repo]].
 
   This file is last updated {{{time(%Y-%m-%d %H:%M)}}}.
 
@@ -34,21 +36,16 @@ after a while.
 :CUSTOM_ID: sec:bootstrap
 :END:
 
-  I use =emacs.d/init.el= to bootstrap all my Emacs configurations.
-  Some package configurations are separated into individula files
-  under =conf.d/= accordingly, following the name convention
-  =name-conf.org=, where =name= is the name for the mode or package.
-  The structure of my =emacs.d= is shown in Figure
-  <<fig:dotemacs_folder_structure>>.
+  I use =emacs.d/init.el= to bootstrap all my Emacs configurations.  The
+  only thing done in =init.el= is to load this file, =conf.org=, which
+  includes all our documented configurations.
 
-  #+CAPTION: Dotemacs folder structure
-  #+NAME: dotemacs_folder_structure
-  [[./img/dotemacs_folder_structure]]
+  #+BEGIN_SRC emacs-lisp :tangle no
+(require 'org)
+(org-babel-load-file "~/.emacs.d/conf.org")
+  #+END_SRC
 
-  The only thing done in =init.el= is to load this file, =conf.org=,
-  which includes all our documented configurations.  To avoid
-  recursive loading, the =init.el= content is not included here.  The
-  following sections are all the documented configurations.
+  The following sections are all the documented configurations.
 
 * Package Manager
   :PROPERTIES:
@@ -62,78 +59,20 @@ after a while.
 
    This is how I did, and probably what you are doing.
 
-   #+BEGIN_SRC lisp
+   1. First of all, maintain a list of packages.
+
+      #+BEGIN_SRC emacs-lisp :tangle no
 (defvar my/package-list
   '(
-    ;; package management
-    use-package
 
-    ;; colors
-    color-identifiers-mode dakrone-theme leuven-theme moe-theme
-    naquadah-theme nyan-mode rainbow-mode rainbow-delimiters-mode
-    volatile-highlights google-c-style paren-face
+    ;; A super long list of all packages
 
-    ;; utility
-    dash f
-
-    ;; misc
-    async bbdb deft diminish gnuplot gnuplot-mode
-
-    ;; python
-    ein
-
-    ;; auto complete
-    fuzzy popup company
-
-    ;; editing utilities
-    ace-jump-mode anzu ag expand-region fill-column-indicator
-    ggtags golden-ratio ido-ubiquitous ido-vertical-mode iedit
-    multiple-cursors projectile simple-call-tree simple-call-tree
-    smart-tab+ smartparens smex undo-tree wc-mode windresize
-
-    ;; statics
-    epl ess ess-R-data-view ess-R-object-popup
-
-    ;; infrastructure stuff
-    company-restclient restclient
-
-    ;; LaTeX
-    auctex
-
-    ;; org-mode
-    org org-plus-contrib htmlize ox-reveal ox-gfm
-
-    ;; buffer utils
-    popwin dired+ ibuffer
-
-    ;; ssh
-    ssh-config-mode
-
-    ;; flycheck
-    flycheck flycheck-tip
-
-    ;; javascript
-    tern json-mode js2-mode
-
-    ;; emacs-lisp
-    elisp-slime-nav
-
-    ;; markup language
-    markdown-mode markdown-mode+ yaml-mode
-
-    ;; helm
-    helm helm-ag helm-bibtex helm-company helm-dash
-    helm-descbinds helm-flycheck helm-flyspell helm-gist
-    helm-gtags helm-ls-git helm-projectile helm-swoop
-
-    ;; git
-    diff-hl git-annex git-gutter git-timemachine magit magit-gh-pulls
-    with-editor
-
-    ;; eshell
-    eshell-prompt-extras
     ))
+      #+END_SRC
 
+   2. Then add official archives and initialize the package system.
+
+      #+BEGIN_SRC emacs-lisp :tangle no
 (require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -142,24 +81,58 @@ after a while.
         ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
 
-(or (file-exists-p package-user-dir)
-    (package-refresh-contents))
+(or (file-exists-p package-user-dir) (package-refresh-contents))
+      #+END_SRC
 
+   3. And finally install, if neccessary all the packages.
+
+      #+BEGIN_SRC emacs-lisp :tangle no
 (dolist (pack my/package-list)
   (unless (package-installed-p pack)
     (package-install pack)))
-   #+END_SRC
+      #+END_SRC
+
+
+   It works.  But there is one thing I particularly do not like about
+   the default packaging system: when updating packages, it
+   /re-downloads/ all the outdated package instead of retrieving only
+   modified files like =git pull=.  It takes quite a while to uncompress
+   and compile large packages, e.g., =ess= (Emacs Speaks Statistics),
+   =org=, =org-plus-contrib= and etc.  And Emacs is blocked during this
+   process since it is /single-threaded/!
 
 ** Preferred Way
 
    Just found about [[http://cask.readthedocs.org/en/latest/index.html][Cask]], yet another package manager for Emacs.  See
-   [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]]  for the reason of switching to Cask.  All dependencies
-   are stored in =Cask= under =.emacs.d/=.
+   [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]] for the reason of switching to Cask.  All dependencies are
+   stored in =Cask= under =.emacs.d/=.
+
+   The contents of Cask is as follows (long list of packages are omitted
+   for brevity).
+
+   #+BEGIN_SRC emacs-lisp :tangle no
+(source gnu)
+(source melpa)
+(source marmalade)
+(source org)
+
+(depends-on "ace-jump-mode")
+(depends-on "ag")
+(depends-on "anzu")
+(depends-on "async")
+(depends-on "auctex")
+;; the (depends-on ...) list goes on and on
+   #+END_SRC
+
+   And the following snippet is needed to initialize the =cask= manager.
 
    #+BEGIN_SRC emacs-lisp
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
    #+END_SRC
+
+   For more information about Cask, please refer to its
+   [[http://cask.readthedocs.org/en/latest/][documentation]].
 
    And as usual, load =use-package= first which is used for loading
    packages everywhere else.
@@ -201,15 +174,14 @@ after a while.
   #+BEGIN_SRC emacs-lisp
 (defun my-apply-region-or-line (func)
   "Apply FUNC to a region, or current line if mark is not
-active."
+      active."
   (save-excursion
-  (if (region-active-p)
-      (funcall func (region-beginning) (region-end))
-    (funcall func (line-beginning-position) (line-end-position)))))
+    (if (region-active-p)
+        (funcall func (region-beginning) (region-end))
+      (funcall func (line-beginning-position) (line-end-position)))))
 
 (defun my-apply-region-or-para (func)
-  "Apply FUNC to a region, or current paragraph if mark is not
-active."
+  "Apply FUNC to a region, or current paragraph if mark is not active."
   (save-excursion
     (if (not (region-active-p))
         (mark-paragraph))
@@ -217,13 +189,13 @@ active."
 
 (defun sort-words (reverse beg end)
   "Sort words in region alphabetically, in REVERSE if
-    negative. Prefixed with negative \\[universal-argument],
-    sorts in reverse.
+      negative. Prefixed with negative \\[universal-argument], sorts
+      in reverse.
 
-    The variable `sort-fold-case' determines whether alphabetic
-    case affects the sort order.
+        The variable `sort-fold-case' determines whether alphabetic
+        case affects the sort order.
 
-    See `sort-regexp-fields'."
+        See `sort-regexp-fields'."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\w\\|-\\)+" "\\&" beg end))
 
@@ -241,8 +213,8 @@ active."
 
   This section contains goodies that enpower Emacs.  Two of the most
   important packages I'm using, Orgmode and Gnus are kept in separate
-  configuration files and listed in separeted sections, while all
-  others are all listed under Section [[#sec:miscpac]].
+  configuration files and listed in separeted sections, while all others
+  are all listed under Section [[#sec:miscpac]].
 
 ** Gnus
    :PROPERTIES:
@@ -251,12 +223,13 @@ active."
 
    #+BEGIN_QUOTE
    Gnus is a flexible message reader running under GNU Emacs.  It
-   supports reading and composing both news and mail.  In addition, it is
-   able to use a number of web-based sources as inputs for its groups.
+   supports reading and composing both news and mail.  In addition, it
+   is able to use a number of web-based sources as inputs for its
+   groups.
    #+END_QUOTE
 
-   I choose Gnus over other GUI or console email client mainly because it
-   is a builtin Emacs package, which gives me access to most of the
+   I choose Gnus over other GUI or console email client mainly because
+   it is a builtin Emacs package, which gives me access to most of the
    powerful goodies when composing and reading emails.
 
    With all that being said, it has a rather steep learning curve, three
@@ -359,8 +332,7 @@ remoterepository = GmailRemote
 [Repository GmailLocal]
 
 type = Maildir
-localfolders = ~/Mail/Gmail
-sep = /
+localfolders = ~/Mail/Gmail sep = /
 
 [Repository GmailRemote]
 
@@ -400,8 +372,7 @@ createfolders = False
 (use-package gnus
   :bind ("<f12>" . gnus-other-frame)
   :config
-  (setq gnus-init-file
-        "/home/gongzhitaao/.emacs.d/gnus-conf.el"))
+  (setq gnus-init-file "/home/gongzhitaao/.emacs.d/gnus-conf.el"))
      #+END_SRC
 
 ** Orgmode
@@ -412,7 +383,7 @@ createfolders = False
    #+BEGIN_SRC emacs-lisp
 (use-package org
   :if (display-graphic-p)
-  :init
+  :config
   (let ((my-org-modules
          '(org-bbdb
            org-bibtex
@@ -420,15 +391,24 @@ createfolders = False
            org-docview
            org-gnus
            org-habit
-           org-table)))
+           org-table
+           ox-latex
+           ox-bibtex)))
     (dolist (m my-org-modules)
-      (add-to-list 'org-modules m t)))
+      (require m)))
 
-  (use-package ox-latex)
-  (use-package ox-bibtex)
-
-  :config
   ;; Where I add todos.
+  (add-hook 'org-mode-hook 'turn-on-reftex)
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+  (define-key org-mode-map (kbd "C-c )") #'reftex-reference)
+  (define-key org-mode-map (kbd "C-c [") #'reftex-citation)
+  (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
+  (define-key org-mode-map (kbd "C-c C-\\")
+    (lambda ()
+      (interactive)
+      (my-apply-region-or-para 'org-indent-region)))
+
   (setq org-directory (expand-file-name "org" my-personal-dir))
 
   (setq org-time-stamp-custom-formats
@@ -460,10 +440,10 @@ createfolders = False
         org-html-head-include-scripts nil)
 
   ;; Postamble.
-  (setq
-   org-html-postamble t
-   org-html-postamble-format
-   '(("en" "<a class=\"author\" href=\"http://gongzhitaao.org\">%a</a> / <span class=\"date\">%T</span><span class=\"creator\">%c</span>")))
+  (setq org-html-postamble t org-html-postamble-format
+        '(("en" "<a class=\"author\"
+       href=\"http://gongzhitaao.org\">%a</a> / <span
+       class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
   ;; Use prefix key as tag selection
   (setq org-use-fast-todo-selection t)
@@ -472,8 +452,12 @@ createfolders = False
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-          (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
+        '((sequence
+           "TODO(t)" "NEXT(n)" "|"
+           "DONE(d!)")
+          (sequence
+           "WAIT(w@/!)" "HOLD(h@/!)" "|"
+           "KILL(k@)")))
 
   (setq org-todo-keyword-faces
         '(("TODO" :foreground "red" :weight bold)
@@ -484,7 +468,8 @@ createfolders = False
           ("KILL" :foreground "forest green" :weight bold)))
 
   ;; Files to be included in Agenda view.
-  (setq org-agenda-files (expand-file-name "orgfile" org-directory))
+  (setq org-agenda-files
+        (expand-file-name "orgfile" org-directory))
 
 
   (setq org-agenda-dim-blocked-tasks t)
@@ -506,7 +491,6 @@ createfolders = False
         org-habit-following-days 1
         org-agenda-start-with-log-mode t)
 
-
   (setq org-clock-history-length 32
         org-clock-in-resume t)
   (setq org-log-into-drawer t
@@ -520,63 +504,51 @@ createfolders = False
   (setq org-capture-templates
         '(("t" "New TODO" entry
            (file+headline "todo.org.gz" "Tasks")
-           "* TODO %^{Title} %^G\n  %u\n  %?\n\n\n")
+           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
           ("p" "New Project Proposal" entry
            (file+headline "proj.org.gz" "Projects")
-           "* %^{Title} %^G\n  %u\n  %?\n\n\n")))
-
+           "* %^{Title} %^G\n %u\n %?\n\n\n")))
 
   (setq org-latex-pdf-process
         (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
-  (add-to-list 'org-latex-classes
-               '("scrartcl"
-                 "\\documentclass{scrartcl}
-                [NO-DEFAULT-PACKAGES]
-                [NO-PACKAGES]
-                [EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("scrartcl"
+     "\\documentclass{scrartcl} [NO-DEFAULT-PACKAGES] [NO-PACKAGES] [EXTRA]"
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (add-to-list 'org-latex-classes
-               '("scrreprt"
-                 "\\documentclass{scrreprt}
-                [NO-DEFAULT-PACKAGES]
-                [NO-PACKAGES]
-                [EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("scrreprt"
+     "\\documentclass{scrreprt} [NO-DEFAULT-PACKAGES] [NO-PACKAGES] [EXTRA]"
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (setq org-publish-project-alist
-        '(("emacsdotd"
-           :base-directory "~/.emacs.d/"
-           :base-extension "org"
-           :publishing-directory "~/Documents/emacsdotd"
-           :publishing-function org-html-publish-to-html
-           :htmlized-source t))))
-
-;;; org-conf.el ends here
+  (setq org-publish-project-alist '(("emacsdotd"
+                                     :base-directory "~/.emacs.d/"
+                                     :base-extension "org"
+                                     :publishing-directory "~/Documents/emacsdotd"
+                                     :publishing-function org-html-publish-to-html
+                                     :htmlized-source t))))
    #+END_SRC
-
-   #+RESULTS:
-: t
 
 ** Miscellaneous Packages
    :PROPERTIES:
 :CUSTOM_ID: sec:miscpac
 :END:
 
-   The followings are light yet serious functionalities.  Some of
-   which that are wrapped in =(when (display-graphic-p) ...)= are
-   intended to be loaded only in GUI mode.  When in console mode,
-   e.g., editing files through SSH, I only need core editing
-   functions.
+   The followings are light yet serious functionalities.  Some of which
+   that are wrapped in =(when (display-graphic-p) ...)= are intended to
+   be loaded only in GUI mode.  When in console mode, e.g., editing
+   files through SSH, I only need core editing functions.
 
 *** Diminish
 
@@ -586,8 +558,8 @@ createfolders = False
     #+BEGIN_QUOTE
     When we diminish a mode, we are saying we want it to continue doing
     its work for us, but we no longer want to be reminded of it. It
-    becomes a night worker, like a janitor; it becomes an invisible
-    man; it remains a component, perhaps an important one, sometimes an
+    becomes a night worker, like a janitor; it becomes an invisible man;
+    it remains a component, perhaps an important one, sometimes an
     indispensable one, of the mechanism that maintains the day-people's
     world, but its place in their thoughts is diminished, usually to
     nothing. As we grow old we diminish more and more such thoughts,
@@ -600,22 +572,24 @@ createfolders = False
 
 *** Ag
 
-    Search like crazy.  It is a code-searching tool alternative for
-    ack related frontend, e.g., ack-and-a-half, which is not actively
-    maintained anymore.  I included this package but never used
-    before!!
+    Search like crazy.  It is a code-searching tool alternative for ack
+    related frontend, e.g., ack-and-a-half, which is not actively
+    maintained anymore.  I included this package but never used before!!
 
     #+BEGIN_SRC emacs-lisp
 (use-package ag
   :defines my-ag-keymap
   :bind-keymap ("C-c a" . my-ag-map)
   :config
+
   (setq ag-reuse-buffers t    ; Don't spam buffer list with ag buffers
         ag-highlight-search t ; A little fanciness
+
         ;; Use Projectile to find the project root
-        ag-project-root-function (lambda (d)
-                                   (let ((default-directory d))
-                                     (projectile-project-root))))
+        ag-project-root-function
+        (lambda (d)
+          (let ((default-directory d))
+            (projectile-project-root))))
 
   (defvar my-ag-map
     (let ((map (make-sparse-keymap)))
@@ -627,10 +601,10 @@ createfolders = False
 
 *** Anzu
 
-    Display in the modeline search information, i.e, =(cur/total)=, where
-    =cur= is the current index of searched keyword and total is number
-    of totally matched keywords in the current buffer, as shown in
-    Figure [[fig:anzu]].
+    Display in the modeline search information, i.e, =(cur/total)=,
+    where =cur= is the current index of searched keyword and total is
+    number of totally matched keywords in the current buffer, as shown
+    in Figure [[fig:anzu]].
 
     #+CAPTION: Anzu minor mode
     #+NAME: fig:anzu
@@ -644,8 +618,8 @@ createfolders = False
 
 *** Appt
 
-    Activate appointment management and remind Org agenda as
-    appoinment, only in GUI mode.
+    Activate appointment management and remind Org agenda as appoinment,
+    only in GUI mode.
 
     #+BEGIN_SRC emacs-lisp
 (when (display-graphic-p)
@@ -673,34 +647,36 @@ createfolders = False
 
     #+BEGIN_SRC emacs-lisp
 (use-package async
-  :commands (dired-async-mode dired-async.el)
+  :commands (dired-async-mode)
   :init (dired-async-mode 1))
     #+END_SRC
 
 *** BBDB
 
     [[http://savannah.nongnu.org/projects/bbdb/][BBDB]] (Insidious Big Brother Database) is a rolodex-like database
-    program for GNU Emacs.  It is mainly used to store contacts.  And
-    it has nice integration with Gnus.
+    program for GNU Emacs.  It is mainly used to store contacts.  And it
+    has nice integration with Gnus.
 
     #+BEGIN_SRC emacs-lisp
 (use-package bbdb
   :if (display-graphic-p)
   :config
   (bbdb-initialize 'gnus 'mail 'message 'anniv)
+
   (setq bbdb-complete-mail-allow-cycling t
         bbdb-allow-duplicates t
         bbdb-message-all-addresses t
-        bbdb-file (expand-file-name "contacts.bbdb.gz" my-personal-dir))
+        bbdb-file
+        (expand-file-name "contacts.bbdb.gz" my-personal-dir))
+
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
     #+END_SRC
 
 *** Deft
 
     #+BEGIN_QUOTE
-    [[http://jblevins.org/projects/deft/][Deft]] is an Emacs mode for quickly browsing, filtering, and
-    editing directories of plain text notes, inspired by [[http://notational.net/][Notational
-    Velocity]].
+    [[http://jblevins.org/projects/deft/][Deft]] is an Emacs mode for quickly browsing, filtering, and editing
+    directories of plain text notes, inspired by [[http://notational.net/][Notational Velocity]].
     #+END_QUOTE
 
     #+BEGIN_SRC emacs-lisp
@@ -713,8 +689,9 @@ createfolders = False
         deft-text-mode 'org-mode
         deft-use-filename-as-title nil
         deft-auto-save-interval 0
-        deft-strip-title-regexp (concat deft-strip-title-regexp
-                                        "\\|\\(?:\\+TITLE:[[:space:]]+\\)")))
+        deft-strip-title-regexp
+        (concat deft-strip-title-regexp
+                "\\|\\(?:\\+TITLE:[[:space:]]+\\)")))
     #+END_SRC
 
 *** Diary
@@ -730,8 +707,8 @@ createfolders = False
 
 *** Dired
 
-    It is a really cool bultin package of which I have not yet
-    leveraged the full power.
+    It is a really cool bultin package of which I have not yet leveraged
+    the full power.
 
     #+BEGIN_SRC emacs-lisp
 (put 'dired-find-alternate-file 'disabled nil)
@@ -750,14 +727,12 @@ createfolders = False
     the mode line.
 
     #+BEGIN_SRC emacs-lisp
-(setq display-time-24hr-format t
-      display-time-day-and-date nil)
+(setq display-time-24hr-format t display-time-day-and-date nil)
 
 (when (display-graphic-p)
 
   (setq display-time-mail-function
-        (lambda ()
-          ;; Gnus launched?
+        (lambda () ;; Gnus launched?
           (when (boundp 'gnus-newsrc-alist)
             (dolist (entry gnus-newsrc-alist)
               (let ((group (car entry)))
@@ -765,7 +740,7 @@ createfolders = False
                   (let ((unread (gnus-group-unread group)))
                     (when (and (numberp unread)
                                (> unread 0))
-                      (return group)))))))))
+                      group))))))))
 
   (setq display-time-use-mail-icon t
         display-time-mail-icon
@@ -793,9 +768,8 @@ createfolders = False
     #+BEGIN_QUOTE
     [[http://ess.r-project.org/][ESS]] (Emacs Speaks Statistics) is an add-on package for Emacs text
     editors such as GNU Emacs and XEmacs.  It is designed to support
-    editing of scripts and interaction with various statistical
-    analysis programs such as R, S-Plus, SAS, Stata and
-    OpenBUGS/JAGS.
+    editing of scripts and interaction with various statistical analysis
+    programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
     #+END_QUOTE
 
     I think [[http://julialang.org/][Julia]] is also supported.
@@ -811,7 +785,9 @@ createfolders = False
               (setq ess-first-continued-statement-offset 2)
               (setq ess-continued-statement-offset 0)
               (setq ess-tab-complete-in-script t)
-              (setq ess-first-tab-never-complete 'symbol-or-paren-or-punct)))
+              (setq ess-first-tab-never-complete
+                    'symbol-or-paren-or-punct)))
+
   (add-hook 'inferior-ess-mode-hook
             (lambda ()
               (smartparens-mode 1))))
@@ -838,6 +814,19 @@ createfolders = False
   :diminish flycheck-mode)
     #+END_SRC
 
+*** Javascript
+
+    #+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (setq js2-basic-offset 2
+        js2-include-node-externs t
+        js2-include-browser-externs t)
+
+  (rename-modeline "js2-mode" js2-mode "JS2"))
+    #+END_SRC
+
 *** Helm
 
     #+BEGIN_SRC emacs-lisp
@@ -855,9 +844,9 @@ createfolders = False
 
   (use-package helm-files)
   (setq helm-recentf-fuzzy-match t
-      helm-buffers-fuzzy-matching t
-      helm-completion-in-region-fuzzy-match t
-      helm-mode-fuzzy-match t))
+        helm-buffers-fuzzy-matching t
+        helm-completion-in-region-fuzzy-match t
+        helm-mode-fuzzy-match t))
     #+END_SRC
 
 *** Ibuffer
@@ -925,30 +914,30 @@ createfolders = False
                 (mode . ess-help-mode)
                 (name . "^\\*scratch\\*$"))))))
 
-  (add-hook 'ibuffer-mode-hook
-            (lambda ()
-              (ibuffer-auto-mode 1)
-              (ibuffer-switch-to-saved-filter-groups "default")
-              (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
-              (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
-              (substitute-key-definition 'ibuffer-find-file 'ido-find-file (current-local-map))
-              (hl-line-mode 1)))
+  (add-hook
+   'ibuffer-mode-hook
+   (lambda ()
+     (ibuffer-auto-mode 1)
+     (ibuffer-switch-to-saved-filter-groups "default")
+     (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
+     (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
+     (substitute-key-definition
+      'ibuffer-find-file 'ido-find-file (current-local-map))
+     (hl-line-mode 1)))
 
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     (t (format "%8dB" (buffer-size)))))
+    (cond ((> (buffer-size) 1000)
+           (format "%7.1fk" (/ (buffer-size) 1000.0)))
+          ((> (buffer-size) 1000000)
+           (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+          (t (format "%8dB" (buffer-size)))))
 
   (setq ibuffer-formats
         '((mark modified read-only " "
-                (name 18 18 :left :elide)
-                " "
-                (size-h 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
+                (name 18 18 :left :elide) " "
+                (size-h 9 -1 :right) " "
+                (mode 16 16 :left :elide) " "
                 filename-and-process))))
     #+END_SRC
 
@@ -959,26 +948,28 @@ createfolders = False
   :config
   (ido-mode 'both)
 
-  (setq ido-save-directory-list-file (expand-file-name "idolast" my-tmp)
-      ;; ignore these buffers during completion
-      ido-ignore-buffers '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-                           "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
-      ;; case insensitive
-      ido-case-fold t
-      ;; remember last directory
-      ido-enable-last-directory-history t
-      ido-max-work-file-list 50
-      ido-use-filename-at-point nil
-      ido-use-url-at-point nil
-      ido-enable-flex-matching nil
-      ido-max-prospects 6
-      ido-confirm-unique-completion t)
+  (setq ido-save-directory-list-file
+        (expand-file-name "idolast" my-tmp)
+        ;; ignore these buffers during completion
+        ido-ignore-buffers
+        '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace" "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
+        ;; case insensitive
+        ido-case-fold t
+        ;; remember last directory
+        ido-enable-last-directory-history t
+        ido-max-work-file-list 50
+        ido-use-filename-at-point nil
+        ido-use-url-at-point nil
+        ido-enable-flex-matching nil
+        ido-max-prospects 6
+        ido-confirm-unique-completion t)
 
   ;; increase minibuffer size when ido completion is active
   (add-hook 'ido-minibuffer-setup-hook
             (function
              (lambda ()
-               (make-local-variable 'resize-minibuffer-window-max-height)))))
+               (make-local-variable
+                'resize-minibuffer-window-max-height)))))
     #+END_SRC
 *** Midnight
 
@@ -1066,8 +1057,8 @@ createfolders = False
 *** Smartparens
 
     #+BEGIN_QUOTE
-    Smartparens is minor mode for Emacs that /deals with parens pairs and
-    tries to be smart about it/.
+    Smartparens is minor mode for Emacs that /deals with parens pairs
+    and tries to be smart about it/.
     #+END_QUOTE
 
     This is a really /smart/ and /useful/ package.  /However it takes a
@@ -1076,33 +1067,40 @@ createfolders = False
     imagine I may have all these convenient options of dealing with
     parens.  Take as an simple example, kill the ballanced expression.
 
-    #+BEGIN_SRC lisp
+    #+BEGIN_SRC lisp :tangle no
 (func1 (func2 (func3)))
     #+END_SRC
 
     Suppose you want to delete =(func2 ...)=, normally I would delete
-    character by character, or hightlight manually and then delete.  With
-    /smartparens/, I may place cursor at the opening bracket of =func2=
-    and {{{kbd(M-x)}}} =sp-kill-sexp= would kill the whole =func2=
-    expression.
+    character by character, or hightlight manually and then delete.
+    With /smartparens/, I may place cursor at the opening bracket of
+    =func2= and {{{kbd(M-x)}}} =sp-kill-sexp= would kill the whole
+    =func2= expression.
 
     #+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :init
+
   (smartparens-global-mode t)
   (show-smartparens-global-mode 1)
+
   :diminish smartparens-mode
+
   :config
-  (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
-                 (sp-local-tag "i" "\"<" "\">")
-                 (sp-local-tag "i" "\"[" "\"]"))
+
+  (sp-with-modes
+      '(tex-mode plain-tex-mode latex-mode)
+    (sp-local-tag "i" "\"<" "\">")
+    (sp-local-tag "i" "\"[" "\"]"))
 
   (--each '("*" "/" "=" "~")
     (sp-local-pair 'org-mode it it))
 
   (sp-local-pair '(emacs-lisp-mode lisp-mode) "`" "'")
-  (sp-local-pair '(emacs-lisp-mode lisp-mode) "`" nil :when '(sp-in-string-p))
-  (sp-local-pair '(emacs-lisp-mode lisp-mode) "'" nil :actions nil)
+  (sp-local-pair '(emacs-lisp-mode lisp-mode) "`"
+                 nil :when '(sp-in-string-p))
+  (sp-local-pair '(emacs-lisp-mode lisp-mode) "'"
+                 nil :actions nil)
 
   (setq sp-cancel-autoskip-on-backward-movement nil)
   (setq sp-navigate-consider-stringlike-sexp
@@ -1160,6 +1158,9 @@ createfolders = False
 *** Tex
 
     #+BEGIN_SRC emacs-lisp
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+
 (setq bibtex-dialect 'biblatex)
 (setq bibtex-align-at-equal-sign t)
 (setq bibtex-text-indentation 20)
@@ -1167,17 +1168,18 @@ createfolders = False
 (add-hook 'bibtex-mode-hook
           (lambda ()
             (local-set-key (kbd "C-c \\") 'bibtex-fill-entry)
-            (setq fill-column 140)
-            (hs-minor-mode 1)
-            (hl-line-mode 1)))
+            (setq fill-column 140)))
 
-(add-hook 'latex-mode-hook 'turn-on-reftex)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-auctex t)
-
-(setq reftex-default-bibliography
-      '("/home/gongzhitaao/Dropbox/bib/nn.bib"
-        "/home/gongzhitaao/Dropbox/bib/sp.bib"))
+(use-package reftex
+  :diminish reftex-mode
+  :config
+  (add-hook 'latex-mode-hook 'turn-on-reftex)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t
+        reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
+        reftex-default-bibliography
+        '("/home/gongzhitaao/Dropbox/bib/nn.bib"
+          "/home/gongzhitaao/Dropbox/bib/sp.bib")))
     #+END_SRC
 
 *** TRAMP
@@ -1189,7 +1191,8 @@ createfolders = False
 (use-package tramp
   :config
   (setq tramp-default-method "ssh"
-        tramp-persistency-file-name (expand-file-name "tramp" my-tmp)))
+        tramp-persistency-file-name
+        (expand-file-name "tramp" my-tmp)))
     #+END_SRC
 
     Expand region increases the selected region by semantic units.  I
@@ -1234,6 +1237,14 @@ createfolders = False
   :diminish volatile-highlights-mode)
     #+END_SRC
 
+*** Writeroom-mode
+
+    #+BEGIN_SRC emacs-lisp
+(use-package writeroom-mode
+  :bind ("C-c w" . writeroom-mode)
+  :config (setq writeroom-width fill-column))
+    #+END_SRC
+
 * Editor Setting
   :PROPERTIES:
 :CUSTOM_ID: sec:editorsetting
@@ -1247,15 +1258,14 @@ createfolders = False
 (setq confirm-kill-emacs 'yes-or-no-p)
   #+END_SRC
 
-  Then load the theme package
+  Then load the theme package and enable =Hl-mode=.  The face has to be
+  set after loading the themes.
 
   #+BEGIN_SRC emacs-lisp
 (load-theme 'naquadah t)
-
-(use-package hl-line-mode
-  :init
-  (global-hl-line-mode 1)
-  (set-face-attribute hl-line-face nil :background "#3B3D3A"))
+(global-hl-line-mode +1)
+(set-face-background 'hl-line "#3B3D3A")
+(set-face-foreground 'highlight nil)
   #+END_SRC
 
 ** Encoding and Font
@@ -1267,11 +1277,10 @@ createfolders = False
 
    I will stick to =utf-8= whenever possible.  In case of Chinese,
    however, the default encoding under MS Windows is =cp936= (for
-   Simplified Chinese) and =cp950= (for Big5), =gb18030= and =gb2312=
-   in some cases.  I include them in the coding system in order to
-   open these files correctly.  And note that =prefer-coding-system=
-   always prefers the last preferred encoding, =utf-8= in the
-   following code.
+   Simplified Chinese) and =cp950= (for Big5), =gb18030= and =gb2312= in
+   some cases.  I include them in the coding system in order to open
+   these files correctly.  And note that =prefer-coding-system= always
+   prefers the last preferred encoding, =utf-8= in the following code.
 
    #+BEGIN_SRC emacs-lisp
 (let ((my-prefer-coding-system
@@ -1298,24 +1307,23 @@ createfolders = False
 :CUSTOM_ID: sec:default_behaviour
 :END:
 
-   Next is the tab thing.  Although I do not use =\t= for
-   indentation, I still set the =tab-width= in case I need it, e.g.,
-   Makefile.
+   Next is the tab thing.  Although I do not use =\t= for indentation, I
+   still set the =tab-width= in case I need it, e.g., Makefile.
 
    #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
+(setq-default tab-stop-list (number-sequence 2 120 2))
    #+END_SRC
 
-   Typing overwrites selected text.  Expected behaviour of most
-   editors.
+   Typing overwrites selected text.  Expected behaviour of most editors.
 
    #+BEGIN_SRC emacs-lisp
 (delete-selection-mode t)
    #+END_SRC
 
-   Leaving double space after =.= makes it easier to delete a whole
-   line with {{{kbd(M-k)}}}.
+   Leaving double space after =.= makes it easier to delete a whole line
+   with {{{kbd(M-k)}}}.
 
    #+BEGIN_SRC emacs-lisp
 (setq colon-double-space t)
@@ -1337,8 +1345,8 @@ createfolders = False
 (setq blink-matching-paren nil)
    #+END_SRC
 
-   I do not need tool bar but I find menu bar helpful in case I
-   forget what operations are available in a major mode.
+   I do not need tool bar but I find menu bar helpful in case I forget
+   what operations are available in a major mode.
 
    #+BEGIN_SRC emacs-lisp
 (tool-bar-mode 0)
@@ -1353,8 +1361,8 @@ createfolders = False
       scroll-preserve-screen-position 1)
    #+END_SRC
 
-   Turn on =subword-mode= so that {{{kbd(C-right)}}} moves in step of
-   a subword.
+   Turn on =subword-mode= so that {{{kbd(C-right)}}} moves in step of a
+   subword.
 
    #+BEGIN_SRC emacs-lisp
 (global-subword-mode 1)
@@ -1362,10 +1370,11 @@ createfolders = False
 
    #+BEGIN_SRC emacs-lisp
 (setq frame-title-format
-      '("emacs%@" (:eval (system-name)) ": "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b")) " [%*]"))
+      '("emacs%@"
+        (:eval (system-name)) ": "
+        (:eval
+         (if (buffer-file-name) (abbreviate-file-name (buffer-file-name))
+           "%b")) " [%*]"))
 
 (setq visible-bell t)
 
@@ -1388,28 +1397,31 @@ createfolders = False
 
    Many of the settings above are rather self-evident.  The following
    /advice/ is for {{{kbd(M-w)}}}, copy command in Emacs.  By default,
-   {{{kbd(M-w)}}} operates on a selected region and does nothing when
-   no text is selected.  Instead of doing nothing, we /advice/ it to
-   copy current line. i.e., where cursor resides, when no region is
-   active.
+   {{{kbd(M-w)}}} operates on a selected region and does nothing when no
+   text is selected.  Instead of doing nothing, we /advice/ it to copy
+   current line. i.e., where cursor resides, when no region is active.
 
    #+BEGIN_SRC emacs-lisp
-(defadvice kill-ring-save (before slick-copy activate compile)
-    "When called interactively with no active region, copy a single
-line instead."
-    (interactive
-     (if mark-active (list (region-beginning) (region-end))
-       (message "Copied line")
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
+(defadvice kill-ring-save
+    (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single
+         line instead."
+  (interactive
+   (if mark-active
+       (list (region-beginning)
+             (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
    #+END_SRC
 
-   Backup files in the temp directory instead of clustering
-   everywhere with tild-ended files.
+   Backup files in the temp directory instead of clustering everywhere
+   with tild-ended files.
 
    #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `((".*" . ,my-tmp)))
-(setq auto-save-list-file-prefix (expand-file-name ".saves-" my-tmp))
+(setq auto-save-list-file-prefix
+      (expand-file-name ".saves-" my-tmp))
 
 (setq backup-by-copying t
       delete-old-versions t
@@ -1424,22 +1436,30 @@ line instead."
 (setq view-read-only t)
    #+END_SRC
 
-   I do not show line numbers at the margin as I do not care.  But I
-   do care when I want to jump to a certain line in the buffer.  So
-   show me the line numbers only when I'm about to jump to a line.
+   I do not show line numbers at the margin as I do not care.  But I do
+   care when I want to jump to a certain line in the buffer.  So show me
+   the line numbers only when I'm about to jump to a line.
 
    #+BEGIN_SRC emacs-lisp
 (defun goto-line-with-feedback ()
-    "Show line numbers temporarily, while prompting for the line
-number input"
-    (interactive)
-    (unwind-protect
-        (progn
-          (linum-mode 1)
-          (goto-line (read-number "Goto line: ")))
-      (linum-mode -1)))
+  "Show line numbers temporarily, while prompting for the line
+         number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
 
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
+   #+END_SRC
+
+   Turn on =auto-fill-mode= by default.  For /historical/ (unknown)
+   reasons, =auto-fill-mode= is named by "auto-fill-function".
+
+   #+BEGIN_SRC emacs-lisp
+(setq-default fill-column 72)
+(diminish 'auto-fill-function)
    #+END_SRC
 
 ** Key bindings
@@ -1453,11 +1473,11 @@ number input"
 
     #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f7>") 'compile)
-;(global-set-key (kbd "<f8>") 'deft)
-;(global-set-key (kbd "<f9>") 'recentf-open-files)
-;; f10 - menu
+(global-set-key (kbd "<f8>") 'deft)
+;; f9 -- helm-recentf
+;; f10 -- menu
 (global-set-key (kbd "<f11>") 'ispell)
-;(global-set-key (kbd "<f12>") 'gnus-other-frame)
+;; f12 -- gnus-other-frame)
     #+END_SRC
 
 *** Improved Standard Bindings
@@ -1466,7 +1486,7 @@ number input"
 (global-set-key [remap execute-extended-command] #'smex)
 (global-set-key [remap list-buffers] #'ibuffer)
 (global-set-key [remap isearch-forward] #'isearch-forward-regexp)
-(global-set-key [remap isearch-backward] #'isearch-backward-regexp)
+(global-set-key [remap isearch-backward] #'isearch-query-replace-regexp)
     #+END_SRC
 
 *** User Key Bindings
@@ -1474,28 +1494,47 @@ number input"
     User key bindings usually begin with {{{kbd(C-c)}}}.
 
     #+BEGIN_SRC emacs-lisp
-;(global-set-key (kbd "C-c a") #'my-ag-map)
-(global-set-key (kbd "C-c m") #'my-multiple-cursors-map)
+;; C-c a -- my-ag-map
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
 (global-set-key (kbd "C-c k") #'browse-kill-ring)
+;; C-c m -- my-multiple-cursor-map
+(global-set-key (kbd "C-c q") #'auto-fill-mode)
+(global-set-key (kbd "C-c r") #'isearch-query-replace-regexp)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+(global-set-key (kbd "C-c o c") #'org-capture)
+;; C-c w -- writeroom-mode
 (global-set-key (kbd "C-c ,") #'color-identifiers-mode)
 
 (global-set-key (kbd "C-c C-=") #'align-regexp)
 (global-set-key (kbd "C-c C-/")
-                (function (lambda ()
-                            (interactive)
-                            (my-apply-region-or-line
-                             'comment-or-uncomment-region))))
+                (function
+                 (lambda ()
+                   (interactive)
+                   (my-apply-region-or-line
+                    'comment-or-uncomment-region))))
 (global-set-key (kbd "C-c C-\\")
-                (function (lambda ()
-                            (interactive)
-                            (my-apply-region-or-para
-                             'indent-region))))
+                (function
+                 (lambda ()
+                   (interactive)
+                   (my-apply-region-or-para
+                    'indent-region))))
 
 (global-set-key (kbd "C-c <left>") #'decrease-left-margin)
 (global-set-key (kbd "C-c <right>") #'increase-left-margin)
 (global-set-key (kbd "C-c C-<left>") #'decrease-left-margin)
 (global-set-key (kbd "C-c C-<right>") #'increase-left-margin)
+    #+END_SRC
+
+*** Key logger
+
+    Sometimes I want to analyze my Emacs key press frequency.  The
+    builtin function =open-dribble-file= does exactly what I want.  But
+    be aware that it logs /everything/, literally, /everything/
+    including your passwords.  So you may remove this section from your
+    configuration files.
+
+    #+BEGIN_SRC emacs-lisp
+(open-dribble-file (expand-file-name ".key.log.gz" my-dir))
     #+END_SRC
 
 * End
