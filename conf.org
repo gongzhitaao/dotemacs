@@ -1458,7 +1458,6 @@ createfolders = False
    reasons, =auto-fill-mode= is named by "auto-fill-function".
 
    #+BEGIN_SRC emacs-lisp
-(setq-default fill-column 72)
 (diminish 'auto-fill-function)
    #+END_SRC
 
