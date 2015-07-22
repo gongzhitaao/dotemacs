@@ -692,6 +692,13 @@ createfolders = False
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
     #+END_SRC
 
+*** Browse-kill-ring
+
+    #+BEGIN_SRC emacs-lisp
+(use-package browse-kill-ring
+  :bind ("C-c k" . browse-kill-ring))
+    #+END_SRC
+
 *** Deft
 
     #+BEGIN_QUOTE
@@ -1505,7 +1512,7 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 ;; C-c a -- my-ag-map
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
-(global-set-key (kbd "C-c k") #'browse-kill-ring)
+;; C-k k -- browse-kill-ring
 ;; C-c m -- my-multiple-cursor-map
 (global-set-key (kbd "C-c q") #'auto-fill-mode)
 (global-set-key (kbd "C-c r") #'isearch-query-replace-regexp)
