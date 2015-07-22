@@ -792,7 +792,6 @@ createfolders = False
 
     #+BEGIN_SRC emacs-lisp
 (use-package ess-site
-  :defer t
   :config
   (add-hook 'ess-mode-hook
             (lambda ()
@@ -1196,6 +1195,9 @@ createfolders = False
         reftex-default-bibliography
         '("/home/gongzhitaao/Dropbox/bib/nn.bib"
           "/home/gongzhitaao/Dropbox/bib/sp.bib")))
+
+(add-hook 'latex-mode-hook 'turn-on-auto-fill)
+(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
     #+END_SRC
 
 *** TRAMP
