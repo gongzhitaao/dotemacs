@@ -405,6 +405,22 @@ createfolders = False
   (add-hook 'org-mode-hook 'turn-on-reftex)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
+  (use-package org-ref
+    :load-path (lambda () (expand-file-name "org-ref" my-dir))
+    :config
+    (use-package doi-utils)
+    (use-package jmax-bibtex)
+    (use-package pubmed)
+    (use-package arxiv)
+    (use-package sci-id)
+
+    (setq org-ref-bibliography-notes
+          '("~/Dropbox/bibliography/notes.org.gz")
+          org-ref-default-bibliography
+          '("~/Dropbox/bibliography/index.bib.gz")
+          org-ref-pdf-directory
+          '("~/Dropbox/bibliography/pdfs/")))
+
   (define-key org-mode-map (kbd "C-c )") #'reftex-reference)
   (define-key org-mode-map (kbd "C-c [") #'reftex-citation)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
@@ -986,6 +1002,22 @@ createfolders = False
                (make-local-variable
                 'resize-minibuffer-window-max-height)))))
     #+END_SRC
+
+*** Lua-mode
+
+    #+BEGIN_SRC emacs-lisp
+(use-package lua-mode
+  :mode "\\.lua\\'"
+  :config
+  (define-key lua-mode-map (kbd "C-<return>") #'lua-send-current-line)
+  (define-key lua-mode-map (kbd "C-c b") #'lua-send-buffer)
+  (define-key lua-mode-map (kbd "C-c C-b") #'lua-send-buffer)
+  (define-key lua-mode-map (kbd "C-c f") #'lua-send-defun)
+  (define-key lua-mode-map (kbd "C-c C-f") #'lua-send-defun)
+  (define-key lua-mode-map (kbd "C-c r") #'lua-send-region)
+  (define-key lua-mode-map (kbd "C-c C-r") #'lua-send-region))
+    #+END_SRC
+
 *** Midnight
 
     What is =midnight-mode= for?  Included but never used...
@@ -1274,6 +1306,13 @@ createfolders = False
 
   #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
+  #+END_SRC
+
+  Some wired erros might occur, sometimes I just want to see where
+  they actually originate from.
+
+  #+BEGIN_SRC emacs-lisp
+(setq debug-on-error t)
   #+END_SRC
 
   Then load the theme package and enable =Hl-mode=.  The face has to be

@@ -1,6 +1,6 @@
-;;; my-editor.el --- My Editor configuration.
+;;; init.el -- Entry to all my configuration
 ;;; Commentary:
-;;; Time-stamp: <2015-07-18 18:53:13 gongzhitaao>
+;;; Time-stamp: <2015-07-27 16:32:59 gongzhitaao>
 ;;; Code:
 
 (require 'org)
