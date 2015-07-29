@@ -133,6 +133,8 @@ after a while.
    #+BEGIN_SRC emacs-lisp
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
+(require 'pallet)
+(pallet-mode t)
    #+END_SRC
 
    For more information about Cask, please refer to its
@@ -560,6 +562,89 @@ createfolders = False
                                      :htmlized-source t))))
    #+END_SRC
 
+** Helm
+
+   [[https://emacs-helm.github.io/helm/][Helm]] is really [[http://tuhdo.github.io/helm-intro.html][a package in a league of its own]].  It deserves a
+   separete section for all its related configuration.
+
+    #+BEGIN_SRC emacs-lisp
+(defvar helm-command-prefix-key)
+(setq helm-command-prefix-key nil)
+(use-package helm-config
+  :bind-keymap ("C-c h" . helm-command-map)
+  :bind ("<f9>" . helm-recentf)
+  :diminish helm-mode
+  :config
+  ;; Some custom helm bindings
+  (define-key helm-command-map (kbd "a") #'helm-apropos)
+  ;; c helm-colors
+  (define-key helm-command-map (kbd "b") #'helm-bibtex)
+  ;; e helm-etags-select
+  ;; f helm-multi-files
+  (define-key helm-command-map (kbd "g") #'helm-do-grep)
+  ;; h help
+  ;; i helm-semantic-or-imenu
+  ;; l helm-locate
+  ;; m helm-man-woman
+  (define-key helm-command-map (kbd "o") #'helm-occur)
+  (define-key helm-command-map (kbd "p") #'helm-projectile)
+  (define-key helm-command-map (kbd "SPC") #'helm-all-mark-rings)
+  ;; r helm-regexp
+  ;; s helm-surfraw
+  ;; t helm-top
+
+  ;; rebind tab to run persistent action
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  ;; make TAB works in terminal
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  ;; list actions using C-z
+  (define-key helm-map (kbd "C-z")  'helm-select-action)
+
+  (setq helm-recentf-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-split-window-in-side-p t
+        helm-ff-search-library-in-sexp t
+        helm-ff-file-name-history-use-recentf t
+        helm-scroll-amount 8
+        helm-completion-in-region-fuzzy-match t
+        helm-mode-fuzzy-match t
+        helm-M-x-fuzzy-match t)
+
+  (setq helm-semantic-fuzzy-match t
+        helm-imenu-fuzzy-match    t)
+
+  (helm-mode +1)
+  (helm-autoresize-mode t))
+    #+END_SRC
+
+*** Helm-files
+
+    #+BEGIN_SRC emacs-lisp
+  (use-package helm-files)
+    #+END_SRC
+
+*** Helm-bibtex
+
+    #+BEGIN_SRC emacs-lisp
+(use-package helm-bibtex
+  :config
+  (setq helm-bibtex-bibliography
+        `(,(expand-file-name "~/Dropbox/bibliography/sp.bib")
+          ,(expand-file-name "~/Dropbox/bibliography/nn.bib")))
+
+  (setq helm-bibtex-library-path
+        `(,(expand-file-name "~/Dropbox/bibliography/sp-pdf")
+          ,(expand-file-name "~/Dropbox/bibliography/nn-pdf")))
+
+  (setq helm-bibtex-notes-path
+        (expand-file-name "~/Dropbox/bibliography/notes"))
+  (setq helm-bibtex-notes-extension ".org")
+
+  (setq helm-bibtex-pdf-open-function
+        (lambda (fpath)
+          (async-start-process "evince" "/usr/bin/evince" nil fpath))))
+    #+END_SRC
+
 ** Miscellaneous Packages
    :PROPERTIES:
 :CUSTOM_ID: sec:miscpac
@@ -590,6 +675,7 @@ createfolders = False
 (use-package diminish)
     #+END_SRC
 
+*** Ace-jump
 *** Ag
 
     Search like crazy.  It is a code-searching tool alternative for ack
@@ -858,26 +944,11 @@ createfolders = False
   (rename-modeline "js2-mode" js2-mode "JS2"))
     #+END_SRC
 
-*** Helm
+*** Hi-mode
 
     #+BEGIN_SRC emacs-lisp
-(defvar helm-command-prefix-key)
-(setq helm-command-prefix-key nil)
-(use-package helm-config
-  :bind-keymap ("C-c h" . helm-command-map)
-  :bind ("<f9>" . helm-recentf)
-  :config
-  ;; Some custom helm bindings
-  (define-key helm-command-map (kbd "a") #'helm-apropos)
-  (define-key helm-command-map (kbd "g") #'helm-do-grep)
-  (define-key helm-command-map (kbd "o") #'helm-occur)
-  (define-key helm-command-map (kbd "p") #'helm-projectile)
-
-  (use-package helm-files)
-  (setq helm-recentf-fuzzy-match t
-        helm-buffers-fuzzy-matching t
-        helm-completion-in-region-fuzzy-match t
-        helm-mode-fuzzy-match t))
+(use-package hi-lock-mode
+  :diminish hi-lock-mode)
     #+END_SRC
 
 *** Ibuffer
@@ -952,8 +1023,6 @@ createfolders = False
      (ibuffer-switch-to-saved-filter-groups "default")
      (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
      (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
-     (substitute-key-definition
-      'ibuffer-find-file 'ido-find-file (current-local-map))
      (hl-line-mode 1)))
 
   (define-ibuffer-column size-h
@@ -974,7 +1043,13 @@ createfolders = False
 
 *** Ido
 
-    #+BEGIN_SRC emacs-lisp
+    I just switched from =ido= to =helm=.  It just feel more natural
+    working with =helm=.  What's more, =helm= is really /ubiquituous/.
+
+    The following configuration is only kept for backup.  They are
+    already deprecated.
+
+    #+BEGIN_SRC emacs-lisp :tangle no
 (use-package ido
   :config
   (ido-mode 'both)
@@ -1540,7 +1615,9 @@ createfolders = False
 *** Improved Standard Bindings
 
     #+BEGIN_SRC emacs-lisp
-(global-set-key [remap execute-extended-command] #'smex)
+(global-set-key [remap execute-extended-command] #'helm-M-x)
+(global-set-key [remap switch-to-buffer] #'helm-mini)
+(global-set-key [remap find-file] #'helm-find-files)
 (global-set-key [remap list-buffers] #'ibuffer)
 (global-set-key [remap isearch-forward] #'isearch-forward-regexp)
 (global-set-key [remap isearch-backward] #'isearch-query-replace-regexp)
