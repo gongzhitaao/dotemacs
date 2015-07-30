@@ -947,8 +947,8 @@ createfolders = False
 *** Hi-mode
 
     #+BEGIN_SRC emacs-lisp
-(use-package hi-lock-mode
-  :diminish hi-lock-mode)
+(add-hook 'hi-lock-mode-hook
+          (lambda () (diminish 'hi-lock-mode)))
     #+END_SRC
 
 *** Ibuffer
@@ -1227,6 +1227,8 @@ createfolders = False
   (setq sp-cancel-autoskip-on-backward-movement nil)
   (setq sp-navigate-consider-stringlike-sexp
         '(lisp-mode emacs-lisp-mode latex-mode LaTeX-mode TeX-mode))
+
+  (set-face-background 'sp-pair-overlay-face "DarkGreen")
 
   (define-key smartparens-mode-map (kbd "C-c s f") 'sp-forward-sexp)
   (define-key smartparens-mode-map (kbd "C-c s b") 'sp-backward-sexp)
