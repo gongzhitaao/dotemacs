@@ -1626,6 +1626,7 @@ createfolders = False
 (global-set-key [remap list-buffers] #'ibuffer)
 (global-set-key [remap isearch-forward] #'isearch-forward-regexp)
 (global-set-key [remap isearch-backward] #'isearch-query-replace-regexp)
+(global-set-key [remap yank-pop] #'helm-show-kill-ring)
     #+END_SRC
 
 *** User Key Bindings
