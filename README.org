@@ -407,6 +407,8 @@ createfolders = False
   (add-hook 'org-mode-hook 'turn-on-reftex)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
+  (setq org-list-description-max-indent 5)
+
   (use-package org-ref
     :load-path (lambda () (expand-file-name "org-ref" my-dir))
     :config
@@ -1229,6 +1231,7 @@ createfolders = False
         '(lisp-mode emacs-lisp-mode latex-mode LaTeX-mode TeX-mode))
 
   (set-face-background 'sp-pair-overlay-face "DarkGreen")
+  (set-face-background 'sp-show-pair-match-face "SteelBlue4")
 
   (define-key smartparens-mode-map (kbd "C-c s f") 'sp-forward-sexp)
   (define-key smartparens-mode-map (kbd "C-c s b") 'sp-backward-sexp)
