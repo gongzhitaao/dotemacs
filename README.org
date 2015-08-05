@@ -410,6 +410,12 @@ createfolders = False
 
   (setq org-list-description-max-indent 5)
 
+  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
+  (add-to-list 'org-structure-template-alist
+               '("b" "#+BEGIN_ABSTRACT\n?\n#+END_ABSTRACT" ""))
+  (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
+  (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
+
   (define-key org-mode-map (kbd "C-c )") #'reftex-reference)
   (define-key org-mode-map (kbd "C-c [") #'reftex-citation)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
@@ -578,6 +584,7 @@ createfolders = False
   ;; r helm-regexp
   ;; s helm-surfraw
   ;; t helm-top
+  (define-key helm-command-map (kbd "w") #'helm-swoop)
 
   ;; rebind tab to run persistent action
 ;  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
@@ -1192,9 +1199,6 @@ createfolders = False
       '(tex-mode plain-tex-mode latex-mode)
     (sp-local-tag "i" "\"<" "\">")
     (sp-local-tag "i" "\"[" "\"]"))
-
-  (--each '("*" "/" "=" "~")
-    (sp-local-pair 'org-mode it it))
 
   (sp-local-pair '(emacs-lisp-mode lisp-mode) "`" "'")
   (sp-local-pair '(emacs-lisp-mode lisp-mode) "`"
