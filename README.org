@@ -409,22 +409,6 @@ createfolders = False
 
   (setq org-list-description-max-indent 5)
 
-  (use-package org-ref
-    :load-path (lambda () (expand-file-name "org-ref" my-dir))
-    :config
-    (use-package doi-utils)
-    (use-package jmax-bibtex)
-    (use-package pubmed)
-    (use-package arxiv)
-    (use-package sci-id)
-
-    (setq org-ref-bibliography-notes
-          '("~/Dropbox/bibliography/notes.org.gz")
-          org-ref-default-bibliography
-          '("~/Dropbox/bibliography/index.bib.gz")
-          org-ref-pdf-directory
-          '("~/Dropbox/bibliography/pdfs/")))
-
   (define-key org-mode-map (kbd "C-c )") #'reftex-reference)
   (define-key org-mode-map (kbd "C-c [") #'reftex-citation)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
@@ -616,35 +600,27 @@ createfolders = False
         helm-imenu-fuzzy-match    t)
 
   (helm-mode +1)
-  (helm-autoresize-mode t))
-    #+END_SRC
+  (helm-autoresize-mode t)
 
-*** Helm-files
+  (use-package helm-bibtex
+    :config
+    (setq helm-bibtex-bibliography
+          `(,(expand-file-name "~/Dropbox/bibliography/sp.bib")
+            ,(expand-file-name "~/Dropbox/bibliography/nn.bib")))
 
-    #+BEGIN_SRC emacs-lisp
-  (use-package helm-files)
-    #+END_SRC
+    (setq helm-bibtex-library-path
+          `(,(expand-file-name "~/Dropbox/bibliography/sp-pdf")
+            ,(expand-file-name "~/Dropbox/bibliography/nn-pdf")))
 
-*** Helm-bibtex
+    (setq helm-bibtex-notes-path
+          (expand-file-name "~/Dropbox/bibliography/notes"))
+    (setq helm-bibtex-notes-extension ".org")
 
-    #+BEGIN_SRC emacs-lisp
-(use-package helm-bibtex
-  :config
-  (setq helm-bibtex-bibliography
-        `(,(expand-file-name "~/Dropbox/bibliography/sp.bib")
-          ,(expand-file-name "~/Dropbox/bibliography/nn.bib")))
+    (setq helm-bibtex-pdf-open-function
+          (lambda (fpath)
+            (async-start-process "evince" "/usr/bin/evince" nil fpath))))
 
-  (setq helm-bibtex-library-path
-        `(,(expand-file-name "~/Dropbox/bibliography/sp-pdf")
-          ,(expand-file-name "~/Dropbox/bibliography/nn-pdf")))
-
-  (setq helm-bibtex-notes-path
-        (expand-file-name "~/Dropbox/bibliography/notes"))
-  (setq helm-bibtex-notes-extension ".org")
-
-  (setq helm-bibtex-pdf-open-function
-        (lambda (fpath)
-          (async-start-process "evince" "/usr/bin/evince" nil fpath))))
+  (use-package helm-files))
     #+END_SRC
 
 ** Miscellaneous Packages
