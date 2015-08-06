@@ -581,8 +581,9 @@ createfolders = False
 (defvar helm-command-prefix-key)
 (setq helm-command-prefix-key nil)
 (use-package helm-config
-  :bind-keymap ("C-c h" . helm-command-map)
-  :bind ("<f9>" . helm-recentf)
+  :demand
+  :bind-keymap ("C-c h" . helm-command-map))
+(use-package helm
   :diminish helm-mode
   :config
   ;; Some custom helm bindings
@@ -1606,10 +1607,10 @@ createfolders = False
     Keybindings for {{{kbd(Fn)}}} keys.
 
     #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<f6>") 'calendar)
-(global-set-key (kbd "<f7>") 'compile)
-(global-set-key (kbd "<f8>") 'deft)
-;; f9 -- helm-recentf
+(global-set-key (kbd "<f6>") #'calendar)
+(global-set-key (kbd "<f7>") #'compile)
+(global-set-key (kbd "<f8>") #'deft)
+(global-set-key (kbd "<f9>") #'helm-recentf)
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") 'ispell)
 ;; f12 -- gnus-other-frame)
