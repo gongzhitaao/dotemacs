@@ -16,10 +16,10 @@
 <a href="https://github.com/gongzhitaao/dotemacs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 #+END_HTML
 
-#+BEGIN_ABSTRACT
+#+BEGIN_abstract
 However I organize my Emacs configurations, they all seem a mess to me
 after a while.
-#+END_ABSTRACT
+#+END_abstract
 
 #+TOC: headlines 2
 
@@ -383,14 +383,13 @@ createfolders = False
 
 ** Orgmode
    :PROPERTIES:
-:CUSTOM_ID: sec:orgmode
-:END:
+   :CUSTOM_ID: sec:orgmode
+   :END:
 
    #+BEGIN_SRC emacs-lisp
 (use-package org
   :if (display-graphic-p)
-  :init (load "org")
-  :config
+  :init
   (let ((my-org-modules
          '(org-bbdb
            org-bibtex
@@ -402,7 +401,9 @@ createfolders = False
            ox-latex
            ox-bibtex)))
     (dolist (m my-org-modules)
-      (require m)))
+      (add-to-list 'org-modules m)))
+  :config
+  (org-reload)
 
   ;; Where I add todos.
   (add-hook 'org-mode-hook 'turn-on-reftex)
@@ -410,9 +411,11 @@ createfolders = False
 
   (setq org-list-description-max-indent 5)
 
-  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
   (add-to-list 'org-structure-template-alist
-               '("b" "#+BEGIN_ABSTRACT\n?\n#+END_ABSTRACT" ""))
+               '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
+  (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
+  (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
+  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
   (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
   (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
 
@@ -546,12 +549,27 @@ createfolders = False
      ("\\paragraph{%s}" . "\\paragraph*{%s}")
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (setq org-publish-project-alist '(("emacsdotd"
-                                     :base-directory "~/.emacs.d/"
-                                     :base-extension "org"
-                                     :publishing-directory "~/Documents/emacsdotd"
-                                     :publishing-function org-html-publish-to-html
-                                     :htmlized-source t))))
+  (setq org-publish-project-alist
+        '(("emacsdotd"
+           :base-directory "~/.emacs.d/"
+           :base-extension "org"
+           :publishing-directory "~/Documents/emacsdotd"
+           :publishing-function org-html-publish-to-html
+           :htmlized-source t)
+          ("comp3220-org"
+           :base-directory "~/Documents/comp3220/master"
+           :base-extension "org"
+           :publishing-directory "~/Documents/comp3220/gh-pages"
+           :publishing-function org-html-publish-to-html
+           :htmlized-source t
+           :recursive t)
+          ("comp3220-bib"
+           :base-directory "~/Documents/comp3220/master"
+           :base-extension "html"
+           :publishing-directory "~/Documents/comp3220/gh-pages"
+           :publishing-function org-publish-attachment
+           :recursive t)
+          ("comp3220" :components ("comp3220-org" "comp3220-bib")))))
    #+END_SRC
 
 ** Helm
