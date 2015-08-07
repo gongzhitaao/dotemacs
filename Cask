@@ -102,7 +102,6 @@
 (depends-on "s")
 (depends-on "simple-call-tree")
 (depends-on "smartparens")
-(depends-on "smex")
 (depends-on "ssh")
 (depends-on "ssh-config-mode")
 (depends-on "tern")

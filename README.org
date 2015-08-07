@@ -556,20 +556,23 @@ createfolders = False
            :publishing-directory "~/Documents/emacsdotd"
            :publishing-function org-html-publish-to-html
            :htmlized-source t)
-          ("comp3220-org"
-           :base-directory "~/Documents/comp3220/master"
+          ("comp3220-slides"
+           :base-directory "~/Documents/comp3220/master/slides"
+           :base-extension "org"
+           :publishing-directory "~/Documents/comp3220/gh-pages"
+           :publishing-function org-reveal-publish-to-reveal
+           :htmlized-source t
+           :recursive t)
+          ("comp3220-index"
+           :base-directory "~/Documents/comp3220/master/index"
            :base-extension "org"
            :publishing-directory "~/Documents/comp3220/gh-pages"
            :publishing-function org-html-publish-to-html
-           :htmlized-source t
            :recursive t)
-          ("comp3220-bib"
-           :base-directory "~/Documents/comp3220/master"
-           :base-extension "html"
-           :publishing-directory "~/Documents/comp3220/gh-pages"
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("comp3220" :components ("comp3220-org" "comp3220-bib")))))
+          ("comp3220" :components ("comp3220-slides" "comp3220-index")))))
+
+(use-package ox-reveal
+  :load-path "org-reveal")
    #+END_SRC
 
 ** Helm
@@ -606,11 +609,11 @@ createfolders = False
   (define-key helm-command-map (kbd "w") #'helm-swoop)
 
   ;; rebind tab to run persistent action
-;  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   ;; make TAB works in terminal
-;  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
   ;; list actions using C-z
-  (define-key helm-map (kbd "C-z")  #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")  #'helm-select-action)
 
   (setq helm-recentf-fuzzy-match t
         helm-buffers-fuzzy-matching t
