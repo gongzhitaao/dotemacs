@@ -108,8 +108,8 @@ after a while.
 ** Preferred Way
 
    Just found about [[http://cask.readthedocs.org/en/latest/index.html][Cask]], yet another package manager for Emacs.  See
-   [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]] for the reason of switching to Cask.  All dependencies are
-   stored in =Cask= under =.emacs.d/=.
+   [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]] for the reason of switching to Cask.  All dependencies
+   are stored in =Cask= under =.emacs.d/=.
 
    The contents of Cask is as follows (long list of packages are omitted
    for brevity).
@@ -387,7 +387,7 @@ createfolders = False
    :END:
 
    #+BEGIN_SRC emacs-lisp
-(use-package org
+(use-package org-install
   :if (display-graphic-p)
   :init
   (let ((my-org-modules
@@ -398,15 +398,13 @@ createfolders = False
            org-gnus
            org-habit
            org-table
-           ox-latex
-           ox-bibtex)))
+           ox-latex)))
     (dolist (m my-org-modules)
       (add-to-list 'org-modules m)))
   :config
-  (org-reload)
+  (mapc 'require org-modules)
 
   ;; Where I add todos.
-  (add-hook 'org-mode-hook 'turn-on-reftex)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
   (setq org-list-description-max-indent 5)
@@ -419,8 +417,6 @@ createfolders = False
   (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
   (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
 
-  (define-key org-mode-map (kbd "C-c )") #'reftex-reference)
-  (define-key org-mode-map (kbd "C-c [") #'reftex-citation)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c C-\\")
     (lambda ()
@@ -429,14 +425,13 @@ createfolders = False
 
   (setq org-directory (expand-file-name "org" my-personal-dir))
 
-  (setq org-time-stamp-custom-formats
-        '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-
   ;; Recursive update todo statistics
   (setq org-hierarchical-todo-statistics nil)
 
   ;; Show events from diary
   (setq org-agenda-include-diary t)
+
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
   ;; Resolve open clocks if the user if idle more than 10 minutes.
   (setq org-clock-idle-time 10)
@@ -458,10 +453,11 @@ createfolders = False
         org-html-head-include-scripts nil)
 
   ;; Postamble.
-  (setq org-html-postamble t org-html-postamble-format
+  (setq org-html-postamble t
+        org-html-postamble-format
         '(("en" "<a class=\"author\"
-       href=\"http://gongzhitaao.org\">%a</a> / <span
-       class=\"date\">%T</span><span class=\"creator\">%c</span>")))
+         href=\"http://gongzhitaao.org\">%a</a> / <span
+         class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
   ;; Use prefix key as tag selection
   (setq org-use-fast-todo-selection t)
@@ -494,6 +490,9 @@ createfolders = False
 
   (setq org-agenda-repeating-timestamp-show-all t)
   (setq org-agenda-show-all-dates t)
+
+  (setq org-time-stamp-custom-formats
+        '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
@@ -529,26 +528,6 @@ createfolders = False
   (setq org-latex-pdf-process
         (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
-  (add-to-list
-   'org-latex-classes
-   '("scrartcl"
-     "\\documentclass{scrartcl} [NO-DEFAULT-PACKAGES] [NO-PACKAGES] [EXTRA]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  (add-to-list
-   'org-latex-classes
-   '("scrreprt"
-     "\\documentclass{scrreprt} [NO-DEFAULT-PACKAGES] [NO-PACKAGES] [EXTRA]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
   (setq org-publish-project-alist
         '(("emacsdotd"
            :base-directory "~/.emacs.d/"
@@ -556,23 +535,41 @@ createfolders = False
            :publishing-directory "~/Documents/emacsdotd"
            :publishing-function org-html-publish-to-html
            :htmlized-source t)
-          ("comp3220-slides"
+          ("comp3220-slides-content"
            :base-directory "~/Documents/comp3220/master/slides"
            :base-extension "org"
            :publishing-directory "~/Documents/comp3220/gh-pages"
            :publishing-function org-reveal-publish-to-reveal
            :htmlized-source t
            :recursive t)
-          ("comp3220-index"
-           :base-directory "~/Documents/comp3220/master/index"
+          ("comp3220-articles-content"
+           :base-directory "~/Documents/comp3220/master/article"
            :base-extension "org"
            :publishing-directory "~/Documents/comp3220/gh-pages"
            :publishing-function org-html-publish-to-html
            :recursive t)
-          ("comp3220" :components ("comp3220-slides" "comp3220-index")))))
+          ("comp3220-slides-static"
+           :base-directory "~/Documents/comp3220/master/slides"
+           :base-extension "svg\\|jpg\\|png"
+           :publishing-directory "~/Documents/comp3220/gh-pages"
+           :publishing-function org-publish-attachment
+           :recursive t)
+          ("comp3220-articles-static"
+           :base-directory "~/Documents/comp3220/master/articles"
+           :base-extension "svg\\|jpg\\|png"
+           :publishing-directory "~/Documents/comp3220/gh-pages"
+           :publishing-function org-publish-attachment
+           :recursive t)
+          ("comp3220-slides" :components ("comp3220-slides-static" "comp3220-slides-content"))
+          ("comp3220-articles" :components ("comp3220-articles-static" "comp3220-articles-content")))))
 
 (use-package ox-reveal
-  :load-path "org-reveal")
+  :load-path "~/.emacs.d/org-reveal"
+  :config
+  (setq org-reveal-title-slide-template
+        "<h1 class=\"title\">%t</h1>
+<p class=\"author\">%a</p>
+<p class=\"email\">%e</p>"))
    #+END_SRC
 
 ** Helm
@@ -874,6 +871,13 @@ createfolders = False
                 :ascent center)))
 
 (display-time)
+    #+END_SRC
+
+*** Drag-stuff-mode
+
+    #+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+  :bind ("C-c d" . drag-stuff-mode))
     #+END_SRC
 
 *** Eshell
@@ -1637,6 +1641,7 @@ createfolders = False
 
     #+BEGIN_SRC emacs-lisp
 ;; C-c a -- my-ag-map
+;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
 ;; C-k k -- browse-kill-ring
 ;; C-c m -- my-multiple-cursor-map
