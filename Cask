@@ -12,7 +12,6 @@
 (depends-on "avy")
 (depends-on "bbdb")
 (depends-on "bind-key")
-(depends-on "browse-kill-ring")
 (depends-on "cask")
 (depends-on "color-identifiers-mode")
 (depends-on "company")
