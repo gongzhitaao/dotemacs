@@ -530,7 +530,7 @@ createfolders = False
 
   (setq org-publish-project-alist
         '(("emacsdotd"
-           :base-directory "~/.emacs.d/"
+           :base-directory "~/.gongzhitaao/emacs.d"
            :base-extension "org"
            :publishing-directory "~/Documents/emacsdotd"
            :publishing-function org-html-publish-to-html
@@ -1429,7 +1429,8 @@ createfolders = False
 
    #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil
-                    :font "Ubuntu Mono:pixelsize=16")
+                    :family "Ubuntu Mono"
+                    :height 120)
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
@@ -1676,7 +1677,7 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 (open-dribble-file
  (expand-file-name
-  (format-time-string "~/.emacs.d/.keylog/key-%FT%H%M%S.log")))
+  (format-time-string "~/.gongzhitaao/emacs.d/keylog/key-%FT%H%M%S.log")))
     #+END_SRC
 
 * End
