@@ -1634,8 +1634,18 @@ createfolders = False
     User key bindings usually begin with {{{kbd(C-c)}}}.
 
     #+BEGIN_SRC emacs-lisp
+(defun clear-shell ()
+   (interactive)
+   (let ((old-max comint-buffer-maximum-size))
+     (setq comint-buffer-maximum-size 0)
+     (comint-truncate-buffer)
+     (setq comint-buffer-maximum-size old-max)))
+    #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
 ;; C-c a -- my-ag-map
 ;; C-c d -- drag-stuff-mode
+(global-set-key (kbd "C-c c") #'clear-shell)
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
 (global-set-key (kbd "C-c m") #'magit-status)
 ;; C-c M -- my-multiple-cursor-map
