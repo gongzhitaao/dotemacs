@@ -514,6 +514,8 @@ createfolders = False
 
     ;; (require 'ox-latex)
 
+    (setq org-latex-prefer-user-labels t)
+
     (setq org-latex-pdf-process
           (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
