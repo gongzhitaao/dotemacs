@@ -1,16 +1,14 @@
 #+TITLE: Emacs Configurations
 #+AUTHOR: Zhitao Gong
 #+EMAIL: me@gongzhitaao.org
-#+HTML_HEAD: <meta name="description" content="Emacs configurations written in Orgmode.">
-#+HTML_HEAD: <meta name="keywords" content="emacs,orgmode,literal programming,emacs-lisp,org">
-#+HTML_HEAD: <link rel="stylesheet" href="normalize.css" type="text/css" />
+#+DESCRIPTION: Emacs configurations written in Orgmode.
+#+KEYWORDS: emacs,orgmode,literal programming,emacs-lisp,org
+
 #+HTML_HEAD: <link rel="stylesheet" href="https://gongzhitaao.github.io/orgcss/org.css" type="text/css" />
 #+OPTIONS: H:4 num:3 toc:nil num:t
 #+TAGS: export(e) noexport(n)
 #+STARTUP: fold content
 #+MACRO: kbd @@html:<kbd>$1</kbd>@@
-
------
 
 #+BEGIN_HTML :tangle no
 <a href="https://github.com/gongzhitaao/dotemacs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
@@ -387,189 +385,314 @@ createfolders = False
    :END:
 
    #+BEGIN_SRC emacs-lisp
-(use-package org-install
-  :if (display-graphic-p)
-  :init
-  (let ((my-org-modules
-         '(org-bbdb
-           org-bibtex
-           org-clock
-           org-docview
-           org-gnus
-           org-habit
-           org-table
-           ox-latex)))
-    (dolist (m my-org-modules)
-      (add-to-list 'org-modules m)))
-  :config
-  (mapc 'require org-modules)
+  (use-package org
+    :if (display-graphic-p)
+    :init
+    (let ((my-org-modules
+           '(org-bbdb
+             org-bibtex
+             org-clock
+             org-docview
+             org-gnus
+             org-habit
+             org-table
+             ox-latex
+             ox-bibtex
+             ox-beamer)))
+      (dolist (m my-org-modules)
+        (add-to-list 'org-modules m)))
+    :config
+    (mapc 'require org-modules)
 
-  ;; Where I add todos.
-  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+    ;; Where I add todos.
+    (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
-  (setq org-list-description-max-indent 5)
+    (setq org-list-description-max-indent 5)
 
-  (add-to-list 'org-structure-template-alist
-               '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
-  (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
-  (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
-  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
-  (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
-  (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
+    (add-to-list 'org-structure-template-alist
+                 '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
+    (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
+    (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
+    (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
+    (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
+    (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
 
-  (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
-  (define-key org-mode-map (kbd "C-c C-\\")
-    (lambda ()
-      (interactive)
-      (my-apply-region-or-para 'org-indent-region)))
+    (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
+    (define-key org-mode-map (kbd "C-c C-\\")
+      (lambda ()
+        (interactive)
+        (my-apply-region-or-para 'org-indent-region)))
 
-  (setq org-directory (expand-file-name "org" my-personal-dir))
+    (setq org-directory (expand-file-name "org" my-personal-dir))
 
-  ;; Recursive update todo statistics
-  (setq org-hierarchical-todo-statistics nil)
+    ;; Recursive update todo statistics
+    (setq org-hierarchical-todo-statistics nil)
 
-  ;; Show events from diary
-  (setq org-agenda-include-diary t)
+    ;; Show events from diary
+    (setq org-agenda-include-diary t)
 
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+    (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
-  ;; Resolve open clocks if the user if idle more than 10 minutes.
-  (setq org-clock-idle-time 10)
+    ;; Resolve open clocks if the user if idle more than 10 minutes.
+    (setq org-clock-idle-time 10)
 
-  ;; Sublevels inherit property from parents
-  (setq org-use-property-inheritance t)
+    ;; Sublevels inherit property from parents
+    (setq org-use-property-inheritance t)
 
-  ;; Fontify src blocks
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
+    ;; Fontify src blocks
+    (setq org-src-fontify-natively t)
+    (setq org-src-preserve-indentation t)
 
-  ;; Press enter to follow links
-  (setq org-return-follows-link t)
+    ;; Press enter to follow links
+    (setq org-return-follows-link t)
 
-  ;; Use html5 and DO NOT include default styles and scripts.
-  (setq org-html-doctype "html5"
-        org-html-html5-fancy t
-        org-html-head-include-default-style nil
-        org-html-head-include-scripts nil)
+    ;; Use prefix key as tag selection
+    (setq org-use-fast-todo-selection t)
 
-  ;; Postamble.
-  (setq org-html-postamble t
-        org-html-postamble-format
-        '(("en" "<a class=\"author\"
-         href=\"http://gongzhitaao.org\">%a</a> / <span
-         class=\"date\">%T</span><span class=\"creator\">%c</span>")))
+    ;; Bypassing logging if change state with Shift key
+    (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
-  ;; Use prefix key as tag selection
-  (setq org-use-fast-todo-selection t)
+    (setq org-todo-keywords
+          '((sequence
+             "TODO(t)" "NEXT(n)" "|"
+             "DONE(d!)")
+            (sequence
+             "WAIT(w@/!)" "HOLD(h@/!)" "|"
+             "KILL(k@)")))
 
-  ;; Bypassing logging if change state with Shift key
-  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+    (setq org-todo-keyword-faces
+          '(("TODO" :foreground "red" :weight bold)
+            ("NEXT" :foreground "cyan" :weight bold)
+            ("DONE" :foreground "green" :weight bold)
+            ("WAIT" :foreground "yellow" :weight bold)
+            ("HOLD" :foreground "magenta" :weight bold)
+            ("KILL" :foreground "forest green" :weight bold)))
 
-  (setq org-todo-keywords
-        '((sequence
-           "TODO(t)" "NEXT(n)" "|"
-           "DONE(d!)")
-          (sequence
-           "WAIT(w@/!)" "HOLD(h@/!)" "|"
-           "KILL(k@)")))
+    ;; Files to be included in Agenda view.
+    (setq org-agenda-files
+          (expand-file-name "orgfile" org-directory))
 
-  (setq org-todo-keyword-faces
-        '(("TODO" :foreground "red" :weight bold)
-          ("NEXT" :foreground "cyan" :weight bold)
-          ("DONE" :foreground "green" :weight bold)
-          ("WAIT" :foreground "yellow" :weight bold)
-          ("HOLD" :foreground "magenta" :weight bold)
-          ("KILL" :foreground "forest green" :weight bold)))
+    (setq org-agenda-dim-blocked-tasks t)
+    (setq org-agenda-compact-blocks t)
 
-  ;; Files to be included in Agenda view.
-  (setq org-agenda-files
-        (expand-file-name "orgfile" org-directory))
+    (setq org-agenda-repeating-timestamp-show-all t)
+    (setq org-agenda-show-all-dates t)
 
-  (setq org-agenda-dim-blocked-tasks t)
-  (setq org-agenda-compact-blocks t)
+    (setq org-time-stamp-custom-formats
+          '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
-  (setq org-agenda-repeating-timestamp-show-all t)
-  (setq org-agenda-show-all-dates t)
+    (setq org-agenda-prefix-format
+          '((agenda . " %i %-12:c%?-12t% s")
+            (timeline . "  % s")
+            (todo . " %i %-12:T")
+            (tags . " %i %-12:T")
+            (search . " %i %-12:T")))
 
-  (setq org-time-stamp-custom-formats
-        '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+    (setq org-agenda-tags-column -100
+          org-habit-graph-column 45
+          org-habit-preceding-days 28
+          org-habit-following-days 1
+          org-agenda-start-with-log-mode t)
 
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-          (timeline . "  % s")
-          (todo . " %i %-12:T")
-          (tags . " %i %-12:T")
-          (search . " %i %-12:T")))
+    (setq org-clock-history-length 32
+          org-clock-in-resume t)
+    (setq org-log-into-drawer t
+          org-clock-into-drawer t)
 
-  (setq org-agenda-tags-column -100
-        org-habit-graph-column 45
-        org-habit-preceding-days 28
-        org-habit-following-days 1
-        org-agenda-start-with-log-mode t)
+    (setq org-clock-persist 't)
+    (org-clock-persistence-insinuate)
 
-  (setq org-clock-history-length 32
-        org-clock-in-resume t)
-  (setq org-log-into-drawer t
-        org-clock-into-drawer t)
+    (setq org-use-fast-tag-selection nil)
 
-  (setq org-clock-persist 't)
-  (org-clock-persistence-insinuate)
+    (setq org-capture-templates
+          '(("t" "New TODO" entry
+             (file+headline "todo.org.gz" "Tasks")
+             "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
+            ("p" "New Project Proposal" entry
+             (file+headline "proj.org.gz" "Projects")
+             "* %^{Title} %^G\n %u\n %?\n\n\n")))
 
-  (setq org-use-fast-tag-selection nil)
+    ;; (require 'ox-latex)
 
-  (setq org-capture-templates
-        '(("t" "New TODO" entry
-           (file+headline "todo.org.gz" "Tasks")
-           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
-          ("p" "New Project Proposal" entry
-           (file+headline "proj.org.gz" "Projects")
-           "* %^{Title} %^G\n %u\n %?\n\n\n")))
+    (setq org-latex-pdf-process
+          (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
-  (setq org-latex-pdf-process
-        (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
+    (setq org-latex-listings 'minted)
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (add-to-list 'org-latex-packages-alist '("" "microtype"))
+    (add-to-list 'org-latex-packages-alist '("backend=bibtex, style=numeric" "biblatex"))
 
-  (setq org-publish-project-alist
-        '(("emacsdotd"
-           :base-directory "~/.gongzhitaao/emacs.d"
-           :base-extension "org"
-           :publishing-directory "~/Documents/emacsdotd"
-           :publishing-function org-html-publish-to-html
-           :htmlized-source t)
-          ("comp3220-slides-content"
-           :base-directory "~/Documents/comp3220/master/slides"
-           :base-extension "org"
-           :publishing-directory "~/Documents/comp3220/gh-pages"
-           :publishing-function org-reveal-publish-to-reveal
-           :htmlized-source t
-           :recursive t)
-          ("comp3220-articles-content"
-           :base-directory "~/Documents/comp3220/master/article"
-           :base-extension "org"
-           :publishing-directory "~/Documents/comp3220/gh-pages"
-           :publishing-function org-html-publish-to-html
-           :recursive t)
-          ("comp3220-slides-static"
-           :base-directory "~/Documents/comp3220/master/slides"
-           :base-extension "svg\\|jpg\\|png"
-           :publishing-directory "~/Documents/comp3220/gh-pages"
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("comp3220-articles-static"
-           :base-directory "~/Documents/comp3220/master/articles"
-           :base-extension "svg\\|jpg\\|png"
-           :publishing-directory "~/Documents/comp3220/gh-pages"
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("comp3220-slides" :components ("comp3220-slides-static" "comp3220-slides-content"))
-          ("comp3220-articles" :components ("comp3220-articles-static" "comp3220-articles-content")))))
+    (setq org-latex-hyperref-template "\\hypersetup{
+      pdfauthor={%a},
+      pdftitle={%t},
+      pdfkeywords={%k},
+      pdfsubject={%d},
+      pdfcreator={%c},
+      pdflang={%L},
+      bookmarks=true,
+      unicode=true,
+      pdftoolbar=true,
+      pdfmenubar=true,
+      pdffitwindow=false,
+      pdfstartview={FitW},
+      pdfnewwindow=true,
+      colorlinks=true,
+      linkcolor=red,
+      citecolor=green,
+      filecolor=magenta,
+      urlcolor=cyan}\n")
 
-(use-package ox-reveal
-  :load-path "~/.emacs.d/org-reveal"
-  :config
-  (setq org-reveal-title-slide-template
-        "<h1 class=\"title\">%t</h1>
-<p class=\"author\">%a</p>
-<p class=\"email\">%e</p>"))
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 '((emacs-lisp . t)
+                                   (latex . t)
+                                   (python . t)))
+
+    ;; (require 'ox-beamer)
+
+    (add-to-list 'org-beamer-environments-extra
+                 '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+
+    ;; (require 'ox-html)
+
+    (setq org-html-doctype "html5"
+          org-html-html5-fancy t
+          org-html-head-include-default-style t
+          org-html-head-include-scripts nil)
+
+    ;; Postamble.
+    (setq org-html-postamble t
+          org-html-postamble-format
+          '(("en" "<a class=\"author\"
+           href=\"http://gongzhitaao.org\">%a</a> / <span
+           class=\"date\">%T</span><span class=\"creator\">%c</span>")))
+
+    (setq
+   org-publish-project-alist
+   '(("emacsdotd"
+      :base-directory "~/.gongzhitaao/emacs.d"
+      :base-extension "org"
+      :publishing-directory "~/Documents/emacsdotd"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t
+      :completion-function
+      (lambda ()
+        (let ((source (expand-file-name
+                       "README.html"
+                       "~/Documents/emacsdotd/"))
+              (target (expand-file-name
+                       "index.html"
+                       "~/Documents/emacsdotd/")))
+          (if (file-exists-p source)
+              (progn
+                (if (file-exists-p target)
+                    (delete-file target))
+                (rename-file source target))))))
+     ("comp3220-slide"
+      :base-directory "~/Documents/comp3220/master/slide"
+      :publishing-directory "~/Documents/comp3220/gh-pages/slide"
+      :publishing-function org-beamer-publish-to-pdf
+      :htmlized-source t)
+     ("comp3220-homework"
+      :base-directory "~/Documents/comp3220/master/homework"
+      :publishing-directory "~/Documents/comp3220/gh-pages/homework"
+      :publishing-function org-latex-publish-to-pdf
+      :htmlized-source t)
+     ("comp3220-exam"
+      :base-directory "~/Documents/comp3220/master/exam"
+      :publishing-directory "~/Documents/comp3220/gh-pages/exam"
+      :publishing-function org-latex-publish-to-pdf
+      :htmlized-source t)
+     ("comp3220-homepage"
+      :base-directory "~/Documents/comp3220/master/homepage"
+      :publishing-directory "~/Documents/comp3220/gh-pages/"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t)
+     ("comp3220" :components ("comp3220-homepage"
+                              "comp3220-slide"
+                              "comp3220-homework"
+                              "comp3220-exam"))
+     ("malware-detection-doc"
+      :base-directory "~/Documents/malware-detection/master"
+      :publishing-directory "~/Documents/malware-detection/gh-pages"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t
+      :completion-function
+      (lambda ()
+        (let ((source (expand-file-name
+                       "README.html"
+                       "~/Documents/malware-detection/gh-pages"))
+              (target (expand-file-name
+                       "index.html"
+                       "~/Documents/malware-detection/gh-pages")))
+          (if (file-exists-p source)
+              (progn
+                (if (file-exists-p target)
+                    (delete-file target))
+                (rename-file source target))))))
+     ("malware-detection-static"
+      :base-directory "~/Documents/malware-detection/master"
+      :publishing-directory "~/Documents/malware-detection/gh-pages"
+      :publishing-function org-publish-attachment
+      :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg"
+      :recursive t)
+     ("malware-detection" :components ("malware-detection-doc"
+                                       "malware-detection-static"))
+     ("abide"
+      :base-directory "~/Documents/abide/master"
+      :publishing-directory "~/Documents/abide/gh-pages"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t
+      :completion-function
+      (lambda ()
+        (let ((source (expand-file-name
+                       "README.html"
+                       "~/Documents/abide/gh-pages"))
+              (target (expand-file-name
+                       "index.html"
+                       "~/Documents/abide/gh-pages")))
+          (if (file-exists-p source)
+              (progn
+                (if (file-exists-p target)
+                    (delete-file target))
+                (rename-file source target))))))
+
+     ("rbm"
+      :base-directory "~/Documents/rbm/master"
+      :publishing-directory "~/Documents/rbm/gh-pages"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t
+      :completion-function
+      (lambda ()
+        (let ((source (expand-file-name
+                       "README.html"
+                       "~/Documents/rbm/gh-pages"))
+              (target (expand-file-name
+                       "index.html"
+                       "~/Documents/rbm/gh-pages")))
+          (if (file-exists-p source)
+              (progn
+                (if (file-exists-p target)
+                    (delete-file target))
+                (rename-file source target))))))
+
+     ("orgcss"
+      :base-directory "~/Documents/orgcss/master/app"
+      :publishing-directory "~/Documents/orgcss/master/dist"
+      :publishing-function org-html-publish-to-html
+      :htmlized-source t
+      :completion-function
+      (lambda ()
+        (let ((source (expand-file-name
+                       "README.html"
+                       "~/Documents/orgcss/master/app"))
+              (target (expand-file-name
+                       "index.html"
+                       "~/Documents/orgcss/master/dist")))
+          (if (file-exists-p source)
+              (progn
+                (if (file-exists-p target)
+                    (delete-file target))
+                (rename-file source target)))))))))
    #+END_SRC
 
 ** Helm
@@ -632,11 +755,13 @@ createfolders = False
     :config
     (setq helm-bibtex-bibliography
           `(,(expand-file-name "~/Dropbox/bibliography/sp.bib")
-            ,(expand-file-name "~/Dropbox/bibliography/nn.bib")))
+            ,(expand-file-name "~/Dropbox/bibliography/nn.bib")
+            ,(expand-file-name "~/Dropbox/bibliography/stats.bib")))
 
     (setq helm-bibtex-library-path
           `(,(expand-file-name "~/Dropbox/bibliography/sp-pdf")
-            ,(expand-file-name "~/Dropbox/bibliography/nn-pdf")))
+            ,(expand-file-name "~/Dropbox/bibliography/nn-pdf")
+            ,(expand-file-name "~/Dropbox/bibliography/stats-pdf")))
 
     (setq helm-bibtex-notes-path
           (expand-file-name "~/Dropbox/bibliography/notes"))
@@ -810,9 +935,8 @@ createfolders = False
   :if (display-graphic-p)
   :bind ("<f8>" . deft)
   :config
-  (setq deft-extension "org"
+  (setq deft-default-extension "org"
         deft-directory (expand-file-name "notes" my-personal-dir)
-        deft-text-mode 'org-mode
         deft-use-filename-as-title nil
         deft-auto-save-interval 0
         deft-strip-title-regexp
@@ -848,20 +972,25 @@ createfolders = False
 
   (setq display-time-mail-function
         (lambda () ;; Gnus launched?
-          (when (boundp 'gnus-newsrc-alist)
-            (dolist (entry gnus-newsrc-alist)
-              (let ((group (car entry)))
-                (when (< (gnus-group-level group) 2)
-                  (let ((unread (gnus-group-unread group)))
-                    (when (and (numberp unread)
-                               (> unread 0))
-                      group))))))))
+          (catch 'break
+            (mapc
+             (lambda (entry)
+               (let ((group (car entry)))
+                 (when (< (gnus-group-level group) 2)
+                   (let ((unread (gnus-group-unread group)))
+                     (if (and (numberp unread)
+                              (> unread 0))
+                         (throw 'break t))))))
+             gnus-newsrc-alist)
+            nil)))
 
-  (setq display-time-use-mail-icon t
-        display-time-mail-icon
-        `(image :type png
-                :file ,(expand-file-name "mail-unread.png" my-icons-dir)
-                :ascent center)))
+  (setq display-time-mail-string (concat " " [#xF003])
+        display-time-use-mail-icon nil
+        ;; display-time-mail-icon
+        ;; `(image :type png
+        ;;         :file ,(expand-file-name "mail-unread.png" my-icons-dir)
+        ;;         :ascent center)
+        ))
 
 (display-time)
     #+END_SRC
@@ -930,9 +1059,18 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :if (display-graphic-p)
+  :bind ("C-c f" . flycheck-mode)
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  :diminish flycheck-mode)
+  (setq flycheck-status-changed-functions nil)
+  (add-hook 'flycheck-status-changed-functions
+            (lambda (status)
+              (let ((fc-icon
+                     (cond
+                      ((eq status 'running) [#xF0F4])
+                      ((eq status 'errored) [#xF00C])
+                      ((eq status 'finished) [#xF00D]))))
+                (diminish #'flycheck-mode (concat " " fc-icon))
+                (force-mode-line-update)))))
     #+END_SRC
 
 *** Javascript
@@ -1045,7 +1183,7 @@ createfolders = False
                 filename-and-process))))
     #+END_SRC
 
-*** Ido
+*** Ido                                                          :deprecated:
 
     I just switched from =ido= to =helm=.  It just feel more natural
     working with =helm=.  What's more, =helm= is really /ubiquituous/.
@@ -1595,7 +1733,9 @@ createfolders = False
    reasons, =auto-fill-mode= is named by "auto-fill-function".
 
    #+BEGIN_SRC emacs-lisp
-(diminish 'auto-fill-function)
+(if (display-graphic-p)
+    (diminish #'auto-fill-function (concat " " [#xF036]))
+  (diminish #'auto-fill-function))
    #+END_SRC
 
 ** Key bindings
@@ -1646,6 +1786,7 @@ createfolders = False
 ;; C-c a -- my-ag-map
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c c") #'clear-shell)
+;; C-c f -- flycheck-mode
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
 (global-set-key (kbd "C-c m") #'magit-status)
 ;; C-c M -- my-multiple-cursor-map
@@ -1685,9 +1826,10 @@ createfolders = False
     configuration files.
 
     #+BEGIN_SRC emacs-lisp
-(open-dribble-file
- (expand-file-name
-  (format-time-string "~/.gongzhitaao/emacs.d/keylog/key-%FT%H%M%S.log")))
+(when display-graphic-p
+  (open-dribble-file
+   (expand-file-name
+    (format-time-string "~/.gongzhitaao/emacs.d/keylog/key-%FT%H%M%S.log"))))
     #+END_SRC
 
 * End
@@ -1697,8 +1839,6 @@ createfolders = False
   #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'server-start t)
   #+END_SRC
-
------
 
 * Footnotes
 
