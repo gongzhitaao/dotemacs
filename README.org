@@ -972,20 +972,25 @@ createfolders = False
 
   (setq display-time-mail-function
         (lambda () ;; Gnus launched?
-          (when (boundp 'gnus-newsrc-alist)
-            (dolist (entry gnus-newsrc-alist)
-              (let ((group (car entry)))
-                (when (< (gnus-group-level group) 2)
-                  (let ((unread (gnus-group-unread group)))
-                    (when (and (numberp unread)
-                               (> unread 0))
-                      group))))))))
+          (catch 'break
+            (mapc
+             (lambda (entry)
+               (let ((group (car entry)))
+                 (when (< (gnus-group-level group) 2)
+                   (let ((unread (gnus-group-unread group)))
+                     (if (and (numberp unread)
+                              (> unread 0))
+                         (throw 'break t))))))
+             gnus-newsrc-alist)
+            nil)))
 
-  (setq display-time-use-mail-icon t
-        display-time-mail-icon
-        `(image :type png
-                :file ,(expand-file-name "mail-unread.png" my-icons-dir)
-                :ascent center)))
+  (setq display-time-mail-string (concat " " [#xF003])
+        display-time-use-mail-icon nil
+        ;; display-time-mail-icon
+        ;; `(image :type png
+        ;;         :file ,(expand-file-name "mail-unread.png" my-icons-dir)
+        ;;         :ascent center)
+        ))
 
 (display-time)
     #+END_SRC
