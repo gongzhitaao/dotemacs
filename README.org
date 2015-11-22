@@ -57,7 +57,7 @@ after a while.
   Before any loading and configuration, I need to make sure all my
   utility packages are installed.
 
-** /Deprecated/ Manager
+** Manager                                                       :deprecated:
 
    This is how I did, and probably what you are doing.
 
@@ -418,10 +418,6 @@ createfolders = False
     (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
 
     (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
-    (define-key org-mode-map (kbd "C-c C-\\")
-      (lambda ()
-        (interactive)
-        (my-apply-region-or-para 'org-indent-region)))
 
     (setq org-directory (expand-file-name "org" my-personal-dir))
 
@@ -558,7 +554,7 @@ createfolders = False
 
     (setq org-html-doctype "html5"
           org-html-html5-fancy t
-          org-html-head-include-default-style t
+          org-html-head-include-default-style nil
           org-html-head-include-scripts nil)
 
     ;; Postamble.
@@ -568,133 +564,7 @@ createfolders = False
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
-    (setq
-     org-publish-project-alist
-     '(("emacsdotd"
-        :base-directory "~/Dropbox/dotfiles/emacs.d"
-        :base-extension "org"
-        :publishing-directory "~/Documents/emacsdotd"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t
-        :completion-function
-        (lambda ()
-          (let ((source (expand-file-name
-                         "README.html"
-                         "~/Documents/emacsdotd/"))
-                (target (expand-file-name
-                         "index.html"
-                         "~/Documents/emacsdotd/")))
-            (if (file-exists-p source)
-                (progn
-                  (if (file-exists-p target)
-                      (delete-file target))
-                  (rename-file source target))))))
-       ("comp3220-slide"
-        :base-directory "~/Documents/comp3220/master/slide"
-        :publishing-directory "~/Documents/comp3220/gh-pages/slide"
-        :publishing-function org-beamer-publish-to-pdf
-        :htmlized-source t)
-       ("comp3220-homework"
-        :base-directory "~/Documents/comp3220/master/homework"
-        :publishing-directory "~/Documents/comp3220/gh-pages/homework"
-        :publishing-function org-latex-publish-to-pdf
-        :htmlized-source t)
-       ("comp3220-exam"
-        :base-directory "~/Documents/comp3220/master/exam"
-        :publishing-directory "~/Documents/comp3220/gh-pages/exam"
-        :publishing-function org-latex-publish-to-pdf
-        :htmlized-source t)
-       ("comp3220-homepage"
-        :base-directory "~/Documents/comp3220/master/homepage"
-        :publishing-directory "~/Documents/comp3220/gh-pages/"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t)
-       ("comp3220" :components ("comp3220-homepage"
-                                "comp3220-slide"
-                                "comp3220-homework"
-                                "comp3220-exam"))
-       ("malware-detection-doc"
-        :base-directory "~/Documents/malware-detection/master"
-        :publishing-directory "~/Documents/malware-detection/gh-pages"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t
-        :completion-function
-        (lambda ()
-          (let ((source (expand-file-name
-                         "README.html"
-                         "~/Documents/malware-detection/gh-pages"))
-                (target (expand-file-name
-                         "index.html"
-                         "~/Documents/malware-detection/gh-pages")))
-            (if (file-exists-p source)
-                (progn
-                  (if (file-exists-p target)
-                      (delete-file target))
-                  (rename-file source target))))))
-       ("malware-detection-static"
-        :base-directory "~/Documents/malware-detection/master"
-        :publishing-directory "~/Documents/malware-detection/gh-pages"
-        :publishing-function org-publish-attachment
-        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg"
-        :recursive t)
-       ("malware-detection" :components ("malware-detection-doc"
-                                         "malware-detection-static"))
-       ("abide"
-        :base-directory "~/Documents/abide/master"
-        :publishing-directory "~/Documents/abide/gh-pages"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t
-        :completion-function
-        (lambda ()
-          (let ((source (expand-file-name
-                         "README.html"
-                         "~/Documents/abide/gh-pages"))
-                (target (expand-file-name
-                         "index.html"
-                         "~/Documents/abide/gh-pages")))
-            (if (file-exists-p source)
-                (progn
-                  (if (file-exists-p target)
-                      (delete-file target))
-                  (rename-file source target))))))
-
-       ("rbm"
-        :base-directory "~/Documents/rbm/master"
-        :publishing-directory "~/Documents/rbm/gh-pages"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t
-        :completion-function
-        (lambda ()
-          (let ((source (expand-file-name
-                         "README.html"
-                         "~/Documents/rbm/gh-pages"))
-                (target (expand-file-name
-                         "index.html"
-                         "~/Documents/rbm/gh-pages")))
-            (if (file-exists-p source)
-                (progn
-                  (if (file-exists-p target)
-                      (delete-file target))
-                  (rename-file source target))))))
-
-       ("orgcss"
-        :base-directory "~/Documents/orgcss/master/app"
-        :publishing-directory "~/Documents/orgcss/master/dist"
-        :publishing-function org-html-publish-to-html
-        :htmlized-source t
-        :completion-function
-        (lambda ()
-          (let ((source (expand-file-name
-                         "README.html"
-                         "~/Documents/orgcss/master/app"))
-                (target (expand-file-name
-                         "index.html"
-                         "~/Documents/orgcss/master/dist")))
-            (if (file-exists-p source)
-                (progn
-                  (if (file-exists-p target)
-                      (delete-file target))
-                  (rename-file source target)))))))))
+    (load-file "~/Dropbox/dotfiles/emacs.d/my-org-project.el"))
    #+END_SRC
 
 ** Helm
@@ -769,9 +639,10 @@ createfolders = False
           (expand-file-name "~/Dropbox/bibliography/notes"))
     (setq helm-bibtex-notes-extension ".org")
 
-    (setq helm-bibtex-pdf-open-function
-          (lambda (fpath)
-            (async-start-process "evince" "/usr/bin/evince" nil fpath))))
+    (defun my-open-pdf-with-evince (path)
+      "Open pdf files with `evince' asynchroneously."
+      (async-start-process "evince" "/usr/bin/evince" nil path))
+    (setq helm-bibtex-pdf-open-function #'my-open-pdf-with-evince))
 
   (use-package helm-files))
     #+END_SRC
@@ -806,7 +677,6 @@ createfolders = False
 (use-package diminish)
     #+END_SRC
 
-*** Ace-jump
 *** Ag
 
     Search like crazy.  It is a code-searching tool alternative for ack
@@ -964,36 +834,11 @@ createfolders = False
 
 *** Display-time
 
-    Display time and unread mail notification, if not in terminal, in
-    the mode line.
+    Display time and unread mail notification in the mode line.  The
+    unread mail notification is configured in [[#sec:gnus]].
 
     #+BEGIN_SRC emacs-lisp
 (setq display-time-24hr-format t display-time-day-and-date nil)
-
-(when (display-graphic-p)
-
-  (setq display-time-mail-function
-        (lambda () ;; Gnus launched?
-          (catch 'break
-            (mapc
-             (lambda (entry)
-               (let ((group (car entry)))
-                 (when (< (gnus-group-level group) 2)
-                   (let ((unread (gnus-group-unread group)))
-                     (if (and (numberp unread)
-                              (> unread 0))
-                         (throw 'break t))))))
-             gnus-newsrc-alist)
-            nil)))
-
-  (setq display-time-mail-string (concat " " [#xF003])
-        display-time-use-mail-icon nil
-        ;; display-time-mail-icon
-        ;; `(image :type png
-        ;;         :file ,(expand-file-name "mail-unread.png" my-icons-dir)
-        ;;         :ascent center)
-        ))
-
 (display-time)
     #+END_SRC
 
@@ -1030,19 +875,18 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 (use-package ess-site
   :config
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (setq ess-help-own-frame 'one)
-              (setq ess-indent-level 2)
-              (setq ess-first-continued-statement-offset 2)
-              (setq ess-continued-statement-offset 0)
-              (setq ess-tab-complete-in-script t)
-              (setq ess-first-tab-never-complete
-                    'symbol-or-paren-or-punct)))
+  (defun my-ess-init ()
+    "Init my ess mode."
+    (setq ess-help-own-frame 'one)
+    (setq ess-indent-level 2)
+    (setq ess-first-continued-statement-offset 2)
+    (setq ess-continued-statement-offset 0)
+    (setq ess-tab-complete-in-script t)
+    (setq ess-first-tab-never-complete
+          'symbol-or-paren-or-punct))
 
-  (add-hook 'inferior-ess-mode-hook
-            (lambda ()
-              (smartparens-mode 1))))
+  (add-hook 'ess-mode-hook #'my-ess-init)
+  (add-hook 'inferior-ess-mode-hook #'turn-on-smartparens-mode))
     #+END_SRC
 
 *** Expand-region
@@ -1063,16 +907,16 @@ createfolders = False
   :if (display-graphic-p)
   :bind ("C-c f" . flycheck-mode)
   :config
-  (setq flycheck-status-changed-functions nil)
-  (add-hook 'flycheck-status-changed-functions
-            (lambda (status)
-              (let ((fc-icon
-                     (cond
-                      ((eq status 'running) [#xF0F4])
-                      ((eq status 'errored) [#xF00C])
-                      ((eq status 'finished) [#xF00D]))))
-                (diminish #'flycheck-mode (concat " " fc-icon))
-                (force-mode-line-update)))))
+  (defun my-on-flycheck-status-change (status)
+    (let ((fc-icon
+           (cond
+            ((eq status 'running) [#xF0F4])
+            ((eq status 'errored) [#xF00C])
+            ((eq status 'finished) [#xF00D]))))
+      (diminish #'flycheck-mode (concat " " fc-icon))
+      (force-mode-line-update)))
+
+  (add-hook 'flycheck-status-changed-functions #'my-on-flycheck-status-change))
     #+END_SRC
 
 *** Javascript
@@ -1134,7 +978,8 @@ createfolders = False
                 (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
                 (mode . python-mode)
                 (name . "\\.ya?ml")
-                (name . "\\.sql")))
+                (name . "\\.R")
+                (name . "\\.lua")))
            ("Mail"
             (or (mode . message-mode)
                 (mode . mail-mode)
@@ -1158,7 +1003,9 @@ createfolders = False
                 (mode . Info-mode)
                 (mode . help-mode)
                 (mode . ess-help-mode)
-                (name . "^\\*scratch\\*$"))))))
+                (name . "^\\*scratch\\*$")))
+           ("Helm"
+            (or (mode . helm-mode))))))
 
   (add-hook
    'ibuffer-mode-hook
@@ -1183,43 +1030,6 @@ createfolders = False
                 (size-h 9 -1 :right) " "
                 (mode 16 16 :left :elide) " "
                 filename-and-process))))
-    #+END_SRC
-
-*** Ido                                                          :deprecated:
-
-    I just switched from =ido= to =helm=.  It just feel more natural
-    working with =helm=.  What's more, =helm= is really /ubiquituous/.
-
-    The following configuration is only kept for backup.  They are
-    already deprecated.
-
-    #+BEGIN_SRC emacs-lisp :tangle no
-(use-package ido
-  :config
-  (ido-mode 'both)
-
-  (setq ido-save-directory-list-file
-        (expand-file-name "idolast" my-tmp)
-        ;; ignore these buffers during completion
-        ido-ignore-buffers
-        '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace" "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
-        ;; case insensitive
-        ido-case-fold t
-        ;; remember last directory
-        ido-enable-last-directory-history t
-        ido-max-work-file-list 50
-        ido-use-filename-at-point nil
-        ido-use-url-at-point nil
-        ido-enable-flex-matching nil
-        ido-max-prospects 6
-        ido-confirm-unique-completion t)
-
-  ;; increase minibuffer size when ido completion is active
-  (add-hook 'ido-minibuffer-setup-hook
-            (function
-             (lambda ()
-               (make-local-variable
-                'resize-minibuffer-window-max-height)))))
     #+END_SRC
 
 *** Lua-mode
@@ -1431,10 +1241,10 @@ createfolders = False
 (setq bibtex-align-at-equal-sign t)
 (setq bibtex-text-indentation 20)
 
-(add-hook 'bibtex-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c \\") 'bibtex-fill-entry)
-            (setq fill-column 140)))
+(defun my-init-bibtex-mode ()
+  (local-set-key (kbd "C-c \\") 'bibtex-fill-entry)
+  (setq fill-column 140))
+(add-hook 'bibtex-mode-hook #'my-init-bibtex-mode)
 
 (use-package reftex
   :diminish reftex-mode
@@ -1444,8 +1254,9 @@ createfolders = False
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
         reftex-default-bibliography
-        '("/home/gongzhitaao/Dropbox/bib/nn.bib"
-          "/home/gongzhitaao/Dropbox/bib/sp.bib")))
+        '("/home/gongzhitaao/Dropbox/bibliography/nn.bib"
+          "/home/gongzhitaao/Dropbox/bibliography/sp.bib"
+          "/home/gongzhitaao/Dropbox/bibliography/stats.bib")))
 
 (add-hook 'latex-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
@@ -1609,10 +1420,10 @@ createfolders = False
    Cleanup spaces and write timestamp if needed.
 
    #+BEGIN_SRC emacs-lisp
-(add-hook 'before-save-hook
-          (lambda ()
-            (delete-trailing-whitespace)
-            (time-stamp)))
+(defun my-cleanup-file ()
+  (delete-trailing-whitespace)
+  (time-stamp))
+(add-hook 'before-save-hook #'my-cleanup-file)
 
 (setq tab-always-indent 'complete)
 (blink-cursor-mode 0)
@@ -1776,17 +1587,17 @@ createfolders = False
     User key bindings usually begin with {{{kbd(C-c)}}}.
 
     #+BEGIN_SRC emacs-lisp
+;; C-c a -- my-ag-map
+;; C-c d -- drag-stuff-mode
+
 (defun clear-shell ()
+  "Clear shell window."
    (interactive)
    (let ((old-max comint-buffer-maximum-size))
      (setq comint-buffer-maximum-size 0)
      (comint-truncate-buffer)
      (setq comint-buffer-maximum-size old-max)))
-    #+END_SRC
 
-    #+BEGIN_SRC emacs-lisp
-;; C-c a -- my-ag-map
-;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c c") #'clear-shell)
 ;; C-c f -- flycheck-mode
 (global-set-key (kbd "C-c g") #'ace-jump-mode)
@@ -1800,23 +1611,24 @@ createfolders = False
 (global-set-key (kbd "C-c ,") #'color-identifiers-mode)
 
 (global-set-key (kbd "C-c C-=") #'align-regexp)
-(global-set-key (kbd "C-c C-/")
-                (function
-                 (lambda ()
-                   (interactive)
-                   (my-apply-region-or-line
-                    'comment-or-uncomment-region))))
-(global-set-key (kbd "C-c C-\\")
-                (function
-                 (lambda ()
-                   (interactive)
-                   (my-apply-region-or-para
-                    'indent-region))))
 
 (global-set-key (kbd "C-c <left>") #'decrease-left-margin)
 (global-set-key (kbd "C-c <right>") #'increase-left-margin)
 (global-set-key (kbd "C-c C-<left>") #'decrease-left-margin)
 (global-set-key (kbd "C-c C-<right>") #'increase-left-margin)
+    #+END_SRC
+
+    Since most of the time {{{kbd(C-c C-c)}}} is unavailable, and
+    {{{kbd(C-c \)}}} is used in Org mode, I have to choose
+    {{{kbd(C-x)}}} prefix.
+
+    #+BEGIN_SRC emacs-lisp
+(defun my-comment-or-uncomment-region ()
+  "Comment a region or a line if no region is marked."
+  (interactive)
+  (my-apply-region-or-line #'comment-or-uncomment-region))
+(global-set-key (kbd "C-x \\") #'my-comment-or-uncomment-region)
+(global-set-key (kbd "C-x C-\\") #'my-comment-or-uncomment-region)
     #+END_SRC
 
 *** Key logger
@@ -1828,10 +1640,19 @@ createfolders = False
     configuration files.
 
     #+BEGIN_SRC emacs-lisp
-(when display-graphic-p
+(when (display-graphic-p)
+
   (open-dribble-file
    (expand-file-name
-    (format-time-string "~/.gongzhitaao/emacs.d/keylog/key-%FT%H%M%S.log"))))
+    (format-time-string "~/.emacs.d/keylog/key-%FT%H%M%S.log")))
+
+  (cl-defun my-sync-keylog
+      (&optional
+       (source (expand-file-name "~/.emacs.d/keylog/"))
+       (target (expand-file-name "~/Dropbox/dotfiles/emacs.d/keylog")))
+    (async-shell-command (format "rsync -rp %s %s" source target)))
+
+  (add-hook 'kill-emacs-hook #'my-sync-keylog))
     #+END_SRC
 
 * End

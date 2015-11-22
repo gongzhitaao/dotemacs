@@ -10,6 +10,7 @@
 !conf.org
 
 !gnus-conf.el
+!my-org-project.el
 
 !icons
 !icons/*

@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2015-06-02 15:26:07 gongzhitaao>
+;;; Time-stamp: <2015-11-22 15:18:09 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -52,18 +52,18 @@ for the header string.
           "%Y-%m-%d %H:%M" (safe-date-to-time (mail-header-date header))))
         (age-level (header-age-level header)))
     (cond
-      ((= 0 age-level)
-       (propertize header-date-time-string
-		   'face '(my-date-one-day-old-face default)
-		   'gnus-face t))
-      ((= 1 age-level)
-       (propertize header-date-time-string
-		   'face '(my-date-one-week-old-face default)
-		   'gnus-face t))
-      (t
-       (propertize header-date-time-string
-                   'face '(my-date-more-than-one-week-old-face default)
-                   'gnus-face t)))))
+     ((= 0 age-level)
+      (propertize header-date-time-string
+                  'face '(my-date-one-day-old-face default)
+                  'gnus-face t))
+     ((= 1 age-level)
+      (propertize header-date-time-string
+                  'face '(my-date-one-week-old-face default)
+                  'gnus-face t))
+     (t
+      (propertize header-date-time-string
+                  'face '(my-date-more-than-one-week-old-face default)
+                  'gnus-face t)))))
 
 (setq-default
  gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30f  %B%s%)\n"
@@ -146,9 +146,9 @@ Software Engineering")))
               "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
-                       "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
-                       "\\(me@gongzhitaao\.org\\)\\|"
-                       "\\(gongzhitaao@yahoo\.com\\)")))
+                        "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
+                        "\\(me@gongzhitaao\.org\\)\\|"
+                        "\\(gongzhitaao@yahoo\.com\\)")))
   (setq message-dont-reply-to-names my-mails))
 (setq gnus-ignored-from-addresses (concat "\\(Zhitao\\( Gong\\)?\\)\\|"
                                           "\\(gongzhitaao\\)"))
@@ -193,5 +193,29 @@ Software Engineering")))
 (add-hook 'gnus-group-mode-hook
           (lambda ()
             (hl-line-mode 1)))
+
+(when (display-graphic-p)
+
+  (setq display-time-mail-function
+        (lambda () ;; Gnus launched?
+          (catch 'break
+            (mapc
+             (lambda (entry)
+               (let ((group (car entry)))
+                 (when (< (gnus-group-level group) 2)
+                   (let ((unread (gnus-group-unread group)))
+                     (if (and (numberp unread)
+                              (> unread 0))
+                         (throw 'break t))))))
+             gnus-newsrc-alist)
+            nil)))
+
+  (setq display-time-mail-string (concat " " [#xF003])
+        display-time-use-mail-icon nil
+        ;; display-time-mail-icon
+        ;; `(image :type png
+        ;;         :file ,(expand-file-name "mail-unread.png" my-icons-dir)
+        ;;         :ascent center)
+        ))
 
 ;;; gnus-conf.el ends here
