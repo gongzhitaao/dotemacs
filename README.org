@@ -1,14 +1,15 @@
 #+TITLE: Emacs Configurations
 #+AUTHOR: Zhitao Gong
 #+EMAIL: me@gongzhitaao.org
-#+DESCRIPTION: Emacs configurations written in Orgmode.
+#+DESCRIPTION: Emacs configurations literal programmed in Orgmode.
 #+KEYWORDS: emacs,orgmode,literal programming,emacs-lisp,org
 
 #+HTML_HEAD: <link rel="stylesheet" href="https://gongzhitaao.github.io/orgcss/org.css" type="text/css" />
-#+OPTIONS: H:4 num:3 toc:nil num:t
+#+OPTIONS: H:4 toc:nil num:t
 #+TAGS: export(e) noexport(n)
 #+STARTUP: fold content
 #+MACRO: kbd @@html:<kbd>$1</kbd>@@
+#+MACRO: org Orgmode
 
 #+BEGIN_HTML :tangle no
 <a href="https://github.com/gongzhitaao/dotemacs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
@@ -23,148 +24,57 @@ after a while.
 
 * Introduction
   :PROPERTIES:
-:CUSTOM_ID: sec:introduction
-:END:
+  :CUSTOM_ID: sec:introduction
+  :END:
 
-  This is my Emacs configuration, stored in =conf.org= file with all
-  these texts and loaded by =org-babel-load-file= from =init.el=.  This
-  is inspired by [[http://writequit.org/][Matthew Lee Hinman]][fn:1] in his [[http://writequit.org/org/settings.html][settings]].  This project
-  is hosted with ♥ by Github, here is the [[https://github.com/gongzhitaao/dotemacs][repo]].
-
-  This file is last updated {{{time(%Y-%m-%d %H:%M)}}}.
+  This is my Emacs configuration.  Inspired by [[http://writequit.org/][Matthew Lee
+  Hinman]][fn:1] in his [[http://writequit.org/org/settings.html][settings]] employing [[https://en.wikipedia.org/wiki/Literate_programming][literal programming]] in
+  {{{org}}}, I store the documentation and configuration code in
+  =README.org= file which is loaded =init.el=.  This project is hosted
+  on https://github.com/gongzhitaao/dotemacs.
 
 * Bootstrap
   :PROPERTIES:
-:CUSTOM_ID: sec:bootstrap
-:END:
+  :CUSTOM_ID: sec:bootstrap
+  :END:
 
-  I use =emacs.d/init.el= to bootstrap all my Emacs configurations.  The
-  only thing done in =init.el= is to load this file, =conf.org=, which
-  includes all our documented configurations.
+  I use =emacs.d/init.el= to bootstrap all my Emacs configurations.
+  The only thing done in =init.el= is to load this file, =README.org=,
+  which includes all our documented configurations.
 
-  #+BEGIN_SRC emacs-lisp :tangle no
-(require 'org)
-(org-babel-load-file "~/.emacs.d/conf.org")
+  #+INCLUDE: "init.el" src emacs-lisp :lines "6-"
+
+  Notice that I load two packages, =cask= and =pallet=, which are
+  substitution for the builtin package manager[fn:2].  For more
+  information about Cask, please refer to its [[http://cask.readthedocs.org/en/latest/][documentation]].
+
+  The =use-package= is a convenient replacement for =require=.  It
+  provides more options and controls on loading packages.
+
+  #+BEGIN_SRC emacs-lisp
+(require 'use-package)
   #+END_SRC
 
-  The following sections are all the documented configurations.
+  Disable debugging information for package loading.
 
-* Package Manager
-  :PROPERTIES:
-:CUSTOM_ID: sec:pacman
-:END:
-
-  Before any loading and configuration, I need to make sure all my
-  utility packages are installed.
-
-** Manager                                                       :deprecated:
-
-   This is how I did, and probably what you are doing.
-
-   1. First of all, maintain a list of packages.
-
-      #+BEGIN_SRC emacs-lisp :tangle no
-(defvar my/package-list
-  '(
-
-    ;; A super long list of all packages
-
-    ))
-      #+END_SRC
-
-   2. Then add official archives and initialize the package system.
-
-      #+BEGIN_SRC emacs-lisp :tangle no
-(require 'package)
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("marmalade" . "http://marmalade-repo.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
-(package-initialize)
-
-(or (file-exists-p package-user-dir) (package-refresh-contents))
-      #+END_SRC
-
-   3. And finally install, if neccessary all the packages.
-
-      #+BEGIN_SRC emacs-lisp :tangle no
-(dolist (pack my/package-list)
-  (unless (package-installed-p pack)
-    (package-install pack)))
-      #+END_SRC
-
-
-   It works.  But there is one thing I particularly do not like about
-   the default packaging system: when updating packages, it
-   /re-downloads/ all the outdated package instead of retrieving only
-   modified files like =git pull=.  It takes quite a while to uncompress
-   and compile large packages, e.g., =ess= (Emacs Speaks Statistics),
-   =org=, =org-plus-contrib= and etc.  And Emacs is blocked during this
-   process since it is /single-threaded/!
-
-** Preferred Way
-
-   Just found about [[http://cask.readthedocs.org/en/latest/index.html][Cask]], yet another package manager for Emacs.  See
-   [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]] for the reason of switching to Cask.  All dependencies
-   are stored in =Cask= under =.emacs.d/=.
-
-   The contents of Cask is as follows (long list of packages are omitted
-   for brevity).
-
-   #+BEGIN_SRC emacs-lisp :tangle no
-(source gnu)
-(source melpa)
-(source marmalade)
-(source org)
-
-(depends-on "ace-jump-mode")
-(depends-on "ag")
-(depends-on "anzu")
-(depends-on "async")
-(depends-on "auctex")
-;; the (depends-on ...) list goes on and on
-   #+END_SRC
-
-   And the following snippet is needed to initialize the =cask= manager.
-
-   #+BEGIN_SRC emacs-lisp
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
-(require 'pallet)
-(pallet-mode t)
-   #+END_SRC
-
-   For more information about Cask, please refer to its
-   [[http://cask.readthedocs.org/en/latest/][documentation]].
-
-   And as usual, load =use-package= first which is used for loading
-   packages everywhere else.
-
-   #+BEGIN_SRC emacs-lisp
-(require 'use-package)
-   #+END_SRC
-
-   Disable debugging information for package loading.
-
-   #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 (setq use-package-verbose nil)
-   #+END_SRC
+  #+END_SRC
 
-* Helper Variables and Functions
+* Helper
   :PROPERTIES:
-:CUSTOM_ID: sec:helper
-:END:
+  :CUSTOM_ID: sec:helper
+  :END:
 
-  Now start with some useful variables and function.
+  I start off defining some useful variables.
 
   #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "me@gongzhitaao.org")
 
-(defvar my-dir user-emacs-directory
+(defvar my-dir (expand-file-name "~/Dropbox/dotfiles/emacs.d")
   "The root dir for my Emacs configuration.")
-(defvar my-tmp (expand-file-name "tmp" my-dir)
+(defvar my-tmp (expand-file-name "tmp" user-emacs-directory)
   "Temp files that might be useful but that I don't care about.")
 (defvar my-personal-dir (expand-file-name "~/Dropbox/emacs/personal"))
 (defvar my-icons-dir (expand-file-name "icons" my-dir)
@@ -202,28 +112,19 @@ after a while.
         See `sort-regexp-fields'."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\w\\|-\\)+" "\\&" beg end))
-
-(defmacro rename-modeline (package-name mode new-name)
-  "Rename modeline."
-  `(eval-after-load ,package-name
-     '(defadvice ,mode (after rename-modeline activate)
-        (setq mode-name ,new-name))))
   #+END_SRC
 
-* Packages and Modes
+* Package
   :PROPERTIES:
-:CUSTOM_ID: sec:packmode
-:END:
+  :CUSTOM_ID: sec:package
+  :END:
 
-  This section contains goodies that enpower Emacs.  Two of the most
-  important packages I'm using, Orgmode and Gnus are kept in separate
-  configuration files and listed in separeted sections, while all others
-  are all listed under Section [[#sec:miscpac]].
+  This section contains goodies that power my Emacs.
 
 ** Gnus
    :PROPERTIES:
-:CUSTOM_ID: sec:gnus
-:END:
+   :CUSTOM_ID: sec:gnus
+   :END:
 
    #+BEGIN_QUOTE
    Gnus is a flexible message reader running under GNU Emacs.  It
@@ -233,7 +134,7 @@ after a while.
    #+END_QUOTE
 
    I choose Gnus over other GUI or console email client mainly because
-   it is a builtin Emacs package, which gives me access to most of the
+   it is a builtin to Emacs, which gives me access to most of the
    powerful goodies when composing and reading emails.
 
    With all that being said, it has a rather steep learning curve, three
@@ -249,22 +150,22 @@ after a while.
     mails.
 
     Since coordinating and properly configuring the three programs,
-    /dovecot/, /offlineimap/ and /Gnus/, seems a little intricate at the
-    beginning, I include all the settings to make the puzzle more
+    /dovecot/, /offlineimap/ and /Gnus/, seems a little intricate at
+    the beginning, all settings are included to make the puzzle more
     complete.
 
     The whole workflow of this tool chain is as follows.
 
-1. Offlineimap periodically updates mails in =Mail= folder,
-2. Dovecot, the mail server, serves mail requests at local port (143
-   for /imap/ and 993 for /imaps/), and
-3. Gnus connects to the local ports, being listened by Dovecot.
+    1. Offlineimap periodically updates mails in =Mail= folder,
+    2. Dovecot, the mail server, serves mails in =Mail= at local port
+       (143 for /imap/ and 993 for /imaps/), and
+    3. Gnus connects to the local ports being listened by Dovecot.
 
 *** Configuration
 
     All configurations to make Gnus work are included in this section.
-    I would assume that all these programs have been correctly
-    installed.
+    And I assume that all these programs have been installed
+    correctly.
 
 **** Dovecot
 
@@ -276,11 +177,11 @@ after a while.
 mail_location = maildir:~/Mail:LAYOUT=fs
      #+END_SRC
 
-     By default Dovecot uses Maildir++ directory layout which means that
-     all mailboxes are stored in a single directory and prefixed with a
-     dot.  But offlineimap by default works with =/= (forward slash),
-     i.e., conventional hierarchical directories.  =LAYOUT\=fs= tells
-     Dovecot to use hierarchical directories.
+     By default dovecot uses Maildir++ directory layout which means
+     that all mailboxes are stored in a single directory and prefixed
+     with a dot.  But offlineimap by default works with =/= (forward
+     slash), i.e., conventional hierarchical directories.
+     =LAYOUT\=fs= tells dovecot to use hierarchical directories.
 
 **** Offlineimap
 
@@ -288,8 +189,8 @@ mail_location = maildir:~/Mail:LAYOUT=fs
      find a complete configuration sample, =offlineimap.conf=, shipped
      with installation.
 
-     One thing to note is that Offlineimap /DOES NOT invoke itself/.  In
-     order to periodically update mails, we need to either manually
+     One thing to note is that offlineimap /DOES NOT invoke itself/.
+     In order to periodically update mails, we need to either manually
      execute it or use other programs.  I use /cron/ utility to invoke
      Offlineimap every 5 minutes, as show in the following code.
 
@@ -376,7 +277,7 @@ createfolders = False
 (use-package gnus
   :bind ("<f12>" . gnus-other-frame)
   :config
-  (setq gnus-init-file "/home/gongzhitaao/.emacs.d/gnus-conf.el"))
+  (setq gnus-init-file (expand-file-name "gnus-conf.el" my-dir)))
      #+END_SRC
 
 ** Orgmode
@@ -385,142 +286,149 @@ createfolders = False
    :END:
 
    #+BEGIN_SRC emacs-lisp
-  (use-package org
-    :if (display-graphic-p)
-    :init
-    (let ((my-org-modules
-           '(org-bbdb
-             org-bibtex
-             org-clock
-             org-docview
-             org-gnus
-             org-habit
-             org-table
-             ox-latex
-             ox-bibtex
-             ox-beamer)))
-      (dolist (m my-org-modules)
-        (add-to-list 'org-modules m)))
-    :config
-    (mapc 'require org-modules)
+(use-package org
+  :if (display-graphic-p)
+  :init
+  (let ((my-org-modules
+         '(org-bbdb
+           org-bibtex
+           org-clock
+           org-docview
+           org-gnus
+           org-habit
+           org-table
+           ox-latex
+           ox-bibtex
+           ox-beamer)))
+    (dolist (m my-org-modules)
+      (add-to-list 'org-modules m)))
+  :config
+  (mapc 'require org-modules)
 
-    ;; Where I add todos.
-    (add-hook 'org-mode-hook 'turn-on-auto-fill)
+  ;; Where I add todos.
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
-    (setq org-list-description-max-indent 5)
+  (setq org-list-description-max-indent 5)
 
-    (add-to-list 'org-structure-template-alist
-                 '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
-    (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
-    (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
-    (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
-    (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
-    (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
+  (add-to-list 'org-structure-template-alist
+               '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
+  (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
+  (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
+  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
+  (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
+  (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
 
-    (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
+  (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
 
-    (setq org-directory (expand-file-name "org" my-personal-dir))
+  (setq org-directory (expand-file-name "org" my-personal-dir))
 
-    ;; Recursive update todo statistics
-    (setq org-hierarchical-todo-statistics nil)
+  ;; Recursive update todo statistics
+  (setq org-hierarchical-todo-statistics nil)
 
-    ;; Show events from diary
-    (setq org-agenda-include-diary t)
+  ;; Show events from diary
+  (setq org-agenda-include-diary t)
 
-    (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
-    ;; Resolve open clocks if the user if idle more than 10 minutes.
-    (setq org-clock-idle-time 10)
+  ;; Resolve open clocks if the user if idle more than 10 minutes.
+  (setq org-clock-idle-time 10)
 
-    ;; Sublevels inherit property from parents
-    (setq org-use-property-inheritance t)
+  ;; Sublevels inherit property from parents
+  (setq org-use-property-inheritance t)
 
-    ;; Fontify src blocks
-    (setq org-src-fontify-natively t)
-    (setq org-src-preserve-indentation t)
+  ;; Fontify src blocks
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
 
-    ;; Press enter to follow links
-    (setq org-return-follows-link t)
+  ;; Press enter to follow links
+  (setq org-return-follows-link t)
 
-    ;; Use prefix key as tag selection
-    (setq org-use-fast-todo-selection t)
+  ;; Use prefix key as tag selection
+  (setq org-use-fast-todo-selection t)
 
-    ;; Bypassing logging if change state with Shift key
-    (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+  ;; Bypassing logging if change state with Shift key
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
-    (setq org-todo-keywords
-          '((sequence
-             "TODO(t)" "NEXT(n)" "|"
-             "DONE(d!)")
-            (sequence
-             "WAIT(w@/!)" "HOLD(h@/!)" "|"
-             "KILL(k@)")))
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)" "NEXT(n)" "|"
+           "DONE(d!)")
+          (sequence
+           "WAIT(w@/!)" "HOLD(h@/!)" "|"
+           "KILL(k@)")))
 
-    (setq org-todo-keyword-faces
-          '(("TODO" :foreground "red" :weight bold)
-            ("NEXT" :foreground "cyan" :weight bold)
-            ("DONE" :foreground "green" :weight bold)
-            ("WAIT" :foreground "yellow" :weight bold)
-            ("HOLD" :foreground "magenta" :weight bold)
-            ("KILL" :foreground "forest green" :weight bold)))
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "red" :weight bold)
+          ("NEXT" :foreground "cyan" :weight bold)
+          ("DONE" :foreground "green" :weight bold)
+          ("WAIT" :foreground "yellow" :weight bold)
+          ("HOLD" :foreground "magenta" :weight bold)
+          ("KILL" :foreground "forest green" :weight bold)))
 
-    ;; Files to be included in Agenda view.
-    (setq org-agenda-files
-          (expand-file-name "orgfile" org-directory))
+  ;; Files to be included in Agenda view.
+  (setq org-agenda-files
+        (expand-file-name "orgfile" org-directory))
 
-    (setq org-agenda-dim-blocked-tasks t)
-    (setq org-agenda-compact-blocks t)
+  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-compact-blocks t)
 
-    (setq org-agenda-repeating-timestamp-show-all t)
-    (setq org-agenda-show-all-dates t)
+  (setq org-agenda-repeating-timestamp-show-all t)
+  (setq org-agenda-show-all-dates t)
 
-    (setq org-time-stamp-custom-formats
-          '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+  (setq org-time-stamp-custom-formats
+        '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
 
-    (setq org-agenda-prefix-format
-          '((agenda . " %i %-12:c%?-12t% s")
-            (timeline . "  % s")
-            (todo . " %i %-12:T")
-            (tags . " %i %-12:T")
-            (search . " %i %-12:T")))
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (timeline . "  % s")
+          (todo . " %i %-12:T")
+          (tags . " %i %-12:T")
+          (search . " %i %-12:T")))
 
-    (setq org-agenda-tags-column -100
-          org-habit-graph-column 45
-          org-habit-preceding-days 28
-          org-habit-following-days 1
-          org-agenda-start-with-log-mode t)
+  (setq org-agenda-tags-column -100
+        org-habit-graph-column 45
+        org-habit-preceding-days 28
+        org-habit-following-days 1
+        org-agenda-start-with-log-mode t)
 
-    (setq org-clock-history-length 32
-          org-clock-in-resume t)
-    (setq org-log-into-drawer t
-          org-clock-into-drawer t)
+  (setq org-clock-history-length 32
+        org-clock-in-resume t)
+  (setq org-log-into-drawer t
+        org-clock-into-drawer t)
 
-    (setq org-clock-persist 't)
-    (org-clock-persistence-insinuate)
+  (setq org-clock-persist 't)
+  (org-clock-persistence-insinuate)
 
-    (setq org-use-fast-tag-selection nil)
+  (setq org-use-fast-tag-selection nil)
 
-    (setq org-capture-templates
-          '(("t" "New TODO" entry
-             (file+headline "todo.org.gz" "Tasks")
-             "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
-            ("p" "New Project Proposal" entry
-             (file+headline "proj.org.gz" "Projects")
-             "* %^{Title} %^G\n %u\n %?\n\n\n")))
+  (setq org-capture-templates
+        '(("t" "New TODO" entry
+           (file+headline "todo.org.gz" "Tasks")
+           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
+          ("p" "New Project Proposal" entry
+           (file+headline "proj.org.gz" "Projects")
+           "* %^{Title} %^G\n %u\n %?\n\n\n")))
 
-    ;; (require 'ox-latex)
+  ;; (require 'ox-latex)
 
-    (setq org-latex-prefer-user-labels t)
+  (setq org-latex-prefer-user-labels t)
 
-    (setq org-latex-pdf-process
-          (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
+  (setq org-latex-pdf-process
+        (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
 
-    (setq org-latex-listings 'minted)
-    (add-to-list 'org-latex-packages-alist '("" "minted"))
-    (add-to-list 'org-latex-packages-alist '("" "microtype"))
-    (add-to-list 'org-latex-packages-alist '("backend=bibtex, style=numeric" "biblatex"))
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (add-to-list 'org-latex-packages-alist '("" "microtype"))
 
-    (setq org-latex-hyperref-template "\\hypersetup{
+  (defun org-latex-ref-to-cref (text backend info)
+    "Use \\cref instead of \\ref in latex export."
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\\\ref{" "\\\\Cref{" text)))
+
+  (add-to-list 'org-export-filter-final-output-functions
+               'org-latex-ref-to-cref)
+
+  (setq org-latex-hyperref-template "\\hypersetup{
       pdfauthor={%a},
       pdftitle={%t},
       pdfkeywords={%k},
@@ -540,31 +448,31 @@ createfolders = False
       filecolor=magenta,
       urlcolor=cyan}\n")
 
-    (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((emacs-lisp . t)
-                                   (latex . t)
-                                   (python . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t)
+                                 (latex . t)
+                                 (python . t)))
 
-    ;; (require 'ox-beamer)
+  ;; (require 'ox-beamer)
 
-    (add-to-list 'org-beamer-environments-extra
-                 '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+  (add-to-list 'org-beamer-environments-extra
+               '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
 
-    ;; (require 'ox-html)
+  ;; (require 'ox-html)
 
-    (setq org-html-doctype "html5"
-          org-html-html5-fancy t
-          org-html-head-include-default-style nil
-          org-html-head-include-scripts nil)
+  (setq org-html-doctype "html5"
+        org-html-html5-fancy t
+        org-html-head-include-default-style nil
+        org-html-head-include-scripts nil)
 
-    ;; Postamble.
-    (setq org-html-postamble t
-          org-html-postamble-format
-          '(("en" "<a class=\"author\"
+  ;; Postamble.
+  (setq org-html-postamble t
+        org-html-postamble-format
+        '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
-    (load-file "~/Dropbox/dotfiles/emacs.d/my-org-project.el"))
+  (load-file (expand-file-name "my-org-project.el" my-dir)))
    #+END_SRC
 
 ** Helm
@@ -572,7 +480,7 @@ createfolders = False
    [[https://emacs-helm.github.io/helm/][Helm]] is really [[http://tuhdo.github.io/helm-intro.html][a package in a league of its own]].  It deserves a
    separete section for all its related configuration.
 
-    #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (defvar helm-command-prefix-key)
 (setq helm-command-prefix-key nil)
 (use-package helm-config
@@ -645,16 +553,16 @@ createfolders = False
     (setq helm-bibtex-pdf-open-function #'my-open-pdf-with-evince))
 
   (use-package helm-files))
-    #+END_SRC
+   #+END_SRC
 
 ** Miscellaneous Packages
    :PROPERTIES:
-:CUSTOM_ID: sec:miscpac
-:END:
+   :CUSTOM_ID: sec:miscpac
+   :END:
 
-   The followings are light yet serious functionalities.  Some of which
-   that are wrapped in =(when (display-graphic-p) ...)= are intended to
-   be loaded only in GUI mode.  When in console mode, e.g., editing
+   The followings are light yet serious functionalities.  Packages
+   that are wrapped in =(when (display-graphic-p) ...)= are intended
+   to be loaded only in GUI mode.  When in console mode, e.g., editing
    files through SSH, I only need core editing functions.
 
 *** Diminish
@@ -663,14 +571,14 @@ createfolders = False
     [[http://www.eskimo.com/~seldon/diminish.el][diminish.el]],
 
     #+BEGIN_QUOTE
-    When we diminish a mode, we are saying we want it to continue doing
-    its work for us, but we no longer want to be reminded of it. It
-    becomes a night worker, like a janitor; it becomes an invisible man;
-    it remains a component, perhaps an important one, sometimes an
-    indispensable one, of the mechanism that maintains the day-people's
-    world, but its place in their thoughts is diminished, usually to
-    nothing. As we grow old we diminish more and more such thoughts,
-    such people, usually to nothing.
+    When we diminish a mode, we are saying we want it to continue
+    doing its work for us, but we no longer want to be reminded of it.
+    It becomes a night worker, like a janitor; it becomes an invisible
+    man; it remains a component, perhaps an important one, sometimes
+    an indispensable one, of the mechanism that maintains the
+    day-people's world, but its place in their thoughts is diminished,
+    usually to nothing.  As we grow old we diminish more and more such
+    thoughts, such people, usually to nothing.
     #+END_QUOTE
 
     #+BEGIN_SRC emacs-lisp
@@ -715,7 +623,7 @@ createfolders = False
 
     #+CAPTION: Anzu minor mode
     #+NAME: fig:anzu
-    [[./img/anzu.png]]
+    [[file:./img/anzu.png]]
 
     #+BEGIN_SRC emacs-lisp
 (use-package anzu
@@ -875,12 +783,40 @@ createfolders = False
     #+BEGIN_SRC emacs-lisp
 (use-package ess-site
   :config
+
+  (setq ess-R-font-lock-keywords
+          '((ess-R-fl-keyword:modifiers . t)
+            (ess-R-fl-keyword:fun-defs . t)
+            (ess-R-fl-keyword:keywords . t)
+            (ess-R-fl-keyword:assign-ops . t)
+            (ess-R-fl-keyword:constants . t)
+            (ess-fl-keyword:fun-calls)
+            (ess-fl-keyword:numbers)
+            (ess-fl-keyword:operators)
+            (ess-fl-keyword:delimiters)
+            (ess-fl-keyword:=)
+            (ess-R-fl-keyword:F&T . t)
+            (ess-R-fl-keyword:%op% . t)))
+
+  (setq inferior-R-font-lock-keywords
+        '((ess-S-fl-keyword:prompt . t)
+          (ess-R-fl-keyword:messages . t)
+          (ess-R-fl-keyword:modifiers . t)
+          (ess-R-fl-keyword:fun-defs . t)
+          (ess-R-fl-keyword:keywords . t)
+          (ess-R-fl-keyword:assign-ops . t)
+          (ess-R-fl-keyword:constants . t)
+          (ess-fl-keyword:matrix-labels . t)
+          (ess-fl-keyword:fun-calls)
+          (ess-fl-keyword:numbers)
+          (ess-fl-keyword:operators)
+          (ess-fl-keyword:delimiters)
+          (ess-fl-keyword:=)
+          (ess-R-fl-keyword:F&T . t)))
+
   (defun my-ess-init ()
     "Init my ess mode."
     (setq ess-help-own-frame 'one)
-    (setq ess-indent-level 2)
-    (setq ess-first-continued-statement-offset 2)
-    (setq ess-continued-statement-offset 0)
     (setq ess-tab-complete-in-script t)
     (setq ess-first-tab-never-complete
           'symbol-or-paren-or-punct))
@@ -927,9 +863,7 @@ createfolders = False
   :config
   (setq js2-basic-offset 2
         js2-include-node-externs t
-        js2-include-browser-externs t)
-
-  (rename-modeline "js2-mode" js2-mode "JS2"))
+        js2-include-browser-externs t))
     #+END_SRC
 
 *** Hi-mode
@@ -1098,10 +1032,10 @@ createfolders = False
   :config
   (setq recentf-save-file (expand-file-name "recentf" my-tmp))
   (add-to-list 'recentf-exclude (expand-file-name ".*" my-tmp))
-  (add-to-list 'recentf-exclude (expand-file-name "elpa/.*" my-dir))
+  (add-to-list 'recentf-exclude (expand-file-name "elpa/.*" user-emacs-directory))
   (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
   (add-to-list 'recentf-exclude (expand-file-name my-personal-dir))
-  (add-to-list 'recentf-exclude (expand-file-name ".cask/.*" my-dir))
+  (add-to-list 'recentf-exclude (expand-file-name ".cask/.*" user-emacs-directory))
   (recentf-mode +1))
     #+END_SRC
 
@@ -1327,8 +1261,8 @@ createfolders = False
 
 * Editor Setting
   :PROPERTIES:
-:CUSTOM_ID: sec:editorsetting
-:END:
+  :CUSTOM_ID: sec:editorsetting
+  :END:
 
   After the above preparations, we continue to customize the default
   behaviours of our editor.  First and formost, I would like to avoid
@@ -1357,8 +1291,8 @@ createfolders = False
 
 ** Encoding and Font
    :PROPERTIES:
-:CUSTOM_ID: sec:encoding_font
-:END:
+   :CUSTOM_ID: sec:encoding_font
+   :END:
 
    First of all, it is the encoding system that matters.
 
@@ -1392,8 +1326,8 @@ createfolders = False
 
 ** Default Behaviours
    :PROPERTIES:
-:CUSTOM_ID: sec:default_behaviour
-:END:
+   :CUSTOM_ID: sec:default_behaviour
+   :END:
 
    Next is the tab thing.  Although I do not use =\t= for indentation, I
    still set the =tab-width= in case I need it, e.g., Makefile.
@@ -1553,8 +1487,8 @@ createfolders = False
 
 ** Key bindings
    :PROPERTIES:
-:CUSTOM_ID: sec:key
-:END:
+   :CUSTOM_ID: sec:key
+   :END:
 
 *** Function Key Bindings
 
@@ -1580,6 +1514,7 @@ createfolders = False
 (global-set-key [remap isearch-forward] #'isearch-forward-regexp)
 (global-set-key [remap isearch-backward] #'isearch-query-replace-regexp)
 (global-set-key [remap yank-pop] #'helm-show-kill-ring)
+(global-set-key (kbd "C-z") #'delete-other-windows)
     #+END_SRC
 
 *** User Key Bindings
@@ -1609,7 +1544,7 @@ createfolders = False
 (global-set-key (kbd "C-c o c") #'org-capture)
 ;; C-c w -- writeroom-mode
 (global-set-key (kbd "C-c ,") #'color-identifiers-mode)
-
+(global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
 (global-set-key (kbd "C-c C-=") #'align-regexp)
 
 (global-set-key (kbd "C-c <left>") #'decrease-left-margin)
@@ -1666,4 +1601,6 @@ createfolders = False
 * Footnotes
 
 [fn:1] As a side note, I guess his blog style might be adopted from
-  [[http://doc.norang.ca/][Bernt Hansen]] blog site.  Correct me if I'm wrong.
+[[http://doc.norang.ca/][Bernt Hansen]] blog site.  Correct me if I'm wrong.
+
+[fn:2] See [[https://cask.readthedocs.org/en/latest/guide/introduction.html][Why Cask?]].

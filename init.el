@@ -1,6 +1,6 @@
 ;;; init.el -- Entry to all my configuration
 ;;; Commentary:
-;;; Time-stamp: <2015-08-05 10:49:38 gongzhitaao>
+;;; Time-stamp: <2015-12-02 17:02:10 gongzhitaao>
 ;;; Code:
 
 (require 'cask "~/.cask/cask.el")
