@@ -5,7 +5,7 @@
 #+KEYWORDS: emacs,orgmode,literal programming,emacs-lisp,org
 
 #+HTML_HEAD: <link rel="stylesheet" href="https://gongzhitaao.github.io/orgcss/org.css" type="text/css" />
-#+OPTIONS: H:4 toc:nil num:t
+#+OPTIONS: H:4 num:3 toc:nil
 #+TAGS: export(e) noexport(n)
 #+STARTUP: fold content
 #+MACRO: kbd @@html:<kbd>$1</kbd>@@
