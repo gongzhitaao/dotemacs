@@ -29,22 +29,21 @@ after a while.
 
   This is my Emacs configuration.  Inspired by [[http://writequit.org/][Matthew Lee
   Hinman]][fn:1] in his [[http://writequit.org/org/settings.html][settings]] employing [[https://en.wikipedia.org/wiki/Literate_programming][literal programming]] in
-  {{{org}}}, I store the documentation and configuration code in
-  =README.org= file which is loaded =init.el=.  This project is hosted
-  on https://github.com/gongzhitaao/dotemacs.
+  {{{org}}}, the configuration code along with the documentation are
+  stored in =README.org= file which is loaded by =init.el=.  This
+  project is hosted on https://github.com/gongzhitaao/dotemacs.
 
 * Bootstrap
   :PROPERTIES:
   :CUSTOM_ID: sec:bootstrap
   :END:
 
-  I use =emacs.d/init.el= to bootstrap all my Emacs configurations.
-  The only thing done in =init.el= is to load this file, =README.org=,
-  which includes all our documented configurations.
+  The =emacs.d/init.el= bootstraps all my Emacs configuration.  The
+  only thing done in =init.el= is to load this file, =README.org=.
 
   #+INCLUDE: "init.el" src emacs-lisp :lines "6-"
 
-  Notice that I load two packages, =cask= and =pallet=, which are
+  Notice that two packages, =cask= and =pallet=, are loaded.  They are
   substitution for the builtin package manager[fn:2].  For more
   information about Cask, please refer to its [[http://cask.readthedocs.org/en/latest/][documentation]].
 
@@ -340,8 +339,7 @@ createfolders = False
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
 
-  ;; Press enter to follow links
-  (setq org-return-follows-link t)
+  (setq org-catch-invisible-edits 'smart)
 
   ;; Use prefix key as tag selection
   (setq org-use-fast-todo-selection t)
@@ -418,15 +416,15 @@ createfolders = False
 
   (setq org-latex-listings 'minted)
   (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (add-to-list 'org-latex-packages-alist '("" "microtype"))
+  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10" "microtype"))
 
-  (defun org-latex-ref-to-cref (text backend info)
-    "Use \\cref instead of \\ref in latex export."
-    (when (org-export-derived-backend-p backend 'latex)
-      (replace-regexp-in-string "\\\\ref{" "\\\\Cref{" text)))
+  ;; (defun org-latex-ref-to-cref (text backend info)
+  ;;   "Use \\cref instead of \\ref in latex export."
+  ;;   (when (org-export-derived-backend-p backend 'latex)
+  ;;     (replace-regexp-in-string "\\\\ref{" "\\\\Cref{" text)))
 
-  (add-to-list 'org-export-filter-final-output-functions
-               'org-latex-ref-to-cref)
+  ;; (add-to-list 'org-export-filter-final-output-functions
+  ;;              'org-latex-ref-to-cref)
 
   (setq org-latex-hyperref-template "\\hypersetup{
       pdfauthor={%a},
@@ -448,11 +446,6 @@ createfolders = False
       filecolor=magenta,
       urlcolor=cyan}\n")
 
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t)
-                                 (latex . t)
-                                 (python . t)))
-
   ;; (require 'ox-beamer)
 
   (add-to-list 'org-beamer-environments-extra
@@ -472,7 +465,7 @@ createfolders = False
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
-  (load-file (expand-file-name "my-org-project.el" my-dir)))
+  (load-file (expand-file-name "my-org-misc.el" my-dir)))
    #+END_SRC
 
 ** Helm
@@ -493,9 +486,8 @@ createfolders = False
   (define-key helm-command-map (kbd "a") #'helm-apropos)
   ;; c helm-colors
   (define-key helm-command-map (kbd "b") #'helm-bibtex)
-  ;; e helm-etags-select
   ;; f helm-multi-files
-  (define-key helm-command-map (kbd "g") #'helm-do-grep)
+  ;; g helm-gtags
   ;; h help
   ;; i helm-semantic-or-imenu
   ;; l helm-locate
@@ -531,7 +523,13 @@ createfolders = False
   (helm-mode +1)
   (helm-autoresize-mode t)
 
-  (use-package helm-bibtex
+  (use-package helm-files))
+   #+END_SRC
+
+*** Helm-bibtex
+
+    #+BEGIN_SRC emacs-lisp
+(use-package helm-bibtex
     :config
     (setq helm-bibtex-bibliography
           `(,(expand-file-name "~/Dropbox/bibliography/sp.bib")
@@ -547,12 +545,42 @@ createfolders = False
           (expand-file-name "~/Dropbox/bibliography/notes"))
     (setq helm-bibtex-notes-extension ".org")
 
-    (defun my-open-pdf-with-evince (path)
-      "Open pdf files with `evince' asynchroneously."
-      (async-start-process "evince" "/usr/bin/evince" nil path))
-    (setq helm-bibtex-pdf-open-function #'my-open-pdf-with-evince))
+    (setq helm-bibtex-pdf-open-function #'helm-open-file-with-default-tool))
+    #+END_SRC
 
-  (use-package helm-files))
+*** Helm-gtags
+
+    #+BEGIN_SRC emacs-lisp
+(use-package helm-gtags
+    :init
+    (setq helm-gtags-prefix-key (kbd "C-c h g"))
+    (setq helm-gtags-suggested-key-mapping t)
+    (setq helm-gtags-ignore-case t
+          helm-gtags-auto-update t
+          helm-gtags-display-style 'detail
+          helm-gtags-direct-helm-completing t)
+    :config
+    (diminish #'helm-gtags-mode (concat " " [#xF02B])))
+    #+END_SRC
+
+** Diminish
+
+   Make minor modes invisible.  As quoted from Will Mengarini in
+   [[http://www.eskimo.com/~seldon/diminish.el][diminish.el]],
+
+   #+BEGIN_QUOTE
+   When we diminish a mode, we are saying we want it to continue
+   doing its work for us, but we no longer want to be reminded of it.
+   It becomes a night worker, like a janitor; it becomes an invisible
+   man; it remains a component, perhaps an important one, sometimes
+   an indispensable one, of the mechanism that maintains the
+   day-people's world, but its place in their thoughts is diminished,
+   usually to nothing.  As we grow old we diminish more and more such
+   thoughts, such people, usually to nothing.
+   #+END_QUOTE
+
+   #+BEGIN_SRC emacs-lisp
+(use-package diminish)
    #+END_SRC
 
 ** Miscellaneous Packages
@@ -564,26 +592,6 @@ createfolders = False
    that are wrapped in =(when (display-graphic-p) ...)= are intended
    to be loaded only in GUI mode.  When in console mode, e.g., editing
    files through SSH, I only need core editing functions.
-
-*** Diminish
-
-    Make minor modes invisible.  As quoted from Will Mengarini in
-    [[http://www.eskimo.com/~seldon/diminish.el][diminish.el]],
-
-    #+BEGIN_QUOTE
-    When we diminish a mode, we are saying we want it to continue
-    doing its work for us, but we no longer want to be reminded of it.
-    It becomes a night worker, like a janitor; it becomes an invisible
-    man; it remains a component, perhaps an important one, sometimes
-    an indispensable one, of the mechanism that maintains the
-    day-people's world, but its place in their thoughts is diminished,
-    usually to nothing.  As we grow old we diminish more and more such
-    thoughts, such people, usually to nothing.
-    #+END_QUOTE
-
-    #+BEGIN_SRC emacs-lisp
-(use-package diminish)
-    #+END_SRC
 
 *** Ag
 
@@ -612,6 +620,15 @@ createfolders = False
       (define-key map (kbd "p") #'ag-project-regexp)
 
       map)))
+    #+END_SRC
+
+*** Auto-revert-mode
+
+    #+BEGIN_SRC emacs-lisp
+(use-package auto-revert-mode
+  :defer t
+  :config
+  (diminish #'auto-revert-mode (concat " " [#xF01E])))
     #+END_SRC
 
 *** Anzu
@@ -703,6 +720,12 @@ createfolders = False
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
     #+END_SRC
 
+*** Cc-mode
+
+    #+BEGIN_SRC emacs-lisp
+(add-hook 'c-mode-common-hook #'google-set-c-style)
+    #+END_SRC
+
 *** Deft
 
     #+BEGIN_QUOTE
@@ -750,11 +773,12 @@ createfolders = False
 (display-time)
     #+END_SRC
 
-*** Drag-stuff-mode
+*** Drag-stuff
 
     #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
-  :bind ("C-c d" . drag-stuff-mode))
+  :bind ("C-c d" . drag-stuff-mode)
+  :config (diminish #'drag-stuff-mode (concat " " [#xF255])))
     #+END_SRC
 
 *** Eshell
@@ -825,6 +849,26 @@ createfolders = False
   (add-hook 'inferior-ess-mode-hook #'turn-on-smartparens-mode))
     #+END_SRC
 
+*** Ebib
+
+    #+BEGIN_SRC emacs-lisp
+(use-package ebib
+  :bind ("C-c e" . ebib)
+  :config
+  (setq
+   ebib-preload-bib-files
+   '("~/Dropbox/bibliography/nn.bib"
+     "~/Dropbox/bibliography/sp.bib"
+     "~/Dropbox/bibliography/stats.bib")
+   ebib-bib-search-dirs '("~/Dropbox/bibliography")
+   ebib-file-search-dirs
+   '("~/Dropbox/bibliography/nn-pdf"
+     "~/Dropbox/bibliography/sp-pdf"
+     "~/Dropbox/bibliography/stats-pdf"))
+  (setq ebib-bibtex-dialect 'biblatex)
+  (setq ebib-file-associations '(("pdf" . "evince") ("ps" . "evince"))))
+    #+END_SRC
+
 *** Expand-region
 
     Select the region in a DWIW style.
@@ -855,15 +899,11 @@ createfolders = False
   (add-hook 'flycheck-status-changed-functions #'my-on-flycheck-status-change))
     #+END_SRC
 
-*** Javascript
+*** Fancy-narrow
 
     #+BEGIN_SRC emacs-lisp
-(use-package js2-mode
-  :mode "\\.js\\'"
-  :config
-  (setq js2-basic-offset 2
-        js2-include-node-externs t
-        js2-include-browser-externs t))
+(use-package fancy-narrow
+  :config (setq fancy-narrow-lighter ""))
     #+END_SRC
 
 *** Hi-mode
@@ -966,6 +1006,18 @@ createfolders = False
                 filename-and-process))))
     #+END_SRC
 
+*** Javascript
+
+    #+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (setq js2-basic-offset 2
+        js2-include-node-externs t
+        js2-include-browser-externs t))
+(setq js-indent-level 2)
+    #+END_SRC
+
 *** Lua-mode
 
     #+BEGIN_SRC emacs-lisp
@@ -1009,6 +1061,20 @@ createfolders = False
       (define-key map (kbd "r") #'mc/mark-all-in-region-regexp)
 
       map)))
+    #+END_SRC
+
+*** Org-ref
+
+    #+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :bind ("C-c r" . org-ref)
+  :init
+  (setq org-ref-bibliography-notes "~/Dropbox/bibliography/notes.org"
+        org-ref-default-bibliography
+        '("~/Dropbox/bibliography/nn.bib"
+          "~/Dropbox/bibliography/sp.bib"
+          "~/Dropbox/bibliography/stats.bib")
+        org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/"))
     #+END_SRC
 
 *** Projectile
@@ -1062,6 +1128,14 @@ createfolders = False
   (setq-default save-place t)
   :config
   (setq save-place-file (expand-file-name "saveplace" my-tmp)))
+    #+END_SRC
+
+*** Scheme
+
+    #+BEGIN_SRC emacs-lisp
+(use-package geiser-mode
+  :config
+  (setq geiser-default-implementation 'guile))
     #+END_SRC
 
 *** Smartparens
@@ -1261,7 +1335,7 @@ createfolders = False
 
 * Editor Setting
   :PROPERTIES:
-  :CUSTOM_ID: sec:editorsetting
+  :CUSTOM_ID: sec:editor-setting
   :END:
 
   After the above preparations, we continue to customize the default
@@ -1291,16 +1365,16 @@ createfolders = False
 
 ** Encoding and Font
    :PROPERTIES:
-   :CUSTOM_ID: sec:encoding_font
+   :CUSTOM_ID: sec:encoding-and-font
    :END:
 
-   First of all, it is the encoding system that matters.
+   Encoding matters.
 
-   I will stick to =utf-8= whenever possible.  In case of Chinese,
-   however, the default encoding under MS Windows is =cp936= (for
-   Simplified Chinese) and =cp950= (for Big5), =gb18030= and =gb2312= in
-   some cases.  I include them in the coding system in order to open
-   these files correctly.  And note that =prefer-coding-system= always
+   I stick to =utf-8= whenever possible.  In case of Chinese, however,
+   the default encoding under MS Windows is =cp936= (for Simplified
+   Chinese) and =cp950= (for Big5), =gb18030= and =gb2312= in some
+   cases.  I include them all in the coding system in order to open
+   those files correctly.  Note that =prefer-coding-system= always
    prefers the last preferred encoding, =utf-8= in the following code.
 
    #+BEGIN_SRC emacs-lisp
@@ -1310,13 +1384,26 @@ createfolders = False
     (prefer-coding-system c)))
    #+END_SRC
 
-   Then comes the font for both English and Chinese.
+   Ubuntu Mono is the most eye pleasing font on my machine.
 
    #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil
                     :family "Ubuntu Mono"
                     :height 120)
+   #+END_SRC
 
+   Use [[https://larsenwork.com/monoid/][Monoisome]] for font-awesome code range.
+
+   #+BEGIN_SRC emacs-lisp
+(set-fontset-font "fontset-default"
+                  (cons (decode-char 'ucs #xF000)
+                        (decode-char 'ucs #xF295))
+                  (font-spec :family "Monoisome" :size 12))
+   #+END_SRC
+
+   Use [[http://wenq.org/][WenQuanYi]] (文泉驿) for Chinese monospace font.
+
+   #+BEGIN_SRC emacs-lisp
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
@@ -1326,11 +1413,11 @@ createfolders = False
 
 ** Default Behaviours
    :PROPERTIES:
-   :CUSTOM_ID: sec:default_behaviour
+   :CUSTOM_ID: sec:default-behaviours
    :END:
 
-   Next is the tab thing.  Although I do not use =\t= for indentation, I
-   still set the =tab-width= in case I need it, e.g., Makefile.
+   Although I do not use =\t= for indentation, I still set the
+   =tab-width= in case I need it, e.g., Makefile.
 
    #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
@@ -1342,13 +1429,6 @@ createfolders = False
 
    #+BEGIN_SRC emacs-lisp
 (delete-selection-mode t)
-   #+END_SRC
-
-   Leaving double space after =.= makes it easier to delete a whole line
-   with {{{kbd(M-k)}}}.
-
-   #+BEGIN_SRC emacs-lisp
-(setq colon-double-space t)
    #+END_SRC
 
    Cleanup spaces and write timestamp if needed.
@@ -1368,14 +1448,14 @@ createfolders = False
    #+END_SRC
 
    I do not need tool bar but I find menu bar helpful in case I forget
-   what operations are available in a major mode.
+   what operations are available.
 
    #+BEGIN_SRC emacs-lisp
 (tool-bar-mode 0)
 (menu-bar-mode 1)
    #+END_SRC
 
-   I do not need the scroll bar either.
+   I do not need the scroll bar.
 
    #+BEGIN_SRC emacs-lisp
 (scroll-bar-mode 0)
@@ -1417,11 +1497,11 @@ createfolders = False
 (put 'downcase-region 'disabled nil)
    #+END_SRC
 
-   Many of the settings above are rather self-evident.  The following
-   /advice/ is for {{{kbd(M-w)}}}, copy command in Emacs.  By default,
-   {{{kbd(M-w)}}} operates on a selected region and does nothing when no
-   text is selected.  Instead of doing nothing, we /advice/ it to copy
-   current line. i.e., where cursor resides, when no region is active.
+   The following /advice/ is for {{{kbd(M-w)}}}, copy command in
+   Emacs.  By default, {{{kbd(M-w)}}} operates on a selected region
+   and does nothing when no text is selected.  Instead of doing
+   nothing, we /advice/ it to copy current line when no region is
+   active.
 
    #+BEGIN_SRC emacs-lisp
 (defadvice kill-ring-save
@@ -1432,9 +1512,9 @@ createfolders = False
    (if mark-active
        (list (region-beginning)
              (region-end))
-     (message "Copied line")
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
+     (message "Line copied!")
+     (list (+ (line-beginning-position) (current-indentation))
+           (1- (line-beginning-position 2))))))
    #+END_SRC
 
    Backup files in the temp directory instead of clustering everywhere
@@ -1487,7 +1567,7 @@ createfolders = False
 
 ** Key bindings
    :PROPERTIES:
-   :CUSTOM_ID: sec:key
+   :CUSTOM_ID: sec:key-bindings
    :END:
 
 *** Function Key Bindings
@@ -1534,12 +1614,15 @@ createfolders = False
      (setq comint-buffer-maximum-size old-max)))
 
 (global-set-key (kbd "C-c c") #'clear-shell)
+;; C-c e -- ebib
 ;; C-c f -- flycheck-mode
-(global-set-key (kbd "C-c g") #'ace-jump-mode)
+(global-set-key (kbd "C-c j") #'ace-jump-mode)
+(global-set-key (kbd "C-c g") #'helm-gtags-mode)
 (global-set-key (kbd "C-c m") #'magit-status)
 ;; C-c M -- my-multiple-cursor-map
 (global-set-key (kbd "C-c q") #'auto-fill-mode)
-(global-set-key (kbd "C-c r") #'isearch-query-replace-regexp)
+;; C-c r -- org-ref
+;; C-c y -- yas-global-mode
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
 ;; C-c w -- writeroom-mode
@@ -1591,6 +1674,9 @@ createfolders = False
     #+END_SRC
 
 * End
+  :PROPERTIES:
+  :CUSTOM_ID: sec:encoding-and-font
+  :END:
 
   After all these things, start the server.
 
