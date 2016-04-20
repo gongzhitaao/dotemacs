@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2015-12-02 17:42:39 gongzhitaao>
+;;; Time-stamp: <2016-02-12 07:38:02 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -13,7 +13,7 @@
                (nnimap-stream network)
                (nnimap-server-port 143)))
 
-(defun header-age-level (header)
+(defun me//header-age-level (header)
   "Return the age of the header
 
 The age are divided into three levels:
@@ -33,66 +33,69 @@ for the header string.
      ((< mail-age 7) 1)
      (t 2))))
 
-(defface my-date-one-day-old-face
-  '((default (:foreground "#ADFF2F")))
+(defface me--one-day-old
+  '((default (:foreground "#ADFF2F" :slant normal :strike-through nil)))
   "...")
-(defface my-date-one-week-old-face
-  '((default (:foreground "#79B221")))
+(defface me--one-week-old
+  '((default (:foreground "#79B221" :slant normal :strike-through nil)))
   "...")
-(defface my-date-more-than-one-week-old-face
-  '((default (:foreground "#456613")))
+(defface me--more-than-one-week-old
+  '((default (:foreground "#456613" :slant normal :strike-through nil)))
   "...")
 
 (defun gnus-user-format-function-color-date (header)
   (let ((header-date-time-string
          (format-time-string
           "%Y-%m-%d %H:%M" (safe-date-to-time (mail-header-date header))))
-        (age-level (header-age-level header)))
+        (age-level (me//header-age-level header)))
     (cond
      ((= 0 age-level)
       (propertize header-date-time-string
-                  'face '(my-date-one-day-old-face default)
+                  'face '(me--one-day-old default)
                   'gnus-face t))
      ((= 1 age-level)
       (propertize header-date-time-string
-                  'face '(my-date-one-week-old-face default)
+                  'face '(me--one-week-old default)
                   'gnus-face t))
      (t
       (propertize header-date-time-string
-                  'face '(my-date-more-than-one-week-old-face default)
+                  'face '(me--more-than-one-week-old default)
                   'gnus-face t)))))
 
+(set-face-italic 'gnus-summary-normal-read nil)
+(set-face-italic 'gnus-summary-normal-ancient nil)
+
 (setq-default
- gnus-summary-line-format "%U%R%z %(%u&color-date;  %-30,30f  %B%s%)\n"
+ gnus-summary-line-format "%U%R%z%I %(%u&color-date;  %-30,30f  %B%s%)\n"
  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
  gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
 
-(setq gnus-summary-to-prefix "→"
-      gnus-summary-newsgroup-prefix "⇶"
-      ;; Marks
-      gnus-ancient-mark ?✓
-      gnus-ticked-mark ?⚑
-      gnus-dormant-mark ?⚐
-      gnus-expirable-mark ?♻
-      gnus-read-mark ?✓
-      gnus-del-mark ?✗
-      gnus-canceled-mark ?✗
-      gnus-killed-mark ?☠
-      gnus-replied-mark ?↺
-      gnus-forwarded-mark ?↪
-      gnus-cached-mark ?☍
-      gnus-recent-mark ?✩
-      gnus-unseen-mark ?★
-      gnus-unread-mark ?✉
-      gnus-score-over-mark ?↑           ; ↑ ☀
-      gnus-score-below-mark ?↓         ; ↓ ☂
-      gnus-sum-thread-tree-false-root " ◌ "
-      gnus-sum-thread-tree-single-indent "◎ "
-      gnus-sum-thread-tree-indent "   "
-      gnus-sum-thread-tree-root "● "
-      gnus-sum-thread-tree-leaf-with-other "├─▶ "
-      gnus-sum-thread-tree-single-leaf     "└─▶ "
-      gnus-sum-thread-tree-vertical        "│ ")
+(setq
+ gnus-summary-to-prefix               "" ;[#xF061]
+ gnus-summary-newsgroup-prefix        "" ;[#xF1EA]
+ gnus-ancient-mark                    ? ;[#xF00C]
+ gnus-ticked-mark                     ? ;[#xF024]
+ gnus-dormant-mark                    ? ;[#xF11D]
+ gnus-expirable-mark                  ? ;[#xF1B8]
+ gnus-read-mark                       ? ;[#xF046]
+ gnus-del-mark                        ? ;[#xF00D]
+ gnus-canceled-mark                   ? ;[#xF00D]
+ gnus-killed-mark                     ? ;[#xF00D]
+ gnus-replied-mark                    ? ;[#xF112]
+ gnus-forwarded-mark                  ? ;[#xF064]
+ gnus-cached-mark                     ? ;[#xF0C5]
+ gnus-recent-mark                     ? ;[#xF006]
+ gnus-unseen-mark                     ? ;[#xF096]
+ gnus-unread-mark                     ? ;[#xF003]
+ gnus-score-over-mark                 ? ;[#xF148]
+ gnus-score-below-mark                ? ;[#xF149]
+ gnus-sum-thread-tree-false-root      " " ;[#xF10C]
+ gnus-sum-thread-tree-single-indent   " " ;[#xF192]
+ gnus-sum-thread-tree-indent          "  "
+ gnus-sum-thread-tree-root            "  " ;[#xF111]
+ gnus-sum-thread-tree-leaf-with-other " " ;[#xF178]
+ gnus-sum-thread-tree-single-leaf     " " ;[#xF178]
+ gnus-sum-thread-tree-vertical        "| ")
 
 (setq gnus-gcc-mark-as-read t)
 (setq gnus-face-properties-alist
@@ -110,7 +113,7 @@ for the header string.
 (setq message-confirm-send t)
 
 (setq message-signature-directory
-      (expand-file-name "signature" my-personal-dir))
+      (expand-file-name "signature" me-emacs-data))
 
 (setq gnus-parameters
       '(("Tiger.*"
@@ -143,7 +146,7 @@ Software Engineering")))
               "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
-                        "\\(zzg0009@\\(tigermail\.\\)?auburn\.edu\\)\\|"
+                        "\\(\\(zzg0009\\|gongzhitaao\\|zhitaao\\|gong\\)@\\(tigermail\.\\)?auburn\.edu\\)\\|"
                         "\\(me@gongzhitaao\.org\\)\\|"
                         "\\(gongzhitaao@yahoo\.com\\)")))
   (setq message-dont-reply-to-names my-mails))
@@ -207,7 +210,7 @@ Software Engineering")))
              gnus-newsrc-alist)
             nil)))
 
-  (setq display-time-mail-string (concat " " [#xF003])
+  (setq display-time-mail-string " "
         display-time-use-mail-icon nil
         ;; display-time-mail-icon
         ;; `(image :type png
