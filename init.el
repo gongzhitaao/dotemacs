@@ -8,6 +8,7 @@
 
 (global-set-key (kbd "<f6>") #'calendar)
 (global-set-key (kbd "<f7>") #'compile)
+;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
 ;; f12 -- gnus-other-frame
@@ -453,6 +454,22 @@ number input"
   :diminish (drag-stuff-mode . " "))
 
 ;; -------------------------------------------------------------------
+;; deft
+;; -------------------------------------------------------------------
+
+(use-package deft
+  :bind ("<f8>" . deft)
+  :config
+  (setq deft-default-extension "org")
+  (setq deft-directory (expand-file-name "notes" me-emacs-data))
+  (setq deft-use-filename-as-title nil)
+  (setq deft-use-filter-string-for-filename t)
+  (setq deft-auto-save-interval 0)
+  (setq deft-file-naming-rules '((noslash . "-")
+                                 (nospace . "-")
+                                 (case-fn . downcase))))
+
+;; -------------------------------------------------------------------
 ;; expand region
 ;; -------------------------------------------------------------------
 
@@ -576,15 +593,9 @@ number input"
 
 (defvar me-bib (expand-file-name "bibliography" me-dropbox)
   "My bibliography collection path.")
-(defvar me-bib-file
-  `(,(expand-file-name "sp.bib" me-bib)
-    ,(expand-file-name "nn.bib" me-bib)
-    ,(expand-file-name "stats.bib" me-bib))
+(defvar me-bib-file (expand-file-name "nn.bib" me-bib)
   "My bibliography files.")
-(defvar me-bib-pdf-path
-  `(,(expand-file-name "sp-pdf" me-bib)
-    ,(expand-file-name "nn-pdf" me-bib)
-    ,(expand-file-name "stats-pdf" me-bib))
+(defvar me-bib-pdf-path (expand-file-name "pdf" me-bib)
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes-path
   (expand-file-name "notes" me-bib)
@@ -599,15 +610,15 @@ number input"
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex)
   :config
-  (setq helm-bibtex-bibliography me-bib-file
-        helm-bibtex-library-path me-bib-pdf-path
-        helm-bibtex-notes-path me-bib-notes-path)
+  (setq bibtex-completion-bibliography me-bib-file
+        bibtex-completion-library-path me-bib-pdf-path
+        bibtex-completion-notes-path me-bib-notes-path)
 
-  (setq helm-bibtex-notes-extension ".org")
-  (setq helm-bibtex-pdf-open-function #'helm-open-file-with-default-tool)
+  (setq bibtex-completion-notes-extension ".org")
+  (setq bibtex-completion-pdf-open-function #'helm-open-file-with-default-tool)
 
-  (setq helm-bibtex-pdf-symbol ""
-        helm-bibtex-notes-symbol ""))
+  (setq bibtex-completion-pdf-symbol ""
+        bibtex-completion-notes-symbol ""))
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -645,10 +656,7 @@ number input"
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
-        reftex-default-bibliography
-        '("/home/gongzhitaao/Dropbox/bibliography/nn.bib"
-          "/home/gongzhitaao/Dropbox/bibliography/sp.bib"
-          "/home/gongzhitaao/Dropbox/bibliography/stats.bib")))
+        reftex-default-bibliography me-bib-file))
 
 ;; -------------------------------------------------------------------
 ;; BBDB
