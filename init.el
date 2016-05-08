@@ -641,7 +641,7 @@ number input"
 
 (use-package org-ref
   :init
-  (setq org-ref-default-bibliography me-bib-file
+  (setq org-ref-default-bibliography (list me-bib-file)
         org-ref-pdf-directory me-bib-pdf-path)
   :after (org))
 
@@ -656,7 +656,7 @@ number input"
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
-        reftex-default-bibliography me-bib-file))
+        reftex-default-bibliography (list me-bib-file)))
 
 ;; -------------------------------------------------------------------
 ;; BBDB
