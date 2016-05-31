@@ -54,7 +54,7 @@
 
 (defconst me-home "~" "My home directory.")
 (defconst me-dropbox (expand-file-name "Dropbox" me-home))
-(defconst me-emacs (expand-file-name "emacs.d" me-dropbox))
+(defconst me-emacs (expand-file-name "dotfiles/emacs.d" me-dropbox))
 (defconst me-emacs-data (expand-file-name "data" me-emacs))
 (defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory))
 
@@ -243,6 +243,12 @@ number input"
       uniquify-ignore-buffers-re "^\\*")
 
 ;; -------------------------------------------------------------------
+;; abbrev
+;; -------------------------------------------------------------------
+
+(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs))
+
+;; -------------------------------------------------------------------
 ;; Vendor minimal
 ;;
 ;; The above is the minimal configuration for builtin packages or
@@ -337,6 +343,18 @@ number input"
   :config
   (volatile-highlights-mode t)
   :diminish volatile-highlights-mode)
+
+;; -------------------------------------------------------------------
+;; yasnippet
+;; -------------------------------------------------------------------
+
+(use-package yasnippet
+  :init
+  (setq yas-snippet-dirs
+        `(,(expand-file-name "snippets" me-emacs)
+          yas-installed-snippets-dir))
+  :config
+  (yas-global-mode))
 
 ;; -------------------------------------------------------------------
 ;; diminish
@@ -629,6 +647,7 @@ number input"
 
 (defun me//init-bibtex ()
   (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
+  (local-set-key (kbd "C-c C-v") #'bibtex-validate)
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
@@ -784,13 +803,13 @@ number input"
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
                         (decode-char 'ucs #xF295))
-                  (font-spec :family "FontAwesome" :size 14))
+                  (font-spec :family "FontAwesome" :size 28))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
-   charset (font-spec :family "WenQuanYi Zen Hei Mono"
-                      :size 16)))
+   charset (font-spec :family "Noto Sans Mono CJK TC"
+                      :size 32)))
 
 (set-face-attribute 'fixed-pitch nil :height 105)
 
@@ -1000,7 +1019,7 @@ number input"
       pdfnewwindow=true,
       colorlinks=true,
       linkcolor=red,
-      citecolor=green,
+      citecolor=ForestGreen,
       filecolor=magenta,
       urlcolor=cyan}\n")
 
@@ -1043,11 +1062,27 @@ number input"
 
 (use-package js2-mode
   :mode "\\.js\\'"
+  :diminish (js2-mode . "JS2")
   :config
   (setq js2-basic-offset 2
         js2-include-node-externs t
         js2-include-browser-externs t))
 (setq js-indent-level 2)
+
+;; -------------------------------------------------------------------
+;; web-mode
+;; -------------------------------------------------------------------
+
+(defun me//init-web-mode()
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2)
+  (setq web-mode-enable-current-element-highlight t))
+
+(use-package web-mode
+  :defer t
+  :config
+  (add-hook 'web-mode-hook #'me//init-web-mode))
 
 ;; -------------------------------------------------------------------
 ;; Python
