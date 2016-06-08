@@ -37,6 +37,9 @@
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c q") #'auto-fill-mode)
+(global-set-key (kbd "C-c r c") #'org-ref-open-citation-at-point)
+(global-set-key (kbd "C-c r p") #'org-ref-open-pdf-at-point)
+(global-set-key (kbd "C-c r n") #'org-ref-open-notes-at-point)
 ;; C-c u -- undo-tree
 ;; C-c w -- writeroom-mode
 (global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
