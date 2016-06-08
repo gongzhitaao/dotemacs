@@ -616,7 +616,8 @@ number input"
 (defvar me-bib-pdf-path (expand-file-name "pdf" me-bib)
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes-path
-  (expand-file-name "notes" me-bib)
+  (expand-file-name "notes" me-emacs-data)
+  ;; (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
 
 ;; -------------------------------------------------------------------
@@ -661,7 +662,12 @@ number input"
 (use-package org-ref
   :init
   (setq org-ref-default-bibliography (list me-bib-file)
-        org-ref-pdf-directory me-bib-pdf-path)
+        org-ref-pdf-directory me-bib-pdf-path
+        org-ref-notes-directory me-bib-notes-path)
+  (defun me//org-ref-notes-function (thekey)
+    (bibtex-completion-edit-notes
+     (car (org-ref-get-bibtex-key-and-file thekey))))
+  (setq org-ref-notes-function #'me//org-ref-notes-function)
   :after (org))
 
 ;; -------------------------------------------------------------------
