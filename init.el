@@ -157,6 +157,8 @@ number input"
   (diminish 'view-mode " "))
 (add-hook 'view-mode-hook #'me//init-view-mode)
 
+(setq delete-by-moving-to-trash t)
+
 ;; -------------------------------------------------------------------
 ;; backup
 ;; -------------------------------------------------------------------
@@ -209,6 +211,7 @@ number input"
 (setq recentf-save-file (expand-file-name "recentf" me-emacs-tmp))
 (add-to-list 'recentf-exclude (expand-file-name ".*" me-emacs-tmp))
 (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
+(add-to-list 'recentf-keep 'file-remote-p)
 (recentf-mode 1)
 
 ;; -------------------------------------------------------------------
@@ -986,12 +989,11 @@ number input"
   (setq org-use-fast-tag-selection nil)
 
   (setq org-capture-templates
-        '(("t" "New TODO" entry
+        `(("t" "New TODO" entry
            (file+headline "todo.org.gz" "Tasks")
            "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
-          ("p" "New Project Proposal" entry
-           (file+headline "proj.org.gz" "Projects")
-           "* %^{Title} %^G\n %u\n %?\n\n\n")))
+          ("n" "New note" entry
+           (file+datetree ,(expand-file-name "notes/notes.org" me-emacs-data)))))
 
   ;; (require 'ox-latex)
 
