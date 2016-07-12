@@ -59,7 +59,14 @@
 (defconst me-dropbox (expand-file-name "Dropbox" me-home))
 (defconst me-emacs (expand-file-name "dotfiles/emacs.d" me-dropbox))
 (defconst me-emacs-data (expand-file-name "data" me-emacs))
+
 (defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory))
+(unless (file-exists-p me-emacs-tmp)
+  (mkdir me-emacs-tmp))
+
+(defconst me-keylog (expand-file-name "keylog" user-emacs-directory))
+(unless (file-exists-p me-keylog)
+  (mkdir me-keylog))
 
 ;; -------------------------------------------------------------------
 ;; Helper
@@ -831,7 +838,7 @@ number input"
 
 (open-dribble-file
  (expand-file-name
-  (format-time-string "~/.emacs.d/keylog/key-%FT%H%M%S.log")))
+  (format-time-string "key-%FT%H%M%S.log") me-keylog))
 
 ;; -------------------------------------------------------------------
 ;; Gnus

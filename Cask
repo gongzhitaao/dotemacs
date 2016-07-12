@@ -64,7 +64,6 @@
 (depends-on "helm-descbinds")
 (depends-on "helm-flycheck")
 (depends-on "helm-flyspell")
-(depends-on "helm-gist")
 (depends-on "helm-gtags")
 (depends-on "helm-ls-git")
 (depends-on "helm-projectile")
