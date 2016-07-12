@@ -295,9 +295,13 @@ number input"
 ;; Theme first
 ;; -------------------------------------------------------------------
 
-(load-theme 'naquadah t)
+;; (load-theme 'naquadah t)
+
+(add-to-list 'default-frame-alist '(background-color . "black"))
+(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
+
 (global-hl-line-mode +1)
-(set-face-background 'hl-line "#3B3D3A")
+(set-face-background 'hl-line "#2A3517")
 (set-face-foreground 'highlight nil)
 (rainbow-delimiters-mode 1)
 
@@ -831,6 +835,8 @@ number input"
                       :size 32)))
 
 (set-face-attribute 'fixed-pitch nil :height 105)
+
+(setq-default line-spacing 3)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
