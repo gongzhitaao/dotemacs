@@ -836,7 +836,7 @@ number input"
 
 (set-face-attribute 'fixed-pitch nil :height 105)
 
-(setq-default line-spacing 3)
+(setq-default line-spacing 5)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
@@ -931,6 +931,10 @@ number input"
   (setq org-agenda-include-diary t)
 
   (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+
+  (defun me//org-agenda-goto-narrow (&rest args)
+    (org-narrow-to-subtree))
+  (advice-add 'org-agenda-goto :after #'me//org-agenda-goto-narrow)
 
   ;; Resolve open clocks if the user if idle more than 10 minutes.
   (setq org-clock-idle-time 10)
