@@ -153,11 +153,19 @@ number input"
 
 (file-name-shadow-mode t)
 
+(setq-default frame-title-format
+              '(("" invocation-name "@" system-name "\t")
+                (buffer-file-name "%f" "%b")))
+
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page   'disabled nil)
 (put 'narrow-to-defun  'disabled nil)
 (put 'upcase-region    'disabled nil)
 (put 'downcase-region  'disabled nil)
+
+(defun me//init-read-only-mode ()
+  (diminish 'read-only-mode " "))
+(add-hook 'read-only-mode-hook #'me//init-read-only-mode)
 
 (setq view-read-only t)
 (defun me//init-view-mode ()
@@ -295,15 +303,11 @@ number input"
 ;; Theme first
 ;; -------------------------------------------------------------------
 
-(load-theme 'base16-default-dark t)
-
-;; (add-to-list 'default-frame-alist '(background-color . "black"))
-;; (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
+(add-to-list 'default-frame-alist '(background-color . "gray20"))
+(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
 (global-hl-line-mode +1)
-;; (set-face-background 'hl-line "#2A3517")
-(set-face-foreground 'highlight nil)
-(rainbow-delimiters-mode 1)
+(set-face-background 'hl-line "gray15")
 
 ;; -------------------------------------------------------------------
 ;; Helm
@@ -316,6 +320,8 @@ number input"
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
   (helm-push-mark-mode 1)
+
+  (set-face-background 'helm-selection "#097209")
 
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
@@ -535,7 +541,8 @@ number input"
     (sp-local-tag "i" "\"<" "\">")
     (sp-local-tag "i" "\"[" "\"]"))
 
-  (set-face-attribute 'sp-pair-overlay-face nil :background "#443152")
+  ;; (set-face-attribute 'sp-pair-overlay-face nil :background "#443152")
+  ;; (set-face-attribute 'sp-show-pair-match-face nil :background "#A16946")
 
   ;; Still dont like this
 
@@ -932,9 +939,9 @@ number input"
 
   (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
-  (defun me//org-agenda-goto-narrow (&rest args)
-    (org-narrow-to-subtree))
-  (advice-add 'org-agenda-goto :after #'me//org-agenda-goto-narrow)
+  ;; (defun me//org-agenda-goto-narrow (&rest args)
+  ;;   (org-narrow-to-subtree))
+  ;; (advice-add 'org-agenda-goto :after #'me//org-agenda-goto-narrow)
 
   ;; Resolve open clocks if the user if idle more than 10 minutes.
   (setq org-clock-idle-time 10)
@@ -1008,9 +1015,10 @@ number input"
   (setq org-capture-templates
         `(("t" "New TODO" entry
            (file+headline "todo.org.gz" "Tasks")
-           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
-          ("n" "New note" entry
-           (file+datetree ,(expand-file-name "notes/notes.org" me-emacs-data)))))
+           "* TODO %^{Title} %^G\n %u\n %?\n\n")
+          ("n" "New log" entry
+           (file+datetree ,(expand-file-name "notes/log.org"
+                                             me-emacs-data)))))
 
   ;; (require 'ox-latex)
 
