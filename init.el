@@ -295,13 +295,13 @@ number input"
 ;; Theme first
 ;; -------------------------------------------------------------------
 
-;; (load-theme 'naquadah t)
+(load-theme 'base16-default-dark t)
 
-(add-to-list 'default-frame-alist '(background-color . "black"))
-(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
+;; (add-to-list 'default-frame-alist '(background-color . "black"))
+;; (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
 (global-hl-line-mode +1)
-(set-face-background 'hl-line "#2A3517")
+;; (set-face-background 'hl-line "#2A3517")
 (set-face-foreground 'highlight nil)
 (rainbow-delimiters-mode 1)
 

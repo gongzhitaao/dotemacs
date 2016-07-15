@@ -11,6 +11,7 @@
 (depends-on "async")
 (depends-on "auctex")
 (depends-on "avy")
+(depends-on "base16-theme")
 (depends-on "bbdb")
 (depends-on "bind-key")
 (depends-on "cask")
