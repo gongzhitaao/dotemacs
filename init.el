@@ -128,6 +128,8 @@ number input"
 
 (delete-selection-mode t)
 (add-hook 'before-save-hook 'whitespace-cleanup)
+(add-hook 'before-save-hook 'time-stamp)
+(setq time-stamp-pattern nil)
 
 (blink-cursor-mode 0)
 (setq scroll-preserve-screen-position t)
@@ -997,10 +999,10 @@ number input"
           (search   . " %i %-12:T")))
 
   (setq org-agenda-tags-column         -100
-        org-habit-graph-column         45
-        org-habit-preceding-days       28
-        org-habit-following-days       1
         org-agenda-start-with-log-mode t)
+  (setq org-habit-graph-column         50
+        org-habit-preceding-days       28
+        org-habit-following-days       1)
 
   (setq org-clock-history-length 32
         org-clock-in-resume t)
@@ -1015,8 +1017,8 @@ number input"
   (setq org-capture-templates
         `(("t" "New TODO" entry
            (file+headline "todo.org.gz" "Tasks")
-           "* TODO %^{Title} %^G\n %u\n %?\n\n")
-          ("n" "New log" entry
+           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
+          ("n" "New log" plain
            (file+datetree ,(expand-file-name "notes/log.org"
                                              me-emacs-data)))))
 
