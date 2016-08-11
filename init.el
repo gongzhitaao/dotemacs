@@ -1017,10 +1017,22 @@ number input"
   (setq org-capture-templates
         `(("t" "New TODO" entry
            (file+headline "todo.org.gz" "Tasks")
-           "* TODO %^{Title} %^G\n %u\n %?\n\n\n")
+           (file "capture/todo.org")
+           :empty-lines 1)
           ("n" "New log" plain
            (file+datetree ,(expand-file-name "notes/log.org"
-                                             me-emacs-data)))))
+                                             me-emacs-data))
+           :empty-lines 1)
+          ("m" "Save mail link" entry
+           (file+headline "todo.org.gz" "Mail")
+           (file "capture/mail.org")
+           :empty-lines 1)
+          ("o" "Templates for OJ summary")
+          ("ou" "New UVa question summary" entry
+           (file ,(expand-file-name "Documents/oj/master/uva/uva.org"
+                                    me-home))
+           (file "capture/uva.org")
+           :empty-lines 1)))
 
   ;; (require 'ox-latex)
 
