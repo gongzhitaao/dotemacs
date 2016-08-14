@@ -1019,19 +1019,13 @@ number input"
            (file+headline "todo.org.gz" "Tasks")
            (file "capture/todo.org")
            :empty-lines 1)
-          ("n" "New log" plain
+          ("n" "Weekly log" item
            (file+datetree ,(expand-file-name "notes/log.org"
                                              me-emacs-data))
-           :empty-lines 1)
+           (file "capture/weekly.org"))
           ("m" "Save mail link" entry
            (file+headline "todo.org.gz" "Mail")
            (file "capture/mail.org")
-           :empty-lines 1)
-          ("o" "Templates for OJ summary")
-          ("ou" "New UVa question summary" entry
-           (file ,(expand-file-name "Documents/oj/master/uva/uva.org"
-                                    me-home))
-           (file "capture/uva.org")
            :empty-lines 1)))
 
   ;; (require 'ox-latex)

@@ -119,4 +119,3 @@
 (depends-on "with-editor")
 (depends-on "writeroom-mode")
 (depends-on "yaml-mode")
-(depends-on "yasnippet")
