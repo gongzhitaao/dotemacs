@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2016-02-12 07:38:02 gongzhitaao>
+;;; Time-stamp: <2016-08-18 10:32:00 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -168,8 +168,7 @@ Software Engineering")))
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
 (setq message-forward-ignored-headers ""
-      message-make-forward-subject-function 'message-forward-subject-fwd
-      message-forward-as-mime nil)
+      message-make-forward-subject-function 'message-forward-subject-fwd)
 
 (add-to-list 'mm-discouraged-alternatives "text/html")
 (add-to-list 'mm-discouraged-alternatives "image/.*")

@@ -373,13 +373,13 @@ number input"
 ;; yasnippet
 ;; -------------------------------------------------------------------
 
-(use-package yasnippet
-  :init
-  (setq yas-snippet-dirs
-        `(,(expand-file-name "snippets" me-emacs)
-          yas-installed-snippets-dir))
-  :config
-  (yas-global-mode))
+;; (use-package yasnippet
+;;   :init
+;;   (setq yas-snippet-dirs
+;;         `(,(expand-file-name "snippets" me-emacs)
+;;           yas-installed-snippets-dir))
+;;   :config
+;;   (yas-global-mode))
 
 ;; -------------------------------------------------------------------
 ;; diminish
@@ -1019,7 +1019,7 @@ number input"
            (file+headline "todo.org.gz" "Tasks")
            (file "capture/todo.org")
            :empty-lines 1)
-          ("n" "Weekly log" item
+          ("l" "Weekly log" item
            (file+datetree ,(expand-file-name "notes/log.org"
                                              me-emacs-data))
            (file "capture/weekly.org"))
@@ -1059,7 +1059,7 @@ number input"
       pdftoolbar=true,
       pdfmenubar=true,
       pdffitwindow=false,
-      pdfstartview={FitW},
+      pdfstartview={FitH},
       pdfnewwindow=true,
       colorlinks=true,
       linkcolor=red,
