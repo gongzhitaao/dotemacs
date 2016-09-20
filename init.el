@@ -646,6 +646,14 @@ number input"
   ;; (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
 
+(setq bibtex-autokey-year-length 4
+      bibtex-autokey-name-year-separator ""
+      bibtex-autokey-year-title-separator "-"
+      bibtex-autokey-titleword-separator "_"
+      bibtex-autokey-titlewords 1
+      bibtex-autokey-titlewords-stretch 0
+      bibtex-autokey-titleword-length nil)
+
 ;; -------------------------------------------------------------------
 ;; helm-bibtex
 ;; -------------------------------------------------------------------
@@ -674,6 +682,7 @@ number input"
 
 (defun me//init-bibtex ()
   (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
+  (local-set-key [remap bibtex-clean-entry] #'org-ref-clean-bibtex-entry)
   (local-set-key (kbd "C-c C-v") #'bibtex-validate)
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
@@ -816,6 +825,19 @@ number input"
                 filename-and-process))))
 
 ;; -------------------------------------------------------------------
+;; Lilypond
+;; -------------------------------------------------------------------
+
+(autoload 'LilyPond-mode "lilypond-mode")
+(setq auto-mode-alist
+      (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+
+(defun me//init-lilypond ()
+  (turn-on-font-lock))
+
+(add-hook 'LilyPond-mode-hook #'me//init-lilypond)
+
+;; -------------------------------------------------------------------
 ;; Appt
 ;; -------------------------------------------------------------------
 
@@ -886,8 +908,6 @@ number input"
     (turn-on-auto-fill)
     (flyspell-mode)
 
-    (setq org-src-preserve-indentation t)
-
     (advice-add 'ispell-highlight-spelling-error :before
                 'me--org-show-context-advice)
 
@@ -898,8 +918,9 @@ number input"
     (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
 
   (add-hook 'org-mode-hook #'me//init-org)
-  (setq org-list-description-max-indent 5)
 
+  (setq org-list-description-max-indent 5)
+  (setq org-src-preserve-indentation t)
   (setq org-support-shift-select t)
 
   (add-to-list 'org-structure-template-alist
@@ -916,6 +937,7 @@ number input"
   (add-to-list 'org-structure-template-alist '("X" "#+ATTR_LaTeX: ?" ""))
 
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
+  (define-key org-mode-map (kbd "C-c [") nil)
 
   (setq org-directory (expand-file-name "org" me-emacs-data))
 
@@ -1037,7 +1059,8 @@ number input"
 
   (setq org-latex-listings 'minted)
   (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10" "microtype"))
+  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
+  (add-to-list 'org-latex-packages-alist '("" "geometry"))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."
@@ -1084,6 +1107,9 @@ number input"
         '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
+
+  ;; ditaa
+  (setq org-ditaa-jar-path "/usr/bin/ditaa")
 
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
 
