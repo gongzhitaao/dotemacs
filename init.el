@@ -920,7 +920,6 @@ number input"
   (add-hook 'org-mode-hook #'me//init-org)
 
   (setq org-list-description-max-indent 5)
-  (setq org-src-preserve-indentation t)
   (setq org-support-shift-select t)
 
   (add-to-list 'org-structure-template-alist
@@ -975,7 +974,7 @@ number input"
 
   ;; Fontify src blocks
   (setq org-src-fontify-natively t
-        org-src-preserve-indentation nil)
+        org-src-preserve-indentation t)
 
   (setq org-catch-invisible-edits 'smart)
 
@@ -1041,10 +1040,10 @@ number input"
            (file+headline "todo.org.gz" "Tasks")
            (file "capture/todo.org")
            :empty-lines 1)
-          ("l" "Weekly log" item
-           (file+datetree ,(expand-file-name "notes/log.org"
-                                             me-emacs-data))
-           (file "capture/weekly.org"))
+          ("r" "To read next" checkitem
+           (file+headline "todo.org.gz" "Read Paper")
+           nil
+           :empty-lines 1)
           ("m" "Save mail link" entry
            (file+headline "todo.org.gz" "Mail")
            (file "capture/mail.org")
