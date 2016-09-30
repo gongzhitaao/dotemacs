@@ -857,13 +857,13 @@ number input"
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
                         (decode-char 'ucs #xF295))
-                  (font-spec :family "FontAwesome" :size 28))
+                  (font-spec :family "FontAwesome" :size 12.0))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
    charset (font-spec :family "Noto Sans Mono CJK TC"
-                      :size 32)))
+                      :size 12.0)))
 
 (set-face-attribute 'fixed-pitch nil :height 105)
 
