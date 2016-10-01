@@ -293,6 +293,27 @@ number input"
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 
+(defun me//init ()
+  "Load packages manually in just in case cask fails.
+
+If cask fails mysteriously, use the following code to get things
+going, at least for now.  Basically add every package path to
+`load-path', and autoload the functions."
+  (dolist (elem
+           (directory-files-and-attributes
+            "~/.emacs.d/.cask/24.5/elpa/" t))
+    (let ((path (car elem))
+          (dir (cadr elem))
+          (auto nil))
+      (if (and dir
+               (not (string= path "."))
+               (not (string= path "..")))
+          (progn
+            (add-to-list 'load-path path)
+            (setq auto (directory-files path nil "-autoloaddds\.el$"))
+            (if auto (autoload (car auto))))))))
+(me//init)
+
 (require 'pallet)
 (pallet-mode t)
 
