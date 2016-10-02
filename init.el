@@ -312,7 +312,7 @@ going, at least for now.  Basically add every package path to
             (add-to-list 'load-path path)
             (setq auto (directory-files path nil "-autoloaddds\.el$"))
             (if auto (autoload (car auto))))))))
-(me//init)
+;(me//init)
 
 (require 'pallet)
 (pallet-mode t)
@@ -723,7 +723,7 @@ going, at least for now.  Basically add every package path to
         org-ref-notes-directory me-bib-notes-path)
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
-     (car (org-ref-get-bibtex-key-and-file thekey))))
+     (list (car (org-ref-get-bibtex-key-and-file thekey)))))
   (setq org-ref-notes-function #'me//org-ref-notes-function)
   :after (org))
 
