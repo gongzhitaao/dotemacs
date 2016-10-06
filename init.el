@@ -2,6 +2,13 @@
 ;; Key binding
 ;; -------------------------------------------------------------------
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (global-set-key (kbd "C-z") #'delete-other-windows)
 
 ;; FN keys
@@ -1082,6 +1089,7 @@ going, at least for now.  Basically add every package path to
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
+  (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."
@@ -1106,10 +1114,10 @@ going, at least for now.  Basically add every package path to
       pdfstartview={FitH},
       pdfnewwindow=true,
       colorlinks=true,
-      linkcolor=red,
+      linkcolor=Maroon,
       citecolor=ForestGreen,
-      filecolor=magenta,
-      urlcolor=cyan}\n")
+      filecolor=Mulberry,
+      urlcolor=MidnightBlue}\n")
 
   (require 'ox-beamer)
   (add-to-list 'org-beamer-environments-extra

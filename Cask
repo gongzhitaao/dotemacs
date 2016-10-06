@@ -98,6 +98,7 @@
 (depends-on "popwin")
 (depends-on "prodigy")
 (depends-on "projectile")
+(depends-on "python-docstring")
 (depends-on "rainbow-delimiters")
 (depends-on "rainbow-mode")
 (depends-on "restclient")
