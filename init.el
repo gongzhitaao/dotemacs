@@ -931,7 +931,6 @@ going, at least for now.  Basically add every package path to
           org-docview
           org-gnus
           org-info))
-
   :config
   (defun me//init-org ()
     (turn-on-auto-fill)
@@ -950,6 +949,8 @@ going, at least for now.  Basically add every package path to
 
   (setq org-list-description-max-indent 5)
   (setq org-support-shift-select t)
+
+  (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")
 
   (add-to-list 'org-structure-template-alist
                '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
