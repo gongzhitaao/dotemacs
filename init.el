@@ -16,6 +16,7 @@
 (global-set-key (kbd "<f6>") #'calendar)
 (global-set-key (kbd "<f7>") #'compile)
 ;; f8 -- deft
+;; f9 -- neotree
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
 ;; f12 -- gnus-other-frame
@@ -536,6 +537,7 @@ going, at least for now.  Basically add every package path to
   (setq deft-directory (expand-file-name "notes" me-emacs-data))
   (setq deft-use-filename-as-title nil)
   (setq deft-use-filter-string-for-filename t)
+  (setq deft-recursive t)
   (setq deft-auto-save-interval 0)
   (setq deft-file-naming-rules '((noslash . "-")
                                  (nospace . "-")
@@ -556,6 +558,27 @@ going, at least for now.  Basically add every package path to
   :config
   (setq fancy-narrow-lighter "")
   (fancy-narrow-mode 1))
+
+;; -------------------------------------------------------------------
+;; all-the-icon
+;; -------------------------------------------------------------------
+
+(use-package font-lock+
+  :after all-the-icons)
+(use-package all-the-icons)
+
+;; -------------------------------------------------------------------
+;; neotree
+;; -------------------------------------------------------------------
+
+(use-package neotree
+  :bind ("<f9>" . neotree-toggle)
+  :config
+  (setq neo-theme 'icons)
+  (setq neo-show-updir-line nil
+        neo-persist-show nil)
+  (setq neo-window-width 40)
+  (setq neo-window-position 'right))
 
 ;; -------------------------------------------------------------------
 ;; smartparens
@@ -967,6 +990,7 @@ going, at least for now.  Basically add every package path to
 
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
+  (define-key org-mode-map (kbd "C-c ]") nil)
 
   (setq org-directory (expand-file-name "org" me-emacs-data))
 
@@ -1130,6 +1154,8 @@ going, at least for now.  Basically add every package path to
         org-html-html5-fancy t
         org-html-head-include-default-style nil
         org-html-head-include-scripts nil)
+
+  (setq org-html-allow-name-attribute-in-anchors t)
 
   ;; Postamble.
   (setq org-html-postamble t
