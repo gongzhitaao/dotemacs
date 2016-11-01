@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2016-10-06 13:27:13 gongzhitaao>
+;;; Time-stamp: <2016-11-01 10:03:07 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -10,10 +10,8 @@
 (setq gnus-select-method
       '(nnimap "LocalMail"
                (nnimap-address "localhost")
-               (nnimap-stream shell)
-               (nnimap-authenticator login)
-               (nnimap-shell-program
-                "MAIL=maildir:$HOME/Mail:LAYOUT=fs /usr/lib/dovecot/imap")))
+               (nnimap-stream network)
+               (nnimap-server-port 143)))
 
 (defun me//header-age-level (header)
   "Return the age of the header

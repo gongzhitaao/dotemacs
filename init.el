@@ -337,6 +337,7 @@ going, at least for now.  Basically add every package path to
 (add-to-list 'default-frame-alist '(background-color . "gray20"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
+(global-font-lock-mode)
 (global-hl-line-mode +1)
 (set-face-background 'hl-line "gray15")
 
@@ -689,12 +690,18 @@ going, at least for now.  Basically add every package path to
 
 (defvar me-bib (expand-file-name "bibliography" me-dropbox)
   "My bibliography collection path.")
-(defvar me-bib-file (expand-file-name "nn.bib" me-bib)
+(defvar me-bib-files
+  `(,(expand-file-name "nn.bib" me-bib)
+    ,(expand-file-name "bio.bib" me-bib)
+    ,(expand-file-name "phy.bib" me-bib))
   "My bibliography files.")
-(defvar me-bib-pdf-path (expand-file-name "pdf" me-bib)
+(defvar me-bib-pdfs
+  `(,(expand-file-name "nn-pdf" me-bib)
+    ,(expand-file-name "bio-pdf" me-bib)
+    ,(expand-file-name "phy-pdf" me-bib))
   "Paths containing my PDFs of the bibliography.")
-(defvar me-bib-notes-path
-  (expand-file-name "notes" me-emacs-data)
+(defvar me-bib-notes
+  (expand-file-name "notes" me-bib)
   ;; (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
 
@@ -715,9 +722,9 @@ going, at least for now.  Basically add every package path to
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex)
   :config
-  (setq bibtex-completion-bibliography me-bib-file
-        bibtex-completion-library-path me-bib-pdf-path
-        bibtex-completion-notes-path me-bib-notes-path)
+  (setq bibtex-completion-bibliography me-bib-files
+        bibtex-completion-library-path me-bib-pdfs
+        bibtex-completion-notes-path me-bib-notes)
 
   (setq bibtex-completion-notes-extension ".org")
   (setq bibtex-completion-pdf-open-function #'helm-open-file-with-default-tool)
@@ -748,9 +755,9 @@ going, at least for now.  Basically add every package path to
 
 (use-package org-ref
   :init
-  (setq org-ref-default-bibliography (list me-bib-file)
-        org-ref-pdf-directory me-bib-pdf-path
-        org-ref-notes-directory me-bib-notes-path)
+  (setq org-ref-default-bibliography me-bib-files
+        org-ref-pdf-directory me-bib-pdfs
+        org-ref-notes-directory me-bib-notes)
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
      (list (car (org-ref-get-bibtex-key-and-file thekey)))))
@@ -768,7 +775,7 @@ going, at least for now.  Basically add every package path to
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
-        reftex-default-bibliography (list me-bib-file)))
+        reftex-default-bibliography me-bib-files))
 
 ;; -------------------------------------------------------------------
 ;; BBDB
