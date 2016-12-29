@@ -16,7 +16,6 @@
 (global-set-key (kbd "<f6>") #'calendar)
 (global-set-key (kbd "<f7>") #'compile)
 ;; f8 -- deft
-;; f9 -- neotree
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
 ;; f12 -- gnus-other-frame
@@ -337,7 +336,6 @@ going, at least for now.  Basically add every package path to
 (add-to-list 'default-frame-alist '(background-color . "gray20"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
-(global-font-lock-mode)
 (global-hl-line-mode +1)
 (set-face-background 'hl-line "gray15")
 
@@ -525,7 +523,8 @@ going, at least for now.  Basically add every package path to
 
 (use-package drag-stuff
   :bind ("C-c d" . drag-stuff-mode)
-  :diminish (drag-stuff-mode . " "))
+  :diminish (drag-stuff-mode . " ")
+  :config (drag-stuff-define-keys))
 
 ;; -------------------------------------------------------------------
 ;; deft
@@ -567,19 +566,6 @@ going, at least for now.  Basically add every package path to
 (use-package font-lock+
   :after all-the-icons)
 (use-package all-the-icons)
-
-;; -------------------------------------------------------------------
-;; neotree
-;; -------------------------------------------------------------------
-
-(use-package neotree
-  :bind ("<f9>" . neotree-toggle)
-  :config
-  (setq neo-theme 'icons)
-  (setq neo-show-updir-line nil
-        neo-persist-show nil)
-  (setq neo-window-width 40)
-  (setq neo-window-position 'right))
 
 ;; -------------------------------------------------------------------
 ;; smartparens
@@ -746,8 +732,14 @@ going, at least for now.  Basically add every package path to
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
-(add-hook 'latex-mode-hook 'turn-on-auto-fill)
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+;; -------------------------------------------------------------------
+;; latex-mode
+;; -------------------------------------------------------------------
+
+(add-hook 'tex-mode-hook 'turn-on-auto-fill)
+(defun me//init-tex ()
+  (TeX-fold-mode 1))
+(add-hook 'tex-mode-hook #'me//init-tex)
 
 ;; -------------------------------------------------------------------
 ;; org-ref
@@ -984,6 +976,7 @@ going, at least for now.  Basically add every package path to
 
   (add-to-list 'org-structure-template-alist
                '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
+  (add-to-list 'org-structure-template-alist '("B" "#+BIBLIOGRAPHY: ?" ""))
   (add-to-list 'org-structure-template-alist '("C" "#+CAPTION: ?" ""))
   (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
   (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
@@ -997,7 +990,7 @@ going, at least for now.  Basically add every package path to
 
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
-  (define-key org-mode-map (kbd "C-c ]") nil)
+  ;; (define-key org-mode-map (kbd "C-c ]") nil)
 
   (setq org-directory (expand-file-name "org" me-emacs-data))
 
@@ -1121,7 +1114,7 @@ going, at least for now.  Basically add every package path to
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
-  (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
+  ;; (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."

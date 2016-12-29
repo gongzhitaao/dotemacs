@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2016-11-01 10:03:07 gongzhitaao>
+;;; Time-stamp: <2016-12-06 11:08:49 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
