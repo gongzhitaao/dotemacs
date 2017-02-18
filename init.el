@@ -134,7 +134,6 @@ number input"
 (setq tab-always-indent 'complete)
 
 (delete-selection-mode t)
-(add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'before-save-hook 'time-stamp)
 (setq time-stamp-pattern nil)
 
@@ -277,6 +276,17 @@ number input"
 ;; -------------------------------------------------------------------
 
 (setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs))
+
+;; -------------------------------------------------------------------
+;; whitespace
+;; -------------------------------------------------------------------
+
+(require 'whitespace)
+(setq whitespace-line-column fill-column)
+(setq whitespace-style
+      '(face trailing tabs spaces lines-tail empty))
+(add-hook 'before-save-hook 'whitespace-cleanup)
+(global-whitespace-mode t)
 
 ;; -------------------------------------------------------------------
 ;; Vendor minimal
@@ -568,6 +578,15 @@ going, at least for now.  Basically add every package path to
 (use-package all-the-icons)
 
 ;; -------------------------------------------------------------------
+;; markdown-mode
+;; -------------------------------------------------------------------
+
+(use-package markdown-mode
+  :defer t
+  :config
+  (add-hook 'markdown-mode-hook #'turn-on-visual-line-mode))
+
+;; -------------------------------------------------------------------
 ;; smartparens
 ;; -------------------------------------------------------------------
 
@@ -667,8 +686,8 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package which-key
-  :diminish which-key-mode
-  :config (which-key-mode))
+  :config (which-key-mode)
+  :diminish which-key-mode)
 
 ;; -------------------------------------------------------------------
 ;; BibTeX
@@ -946,6 +965,7 @@ going, at least for now.  Basically add every package path to
         '(ox-beamer
           ox-bibtex
           ox-latex
+          ox-md
           org-table
           org-habit
           org-clock
@@ -1145,6 +1165,7 @@ going, at least for now.  Basically add every package path to
       urlcolor=MidnightBlue}\n")
 
   (require 'ox-beamer)
+
   (add-to-list 'org-beamer-environments-extra
                '("only" "O" "\\only%a{" "}"))
 
