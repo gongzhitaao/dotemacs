@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2016-12-06 11:08:49 gongzhitaao>
+;;; Time-stamp: <2017-03-08 11:18:48 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -105,10 +105,9 @@ for the header string.
 (setq gnus-treat-mail-gravatar 'head)
 
 (setq gnus-message-archive-group
-      `(("Tiger" "nnimap+zzg0009@auburn.edu:Tiger/Sent")
-        ("Gmail" "nnimap+zhitaao.gong@gmail.com:Gmail/[Gmail]/Sent Mail")
-        ("Ymail" "nnimap+gongzhitaao@yahoo.com:Ymail/Sent")
-        (".*" ,(format-time-string "sent.%Y-%m"))))
+      `(("Tiger" "nnimap+tiger:Tiger/sent")
+        ("Gmail" "nnimap+gmail:Gmail/sent")
+        (".*" ,(format-time-string "sent/%Y-%m"))))
 
 (setq message-confirm-send t)
 
@@ -120,29 +119,30 @@ for the header string.
          (charset . utf-8)
          (posting-style
           (address "zzg0009@auburn.edu")
+          (gcc "nnimap+tiger:Tiger/sent")
           (name "Zhitao Gong")
           (signature-file "tiger")
-          (organization "Department of Computer Science & \
-Software Engineering")))
+          (organization "Auburn CSSE")))
         ("Gmail.*"
          (charset . utf-8)
          (posting-style
           (address "zhitaao.gong@gmail.com")
+          (gcc "nnimap+gmail:Gmail/sent")
           (name "Zhitao Gong")
           (signature-file "gmail")
           (organization "Auburn University")))
-        ("Ymail.*"
-         (charset . utf-8)
-         (posting-style
-          (address "gongzhitaao@yahoo.com")
-          (name "Zhitao Gong")
-          (signature-file "yahoo")
-          (organization "Auburn University")))))
+        ;; ("Ymail.*"
+        ;;  (charset . utf-8)
+        ;;  (posting-style
+        ;;   (address "gongzhitaao@yahoo.com")
+        ;;   (name "Zhitao Gong")
+        ;;   (signature-file "yahoo")
+        ;;   (organization "Auburn University")))
+        ))
 
 (setq gnus-permanently-visible-groups
-      (concat "^Tiger/\\(INBOX\\|Sent\\)\\'\\|"
-              "^Gmail/\\(INBOX\\|\\[Gmail\\]/Sent Mail\\)\\'\\|"
-              "^Ymail/\\(Inbox\\|Sent\\)\\'\\|"
+      (concat "^Tiger/\\(inbox\\|sent\\)\\'\\|"
+              "^Gmail/\\(inbox\\|sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
@@ -158,6 +158,8 @@ Software Engineering")))
 
 (gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
 (gnus-demon-init)
+
+(setq gnus-list-groups-with-ticked-articles nil)
 
 (add-hook 'gnus-after-getting-new-news-hook 'gnus-notifications)
 
@@ -179,6 +181,9 @@ Software Engineering")))
 (setq mm-inline-large-images nil)
 (auto-image-file-mode t)
 (setq mm-inline-text-html-with-images nil)
+
+(setq message-forward-as-mime nil)
+(setq message-forward-before-signature nil)
 
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)

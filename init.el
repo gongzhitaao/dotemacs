@@ -52,6 +52,8 @@
 (global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
 (global-set-key (kbd "C-c =") #'align-regexp)
 
+(global-set-key (kbd "C-c C-q") #'bury-buffer)
+
 ;; M-s search key
 
 ;; M-s a helm-do-ag
@@ -201,7 +203,8 @@ number input"
   (message "Deleting old backup files...")
   (dolist (file (directory-files temporary-file-directory t))
     (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth (file-attributes file))))
+               (> (- current (float-time (fifth
+                                          (file-attributes file))))
                   week))
       (message "%s" file)
       (delete-file file))))
@@ -283,8 +286,8 @@ number input"
 
 (require 'whitespace)
 (setq whitespace-line-column fill-column)
-(setq whitespace-style
-      '(face trailing tabs spaces lines-tail empty))
+(setq whitespace-style '(face trailing tabs spaces lines-tail
+      empty indentation space-after-tab space-before-tab))
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (global-whitespace-mode t)
 
@@ -408,27 +411,19 @@ going, at least for now.  Basically add every package path to
   :diminish volatile-highlights-mode)
 
 ;; -------------------------------------------------------------------
-;; yasnippet
-;; -------------------------------------------------------------------
-
-;; (use-package yasnippet
-;;   :init
-;;   (setq yas-snippet-dirs
-;;         `(,(expand-file-name "snippets" me-emacs)
-;;           yas-installed-snippets-dir))
-;;   :config
-;;   (yas-global-mode))
-
-;; -------------------------------------------------------------------
 ;; diminish
 ;; -------------------------------------------------------------------
 
 (diminish 'auto-fill-function " ")
 (diminish 'isearch-mode " ")
+(diminish 'whitespace-mode)
+(diminish 'global-whitespace-mode)
+(diminish 'visual-line-mode)
 
 (defun me//init-flyspell-mode()
   (diminish 'flyspell-mode))
 (add-hook 'flyspell-mode-hook #'me//init-flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (defun me//init-auto-revert-mode ()
   (diminish 'auto-revert-mode " "))
@@ -474,7 +469,8 @@ going, at least for now.  Basically add every package path to
 (use-package tramp
   :config
   (setq tramp-default-method "ssh"
-        tramp-persistency-file-name (expand-file-name "tramp" me-emacs-tmp)))
+        tramp-persistency-file-name (expand-file-name "tramp"
+                                                      me-emacs-tmp)))
 
 ;; -------------------------------------------------------------------
 ;; writeroom
@@ -482,7 +478,9 @@ going, at least for now.  Basically add every package path to
 
 (use-package writeroom-mode
   :bind ("C-c w" . writeroom-mode)
-  :config (setq writeroom-width (+ fill-column 10)))
+  :config
+  (setq writeroom-width (+ fill-column 20))
+  (setq writeroom-fullscreen-effect 'maximized))
 
 ;; -------------------------------------------------------------------
 ;; anzu
@@ -584,7 +582,9 @@ going, at least for now.  Basically add every package path to
 (use-package markdown-mode
   :defer t
   :config
-  (add-hook 'markdown-mode-hook #'turn-on-visual-line-mode))
+  (add-hook 'markdown-mode-hook #'turn-on-auto-fill)
+  (add-hook 'markdown-mode-hook #'turn-on-flyspell)
+  (add-hook 'markdown-mode-hook #'pandoc-mode))
 
 ;; -------------------------------------------------------------------
 ;; smartparens
@@ -732,7 +732,8 @@ going, at least for now.  Basically add every package path to
         bibtex-completion-notes-path me-bib-notes)
 
   (setq bibtex-completion-notes-extension ".org")
-  (setq bibtex-completion-pdf-open-function #'helm-open-file-with-default-tool)
+  (setq bibtex-completion-pdf-open-function
+        #'helm-open-file-with-default-tool)
 
   (setq bibtex-completion-pdf-symbol ""
         bibtex-completion-notes-symbol ""))
@@ -746,7 +747,8 @@ going, at least for now.  Basically add every package path to
 
 (defun me//init-bibtex ()
   (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
-  (local-set-key [remap bibtex-clean-entry] #'org-ref-clean-bibtex-entry)
+  (local-set-key [remap bibtex-clean-entry]
+                 #'org-ref-clean-bibtex-entry)
   (local-set-key (kbd "C-c C-v") #'bibtex-validate)
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
@@ -761,21 +763,6 @@ going, at least for now.  Basically add every package path to
 (add-hook 'tex-mode-hook #'me//init-tex)
 
 ;; -------------------------------------------------------------------
-;; org-ref
-;; -------------------------------------------------------------------
-
-(use-package org-ref
-  :init
-  (setq org-ref-default-bibliography me-bib-files
-        org-ref-pdf-directory me-bib-pdfs
-        org-ref-notes-directory me-bib-notes)
-  (defun me//org-ref-notes-function (thekey)
-    (bibtex-completion-edit-notes
-     (list (car (org-ref-get-bibtex-key-and-file thekey)))))
-  (setq org-ref-notes-function #'me//org-ref-notes-function)
-  :after (org))
-
-;; -------------------------------------------------------------------
 ;; reftex
 ;; -------------------------------------------------------------------
 
@@ -785,7 +772,9 @@ going, at least for now.  Basically add every package path to
   (add-hook 'latex-mode-hook 'turn-on-reftex)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
-        reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
+        reftex-ref-style-default-list '("Cleveref"
+                                        "Hyperref"
+                                        "Fancyref")
         reftex-default-bibliography me-bib-files))
 
 ;; -------------------------------------------------------------------
@@ -955,6 +944,21 @@ going, at least for now.  Basically add every package path to
 (global-set-key (kbd "<f12>") #'gnus-other-frame)
 (setq gnus-init-file (expand-file-name "gnus-conf.el" me-emacs))
 
+
+;; -------------------------------------------------------------------
+;; org-ref
+;; -------------------------------------------------------------------
+
+(use-package org-ref
+  :init
+  (setq org-ref-default-bibliography me-bib-files
+        org-ref-pdf-directory me-bib-pdfs
+        org-ref-notes-directory me-bib-notes)
+  (defun me//org-ref-notes-function (thekey)
+    (bibtex-completion-edit-notes
+     (list (car (org-ref-get-bibtex-key-and-file thekey)))))
+  (setq org-ref-notes-function #'me//org-ref-notes-function))
+
 ;; -------------------------------------------------------------------
 ;; Org
 ;; -------------------------------------------------------------------
@@ -989,7 +993,8 @@ going, at least for now.  Basically add every package path to
 
   (add-hook 'org-mode-hook #'me//init-org)
 
-  (setq org-list-description-max-indent 5)
+  (setq org-adapt-indentation nil)
+  (setq org-list-description-max-indent 0)
   (setq org-support-shift-select t)
 
   (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")
@@ -1134,7 +1139,13 @@ going, at least for now.  Basically add every package path to
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
-  ;; (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
+  (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
+
+  ;; (add-to-list 'org-latex-classes
+  ;;              '("empty"
+  ;;                "\\documentclass{article}
+  ;;               [NO-DEFAULT-PACKAGES]
+  ;;               [EXTRA]"))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."
@@ -1239,6 +1250,14 @@ going, at least for now.  Basically add every package path to
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
   (local-set-key (kbd "M-<right>") #'increase-left-margin))
 (add-hook 'python-mode-hook #'me//init-python)
+
+(defun me//init-ein()
+  (interactive)
+  (progn
+    (require 'ein)
+    (require 'ein-loaddefs)
+    (require 'ein-notebook)
+    (require 'ein-subpackages)))
 
 ;; -------------------------------------------------------------------
 ;; Lua
