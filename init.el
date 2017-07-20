@@ -1,7 +1,9 @@
+;;; init.el
+;;; Time-stamp: <2017-06-25 08:19:25 gongzhitaao>
+
 ;; -------------------------------------------------------------------
 ;; Key binding
 ;; -------------------------------------------------------------------
-
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -12,6 +14,7 @@
 (global-set-key (kbd "C-z") #'delete-other-windows)
 
 ;; FN keys
+;; --------------------------------------------------------------------
 
 (global-set-key (kbd "<f6>") #'calendar)
 (global-set-key (kbd "<f7>") #'compile)
@@ -21,32 +24,36 @@
 ;; f12 -- gnus-other-frame
 
 ;; Remaping
+;; --------------------------------------------------------------------
 
 (global-set-key [remap execute-extended-command] #'helm-M-x)
-
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
-
-(global-set-key [remap goto-line]        #'me-goto-line-with-linum)
+;; (global-set-key [remap goto-line]        #'me-goto-line-with-linum)
 (global-set-key [remap isearch-backward] #'isearch-backward-regexp)
 (global-set-key [remap isearch-forward]  #'isearch-forward-regexp)
 (global-set-key [remap list-buffers]     #'ibuffer)
 (global-set-key [remap switch-to-buffer] #'helm-mini)
 (global-set-key [remap yank-pop]         #'helm-show-kill-ring)
 
-;; C-c user-key
+;; C-c key
+;; --------------------------------------------------------------------
 
 ;; C-c b -- helm-bibtex
+(global-set-key (kbd "C-c c") #'color-identifiers-mode)
 ;; C-c d -- drag-stuff-mode
+(global-set-key (kbd "C-c e") #'me//sudo-edit)
 (global-set-key (kbd "C-c j") #'ace-jump-mode)
-;; C-c g -- helm-gtags-mode
-(global-set-key (kbd "C-c m") #'magit-status)
-;; C-c M -- multiple-cursor
+;; C-c f -- frame operation
+(global-set-key (kbd "C-c g") #'magit-status)
+;; C-c m --  multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c q") #'auto-fill-mode)
 (global-set-key (kbd "C-c r c") #'org-ref-open-citation-at-point)
+(global-set-key (kbd "C-c r C") #'me//org-ref-jump-to-citation-from-note)
 (global-set-key (kbd "C-c r p") #'org-ref-open-pdf-at-point)
+(global-set-key (kbd "C-c r P") #'me//org-ref-jump-to-pdf-from-note)
 (global-set-key (kbd "C-c r n") #'org-ref-open-notes-at-point)
+;; C-c s -- smartparens
 ;; C-c u -- undo-tree
 ;; C-c w -- writeroom-mode
 (global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
@@ -54,10 +61,14 @@
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
 
-;; M-s search key
+;; M-key
+;; --------------------------------------------------------------------
 
+;; M-s search key
 ;; M-s a helm-do-ag
 (global-set-key (kbd "M-s g") #'helm-do-grep-ag)
+;; M-s h highlight-xxx
+(global-set-key (kbd "M-s q") #'vr/query-replace)
 ;; M-s s helm-swoop
 
 ;; -------------------------------------------------------------------
@@ -65,8 +76,8 @@
 ;; -------------------------------------------------------------------
 
 (defconst me-home "~" "My home directory.")
-(defconst me-dropbox (expand-file-name "Dropbox" me-home))
-(defconst me-emacs (expand-file-name "dotfiles/emacs.d" me-dropbox))
+(defconst me-data (expand-file-name "Dropbox" me-home))
+(defconst me-emacs (expand-file-name "dotfiles/emacs.d" me-data))
 (defconst me-emacs-data (expand-file-name "data" me-emacs))
 
 (defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory))
@@ -76,6 +87,9 @@
 (defconst me-keylog (expand-file-name "keylog" user-emacs-directory))
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
+
+(defconst me-local-conf (expand-file-name "local.el" user-emacs-directory)
+  "Local configuration not shared around machines.")
 
 ;; -------------------------------------------------------------------
 ;; Helper
@@ -108,9 +122,9 @@ number input"
   (interactive)
   (unwind-protect
       (progn
-        (linum-mode 1)
+        (nlinum-mode 1)
         (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
+    (nlinum-mode -1)))
 
 (defun me-clear-shell ()
   "Clear shell window."
@@ -122,6 +136,9 @@ number input"
 
 (me-with-region-or-line #'kill-ring-save)
 
+(if (file-exists-p me-local-conf)
+    (load me-local-conf))
+
 ;; -------------------------------------------------------------------
 ;; Misc
 ;; -------------------------------------------------------------------
@@ -131,13 +148,13 @@ number input"
 (display-time)
 
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 8)
+(setq-default tab-width 2)
+(setq-default standard-indent 2)
 (setq-default tab-stop-list (number-sequence 2 120 2))
 (setq tab-always-indent 'complete)
 
-(delete-selection-mode t)
+(delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
-(setq time-stamp-pattern nil)
 
 (blink-cursor-mode 0)
 (setq scroll-preserve-screen-position t)
@@ -173,16 +190,16 @@ number input"
 (put 'upcase-region    'disabled nil)
 (put 'downcase-region  'disabled nil)
 
-(defun me//init-read-only-mode ()
-  (diminish 'read-only-mode " "))
-(add-hook 'read-only-mode-hook #'me//init-read-only-mode)
-
-(setq view-read-only t)
-(defun me//init-view-mode ()
-  (diminish 'view-mode " "))
-(add-hook 'view-mode-hook #'me//init-view-mode)
-
 (setq delete-by-moving-to-trash t)
+
+(global-visual-line-mode)
+
+(setq-default fill-column 80)
+
+(setq custom-file (expand-file-name "emacs-custom.el" me-emacs))
+(load custom-file)
+
+(add-hook 'focus-out-hook #'garbage-collect)
 
 ;; -------------------------------------------------------------------
 ;; backup
@@ -235,9 +252,10 @@ number input"
 
 (require 'recentf)
 (setq recentf-save-file (expand-file-name "recentf" me-emacs-tmp))
+(setq recentf-max-saved-items 20)
 (add-to-list 'recentf-exclude (expand-file-name ".*" me-emacs-tmp))
 (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
-(add-to-list 'recentf-keep 'file-remote-p)
+(add-to-list 'recentf-exclude me-emacs-data)
 (recentf-mode 1)
 
 ;; -------------------------------------------------------------------
@@ -245,17 +263,17 @@ number input"
 ;; -------------------------------------------------------------------
 
 (require 'savehist)
-(savehist-mode 1)
 (setq savehist-additional-variables '(search ring regexp-search-ring)
       savehist-file (expand-file-name "savehist" me-emacs-tmp))
+(savehist-mode)
 
 ;; -------------------------------------------------------------------
 ;; saveplace
 ;; -------------------------------------------------------------------
 
-(setq-default save-place t)
 (require 'saveplace)
 (setq save-place-file (expand-file-name "saveplace" me-emacs-tmp))
+(save-place-mode)
 
 ;; -------------------------------------------------------------------
 ;; Eshell
@@ -287,9 +305,10 @@ number input"
 (require 'whitespace)
 (setq whitespace-line-column fill-column)
 (setq whitespace-style '(face trailing tabs spaces lines-tail
-      empty indentation space-after-tab space-before-tab))
+                              empty indentation space-after-tab space-before-tab))
+
 (add-hook 'before-save-hook 'whitespace-cleanup)
-(global-whitespace-mode t)
+(add-hook 'text-mode-hook 'whitespace-mode)
 
 ;; -------------------------------------------------------------------
 ;; Vendor minimal
@@ -310,10 +329,7 @@ number input"
 ;;    ("gnu"          . "https://elpa.gnu.org/packages/")
 ;;    ("sc"           . "http://joseito.republika.pl/sunrise-commander/")))
 
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
-
-(defun me//init ()
+(defun me//init-package ()
   "Load packages manually in just in case cask fails.
 
 If cask fails mysteriously, use the following code to get things
@@ -330,12 +346,15 @@ going, at least for now.  Basically add every package path to
                (not (string= path "..")))
           (progn
             (add-to-list 'load-path path)
-            (setq auto (directory-files path nil "-autoloaddds\.el$"))
+            (setq auto (directory-files path nil "-autoloads\.el$"))
             (if auto (autoload (car auto))))))))
-;(me//init)
+;; (me//init)
+
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
 
 (require 'pallet)
-(pallet-mode t)
+(pallet-mode)
 
 (eval-when-compile
   (require 'use-package))
@@ -349,8 +368,8 @@ going, at least for now.  Basically add every package path to
 (add-to-list 'default-frame-alist '(background-color . "gray20"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
-(global-hl-line-mode +1)
-(set-face-background 'hl-line "gray15")
+(global-hl-line-mode)
+(set-face-background 'hl-line "gray10")
 
 ;; -------------------------------------------------------------------
 ;; Helm
@@ -393,6 +412,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 ;; helm projectile
 ;; -------------------------------------------------------------------
+
 (use-package projectile
   :config (projectile-global-mode 1)
   :diminish projectile-mode)
@@ -418,7 +438,18 @@ going, at least for now.  Basically add every package path to
 (diminish 'isearch-mode " ")
 (diminish 'whitespace-mode)
 (diminish 'global-whitespace-mode)
+(diminish 'global-visual-line-mode)
 (diminish 'visual-line-mode)
+(diminish 'color-identifiers-mode)
+
+(defun me//init-read-only-mode ()
+  (diminish 'read-only-mode " "))
+(add-hook 'read-only-mode-hook #'me//init-read-only-mode)
+
+(setq view-read-only t)
+(defun me//init-view-mode ()
+  (diminish 'view-mode " "))
+(add-hook 'view-mode-hook #'me//init-view-mode)
 
 (defun me//init-flyspell-mode()
   (diminish 'flyspell-mode))
@@ -439,26 +470,29 @@ going, at least for now.  Basically add every package path to
   (dired-async-mode 1))
 
 ;; -------------------------------------------------------------------
+;; visual regexp steroids
+;; -------------------------------------------------------------------
+
+(use-package visual-regexp-steroids)
+
+;; -------------------------------------------------------------------
 ;; multiple cursors
 ;; -------------------------------------------------------------------
 
 (use-package multiple-cursors
   :defines my-multiple-cursors-map
-  :bind-keymap ("C-c M" . my-multiple-cursors-map)
+  :bind-keymap ("C-c m" . my-multiple-cursors-map)
   :config
   (defvar my-multiple-cursors-map
     (let ((map (make-sparse-keymap)))
 
       (define-key map (kbd "C-a") #'mc/edit-beginnings-of-lines)
       (define-key map (kbd "C-e") #'mc/edit-ends-of-lines)
-      (define-key map (kbd "C-s") #'mc/mark-all-in-region)
 
       (define-key map (kbd "a")   #'mc/mark-all-like-this-dwim)
       (define-key map (kbd "l")   #'mc/edit-lines)
       (define-key map (kbd "m")   #'mc/mark-more-like-this-extended)
-      (define-key map (kbd "n")   #'mc/mark-next-like-this)
-      (define-key map (kbd "p")   #'mc/mark-previous-like-this)
-      (define-key map (kbd "r")   #'mc/mark-all-in-region-regexp)
+      (define-key map (kbd "r")   #'vr/mc-mark)
 
       map)))
 
@@ -472,6 +506,18 @@ going, at least for now.  Basically add every package path to
         tramp-persistency-file-name (expand-file-name "tramp"
                                                       me-emacs-tmp)))
 
+(defun me//sudo-edit (&optional arg)
+  "Edit file as root.
+
+With a prefix ARG prompt for a file to visit.  Will also prompt
+for a file to visit if current buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (helm-read-file-name "Find file(root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:"
+                                 buffer-file-name))))
+
 ;; -------------------------------------------------------------------
 ;; writeroom
 ;; -------------------------------------------------------------------
@@ -479,8 +525,66 @@ going, at least for now.  Basically add every package path to
 (use-package writeroom-mode
   :bind ("C-c w" . writeroom-mode)
   :config
-  (setq writeroom-width (+ fill-column 20))
-  (setq writeroom-fullscreen-effect 'maximized))
+  (setq writeroom-fullscreen-effect nil)
+  (setq writeroom-maximize-window nil)
+  (setq writeroom-width (+ fill-column 10))
+  (setq writeroom-major-modes
+        '(text-mode prog-mode dired-mode conf-mode
+                    protobuf-mode borg-mode))
+  (setq writeroom-mode-line t)
+  (delete 'writeroom-set-menu-bar-lines writeroom-global-effects))
+
+(global-writeroom-mode)
+
+;; -------------------------------------------------------------------
+;; highlight-indent-guides
+;; -------------------------------------------------------------------
+
+(use-package highlight-indent-guides)
+(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+
+;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
+;; no guides are shown.
+(add-hook 'prog-mode-hook #'whitespace-mode)
+
+;; -------------------------------------------------------------------
+;; transpose-frame
+;; -------------------------------------------------------------------
+
+(use-package transpose-frame
+  :defines my-transpose-frame-map
+  :bind-keymap ("C-c f" . my-transpose-frame-map)
+  :config
+  (defvar my-transpose-frame-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "a") #'rotate-frame-anticlockwise)
+      (define-key map (kbd "c") #'rotate-frame-clockwise)
+      (define-key map (kbd "r") #'rotate-frame)
+
+      (define-key map (kbd "t") #'transpose-frame)
+
+      (define-key map (kbd "x") #'flip-frame)
+      (define-key map (kbd "y") #'flop-frame)
+
+      map)))
+
+;; -------------------------------------------------------------------
+;; ace-window
+;; -------------------------------------------------------------------
+
+(use-package ace-window
+  :bind ("M-p" . ace-window)
+  :config
+  (setq aw-dispatch-always t))
+
+;; x - delete window
+;; m - swap (move) window
+;; c - split window fairly, either vertically or horizontally
+;; v - split window vertically
+;; b - split window horizontally
+;; n - select the previous window
+;; i - maximize window (select which window)
+;; o - maximize current window
 
 ;; -------------------------------------------------------------------
 ;; anzu
@@ -491,13 +595,27 @@ going, at least for now.  Basically add every package path to
   :diminish anzu-mode)
 
 ;; -------------------------------------------------------------------
+;; persistent scratch
+;; -------------------------------------------------------------------
+
+(use-package persistent-scratch
+  :config
+  (setq persistent-scratch-backup-directory
+        (expand-file-name "scratch" user-emacs-directory))
+  ;; keep backups not older than a month
+  (setq persistent-scratch-backup-filter
+        (persistent-scratch-keep-backups-not-older-than
+         (days-to-time 30)))
+  (persistent-scratch-setup-default)
+  (persistent-scratch-autosave-mode))
+
+;; -------------------------------------------------------------------
 ;; helm-gtags
 ;; -------------------------------------------------------------------
 
 (use-package helm-gtags
   :diminish (helm-gtags-mode . " ")
   :config
-  (setq helm-gtags-prefix-key "\C-cg")
   (setq helm-gtags-suggested-key-mapping t)
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
@@ -519,11 +637,32 @@ going, at least for now.  Basically add every package path to
   :bind ("M-s s" . helm-swoop))
 
 ;; -------------------------------------------------------------------
+;; helm-flyspell
+;; -------------------------------------------------------------------
+
+(use-package helm-flyspell
+  :if (not noninteractive)
+  :commands helm-flyspell-correct
+  :config
+  (bind-key "C-;" #'helm-flyspell-correct flyspell-mode-map))
+
+;; -------------------------------------------------------------------
 ;; wgrep
 ;; -------------------------------------------------------------------
+
 (use-package wgrep
   :config (setq wgrep-auto-save-buffer t))
 (use-package wgrep-helm)
+
+;; -------------------------------------------------------------------
+;; beacon
+;; -------------------------------------------------------------------
+
+(use-package beacon
+  :diminish beacon-mode
+  :config
+  (beacon-mode)
+  (setq beacon-color 0.4))
 
 ;; -------------------------------------------------------------------
 ;; Drag
@@ -559,23 +698,6 @@ going, at least for now.  Basically add every package path to
   :bind ("C-=" . er/expand-region))
 
 ;; -------------------------------------------------------------------
-;; fancy narrow
-;; -------------------------------------------------------------------
-
-(use-package fancy-narrow
-  :config
-  (setq fancy-narrow-lighter "")
-  (fancy-narrow-mode 1))
-
-;; -------------------------------------------------------------------
-;; all-the-icon
-;; -------------------------------------------------------------------
-
-(use-package font-lock+
-  :after all-the-icons)
-(use-package all-the-icons)
-
-;; -------------------------------------------------------------------
 ;; markdown-mode
 ;; -------------------------------------------------------------------
 
@@ -593,26 +715,38 @@ going, at least for now.  Basically add every package path to
 (use-package smartparens-config
   :diminish smartparens-mode
   :config
-  (smartparens-global-mode t)
-  (show-smartparens-global-mode 1)
+  (smartparens-global-mode)
+  (show-smartparens-global-mode)
+
+  (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
+  (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-c s D") 'sp-backward-down-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s E") 'sp-up-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s a") 'sp-beginning-of-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s b") 'sp-backward-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s d") 'sp-down-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s e") 'sp-end-of-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s f") 'sp-forward-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s k") 'sp-kill-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s n") 'sp-next-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s p") 'sp-previous-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s r") 'sp-rewrap-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s s") 'sp-split-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s t") 'sp-transpose-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s w") 'sp-copy-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s <right>") 'sp-forward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s <left>") 'sp-backward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s C-<left>") 'sp-forward-barf-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s C-<right>") 'sp-backward-barf-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s <delete>") 'sp-splice-sexp-killing-forward)
+  (define-key smartparens-mode-map (kbd "C-c s <backspace>") 'sp-splice-sexp-killing-backward)
+  (define-key smartparens-mode-map (kbd "C-c s C-<delete>") 'sp-splice-sexp-killing-around)
 
   (sp-with-modes
       '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
     (sp-local-tag "i" "\"<" "\">")
     (sp-local-tag "i" "\"[" "\"]"))
-
-  ;; (set-face-attribute 'sp-pair-overlay-face nil :background "#443152")
-  ;; (set-face-attribute 'sp-show-pair-match-face nil :background "#A16946")
-
-  ;; Still dont like this
-
-  ;; (sp-with-modes 'org-mode
-  ;;   (sp-local-pair "*" "*" :actions '(insert wrap) :unless '(sp-point-after-word-p sp-point-at-bol-p) :wrap "C-*" :skip-match 'sp--org-skip-asterisk)
-  ;;   (sp-local-pair "_" "_" :unless '(sp-point-after-word-p) :wrap "C-_")
-  ;;   (sp-local-pair "/" "/" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-  ;;   (sp-local-pair "~" "~" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-  ;;   (sp-local-pair "=" "=" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-  ;;   (sp-local-pair "«" "»"))
 
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`" "'")
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`"
@@ -622,55 +756,7 @@ going, at least for now.  Basically add every package path to
 
   (setq sp-cancel-autoskip-on-backward-movement nil)
   (setq sp-navigate-consider-stringlike-sexp
-        '(lisp-mode emacs-lisp-mode latex-mode LaTeX-mode TeX-mode))
-
-  (define-key smartparens-mode-map (kbd "C-c s f") 'sp-forward-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s b") 'sp-backward-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s d") 'sp-down-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s D") 'sp-backward-down-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s a") 'sp-beginning-of-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s e") 'sp-end-of-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s u") 'sp-up-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s U") 'sp-backward-up-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s t") 'sp-transpose-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s n") 'sp-next-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s p") 'sp-previous-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s k") 'sp-kill-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s w") 'sp-copy-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s s") 'sp-forward-slurp-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s r") 'sp-forward-barf-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s S") 'sp-backward-slurp-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s R") 'sp-backward-barf-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s F") 'sp-forward-symbol)
-  (define-key smartparens-mode-map (kbd "C-c s B") 'sp-backward-symbol)
-
-  (define-key smartparens-mode-map (kbd "C-c s [") 'sp-select-previous-thing)
-  (define-key smartparens-mode-map (kbd "C-c s ]") 'sp-select-next-thing)
-
-  (define-key smartparens-mode-map (kbd "C-c s C-i") 'sp-splice-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s <delete>") 'sp-splice-sexp-killing-forward)
-  (define-key smartparens-mode-map (kbd "C-c s <backspace>") 'sp-splice-sexp-killing-backward)
-  (define-key smartparens-mode-map (kbd "C-c s C-<backspace>") 'sp-splice-sexp-killing-around)
-
-  (define-key smartparens-mode-map (kbd "C-c s C-w") 'sp-wrap)
-  (define-key smartparens-mode-map (kbd "C-c s C-u") 'sp-unwrap-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-b") 'sp-backward-unwrap-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-c s C-t") 'sp-prefix-tag-object)
-  (define-key smartparens-mode-map (kbd "C-c s C-p") 'sp-prefix-pair-object)
-  (define-key smartparens-mode-map (kbd "C-c s C-c") 'sp-convolute-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-a") 'sp-absorb-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-e") 'sp-emit-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-p") 'sp-add-to-previous-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-n") 'sp-add-to-next-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-j") 'sp-join-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-s") 'sp-split-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s C-r") 'sp-raise-sexp))
+        '(lisp-mode emacs-lisp-mode latex-mode LaTeX-mode TeX-mode)))
 
 ;; -------------------------------------------------------------------
 ;; undo tree
@@ -693,21 +779,16 @@ going, at least for now.  Basically add every package path to
 ;; BibTeX
 ;; -------------------------------------------------------------------
 
-(defvar me-bib (expand-file-name "bibliography" me-dropbox)
+(defvar me-bib (expand-file-name "bibliography" me-data)
   "My bibliography collection path.")
 (defvar me-bib-files
-  `(,(expand-file-name "nn.bib" me-bib)
-    ,(expand-file-name "bio.bib" me-bib)
-    ,(expand-file-name "phy.bib" me-bib))
+  `(,(expand-file-name "nn.bib" me-bib))
   "My bibliography files.")
 (defvar me-bib-pdfs
-  `(,(expand-file-name "nn-pdf" me-bib)
-    ,(expand-file-name "bio-pdf" me-bib)
-    ,(expand-file-name "phy-pdf" me-bib))
+  `(,(expand-file-name "nn-pdf" me-bib))
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes
   (expand-file-name "notes" me-bib)
-  ;; (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
 
 (setq bibtex-autokey-year-length 4
@@ -753,6 +834,10 @@ going, at least for now.  Basically add every package path to
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
+(require 'bibtex)
+(add-to-list 'bibtex-entry-format 'unify-case)
+(add-to-list 'bibtex-entry-format 'sort-fields)
+
 ;; -------------------------------------------------------------------
 ;; latex-mode
 ;; -------------------------------------------------------------------
@@ -761,6 +846,17 @@ going, at least for now.  Basically add every package path to
 (defun me//init-tex ()
   (TeX-fold-mode 1))
 (add-hook 'tex-mode-hook #'me//init-tex)
+
+;; -------------------------------------------------------------------
+;; ssh-config-mode
+;; -------------------------------------------------------------------
+
+(use-package ssh-config-mode
+  :config
+  (add-to-list 'auto-mode-alist '("/\\.ssh/config\\'" . ssh-config-mode))
+  (add-to-list 'auto-mode-alist '("/sshd?_config\\'" . ssh-config-mode))
+  (add-to-list 'auto-mode-alist '("/known_hosts\\'" . ssh-known-hosts-mode))
+  (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
 ;; -------------------------------------------------------------------
 ;; reftex
@@ -811,7 +907,7 @@ going, at least for now.  Basically add every package path to
            ("Dired" (mode . dired-mode))
            ("Web"
             (or (name . "\\.js")
-                (name . "\\.css")
+                (name . "\\.s?css")
                 (name . "\\.html")
                 (name . "\\.php")
                 (name . "\\.xml")
@@ -821,28 +917,18 @@ going, at least for now.  Basically add every package path to
                 (mode . org-mode)
                 (mode . markdown-mode)
                 (mode . text-mode)))
-           ("Data"
-            (or (mode . gnuplot-mode)
-                (mode . octave-mode)
-                (mode . R-mode)))
+           ("Emacs Config"
+            (or (mode . emacs-lisp-mode)))
            ("Coding"
             (or (mode . shell-script-mode)
                 (mode . sh-mode)
-                (mode . emacs-lisp-mode)
                 (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
                 (mode . python-mode)
                 (name . "\\.ya?ml")
                 (name . "\\.R")
                 (name . "\\.lua")))
            ("Mail"
-            (or (mode . message-mode)
-                (mode . mail-mode)
-                (mode . gnus-group-mode)
-                (mode . gnus-summary-mode)
-                (mode . gnus-article-mode)
-                (mode . gnus-server-mode)
-                (mode . gnus-browse-mode)
-                (name . "^\\.newsrc-dribble")))
+            (or (mode . message-mode)))
            ("Console"
             (or (mode . inferior-ess-mode)
                 (mode . inferior-python-mode)
@@ -884,24 +970,18 @@ going, at least for now.  Basically add every package path to
                 filename-and-process))))
 
 ;; -------------------------------------------------------------------
-;; Lilypond
+;; Calendar
 ;; -------------------------------------------------------------------
 
-(autoload 'LilyPond-mode "lilypond-mode")
-(setq auto-mode-alist
-      (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
-
-(defun me//init-lilypond ()
-  (turn-on-font-lock))
-
-(add-hook 'LilyPond-mode-hook #'me//init-lilypond)
+(setq diary-file (expand-file-name "diary" me-emacs-data))
+(setq calendar-view-diary-initially-flag t)
+(setq calendar-latitude 37.42)
+(setq calendar-longitude -122.10)
 
 ;; -------------------------------------------------------------------
 ;; Appt
 ;; -------------------------------------------------------------------
 
-(setq diary-file (expand-file-name "diary" me-emacs-data))
-(setq calendar-view-diary-initially-flag t)
 (appt-activate 1)
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
@@ -916,7 +996,7 @@ going, at least for now.  Basically add every package path to
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
                         (decode-char 'ucs #xF295))
-                  (font-spec :family "FontAwesome" :size 12.0))
+                  (font-spec :family "FontAwesome" :size 11.0))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
@@ -944,6 +1024,19 @@ going, at least for now.  Basically add every package path to
 (global-set-key (kbd "<f12>") #'gnus-other-frame)
 (setq gnus-init-file (expand-file-name "gnus-conf.el" me-emacs))
 
+(defun me//seconds-from-now (interval &optional wait)
+  (let* ((m (mod (string-to-int (format-time-string "%M")) interval))
+         (s (string-to-int (format-time-string "%S")))
+         (elapsed (+ (* m 60) s))
+         (w (or wait 30)))
+    (if (< elapsed (- w 15))
+        w
+      (- (+ (* interval 60) w) elapsed))))
+
+(defun me//start-gnus-bg ()
+  (gnus)
+  (switch-to-prev-buffer))
+(run-at-time (me//seconds-from-now 5) nil #'me//start-gnus-bg)
 
 ;; -------------------------------------------------------------------
 ;; org-ref
@@ -954,10 +1047,31 @@ going, at least for now.  Basically add every package path to
   (setq org-ref-default-bibliography me-bib-files
         org-ref-pdf-directory me-bib-pdfs
         org-ref-notes-directory me-bib-notes)
+  :config
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
      (list (car (org-ref-get-bibtex-key-and-file thekey)))))
-  (setq org-ref-notes-function #'me//org-ref-notes-function))
+  (setq org-ref-notes-function #'me//org-ref-notes-function)
+  (add-hook 'org-ref-clean-bibtex-entry-hook
+            #'org-ref-downcase-bibtex-entry))
+
+(defun me//org-ref-jump-to-pdf-from-note ()
+  "Jump to the pdf with which the current note associated."
+  (interactive)
+  (let* ((key (file-name-base (buffer-file-name)))
+         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+    (if (file-exists-p pdf-file)
+        (org-open-file pdf-file)
+      (message "no pdf found for %s" key))))
+
+(defun me//org-ref-jump-to-citation-from-note ()
+  "Open bibtex file to key with which the note associated."
+  (interactive)
+  (let* ((key (file-name-base (buffer-file-name)))
+         (results (org-ref-get-bibtex-key-and-file key))
+         (bibfile (cdr results)))
+    (find-file bibfile)
+    (bibtex-search-entry key)))
 
 ;; -------------------------------------------------------------------
 ;; Org
@@ -1116,36 +1230,40 @@ going, at least for now.  Basically add every package path to
 
   (setq org-capture-templates
         `(("t" "New TODO" entry
-           (file+headline "todo.org.gz" "Tasks")
+           (file "todo.org.gz")
            (file "capture/todo.org")
-           :empty-lines 1)
-          ("r" "To read next" checkitem
-           (file+headline "todo.org.gz" "Read Paper")
-           nil
-           :empty-lines 1)
+           :empty-lines 1
+           :jump-to-captured t)
           ("m" "Save mail link" entry
-           (file+headline "todo.org.gz" "Mail")
+           (file "todo.org.gz")
            (file "capture/mail.org")
-           :empty-lines 1)))
+           :empty-lines 1
+           :jump-to-captured t)))
 
   ;; (require 'ox-latex)
 
   (setq org-latex-prefer-user-labels t)
 
   (setq org-latex-pdf-process
-        (quote ("texi2dvi --pdf --clean --verbose --batch %f")))
+        (quote ("PDFLATEX=%latex texi2dvi --shell-escape --pdf --clean --verbose --batch %f")))
 
   (setq org-latex-listings 'minted)
+  ;; (add-to-list 'org-latex-packages-alist '("dvipsnames" "xcolor"))
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
-  (add-to-list 'org-latex-packages-alist '("usenames,dvipsnames" "xcolor"))
 
-  ;; (add-to-list 'org-latex-classes
-  ;;              '("empty"
-  ;;                "\\documentclass{article}
-  ;;               [NO-DEFAULT-PACKAGES]
-  ;;               [EXTRA]"))
+  (add-to-list 'org-latex-classes
+               '("ctexart"
+                 "\\documentclass[11pt]{ctexart}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."
@@ -1189,6 +1307,8 @@ going, at least for now.  Basically add every package path to
 
   (setq org-html-allow-name-attribute-in-anchors t)
 
+  (setq org-html-htmlize-output-type 'css)
+
   ;; Postamble.
   (setq org-html-postamble t
         org-html-postamble-format
@@ -1197,7 +1317,7 @@ going, at least for now.  Basically add every package path to
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
   ;; ditaa
-  (setq org-ditaa-jar-path "/usr/bin/ditaa")
+  ;; (setq org-ditaa-jar-path "/usr/bin/ditaa")
 
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
 
@@ -1205,13 +1325,12 @@ going, at least for now.  Basically add every package path to
 ;; C/C++
 ;; -------------------------------------------------------------------
 
-(add-hook 'c-mode-common-hook #'google-set-c-style)
-
-(defun me//turn-on-hs-minor-mode()
+(defun me//init-c-mode()
   (interactive)
-  (hs-minor-mode 1))
+  (hs-minor-mode))
 
-(add-hook 'c-mode-common-hook #'me//turn-on-hs-minor-mode)
+(add-hook 'c-mode-common-hook #'me//init-c-mode)
+(add-hook 'c-mode-common-hook #'google-set-c-style)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;; -------------------------------------------------------------------
@@ -1238,7 +1357,7 @@ going, at least for now.  Basically add every package path to
   (setq web-mode-enable-current-element-highlight t))
 
 (use-package web-mode
-  :defer t
+  :mode "\\.\\(html\\|htm\\)\\'"
   :config
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
@@ -1248,7 +1367,8 @@ going, at least for now.  Basically add every package path to
 
 (defun me//init-python()
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
-  (local-set-key (kbd "M-<right>") #'increase-left-margin))
+  (local-set-key (kbd "M-<right>") #'increase-left-margin)
+  (setq-default python-indent-offset 2))
 (add-hook 'python-mode-hook #'me//init-python)
 
 (defun me//init-ein()
@@ -1329,3 +1449,5 @@ going, at least for now.  Basically add every package path to
 
 (require 'server)
 (unless (server-running-p) (server-start))
+
+;;; init.el ends here

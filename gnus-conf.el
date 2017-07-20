@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-03-08 11:18:48 gongzhitaao>
+;;; Time-stamp: <2017-05-11 19:54:34 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -34,13 +34,16 @@ for the header string.
      (t 2))))
 
 (defface me--one-day-old
-  '((default (:foreground "#ADFF2F" :slant normal :strike-through nil)))
+  '((default (:foreground "#ADFF2F" :background "gray20"
+                          :slant normal :strike-through nil)))
   "...")
 (defface me--one-week-old
-  '((default (:foreground "#79B221" :slant normal :strike-through nil)))
+  '((default (:foreground "#79B221" :background "gray20"
+                          :slant normal :strike-through nil)))
   "...")
 (defface me--more-than-one-week-old
-  '((default (:foreground "#456613" :slant normal :strike-through nil)))
+  '((default (:foreground "#456613" :background "gray20"
+                          :slant normal :strike-through nil)))
   "...")
 
 (defun gnus-user-format-function-color-date (header)
@@ -106,7 +109,8 @@ for the header string.
 
 (setq gnus-message-archive-group
       `(("Tiger" "nnimap+tiger:Tiger/sent")
-        ("Gmail" "nnimap+gmail:Gmail/sent")
+        ("Work" "nnimap+work:Work/sent")
+        ("Personal" "nnimap+personal:Personal/sent")
         (".*" ,(format-time-string "sent/%Y-%m"))))
 
 (setq message-confirm-send t)
@@ -123,29 +127,32 @@ for the header string.
           (name "Zhitao Gong")
           (signature-file "tiger")
           (organization "Auburn CSSE")))
-        ("Gmail.*"
+        ("Personal.*"
          (charset . utf-8)
          (posting-style
           (address "zhitaao.gong@gmail.com")
-          (gcc "nnimap+gmail:Gmail/sent")
+          (gcc "nnimap+personal:Personal/sent")
           (name "Zhitao Gong")
-          (signature-file "gmail")
+          (signature-file "personal")
           (organization "Auburn University")))
-        ;; ("Ymail.*"
-        ;;  (charset . utf-8)
-        ;;  (posting-style
-        ;;   (address "gongzhitaao@yahoo.com")
-        ;;   (name "Zhitao Gong")
-        ;;   (signature-file "yahoo")
-        ;;   (organization "Auburn University")))
+        ("Work.*"
+         (charset . utf-8)
+         (posting-style
+          (address "gongzhitaao@google.com")
+          (gcc "nnimap+work:Work/sent")
+          (name "Zhitao Gong")
+          (signature-file "work")
+          (organization "Google Translation")))
         ))
 
 (setq gnus-permanently-visible-groups
       (concat "^Tiger/\\(inbox\\|sent\\)\\'\\|"
-              "^Gmail/\\(inbox\\|sent\\)\\'\\|"
+              "^Work/\\(inbox\\|sent\\)\\'\\|"
+              "^Personal/\\(inbox\\|sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
 
 (let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
+                        "\\(gongzhitaao@google\.com\\)\\|"
                         "\\(\\(zzg0009\\|gongzhitaao\\|zhitaao\\|gong\\)@\\(tigermail\.\\)?auburn\.edu\\)\\|"
                         "\\(me@gongzhitaao\.org\\)\\|"
                         "\\(gongzhitaao@yahoo\.com\\)")))
@@ -156,7 +163,7 @@ for the header string.
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
 
-(gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
+(gnus-demon-add-handler 'gnus-group-get-new-news 5 nil)
 (gnus-demon-init)
 
 (setq gnus-list-groups-with-ticked-articles nil)
