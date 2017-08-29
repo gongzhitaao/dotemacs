@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-05-11 19:54:34 gongzhitaao>
+;;; Time-stamp: <2017-08-29 09:09:26 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -191,6 +191,9 @@ for the header string.
 
 (setq message-forward-as-mime nil)
 (setq message-forward-before-signature nil)
+
+(setq message-citation-line-function #'message-insert-formatted-citation-line)
+(setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
 
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)

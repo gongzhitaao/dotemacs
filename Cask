@@ -16,6 +16,7 @@
 (depends-on "bind-key")
 (depends-on "cask")
 (depends-on "cl-generic")
+(depends-on "clang-format")
 (depends-on "color-identifiers-mode")
 (depends-on "company")
 (depends-on "dash")

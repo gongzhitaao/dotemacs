@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-06-25 08:19:25 gongzhitaao>
+;;; Time-stamp: <2017-08-05 09:35:38 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -146,6 +146,8 @@ number input"
 (setq display-time-24hr-format t
       display-time-day-and-date nil)
 (display-time)
+
+(setq confirm-kill-emacs 'yes-or-no-p)
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -884,8 +886,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq bbdb-complete-mail-allow-cycling t
         bbdb-allow-duplicates t
         bbdb-message-all-addresses t
-        bbdb-file
-        (expand-file-name "contacts.bbdb.gz" me-emacs-data))
+        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
 
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
@@ -915,7 +916,7 @@ for a file to visit if current buffer is not visiting a file."
            ("Text"
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
-                (mode . markdown-mode)
+                (name . "\\.md")
                 (mode . text-mode)))
            ("Emacs Config"
             (or (mode . emacs-lisp-mode)))
@@ -1133,19 +1134,6 @@ for a file to visit if current buffer is not visiting a file."
 
   (setq org-directory (expand-file-name "org" me-emacs-data))
 
-  ;; never use [1]-styled footnote.
-  (setq org-footnote-re
-        (concat "\\[\\(?:"
-                ;; Match inline footnotes.
-                (org-re "fn:\\([-_[:word:]]+\\)?:\\|")
-                ;; Match other footnotes.
-                ;; "\\(?:\\([0-9]+\\)\\]\\)\\|"
-                (org-re "\\(fn:[-_[:word:]]+\\)")
-                "\\)")
-
-        org-footnote-definition-re
-        (org-re "^\\[\\(fn:[-_[:word:]]+\\)\\]"))
-
   ;; Recursive update todo statistics
   (setq org-provide-todo-statistics      t
         org-hierarchical-todo-statistics nil)
@@ -1333,6 +1321,10 @@ for a file to visit if current buffer is not visiting a file."
 (add-hook 'c-mode-common-hook #'google-set-c-style)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+(use-package clang-format
+  :bind (:map c++-mode-map
+              ("C-M-q" . clang-format-region)))
+
 ;; -------------------------------------------------------------------
 ;; Javascript
 ;; -------------------------------------------------------------------
@@ -1444,8 +1436,6 @@ for a file to visit if current buffer is not visiting a file."
 
   (add-hook 'ess-mode-hook #'me//init-ess)
   (add-hook 'inferior-ess-mode-hook #'turn-on-smartparens-mode))
-
-(setq confirm-kill-emacs 'yes-or-no-p)
 
 (require 'server)
 (unless (server-running-p) (server-start))
