@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-08-05 09:35:38 gongzhitaao>
+;;; Time-stamp: <2017-09-07 10:51:44 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -243,6 +243,7 @@ number input"
 
 (put 'dired-find-alternate-file 'disabled nil)
 
+(require 'dired)
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always
       dired-recursive-copies 'always
@@ -383,7 +384,6 @@ going, at least for now.  Basically add every package path to
   (helm-mode 1)
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
-  (helm-push-mark-mode 1)
 
   (set-face-background 'helm-selection "#097209")
 
@@ -708,7 +708,14 @@ for a file to visit if current buffer is not visiting a file."
   :config
   (add-hook 'markdown-mode-hook #'turn-on-auto-fill)
   (add-hook 'markdown-mode-hook #'turn-on-flyspell)
-  (add-hook 'markdown-mode-hook #'pandoc-mode))
+  (add-hook 'markdown-mode-hook #'pandoc-mode)
+
+  (setq markdown-hide-urls t)
+  (setq markdown-fontify-code-blocks-natively t)
+  (setq markdown-asymmetric-header t)
+  (setq markdown-unordered-list-item-prefix "- "
+        markdown-list-indent-width 2)
+  (setq markdown-use-pandoc-style-yaml-metadata t))
 
 ;; -------------------------------------------------------------------
 ;; smartparens
@@ -976,8 +983,8 @@ for a file to visit if current buffer is not visiting a file."
 
 (setq diary-file (expand-file-name "diary" me-emacs-data))
 (setq calendar-view-diary-initially-flag t)
-(setq calendar-latitude 37.42)
-(setq calendar-longitude -122.10)
+(setq calendar-latitude 32.6)
+(setq calendar-longitude -85.5)
 
 ;; -------------------------------------------------------------------
 ;; Appt

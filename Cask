@@ -26,6 +26,7 @@
 (depends-on "dired+")
 (depends-on "drag-stuff")
 (depends-on "ebib")
+(depends-on "edit-indirect")
 (depends-on "ein")
 (depends-on "elisp-slime-nav")
 (depends-on "epl")
