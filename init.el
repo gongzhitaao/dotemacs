@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-09-07 10:51:44 gongzhitaao>
+;;; Time-stamp: <2017-09-16 13:13:33 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -16,6 +16,7 @@
 ;; FN keys
 ;; --------------------------------------------------------------------
 
+;; f3 -- sr-speedbar-toggle
 (global-set-key (kbd "<f6>") #'calendar)
 (global-set-key (kbd "<f7>") #'compile)
 ;; f8 -- deft
@@ -243,7 +244,6 @@ number input"
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-(require 'dired)
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always
       dired-recursive-copies 'always
@@ -402,6 +402,8 @@ going, at least for now.  Basically add every package path to
         helm-imenu-fuzzy-match                 t
         helm-M-x-fuzzy-match                   t)
 
+  (setq helm-buffer-max-length nil)
+
   ;; rebind tab to run persistent action
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   ;; make TAB works in terminal
@@ -461,6 +463,19 @@ going, at least for now.  Basically add every package path to
 (defun me//init-auto-revert-mode ()
   (diminish 'auto-revert-mode " "))
 (add-hook 'auto-revert-mode-hook #'me//init-auto-revert-mode)
+
+;; -------------------------------------------------------------------
+;; dired+
+;; -------------------------------------------------------------------
+
+(use-package dired+)
+(use-package mouse3)
+(use-package bookmark+)
+
+(use-package ls-lisp
+  :config
+  (setq ls-lisp-dirs-first t)
+  (setq ls-lisp-use-insert-directory-program nil))
 
 ;; -------------------------------------------------------------------
 ;; Async
@@ -700,6 +715,15 @@ for a file to visit if current buffer is not visiting a file."
   :bind ("C-=" . er/expand-region))
 
 ;; -------------------------------------------------------------------
+;; sr speedbar
+;; -------------------------------------------------------------------
+
+(use-package sr-speedbar
+  :bind ("<f3>" . sr-speedbar-toggle)
+  :config
+  (setq sr-speedbar-right-side nil))
+
+;; -------------------------------------------------------------------
 ;; markdown-mode
 ;; -------------------------------------------------------------------
 
@@ -710,6 +734,7 @@ for a file to visit if current buffer is not visiting a file."
   (add-hook 'markdown-mode-hook #'turn-on-flyspell)
   (add-hook 'markdown-mode-hook #'pandoc-mode)
 
+  (setq markdown-command "pandoc")
   (setq markdown-hide-urls t)
   (setq markdown-fontify-code-blocks-natively t)
   (setq markdown-asymmetric-header t)
@@ -1367,8 +1392,12 @@ for a file to visit if current buffer is not visiting a file."
 (defun me//init-python()
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
   (local-set-key (kbd "M-<right>") #'increase-left-margin)
-  (setq-default python-indent-offset 2))
+  (python-docstring-mode))
 (add-hook 'python-mode-hook #'me//init-python)
+
+(use-package python-docstring-mode
+  :no-require t
+  :diminish python-docstring-mode)
 
 (defun me//init-ein()
   (interactive)
