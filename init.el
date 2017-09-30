@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-09-16 13:13:33 gongzhitaao>
+;;; Time-stamp: <2017-09-30 14:07:17 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -45,7 +45,7 @@
 (global-set-key (kbd "C-c e") #'me//sudo-edit)
 (global-set-key (kbd "C-c j") #'ace-jump-mode)
 ;; C-c f -- frame operation
-(global-set-key (kbd "C-c g") #'magit-status)
+;; C-c g -- magit-status
 ;; C-c m --  multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
@@ -482,6 +482,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package async
+  :diminish dired-async-mode
   :config
   (autoload 'dired-async-mode "dired-async.el" nil t)
   (dired-async-mode 1))
@@ -491,6 +492,14 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package visual-regexp-steroids)
+
+;; -------------------------------------------------------------------
+;; magit
+;; -------------------------------------------------------------------
+
+(use-package magit
+  :bind ("C-c g" . magit-status)
+  (setq git-commit-major-mode 'org-mode))
 
 ;; -------------------------------------------------------------------
 ;; multiple cursors
@@ -547,7 +556,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq writeroom-width (+ fill-column 10))
   (setq writeroom-major-modes
         '(text-mode prog-mode dired-mode conf-mode
-                    protobuf-mode borg-mode))
+                    ein:notebook-multilang-mode))
   (setq writeroom-mode-line t)
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects))
 
@@ -721,7 +730,8 @@ for a file to visit if current buffer is not visiting a file."
 (use-package sr-speedbar
   :bind ("<f3>" . sr-speedbar-toggle)
   :config
-  (setq sr-speedbar-right-side nil))
+  (setq sr-speedbar-right-side nil)
+  (setq speedbar-use-images nil))
 
 ;; -------------------------------------------------------------------
 ;; markdown-mode
@@ -1392,20 +1402,14 @@ for a file to visit if current buffer is not visiting a file."
 (defun me//init-python()
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
   (local-set-key (kbd "M-<right>") #'increase-left-margin)
-  (python-docstring-mode))
+  (python-docstring-mode)
+  (diminish 'python-docstring-mode))
 (add-hook 'python-mode-hook #'me//init-python)
 
-(use-package python-docstring-mode
-  :no-require t
-  :diminish python-docstring-mode)
-
-(defun me//init-ein()
-  (interactive)
-  (progn
-    (require 'ein)
-    (require 'ein-loaddefs)
-    (require 'ein-notebook)
-    (require 'ein-subpackages)))
+(use-package ein
+  :config
+  (setq ein:jupyter-default-server-command
+        "/home/gongzhitaao/.local/env/py3/bin/jupyter"))
 
 ;; -------------------------------------------------------------------
 ;; Lua
