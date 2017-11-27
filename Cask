@@ -25,6 +25,7 @@
 (depends-on "diff-hl")
 (depends-on "diminish")
 (depends-on "dired+")
+(depends-on "doremi")
 (depends-on "drag-stuff")
 (depends-on "ebib")
 (depends-on "edit-indirect")

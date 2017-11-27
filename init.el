@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-09-30 14:07:17 gongzhitaao>
+;;; Time-stamp: <2017-11-27 10:19:27 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -375,6 +375,14 @@ going, at least for now.  Basically add every package path to
 (set-face-background 'hl-line "gray10")
 
 ;; -------------------------------------------------------------------
+;; exec-path
+;; -------------------------------------------------------------------
+
+(use-package exec-path
+  :config
+  (exec-path-from-shell-initialize))
+
+;; -------------------------------------------------------------------
 ;; Helm
 ;; -------------------------------------------------------------------
 
@@ -499,6 +507,7 @@ going, at least for now.  Basically add every package path to
 
 (use-package magit
   :bind ("C-c g" . magit-status)
+  :config
   (setq git-commit-major-mode 'org-mode))
 
 ;; -------------------------------------------------------------------
@@ -823,7 +832,7 @@ for a file to visit if current buffer is not visiting a file."
 ;; BibTeX
 ;; -------------------------------------------------------------------
 
-(defvar me-bib (expand-file-name "bibliography" me-data)
+(defvar me-bib (expand-file-name ".local/data/bibliography" me-home)
   "My bibliography collection path.")
 (defvar me-bib-files
   `(,(expand-file-name "nn.bib" me-bib))
@@ -843,6 +852,8 @@ for a file to visit if current buffer is not visiting a file."
       bibtex-autokey-titlewords-stretch 0
       bibtex-autokey-titleword-length nil)
 
+(setq bibtex-maintain-sorted-entries t)
+
 ;; -------------------------------------------------------------------
 ;; helm-bibtex
 ;; -------------------------------------------------------------------
@@ -857,8 +868,8 @@ for a file to visit if current buffer is not visiting a file."
         bibtex-completion-notes-path me-bib-notes)
 
   (setq bibtex-completion-notes-extension ".org")
-  (setq bibtex-completion-pdf-open-function
-        #'helm-open-file-with-default-tool)
+  ;; (setq bibtex-completion-pdf-open-function
+  ;;       #'helm-open-file-with-default-tool)
 
   (setq bibtex-completion-pdf-symbol ""
         bibtex-completion-notes-symbol ""))
@@ -882,14 +893,8 @@ for a file to visit if current buffer is not visiting a file."
 (add-to-list 'bibtex-entry-format 'unify-case)
 (add-to-list 'bibtex-entry-format 'sort-fields)
 
-;; -------------------------------------------------------------------
-;; latex-mode
-;; -------------------------------------------------------------------
-
-(add-hook 'tex-mode-hook 'turn-on-auto-fill)
-(defun me//init-tex ()
-  (TeX-fold-mode 1))
-(add-hook 'tex-mode-hook #'me//init-tex)
+;; use pdf-tools to open pdf in Emacs
+(pdf-tools-install)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
@@ -903,14 +908,26 @@ for a file to visit if current buffer is not visiting a file."
   (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
 ;; -------------------------------------------------------------------
+;; latex-mode
+;; -------------------------------------------------------------------
+
+(defun me//init-LaTeX ()
+  (TeX-fold-mode 1)
+  (turn-on-auto-fill)
+  (flyspell-mode)
+  (whitespace-mode)
+  (setq LaTeX-indent-level 1
+        LaTeX-item-indent 0))
+(add-hook 'LaTeX-mode-hook #'me//init-LaTeX)
+
+;; -------------------------------------------------------------------
 ;; reftex
 ;; -------------------------------------------------------------------
 
 (use-package reftex
   :diminish reftex-mode
   :config
-  (add-hook 'latex-mode-hook 'turn-on-reftex)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (add-hook 'tex-mode-hook #'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref"
                                         "Hyperref"
@@ -1034,20 +1051,20 @@ for a file to visit if current buffer is not visiting a file."
 
 (set-face-attribute 'default nil
                     :family "Ubuntu Mono"
-                    :height 120)
+                    :height 140)
 
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
                         (decode-char 'ucs #xF295))
-                  (font-spec :family "FontAwesome" :size 11.0))
+                  (font-spec :family "FontAwesome" :size 16))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font)
    charset (font-spec :family "Noto Sans Mono CJK TC"
-                      :size 12.0)))
+                      :size 20)))
 
-(set-face-attribute 'fixed-pitch nil :height 105)
+(set-face-attribute 'fixed-pitch nil :height 130)
 
 (setq-default line-spacing 5)
 
@@ -1154,7 +1171,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-list-description-max-indent 0)
   (setq org-support-shift-select t)
 
-  (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")
+  ;; (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")
 
   (add-to-list 'org-structure-template-alist
                '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
@@ -1355,11 +1372,6 @@ for a file to visit if current buffer is not visiting a file."
 ;; C/C++
 ;; -------------------------------------------------------------------
 
-(defun me//init-c-mode()
-  (interactive)
-  (hs-minor-mode))
-
-(add-hook 'c-mode-common-hook #'me//init-c-mode)
 (add-hook 'c-mode-common-hook #'google-set-c-style)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
@@ -1403,13 +1415,24 @@ for a file to visit if current buffer is not visiting a file."
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
   (local-set-key (kbd "M-<right>") #'increase-left-margin)
   (python-docstring-mode)
-  (diminish 'python-docstring-mode))
+  (diminish 'python-docstring-mode)
+  (setq fill-column 78)
+  (setq python-check-command "flake8"))
 (add-hook 'python-mode-hook #'me//init-python)
 
 (use-package ein
   :config
   (setq ein:jupyter-default-server-command
         "/home/gongzhitaao/.local/env/py3/bin/jupyter"))
+
+;; -------------------------------------------------------------------
+;; shell script
+;; -------------------------------------------------------------------
+
+(defun me//init-sh()
+  (local-set-key (kbd "M-<left>") #'decrease-left-margin)
+  (local-set-key (kbd "M-<right>") #'increase-left-margin))
+(add-hook 'sh-mode-hook #'me//init-sh)
 
 ;; -------------------------------------------------------------------
 ;; Lua
@@ -1419,9 +1442,16 @@ for a file to visit if current buffer is not visiting a file."
   (lua-send-current-line)
   (next-line))
 
+(defun me//init-lua()
+  (local-set-key (kbd "M-<left>") #'decrease-left-margin)
+  (local-set-key (kbd "M-<right>") #'increase-left-margin)
+  (setq standard-indent 3)
+  (setq tab-stop-list (number-sequence 3 120 3)))
+
 (use-package lua-mode
   :mode "\\.lua\\'"
   :config
+  (add-hook 'lua-mode-hook #'me//init-lua)
   (define-key lua-mode-map (kbd "C-<return>")
     #'me//lua-send-current-line-and-next)
   (define-key lua-mode-map (kbd "C-c b")   #'lua-send-buffer)
