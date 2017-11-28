@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-11-27 10:19:27 gongzhitaao>
+;;; Time-stamp: <2017-11-27 19:45:42 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -977,6 +977,8 @@ for a file to visit if current buffer is not visiting a file."
                 (mode . org-mode)
                 (name . "\\.md")
                 (mode . text-mode)))
+           ("PDF"
+            (or (mode . pdf-view-mode)))
            ("Emacs Config"
             (or (mode . emacs-lisp-mode)))
            ("Coding"
