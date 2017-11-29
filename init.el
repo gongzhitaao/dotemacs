@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-11-27 19:45:42 gongzhitaao>
+;;; Time-stamp: <2017-11-28 21:17:07 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -49,11 +49,9 @@
 ;; C-c m --  multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c r c") #'org-ref-open-citation-at-point)
-(global-set-key (kbd "C-c r C") #'me//org-ref-jump-to-citation-from-note)
-(global-set-key (kbd "C-c r p") #'org-ref-open-pdf-at-point)
-(global-set-key (kbd "C-c r P") #'me//org-ref-jump-to-pdf-from-note)
-(global-set-key (kbd "C-c r n") #'org-ref-open-notes-at-point)
+(global-set-key (kbd "C-c r c") #'me//org-ref-open-citration)
+(global-set-key (kbd "C-c r n") #'me//org-ref-open-note)
+(global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
 ;; C-c w -- writeroom-mode
@@ -886,6 +884,7 @@ for a file to visit if current buffer is not visiting a file."
   (local-set-key [remap bibtex-clean-entry]
                  #'org-ref-clean-bibtex-entry)
   (local-set-key (kbd "C-c C-v") #'bibtex-validate)
+  (local-set-key (kbd "C-c r p") #'org-ref-open-bibtex-pdf)
   (setq fill-column 140))
 (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
@@ -1117,23 +1116,38 @@ for a file to visit if current buffer is not visiting a file."
   (add-hook 'org-ref-clean-bibtex-entry-hook
             #'org-ref-downcase-bibtex-entry))
 
-(defun me//org-ref-jump-to-pdf-from-note ()
-  "Jump to the pdf with which the current note associated."
+(defun me//org-ref-open-pdf ()
   (interactive)
-  (let* ((key (file-name-base (buffer-file-name)))
-         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-    (if (file-exists-p pdf-file)
-        (org-open-file pdf-file)
-      (message "no pdf found for %s" key))))
+  (if (string= (file-name-extension (buffer-file-name)) "pdf")
+      nil
+    (let* ((key
+            (condition-case nil
+                (org-ref-get-bibtex-key-under-cursor)
+              ('error (file-name-base (buffer-file-name)))))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (org-open-file pdf-file)
+        (message "no pdf found for %s" key)))))
 
-(defun me//org-ref-jump-to-citation-from-note ()
+(defun me//org-ref-open-citation ()
   "Open bibtex file to key with which the note associated."
   (interactive)
-  (let* ((key (file-name-base (buffer-file-name)))
+  (let* ((key
+            (condition-case nil
+                (org-ref-get-bibtex-key-under-cursor)
+              ('error (file-name-base (buffer-file-name)))))
          (results (org-ref-get-bibtex-key-and-file key))
          (bibfile (cdr results)))
     (find-file bibfile)
     (bibtex-search-entry key)))
+
+(defun me//org-ref-open-note ()
+  (interactive)
+  (let ((key
+         (condition-case nil
+             (org-ref-get-bibtex-key-under-cursor)
+           ('error (file-name-base (buffer-file-name))))))
+    (org-ref-open-notes-at-point key)))
 
 ;; -------------------------------------------------------------------
 ;; Org
