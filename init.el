@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-11-28 21:17:07 gongzhitaao>
+;;; Time-stamp: <2017-11-29 07:27:05 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -49,7 +49,7 @@
 ;; C-c m --  multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c r c") #'me//org-ref-open-citration)
+(global-set-key (kbd "C-c r c") #'me//org-ref-open-citation)
 (global-set-key (kbd "C-c r n") #'me//org-ref-open-note)
 (global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
 ;; C-c s -- smartparens
@@ -1132,22 +1132,31 @@ for a file to visit if current buffer is not visiting a file."
 (defun me//org-ref-open-citation ()
   "Open bibtex file to key with which the note associated."
   (interactive)
-  (let* ((key
+  (if (string= (file-name-extension (buffer-file-name)) "bib")
+      nil
+    (let* ((key
             (condition-case nil
                 (org-ref-get-bibtex-key-under-cursor)
               ('error (file-name-base (buffer-file-name)))))
-         (results (org-ref-get-bibtex-key-and-file key))
-         (bibfile (cdr results)))
-    (find-file bibfile)
-    (bibtex-search-entry key)))
+           (results (org-ref-get-bibtex-key-and-file key))
+           (bibfile (cdr results)))
+      (find-file bibfile)
+      (bibtex-search-entry key))))
 
 (defun me//org-ref-open-note ()
   (interactive)
-  (let ((key
+  (let* ((key
          (condition-case nil
              (org-ref-get-bibtex-key-under-cursor)
-           ('error (file-name-base (buffer-file-name))))))
-    (org-ref-open-notes-at-point key)))
+           ('error (if (string= (file-name-extension (buffer-file-name)) "bib")
+                       (save-excursion
+                         (bibtex-beginning-of-entry)
+                         (reftex-get-bib-field "=key=" (bibtex-parse-entry t)))
+                     (file-name-base (buffer-file-name))))))
+         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+    (if (file-exists-p pdf-file)
+        (org-ref-open-notes-at-point key)
+      (message "no pdf found for %s" key))))
 
 ;; -------------------------------------------------------------------
 ;; Org
