@@ -1,11 +1,11 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-09-08 10:04:21 gongzhitaao>
+;;; Time-stamp: <2017-11-29 10:16:58 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
 
 (setq user-full-name "Zhitao Gong")
-(setq user-mail-address "me@gongzhitaao.org")
+(setq user-mail-address "zhitaao.gong@gmail.com")
 
 (setq gnus-select-method
       '(nnimap "LocalMail"
