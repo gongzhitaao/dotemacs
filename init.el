@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-11-29 07:27:05 gongzhitaao>
+;;; Time-stamp: <2017-12-03 07:23:10 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -376,7 +376,7 @@ going, at least for now.  Basically add every package path to
 ;; exec-path
 ;; -------------------------------------------------------------------
 
-(use-package exec-path
+(use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
 
@@ -1441,6 +1441,7 @@ for a file to visit if current buffer is not visiting a file."
   (local-set-key (kbd "M-<right>") #'increase-left-margin)
   (python-docstring-mode)
   (diminish 'python-docstring-mode)
+  (set (make-local-variable 'comment-inline-offset) 2)
   (setq fill-column 78)
   (setq python-check-command "flake8"))
 (add-hook 'python-mode-hook #'me//init-python)
