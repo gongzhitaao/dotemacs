@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-12-03 07:23:10 gongzhitaao>
+;;; Time-stamp: <2017-12-24 13:36:29 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -193,7 +193,7 @@ number input"
 
 (setq delete-by-moving-to-trash t)
 
-(global-visual-line-mode)
+;; (global-visual-line-mode)
 
 (setq-default fill-column 80)
 
@@ -560,7 +560,7 @@ for a file to visit if current buffer is not visiting a file."
   :config
   (setq writeroom-fullscreen-effect nil)
   (setq writeroom-maximize-window nil)
-  (setq writeroom-width (+ fill-column 10))
+  (setq writeroom-width (+ fill-column 15))
   (setq writeroom-major-modes
         '(text-mode prog-mode dired-mode conf-mode
                     ein:notebook-multilang-mode))
@@ -1167,6 +1167,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-modules
         '(ox-beamer
           ox-bibtex
+          ox-extra
           ox-latex
           ox-md
           org-table
@@ -1336,6 +1337,17 @@ for a file to visit if current buffer is not visiting a file."
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines))
+  (add-to-list 'org-latex-classes
+             '("IEEEtran"
+               "\\documentclass{IEEEtran}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
   ;; (defun org-latex-ref-to-cref (text backend info)
   ;;   "Use \\cref instead of \\ref in latex export."

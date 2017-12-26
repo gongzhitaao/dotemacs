@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-11-29 10:16:58 gongzhitaao>
+;;; Time-stamp: <2017-12-17 09:05:19 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -163,7 +163,14 @@ for the header string.
 (add-hook 'message-send-hook 'ispell-message)
 (add-hook 'mail-send-hook  'ispell-message)
 
+;; activation delayed message
+(gnus-delay-initialize)
+
+;; Remove date, so delayed messages (C-c C-j) don't get a date until sent
+(setq message-draft-headers '(References From))
+
 (gnus-demon-add-handler 'gnus-group-get-new-news 5 nil)
+(gnus-demon-add-handler 'gnus-delay-send-queue 30 nil)
 (gnus-demon-init)
 
 (setq gnus-list-groups-with-ticked-articles nil)
