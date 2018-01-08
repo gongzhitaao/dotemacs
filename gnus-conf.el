@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-12-17 09:05:19 gongzhitaao>
+;;; Time-stamp: <2017-12-27 16:53:27 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -119,19 +119,20 @@ for the header string.
       (expand-file-name "signature" me-emacs-data))
 
 (setq gnus-parameters
-      '(("Tiger.*"
+      `(("Tiger.*"
          (charset . utf-8)
          (posting-style
           (address "zzg0009@auburn.edu")
-          (gcc "nnimap+tiger:Tiger/sent")
+          (gcc "Tiger/sent")
           (name "Zhitao Gong")
           (signature-file "tiger")
+          (x-face-file ,(expand-file-name "x-faces/tao" me-emacs-data))
           (organization "Auburn CSSE")))
         ("Personal.*"
          (charset . utf-8)
          (posting-style
           (address "zhitaao.gong@gmail.com")
-          (gcc "nnimap+personal:Personal/sent")
+          (gcc "Personal/sent")
           (name "Zhitao Gong")
           (signature-file "personal")
           (organization "Auburn University")))
@@ -139,11 +140,14 @@ for the header string.
          (charset . utf-8)
          (posting-style
           (address "gongzhitaao@google.com")
-          (gcc "nnimap+work:Work/sent")
+          (gcc "Work/sent")
           (name "Zhitao Gong")
           (signature-file "work")
           (organization "Google Translation")))
         ))
+
+(setq gnus-x-face-directory (expand-file-name "x-faces" me-emacs-data))
+(setq gnus-treat-display-x-face 'head)
 
 (setq gnus-permanently-visible-groups
       (concat "^Tiger/\\(inbox\\|sent\\)\\'\\|"

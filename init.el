@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2017-12-24 13:36:29 gongzhitaao>
+;;; Time-stamp: <2018-01-07 19:54:01 gongzhitaao>
 
 ;; -------------------------------------------------------------------
 ;; Key binding
@@ -16,9 +16,8 @@
 ;; FN keys
 ;; --------------------------------------------------------------------
 
-;; f3 -- sr-speedbar-toggle
-(global-set-key (kbd "<f6>") #'calendar)
-(global-set-key (kbd "<f7>") #'compile)
+(global-set-key (kbd "<f5>") #'bookmark-bmenu-list)
+;; f6 -- calendar
 ;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
@@ -29,7 +28,6 @@
 
 (global-set-key [remap execute-extended-command] #'helm-M-x)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
-;; (global-set-key [remap goto-line]        #'me-goto-line-with-linum)
 (global-set-key [remap isearch-backward] #'isearch-backward-regexp)
 (global-set-key [remap isearch-forward]  #'isearch-forward-regexp)
 (global-set-key [remap list-buffers]     #'ibuffer)
@@ -44,9 +42,8 @@
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c e") #'me//sudo-edit)
 (global-set-key (kbd "C-c j") #'ace-jump-mode)
-;; C-c f -- frame operation
 ;; C-c g -- magit-status
-;; C-c m --  multiple-cursor
+;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c r c") #'me//org-ref-open-citation)
@@ -54,16 +51,14 @@
 (global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
-;; C-c w -- writeroom-mode
 (global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
 (global-set-key (kbd "C-c =") #'align-regexp)
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
 
-;; M-key
+;; M-s search
 ;; --------------------------------------------------------------------
 
-;; M-s search key
 ;; M-s a helm-do-ag
 (global-set-key (kbd "M-s g") #'helm-do-grep-ag)
 ;; M-s h highlight-xxx
@@ -99,13 +94,10 @@
   (if (region-active-p)
       args
     (let ((bol (+ (line-beginning-position) (current-indentation)))
-          (eol (1- (line-beginning-position 2))))
+          (eol (line-end-position)))
       (push-mark bol)
       (goto-char eol)
       (list bol eol (nth 2 args)))))
-
-(defun me--org-show-context-advice (&rest ignore)
-  (org-show-context 'default))
 
 (defun me-with-region-or-line (func &optional remove)
   "If not REMOVE, add advice to FUNC, i.e., when called with no
@@ -115,16 +107,6 @@ advice."
       (advice-remove func #'me--ad-with-region-or-line)
     (advice-add func :filter-args #'me--ad-with-region-or-line)))
 
-(defun me-goto-line-with-linum ()
-  "Show line numbers temporarily, while prompting for the line
-number input"
-  (interactive)
-  (unwind-protect
-      (progn
-        (nlinum-mode 1)
-        (goto-line (read-number "Goto line: ")))
-    (nlinum-mode -1)))
-
 (defun me-clear-shell ()
   "Clear shell window."
    (interactive)
@@ -133,10 +115,19 @@ number input"
      (comint-truncate-buffer)
      (setq comint-buffer-maximum-size old-max)))
 
-(me-with-region-or-line #'kill-ring-save)
+(defun me//sudo-edit (&optional arg)
+  "Edit file as root.
 
-(if (file-exists-p me-local-conf)
-    (load me-local-conf))
+With a prefix ARG prompt for a file to visit.  Will also prompt
+for a file to visit if current buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (helm-read-file-name "Find file(root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:"
+                                 buffer-file-name))))
+
+(me-with-region-or-line #'kill-ring-save)
 
 ;; -------------------------------------------------------------------
 ;; Misc
@@ -148,10 +139,11 @@ number input"
 
 (setq confirm-kill-emacs 'yes-or-no-p)
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-(setq-default standard-indent 2)
-(setq-default tab-stop-list (number-sequence 2 120 2))
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              standard-indent 2
+              tab-stop-list (number-sequence 2 120 2))
+
 (setq tab-always-indent 'complete)
 
 (delete-selection-mode)
@@ -193,12 +185,14 @@ number input"
 
 (setq delete-by-moving-to-trash t)
 
-;; (global-visual-line-mode)
-
 (setq-default fill-column 80)
 
-(setq custom-file (expand-file-name "emacs-custom.el" me-emacs))
-(load custom-file)
+(setq custom-file (expand-file-name "custom.el" me-emacs))
+
+(if (file-exists-p custom-file)
+    (load custom-file))
+(if (file-exists-p me-local-conf)
+    (load me-local-conf))
 
 (add-hook 'focus-out-hook #'garbage-collect)
 
@@ -306,10 +300,21 @@ number input"
 (require 'whitespace)
 (setq whitespace-line-column fill-column)
 (setq whitespace-style '(face trailing tabs spaces lines-tail
-                              empty indentation space-after-tab space-before-tab))
+                              empty indentation space-after-tab
+                              space-before-tab))
 
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'text-mode-hook 'whitespace-mode)
+
+;; -------------------------------------------------------------------
+;; Theme
+;; -------------------------------------------------------------------
+
+(add-to-list 'default-frame-alist '(background-color . "gray20"))
+(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
+
+(global-hl-line-mode)
+(set-face-background 'hl-line "gray10")
 
 ;; -------------------------------------------------------------------
 ;; Vendor minimal
@@ -349,7 +354,7 @@ going, at least for now.  Basically add every package path to
             (add-to-list 'load-path path)
             (setq auto (directory-files path nil "-autoloads\.el$"))
             (if auto (autoload (car auto))))))))
-;; (me//init)
+;; (me//init-package)
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
@@ -361,16 +366,6 @@ going, at least for now.  Basically add every package path to
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
-
-;; -------------------------------------------------------------------
-;; Theme first
-;; -------------------------------------------------------------------
-
-(add-to-list 'default-frame-alist '(background-color . "gray20"))
-(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
-
-(global-hl-line-mode)
-(set-face-background 'hl-line "gray10")
 
 ;; -------------------------------------------------------------------
 ;; exec-path
@@ -452,23 +447,23 @@ going, at least for now.  Basically add every package path to
 (diminish 'visual-line-mode)
 (diminish 'color-identifiers-mode)
 
-(defun me//init-read-only-mode ()
+(defun me//diminish-read-only ()
   (diminish 'read-only-mode " "))
-(add-hook 'read-only-mode-hook #'me//init-read-only-mode)
+(add-hook 'read-only-mode-hook #'me//diminish-read-only)
 
 (setq view-read-only t)
-(defun me//init-view-mode ()
+(defun me//diminish-view ()
   (diminish 'view-mode " "))
-(add-hook 'view-mode-hook #'me//init-view-mode)
+(add-hook 'view-mode-hook #'me//diminish-view)
 
-(defun me//init-flyspell-mode()
+(defun me//diminish-flyspell()
   (diminish 'flyspell-mode))
-(add-hook 'flyspell-mode-hook #'me//init-flyspell-mode)
+(add-hook 'flyspell-mode-hook #'me//diminish-flyspell)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-(defun me//init-auto-revert-mode ()
+(defun me//diminish-auto-revert ()
   (diminish 'auto-revert-mode " "))
-(add-hook 'auto-revert-mode-hook #'me//init-auto-revert-mode)
+(add-hook 'auto-revert-mode-hook #'me//diminish-auto-revert)
 
 ;; -------------------------------------------------------------------
 ;; dired+
@@ -512,22 +507,14 @@ going, at least for now.  Basically add every package path to
 ;; multiple cursors
 ;; -------------------------------------------------------------------
 
+
 (use-package multiple-cursors
-  :defines my-multiple-cursors-map
-  :bind-keymap ("C-c m" . my-multiple-cursors-map)
-  :config
-  (defvar my-multiple-cursors-map
-    (let ((map (make-sparse-keymap)))
-
-      (define-key map (kbd "C-a") #'mc/edit-beginnings-of-lines)
-      (define-key map (kbd "C-e") #'mc/edit-ends-of-lines)
-
-      (define-key map (kbd "a")   #'mc/mark-all-like-this-dwim)
-      (define-key map (kbd "l")   #'mc/edit-lines)
-      (define-key map (kbd "m")   #'mc/mark-more-like-this-extended)
-      (define-key map (kbd "r")   #'vr/mc-mark)
-
-      map)))
+  :bind (("C-c m C-a" . mc/edit-beginnings-of-lines)
+         ("C-c m C-e" . mc/edit-ends-of-lines)
+         ("C-c m a"   . mc/mark-all-like-this-dwin)
+         ("C-c m l" . mc/edit-lines)
+         ("C-c m m" . mc/mc/mark-more-like-this-extended)
+         ("C-c m r" . vr/mc-mark)))
 
 ;; -------------------------------------------------------------------
 ;; tramp
@@ -539,35 +526,21 @@ going, at least for now.  Basically add every package path to
         tramp-persistency-file-name (expand-file-name "tramp"
                                                       me-emacs-tmp)))
 
-(defun me//sudo-edit (&optional arg)
-  "Edit file as root.
-
-With a prefix ARG prompt for a file to visit.  Will also prompt
-for a file to visit if current buffer is not visiting a file."
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (helm-read-file-name "Find file(root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:"
-                                 buffer-file-name))))
-
 ;; -------------------------------------------------------------------
 ;; writeroom
 ;; -------------------------------------------------------------------
 
 (use-package writeroom-mode
-  :bind ("C-c w" . writeroom-mode)
   :config
   (setq writeroom-fullscreen-effect nil)
   (setq writeroom-maximize-window nil)
   (setq writeroom-width (+ fill-column 15))
   (setq writeroom-major-modes
         '(text-mode prog-mode dired-mode conf-mode
-                    ein:notebook-multilang-mode))
+                    ein:notebook-multilang-mode Info-mode))
   (setq writeroom-mode-line t)
-  (delete 'writeroom-set-menu-bar-lines writeroom-global-effects))
-
-(global-writeroom-mode)
+  (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
+  (global-writeroom-mode))
 
 ;; -------------------------------------------------------------------
 ;; highlight-indent-guides
@@ -579,27 +552,6 @@ for a file to visit if current buffer is not visiting a file."
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
 (add-hook 'prog-mode-hook #'whitespace-mode)
-
-;; -------------------------------------------------------------------
-;; transpose-frame
-;; -------------------------------------------------------------------
-
-(use-package transpose-frame
-  :defines my-transpose-frame-map
-  :bind-keymap ("C-c f" . my-transpose-frame-map)
-  :config
-  (defvar my-transpose-frame-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "a") #'rotate-frame-anticlockwise)
-      (define-key map (kbd "c") #'rotate-frame-clockwise)
-      (define-key map (kbd "r") #'rotate-frame)
-
-      (define-key map (kbd "t") #'transpose-frame)
-
-      (define-key map (kbd "x") #'flip-frame)
-      (define-key map (kbd "y") #'flop-frame)
-
-      map)))
 
 ;; -------------------------------------------------------------------
 ;; ace-window
@@ -731,16 +683,6 @@ for a file to visit if current buffer is not visiting a file."
   :bind ("C-=" . er/expand-region))
 
 ;; -------------------------------------------------------------------
-;; sr speedbar
-;; -------------------------------------------------------------------
-
-(use-package sr-speedbar
-  :bind ("<f3>" . sr-speedbar-toggle)
-  :config
-  (setq sr-speedbar-right-side nil)
-  (setq speedbar-use-images nil))
-
-;; -------------------------------------------------------------------
 ;; markdown-mode
 ;; -------------------------------------------------------------------
 
@@ -797,8 +739,10 @@ for a file to visit if current buffer is not visiting a file."
   (sp-with-modes
       '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
     (sp-local-tag "i" "\"<" "\">")
-    (sp-local-tag "i" "\"[" "\"]"))
+    (sp-local-tag "i" "\\|" "\\|")
+    (sp-local-tag "i" "\\[" "\\]"))
 
+  (sp-local-pair '(org-mode) "\\[" "\\]")
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`" "'")
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`"
                  nil :when '(sp-in-string-p))
@@ -841,56 +785,6 @@ for a file to visit if current buffer is not visiting a file."
 (defvar me-bib-notes
   (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
-
-(setq bibtex-autokey-year-length 4
-      bibtex-autokey-name-year-separator ""
-      bibtex-autokey-year-title-separator "-"
-      bibtex-autokey-titleword-separator "_"
-      bibtex-autokey-titlewords 1
-      bibtex-autokey-titlewords-stretch 0
-      bibtex-autokey-titleword-length nil)
-
-(setq bibtex-maintain-sorted-entries t)
-
-;; -------------------------------------------------------------------
-;; helm-bibtex
-;; -------------------------------------------------------------------
-
-(define-key helm-command-map (kbd "b") #'helm-bibtex)
-
-(use-package helm-bibtex
-  :bind ("C-c b" . helm-bibtex)
-  :config
-  (setq bibtex-completion-bibliography me-bib-files
-        bibtex-completion-library-path me-bib-pdfs
-        bibtex-completion-notes-path me-bib-notes)
-
-  (setq bibtex-completion-notes-extension ".org")
-  ;; (setq bibtex-completion-pdf-open-function
-  ;;       #'helm-open-file-with-default-tool)
-
-  (setq bibtex-completion-pdf-symbol ""
-        bibtex-completion-notes-symbol ""))
-
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-
-(setq bibtex-dialect 'biblatex)
-(setq bibtex-align-at-equal-sign t)
-(setq bibtex-text-indentation 20)
-
-(defun me//init-bibtex ()
-  (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
-  (local-set-key [remap bibtex-clean-entry]
-                 #'org-ref-clean-bibtex-entry)
-  (local-set-key (kbd "C-c C-v") #'bibtex-validate)
-  (local-set-key (kbd "C-c r p") #'org-ref-open-bibtex-pdf)
-  (setq fill-column 140))
-(add-hook 'bibtex-mode-hook #'me//init-bibtex)
-
-(require 'bibtex)
-(add-to-list 'bibtex-entry-format 'unify-case)
-(add-to-list 'bibtex-entry-format 'sort-fields)
 
 ;; use pdf-tools to open pdf in Emacs
 (pdf-tools-install)
@@ -1067,7 +961,7 @@ for a file to visit if current buffer is not visiting a file."
 
 (set-face-attribute 'fixed-pitch nil :height 130)
 
-(setq-default line-spacing 5)
+(setq-default line-spacing 4)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
@@ -1099,6 +993,49 @@ for a file to visit if current buffer is not visiting a file."
   (switch-to-prev-buffer))
 (run-at-time (me//seconds-from-now 5) nil #'me//start-gnus-bg)
 
+;; -----------------------------------------------------------------------------
+;; bibtex
+;; -----------------------------------------------------------------------------
+
+(use-package helm-bibtex
+  :bind ("C-c b" . helm-bibtex))
+
+(use-package bibtex
+  :config
+  (defun me//init-bibtex ()
+    (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
+    (local-set-key [remap bibtex-clean-entry]
+                   #'org-ref-clean-bibtex-entry)
+    (local-set-key (kbd "C-c C-v") #'bibtex-validate)
+    (local-set-key (kbd "C-c r p") #'org-ref-open-bibtex-pdf)
+    (setq fill-column 140))
+  (add-hook 'bibtex-mode-hook #'me//init-bibtex)
+
+  (setq bibtex-dialect 'biblatex)
+  (setq bibtex-align-at-equal-sign t)
+  (setq bibtex-text-indentation 20)
+
+  (add-to-list 'bibtex-entry-format 'unify-case)
+  (add-to-list 'bibtex-entry-format 'sort-fields)
+  (add-to-list 'bibtex-entry-format 'whitespace)
+  (add-to-list 'bibtex-entry-format 'last-comma)
+
+  (setq bibtex-autokey-year-length 4
+        bibtex-autokey-name-year-separator ""
+        bibtex-autokey-year-title-separator "-"
+        bibtex-autokey-titleword-separator "_"
+        bibtex-autokey-titlewords 1
+        bibtex-autokey-titlewords-stretch 0
+        bibtex-autokey-titleword-length nil)
+  (setq bibtex-maintain-sorted-entries t)
+
+  (setq bibtex-completion-bibliography me-bib-files
+        bibtex-completion-library-path me-bib-pdfs
+        bibtex-completion-notes-path me-bib-notes)
+  (setq bibtex-completion-notes-extension ".org")
+  (setq bibtex-completion-pdf-symbol ""
+        bibtex-completion-notes-symbol ""))
+
 ;; -------------------------------------------------------------------
 ;; org-ref
 ;; -------------------------------------------------------------------
@@ -1108,6 +1045,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-ref-default-bibliography me-bib-files
         org-ref-pdf-directory me-bib-pdfs
         org-ref-notes-directory me-bib-notes)
+
   :config
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
@@ -1115,6 +1053,10 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-ref-notes-function #'me//org-ref-notes-function)
   (add-hook 'org-ref-clean-bibtex-entry-hook
             #'org-ref-downcase-bibtex-entry))
+
+;; The following three interactive functions jump among PDF, bibtex entry and
+;; note.  For instance, me//org-ref-open-pdf opens the PDF file when your cursor
+;; is at a bibtex entry or note associated with this bibtex entry.
 
 (defun me//org-ref-open-pdf ()
   (interactive)
@@ -1159,29 +1101,29 @@ for a file to visit if current buffer is not visiting a file."
       (message "no pdf found for %s" key))))
 
 ;; -------------------------------------------------------------------
-;; Org
+;; Orgmode
 ;; -------------------------------------------------------------------
+
+(use-package ox-beamer)
+(use-package ox-bibtex)
+(use-package ox-extra)
+(use-package ox-gfm)
 
 (use-package org
   :init
-  (setq org-modules
-        '(ox-beamer
-          ox-bibtex
-          ox-extra
-          ox-latex
-          ox-md
-          org-table
-          org-habit
-          org-clock
-          org-bbdb
-          org-docview
-          org-gnus
-          org-info))
+  (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus
+                               org-habit org-table))
+  (setq org-export-backends '(ascii beamer html latex md))
+
   :config
+  (setq org-directory (expand-file-name "org" me-emacs-data))
+
   (defun me//init-org ()
     (turn-on-auto-fill)
     (flyspell-mode)
 
+    (defun me--org-show-context-advice (&rest ignore)
+      (org-show-context 'default))
     (advice-add 'ispell-highlight-spelling-error :before
                 'me--org-show-context-advice)
 
@@ -1197,10 +1139,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-list-description-max-indent 0)
   (setq org-support-shift-select t)
 
-  ;; (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")
-
-  (add-to-list 'org-structure-template-alist
-               '("b" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
+  (add-to-list 'org-structure-template-alist '("a" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
   (add-to-list 'org-structure-template-alist '("B" "#+BIBLIOGRAPHY: ?" ""))
   (add-to-list 'org-structure-template-alist '("C" "#+CAPTION: ?" ""))
   (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
@@ -1208,6 +1147,7 @@ for a file to visit if current buffer is not visiting a file."
   (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
   (add-to-list 'org-structure-template-alist '("N" "#+NAME: ?" ""))
   (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
+  (add-to-list 'org-structure-template-alist '("p" "#+LATEX_HEADER: ?" ""))
   (add-to-list 'org-structure-template-alist '("R" "#+ATTR_BEAMER: ?" ""))
   (add-to-list 'org-structure-template-alist '("S" "#+SETUPFILE: ?" ""))
   (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
@@ -1217,8 +1157,6 @@ for a file to visit if current buffer is not visiting a file."
   (define-key org-mode-map (kbd "C-c [") nil)
   ;; (define-key org-mode-map (kbd "C-c ]") nil)
 
-  (setq org-directory (expand-file-name "org" me-emacs-data))
-
   ;; Recursive update todo statistics
   (setq org-provide-todo-statistics      t
         org-hierarchical-todo-statistics nil)
@@ -1227,16 +1165,6 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-agenda-include-diary t)
 
   (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-
-  ;; (defun me//org-agenda-goto-narrow (&rest args)
-  ;;   (org-narrow-to-subtree))
-  ;; (advice-add 'org-agenda-goto :after #'me//org-agenda-goto-narrow)
-
-  ;; Resolve open clocks if the user if idle more than 10 minutes.
-  (setq org-clock-idle-time 10)
-
-  ;; Sublevels inherit property from parents
-  (setq org-use-property-inheritance t)
 
   ;; Fontify src blocks
   (setq org-src-fontify-natively t
@@ -1299,7 +1227,7 @@ for a file to visit if current buffer is not visiting a file."
   (setq org-clock-persist t)
   (org-clock-persistence-insinuate)
 
-  (setq org-use-fast-tag-selection nil)
+  (setq org-use-fast-tag-selection 'auto)
 
   (setq org-capture-templates
         `(("t" "New TODO" entry
@@ -1313,49 +1241,34 @@ for a file to visit if current buffer is not visiting a file."
            :empty-lines 1
            :jump-to-captured t)))
 
-  ;; (require 'ox-latex)
-
   (setq org-latex-prefer-user-labels t)
 
   (setq org-latex-pdf-process
         (quote ("PDFLATEX=%latex texi2dvi --shell-escape --pdf --clean --verbose --batch %f")))
 
   (setq org-latex-listings 'minted)
-  ;; (add-to-list 'org-latex-packages-alist '("dvipsnames" "xcolor"))
   (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=nonfrench,factor=1100,stretch=10,shrink=10" "microtype"))
+  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
 
   (add-to-list 'org-latex-classes
                '("ctexart"
-                 "\\documentclass[11pt]{ctexart}
-[NO-DEFAULT-PACKAGES]
-[NO-PACKAGES]
-[EXTRA]"
+                 "\\documentclass[11pt]{ctexart} [NO-DEFAULT-PACKAGES] [NO-PACKAGES] [EXTRA]"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines))
   (add-to-list 'org-latex-classes
-             '("IEEEtran"
-               "\\documentclass{IEEEtran}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  ;; (defun org-latex-ref-to-cref (text backend info)
-  ;;   "Use \\cref instead of \\ref in latex export."
-  ;;   (when (org-export-derived-backend-p backend 'latex)
-  ;;     (replace-regexp-in-string "\\\\ref{" "\\\\Cref{" text)))
-
-  ;; (add-to-list 'org-export-filter-final-output-functions
-  ;;              'org-latex-ref-to-cref)
+               '("IEEEtran"
+                 "\\documentclass{IEEEtran} [NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
   (setq org-latex-hyperref-template "\\hypersetup{
       pdfauthor={%a},
@@ -1377,12 +1290,8 @@ for a file to visit if current buffer is not visiting a file."
       filecolor=Mulberry,
       urlcolor=MidnightBlue}\n")
 
-  (require 'ox-beamer)
-
   (add-to-list 'org-beamer-environments-extra
                '("only" "O" "\\only%a{" "}"))
-
-  ;; (require 'ox-html)
 
   (setq org-html-doctype "html5"
         org-html-html5-fancy t
@@ -1399,9 +1308,6 @@ for a file to visit if current buffer is not visiting a file."
         '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
-
-  ;; ditaa
-  ;; (setq org-ditaa-jar-path "/usr/bin/ditaa")
 
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
 
@@ -1544,6 +1450,64 @@ for a file to visit if current buffer is not visiting a file."
 
   (add-hook 'ess-mode-hook #'me//init-ess)
   (add-hook 'inferior-ess-mode-hook #'turn-on-smartparens-mode))
+
+;; -------------------------------------------------------------------
+;; calendar in emacs
+;; -------------------------------------------------------------------
+
+(use-package org-gcal
+  :config
+  (setq org-gcal-client-id "1061693727479-1tf1621pclk4b31gunogg1psdbn3t5r1.apps.googleusercontent.com"
+        org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
+        org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/org/gcal.org"))))
+
+(defun me//calendar ()
+  (interactive)
+  (let ((buf (get-buffer "*cfw-calendar*")))
+    (if buf
+        (pop-to-buffer buf nil)
+      (cfw:open-calendar-buffer
+       :contents-sources
+       (list (cfw:org-create-source "LightBlue")
+             (cfw:cal-create-source "Orange"))
+       :view 'week))))
+
+(use-package calfw
+  :bind (("<f6>" . me//calendar)
+         :map cfw:calendar-mode-map
+         ("M-n" . cfw:navi-next-month-command)
+         ("M-p" . cfw:navi-previous-month-command)
+         ("j"   . cfw:navi-goto-date-command)
+         ("g"   . cfw:refresh-calendar-buffer)
+         ("d"   . cfw:change-view-day)
+         ("w" . cfw:change-view-week)
+         ("m" . cfw:change-view-month))
+
+  :commands cfw:open-calendar-buffer
+
+  :config
+  (use-package calfw-cal)
+  (use-package calfw-org)
+
+  (custom-set-faces
+   '(cfw:face-title ((t (:foreground "#f0dfaf" :weight bold :height 2.0 :inherit variable-pitch))))
+   '(cfw:face-header ((t (:foreground "#d0bf8f" :weight bold))))
+   '(cfw:face-sunday ((t :foreground "#cc9393" :weight bold)))
+   '(cfw:face-saturday ((t :foreground "#8cd0d3"  :weight bold)))
+   '(cfw:face-holiday ((t :background "grey10" :foreground "#8c5353" :weight bold)))
+   '(cfw:face-grid ((t :foreground "#BADEAC")))
+   '(cfw:face-default-content ((t :foreground "#ffffff")))
+   '(cfw:face-periods ((t :foreground "#ffe259")))
+   '(cfw:face-day-title ((t :background "grey10")))
+   '(cfw:face-default-day ((t :foreground "#ffffff" :weight bold :inherit cfw:face-day-title)))
+   '(cfw:face-annotation ((t :foreground "#ffffff" :inherit cfw:face-day-title)))
+   '(cfw:face-disable ((t :foreground "DarkGray" :inherit cfw:face-day-title)))
+   '(cfw:face-today-title ((t :background "#7f9f7f" :weight bold)))
+   '(cfw:face-today ((t :background: "grey10" :weight bold)))
+   '(cfw:face-select ((t :background "#2f2f2f")))
+   '(cfw:face-toolbar ((t :foreground "SteelBlue4" :background "#3F3F3F")))
+   '(cfw:face-toolbar-button-off ((t :foreground "#f5f5f5" :weight bold))) ;;top botton
+   '(cfw:face-toolbar-button-on ((t :foreground "#ffffff" :weight bold)))))
 
 (require 'server)
 (unless (server-running-p) (server-start))
