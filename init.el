@@ -1,15 +1,15 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-07 19:54:01 gongzhitaao>
-
-;; -------------------------------------------------------------------
-;; Key binding
-;; -------------------------------------------------------------------
+;;; Time-stamp: <2018-01-17 12:54:31 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
+
+;; -------------------------------------------------------------------
+;; Key binding
+;; -------------------------------------------------------------------
 
 (global-set-key (kbd "C-z") #'delete-other-windows)
 
@@ -38,10 +38,9 @@
 ;; --------------------------------------------------------------------
 
 ;; C-c b -- helm-bibtex
-(global-set-key (kbd "C-c c") #'color-identifiers-mode)
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c e") #'me//sudo-edit)
-(global-set-key (kbd "C-c j") #'ace-jump-mode)
+;; C-c j -- ace-jump-mode
 ;; C-c g -- magit-status
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -51,7 +50,6 @@
 (global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
-(global-set-key (kbd "C-c (") #'rainbow-delimiters-mode)
 (global-set-key (kbd "C-c =") #'align-regexp)
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
@@ -64,6 +62,10 @@
 ;; M-s h highlight-xxx
 (global-set-key (kbd "M-s q") #'vr/query-replace)
 ;; M-s s helm-swoop
+
+;; special key
+;; -------------------------------------------------------------------
+(global-set-key (kbd "<backtab>") #'decrease-left-margin)
 
 ;; -------------------------------------------------------------------
 ;; Variable
@@ -445,7 +447,6 @@ going, at least for now.  Basically add every package path to
 (diminish 'global-whitespace-mode)
 (diminish 'global-visual-line-mode)
 (diminish 'visual-line-mode)
-(diminish 'color-identifiers-mode)
 
 (defun me//diminish-read-only ()
   (diminish 'read-only-mode " "))
@@ -506,7 +507,6 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 ;; multiple cursors
 ;; -------------------------------------------------------------------
-
 
 (use-package multiple-cursors
   :bind (("C-c m C-a" . mc/edit-beginnings-of-lines)
@@ -570,6 +570,15 @@ going, at least for now.  Basically add every package path to
 ;; n - select the previous window
 ;; i - maximize window (select which window)
 ;; o - maximize current window
+
+;; -------------------------------------------------------------------
+;; ace-jump
+;; -------------------------------------------------------------------
+
+(use-package ace-jump
+  :bind ("C-c j" . ace-jump-mode)
+  :config
+  (setq ace-jump-mode-case-fold nil))
 
 ;; -------------------------------------------------------------------
 ;; anzu
@@ -653,6 +662,15 @@ going, at least for now.  Basically add every package path to
 ;; Drag
 ;; -------------------------------------------------------------------
 
+(use-package golden-ratio-scroll-screen
+  :config
+  (global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
+  (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up))
+
+;; -------------------------------------------------------------------
+;; Drag
+;; -------------------------------------------------------------------
+
 (use-package drag-stuff
   :bind ("C-c d" . drag-stuff-mode)
   :diminish (drag-stuff-mode . " ")
@@ -710,6 +728,8 @@ going, at least for now.  Basically add every package path to
   :config
   (smartparens-global-mode)
   (show-smartparens-global-mode)
+
+  (setq sp-highlight-pair-overlay nil)
 
   (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
   (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
@@ -788,6 +808,17 @@ going, at least for now.  Basically add every package path to
 
 ;; use pdf-tools to open pdf in Emacs
 (pdf-tools-install)
+(defun me//pdf-view-next-few-lines ()
+  (interactive)
+  (pdf-view-next-line-or-next-page 10))
+
+(defun me//pdf-view-prev-few-lines ()
+  (interactive)
+  (pdf-view-previous-line-or-previous-page 10))
+
+(bind-key (kbd "<delete>") #'pdf-view-scroll-up-or-next-page pdf-view-mode-map)
+(bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
+(bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
@@ -955,13 +986,10 @@ going, at least for now.  Basically add every package path to
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
-   (frame-parameter nil 'font)
-   charset (font-spec :family "Noto Sans Mono CJK TC"
-                      :size 20)))
+   (frame-parameter nil 'font) charset (font-spec :family "Noto Sans Mono CJK TC"
+                                                  :size 20)))
 
-(set-face-attribute 'fixed-pitch nil :height 130)
-
-(setq-default line-spacing 4)
+(set-face-attribute 'fixed-pitch nil :height 120)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
@@ -1479,7 +1507,9 @@ going, at least for now.  Basically add every package path to
          ("M-p" . cfw:navi-previous-month-command)
          ("j"   . cfw:navi-goto-date-command)
          ("g"   . cfw:refresh-calendar-buffer)
+         ("G"   . org-gcal-sync)
          ("d"   . cfw:change-view-day)
+         ("s" . org-save-all-org-buffers)
          ("w" . cfw:change-view-week)
          ("m" . cfw:change-view-month))
 
