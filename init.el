@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-17 12:54:31 gongzhitaao>
+;;; Time-stamp: <2018-01-21 15:50:55 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -378,6 +378,34 @@ going, at least for now.  Basically add every package path to
   (exec-path-from-shell-initialize))
 
 ;; -------------------------------------------------------------------
+;; god mode
+;; -------------------------------------------------------------------
+
+(use-package god-mode
+  :bind ("<escape>" . god-mode-all)
+  :config
+  (setq god-exempt-major-modes nil)
+  (setq god-exempt-predicates nil)
+
+  (defun me//god-mode-indicator ()
+    (let ((limited-colors-p (> 257 (length (defined-colors)))))
+      (cond (god-local-mode
+             (progn
+               (set-face-background 'mode-line "red4")
+               (set-face-foreground 'mode-line "gray")
+               (set-face-background 'mode-line-inactive "gray30")
+               (set-face-foreground 'mode-line-inactive "red")))
+            (t
+             (progn
+               (set-face-background 'mode-line-inactive "gray30")
+               (set-face-foreground 'mode-line-inactive "gray80")
+               (set-face-background 'mode-line "gray75")
+               (set-face-foreground 'mode-line "black"))))))
+
+  (add-hook 'god-mode-enabled-hook #'me//god-mode-indicator)
+  (add-hook 'god-mode-disabled-hook #'me//god-mode-indicator))
+
+;; -------------------------------------------------------------------
 ;; Helm
 ;; -------------------------------------------------------------------
 
@@ -649,6 +677,14 @@ going, at least for now.  Basically add every package path to
 (use-package wgrep-helm)
 
 ;; -------------------------------------------------------------------
+;; rainbow delimiter
+;; -------------------------------------------------------------------
+
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+;; -------------------------------------------------------------------
 ;; beacon
 ;; -------------------------------------------------------------------
 
@@ -730,6 +766,7 @@ going, at least for now.  Basically add every package path to
   (show-smartparens-global-mode)
 
   (setq sp-highlight-pair-overlay nil)
+  (setq sp-show-pair-from-inside t)
 
   (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
   (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
@@ -806,8 +843,12 @@ going, at least for now.  Basically add every package path to
   (expand-file-name "notes" me-bib)
   "Path to store my notes on each papers.")
 
-;; use pdf-tools to open pdf in Emacs
+;; -------------------------------------------------------------------
+;; PDF tools
+;; -------------------------------------------------------------------
+
 (pdf-tools-install)
+
 (defun me//pdf-view-next-few-lines ()
   (interactive)
   (pdf-view-next-line-or-next-page 10))
