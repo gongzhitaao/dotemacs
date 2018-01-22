@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-21 15:50:55 gongzhitaao>
+;;; Time-stamp: <2018-01-22 08:06:17 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -828,22 +828,6 @@ going, at least for now.  Basically add every package path to
   :diminish which-key-mode)
 
 ;; -------------------------------------------------------------------
-;; BibTeX
-;; -------------------------------------------------------------------
-
-(defvar me-bib (expand-file-name ".local/data/bibliography" me-home)
-  "My bibliography collection path.")
-(defvar me-bib-files
-  `(,(expand-file-name "nn.bib" me-bib))
-  "My bibliography files.")
-(defvar me-bib-pdfs
-  `(,(expand-file-name "nn-pdf" me-bib))
-  "Paths containing my PDFs of the bibliography.")
-(defvar me-bib-notes
-  (expand-file-name "notes" me-bib)
-  "Path to store my notes on each papers.")
-
-;; -------------------------------------------------------------------
 ;; PDF tools
 ;; -------------------------------------------------------------------
 
@@ -884,20 +868,6 @@ going, at least for now.  Basically add every package path to
   (setq LaTeX-indent-level 1
         LaTeX-item-indent 0))
 (add-hook 'LaTeX-mode-hook #'me//init-LaTeX)
-
-;; -------------------------------------------------------------------
-;; reftex
-;; -------------------------------------------------------------------
-
-(use-package reftex
-  :diminish reftex-mode
-  :config
-  (add-hook 'tex-mode-hook #'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t
-        reftex-ref-style-default-list '("Cleveref"
-                                        "Hyperref"
-                                        "Fancyref")
-        reftex-default-bibliography me-bib-files))
 
 ;; -------------------------------------------------------------------
 ;; BBDB
@@ -1062,9 +1032,21 @@ going, at least for now.  Basically add every package path to
   (switch-to-prev-buffer))
 (run-at-time (me//seconds-from-now 5) nil #'me//start-gnus-bg)
 
-;; -----------------------------------------------------------------------------
-;; bibtex
-;; -----------------------------------------------------------------------------
+;; -------------------------------------------------------------------
+;; BibTeX
+;; -------------------------------------------------------------------
+
+(defvar me-bib (expand-file-name ".local/data/bibliography" me-home)
+  "My bibliography collection path.")
+(defvar me-bib-files
+  `(,(expand-file-name "nn.bib" me-bib))
+  "My bibliography files.")
+(defvar me-bib-pdfs
+  `(,(expand-file-name "nn-pdf" me-bib))
+  "Paths containing my PDFs of the bibliography.")
+(defvar me-bib-notes
+  (expand-file-name "notes" me-bib)
+  "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex))
@@ -1106,6 +1088,20 @@ going, at least for now.  Basically add every package path to
         bibtex-completion-notes-symbol ""))
 
 ;; -------------------------------------------------------------------
+;; reftex
+;; -------------------------------------------------------------------
+
+(use-package reftex
+  :diminish reftex-mode
+  :config
+  (add-hook 'tex-mode-hook #'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t
+        reftex-ref-style-default-list '("Cleveref"
+                                        "Hyperref"
+                                        "Fancyref")
+        reftex-default-bibliography me-bib-files))
+
+;; -------------------------------------------------------------------
 ;; org-ref
 ;; -------------------------------------------------------------------
 
@@ -1123,9 +1119,9 @@ going, at least for now.  Basically add every package path to
   (add-hook 'org-ref-clean-bibtex-entry-hook
             #'org-ref-downcase-bibtex-entry))
 
-;; The following three interactive functions jump among PDF, bibtex entry and
-;; note.  For instance, me//org-ref-open-pdf opens the PDF file when your cursor
-;; is at a bibtex entry or note associated with this bibtex entry.
+;; The following three functions jump among PDF, bibtex entry and note.  For
+;; instance, me//org-ref-open-pdf opens the PDF file when your cursor is at the
+;; bibtex entry or the note that is associated with this bibtex entry.
 
 (defun me//org-ref-open-pdf ()
   (interactive)
