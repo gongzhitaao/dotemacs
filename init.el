@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-22 08:06:17 gongzhitaao>
+;;; Time-stamp: <2018-01-24 09:36:25 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -40,7 +40,6 @@
 ;; C-c b -- helm-bibtex
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c e") #'me//sudo-edit)
-;; C-c j -- ace-jump-mode
 ;; C-c g -- magit-status
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -54,6 +53,8 @@
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
 
+(global-set-key (kbd "C-:") #'comment-or-uncomment-region)
+
 ;; M-s search
 ;; --------------------------------------------------------------------
 
@@ -63,8 +64,38 @@
 (global-set-key (kbd "M-s q") #'vr/query-replace)
 ;; M-s s helm-swoop
 
+;; Meta
+;; --------------------------------------------------------------------
+
+;; M-a backward-sentence
+;; M-b backward-word
+;; M-c capitalize-word
+;; M-d kill-word
+;; M-e forward-sentence
+;; M-f forward-word
+;; M-h mark-paragraph
+;; M-i tab-to-tab-stop
+;; M-j ace-jump
+;; M-k kill-sentence
+;; M-l downcase-word
+;; M-m back-to-indentation
+;; M-n
+;; M-o ???
+;; M-p ace-window
+;; M-q fill-paragraph
+;; M-r move-to-window-line-top-bottom
+;; M-s search
+;; M-t transpose-word
+;; M-u upcase-word
+;; M-v scroll-down
+;; M-w kill-ring-save
+;; M-x helm-M-x execute command
+;; M-y helm-show-kill-ring
+;; M-z zap-to-char
+
 ;; special key
 ;; -------------------------------------------------------------------
+
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
 
 ;; -------------------------------------------------------------------
@@ -129,6 +160,7 @@ for a file to visit if current buffer is not visiting a file."
     (find-alternate-file (concat "/sudo:root@localhost:"
                                  buffer-file-name))))
 
+(me-with-region-or-line #'comment-or-uncomment-region)
 (me-with-region-or-line #'kill-ring-save)
 
 ;; -------------------------------------------------------------------
@@ -484,6 +516,7 @@ going, at least for now.  Basically add every package path to
 (defun me//diminish-view ()
   (diminish 'view-mode " "))
 (add-hook 'view-mode-hook #'me//diminish-view)
+(bind-key (kbd "<del>") #'View-scroll-half-page-forward view-mode-map)
 
 (defun me//diminish-flyspell()
   (diminish 'flyspell-mode))
@@ -604,7 +637,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package ace-jump
-  :bind ("C-c j" . ace-jump-mode)
+  :bind ("M-j" . ace-jump-mode)
   :config
   (setq ace-jump-mode-case-fold nil))
 
@@ -649,6 +682,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package helm-ag
+  :after (helm)
   :bind ("M-s a" . helm-do-ag))
 
 ;; -------------------------------------------------------------------
@@ -656,7 +690,10 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package helm-swoop
-  :bind ("M-s s" . helm-swoop))
+  :after (helm)
+  :bind ("M-s s" . helm-swoop)
+  :config
+  (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch))
 
 ;; -------------------------------------------------------------------
 ;; helm-flyspell
@@ -674,7 +711,8 @@ going, at least for now.  Basically add every package path to
 
 (use-package wgrep
   :config (setq wgrep-auto-save-buffer t))
-(use-package wgrep-helm)
+(use-package wgrep-helm
+  :after (helm))
 
 ;; -------------------------------------------------------------------
 ;; rainbow delimiter
