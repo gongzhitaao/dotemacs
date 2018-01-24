@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-24 09:36:25 gongzhitaao>
+;;; Time-stamp: <2018-01-24 16:08:04 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -97,6 +97,8 @@
 ;; -------------------------------------------------------------------
 
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
+;; esc view-mode
+(global-set-key (kbd "<escape>") #'view-mode)
 
 ;; -------------------------------------------------------------------
 ;; Variable
@@ -341,6 +343,30 @@ for a file to visit if current buffer is not visiting a file."
 (add-hook 'text-mode-hook 'whitespace-mode)
 
 ;; -------------------------------------------------------------------
+;; view mode
+;; -------------------------------------------------------------------
+
+(require 'view)
+
+;; (defun me//view-mode-indicator ()
+;;   (cond (view-local-mode
+;;          (progn
+;;            (set-face-background 'mode-line "red4")
+;;            (set-face-foreground 'mode-line "gray")
+;;            (set-face-background 'mode-line-inactive "gray30")
+;;            (set-face-foreground 'mode-line-inactive "red")))
+;;         (t
+;;          (progn
+;;            (set-face-background 'mode-line-inactive "gray30")
+;;            (set-face-foreground 'mode-line-inactive "gray80")
+;;            (set-face-background 'mode-line "gray75")
+;;            (set-face-foreground 'mode-line "black")))))
+
+;; (add-hook 'view-mode-hook #'me//view-mode-indicator)
+(define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
+(setq view-read-only t)
+
+;; -------------------------------------------------------------------
 ;; Theme
 ;; -------------------------------------------------------------------
 
@@ -408,34 +434,6 @@ going, at least for now.  Basically add every package path to
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
-
-;; -------------------------------------------------------------------
-;; god mode
-;; -------------------------------------------------------------------
-
-(use-package god-mode
-  :bind ("<escape>" . god-mode-all)
-  :config
-  (setq god-exempt-major-modes nil)
-  (setq god-exempt-predicates nil)
-
-  (defun me//god-mode-indicator ()
-    (let ((limited-colors-p (> 257 (length (defined-colors)))))
-      (cond (god-local-mode
-             (progn
-               (set-face-background 'mode-line "red4")
-               (set-face-foreground 'mode-line "gray")
-               (set-face-background 'mode-line-inactive "gray30")
-               (set-face-foreground 'mode-line-inactive "red")))
-            (t
-             (progn
-               (set-face-background 'mode-line-inactive "gray30")
-               (set-face-foreground 'mode-line-inactive "gray80")
-               (set-face-background 'mode-line "gray75")
-               (set-face-foreground 'mode-line "black"))))))
-
-  (add-hook 'god-mode-enabled-hook #'me//god-mode-indicator)
-  (add-hook 'god-mode-disabled-hook #'me//god-mode-indicator))
 
 ;; -------------------------------------------------------------------
 ;; Helm
@@ -508,20 +506,14 @@ going, at least for now.  Basically add every package path to
 (diminish 'global-visual-line-mode)
 (diminish 'visual-line-mode)
 
-(defun me//diminish-read-only ()
-  (diminish 'read-only-mode " "))
-(add-hook 'read-only-mode-hook #'me//diminish-read-only)
-
-(setq view-read-only t)
-(defun me//diminish-view ()
-  (diminish 'view-mode " "))
-(add-hook 'view-mode-hook #'me//diminish-view)
-(bind-key (kbd "<del>") #'View-scroll-half-page-forward view-mode-map)
-
 (defun me//diminish-flyspell()
   (diminish 'flyspell-mode))
 (add-hook 'flyspell-mode-hook #'me//diminish-flyspell)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+(defun me//diminish-view ()
+  (diminish 'view-mode))
+(add-hook 'view-mode-hook #'me//diminish-view)
 
 (defun me//diminish-auto-revert ()
   (diminish 'auto-revert-mode " "))
@@ -1242,6 +1234,7 @@ going, at least for now.  Basically add every package path to
   (setq org-list-description-max-indent 0)
   (setq org-support-shift-select t)
 
+  (add-to-list 'org-structure-template-alist '("A" "#+AUTHOR: ?" ""))
   (add-to-list 'org-structure-template-alist '("a" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
   (add-to-list 'org-structure-template-alist '("B" "#+BIBLIOGRAPHY: ?" ""))
   (add-to-list 'org-structure-template-alist '("C" "#+CAPTION: ?" ""))

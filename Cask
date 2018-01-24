@@ -55,7 +55,6 @@
 (depends-on "gitignore-mode")
 (depends-on "gnuplot")
 (depends-on "gnuplot-mode")
-(depends-on "god-mode")
 (depends-on "golden-ratio-scroll-screen")
 (depends-on "google-c-style")
 (depends-on "helm")
