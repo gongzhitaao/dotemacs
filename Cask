@@ -59,6 +59,7 @@
 (depends-on "google-c-style")
 (depends-on "helm")
 (depends-on "helm-ag")
+(depends-on "helm-bbdb")
 (depends-on "helm-bibtex")
 (depends-on "helm-company")
 (depends-on "helm-core")
