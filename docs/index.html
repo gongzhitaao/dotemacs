@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2018-01-27 Sat 17:27 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Living in Emacs</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Zhitao Gong">
+<link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+</head>
+<body>
+<div id="content">
+<header>
+<h1 class="title">Living in Emacs</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#package-manager">1. Package Manager</a></li>
+<li><a href="#separate-editing-from-viewing">2. Separate Editing from Viewing</a></li>
+<li><a href="#bibliography-manager">3. Bibliography Manager</a></li>
+<li><a href="#editing-enhancement">4. Editing Enhancement</a>
+<ul>
+<li><a href="#builtin-packages">4.1. Builtin Packages</a></li>
+<li><a href="#melpa-packages">4.2. MELPA Packages</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgecfc952" class="outline-2">
+<h2 id="package-manager"><a id="orgecfc952" name="orgecfc952"></a><span class="section-number-2">1</span> Package Manager</h2>
+<div class="outline-text-2" id="text-package-manager">
+<p>
+<b>Dependencies</b>: Cask, pallet.
+</p>
+
+<p>
+Third party libraries are managed by Cask and pallet.  Every morning I open up
+the terminal and enter the <code>emacs.d</code> directory, type <code>cask update</code> will update
+and byte-compile the packages listed in a file named <code>Cask</code>.  When you install
+packages inside Emacs, <code>pallet</code> makes sure that <code>Cask</code> is updated accordingly.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc297562" class="outline-2">
+<h2 id="separate-editing-from-viewing"><a id="orgc297562" name="orgc297562"></a><span class="section-number-2">2</span> Separate Editing from Viewing</h2>
+<div class="outline-text-2" id="text-separate-editing-from-viewing">
+<p>
+View mode is a minor mode for <b>viewing</b> text but <b>not editing</b> it.
+</p>
+
+<blockquote>
+<p>
+When View mode is enabled, commands that do not change the buffer contents are
+available as usual.  Kill commands insert text in kill buffers but do not
+delete.  Most other commands beep and tell the user that the buffer is
+read-only.
+</p>
+</blockquote>
+
+<p>
+Via <code>view-mode</code>, we can separate <i>editing mode</i> from <i>viewing mode</i> in Emacs,
+similar to editing/command mode separation in Vim.  The main purpose is to avoid
+accidental modification of the buffer when we only want to do non-modifying
+operations, e.g., view, search, navigate, copy, etc.  The major advantage over
+<code>evil-mode</code> is that <code>view-mode</code> is lightweight, builtin and non-obstructive.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org822449a" class="outline-2">
+<h2 id="bibliography-manager"><a id="org822449a" name="org822449a"></a><span class="section-number-2">3</span> Bibliography Manager</h2>
+<div class="outline-text-2" id="text-bibliography-manager">
+<p>
+<b>Dependencies</b>: helm, helm-bibtex, org-ref, PDF-tools, deft.
+</p>
+
+<p>
+My configuration provide the following functionalities:
+</p>
+<ul class="org-ul">
+<li>Viewing PDF inside Emacs.</li>
+<li>Fuzzy-search bibtex entries by authors name, title, year and keywords.</li>
+<li>Associate PDF file, note file with a bibtex entry, and jump among them.
+Specifically, <kbd>C-c r p</kbd> opens the PDF file, <kbd>C-c r n</kbd> opens
+the note file and <kbd>C-c r c</kbd> jumps to the bibtex entry.  For example,
+when you are viewing the PDF in Emacs, <kbd>C-c r n</kbd> opens the note file
+(create one if necessary), <kbd>C-c r c</kbd> jumps to the bibtex entry for
+this PDF file.</li>
+<li>Fuzzy-search notes.</li>
+<li>Quick insert citations to org files, which can be exported to TeX, PDF or HTML
+with appropriate reference list.</li>
+<li>Cleanup/format bibtex entries, auto construct keys for bibtex entries.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org70941c6" class="outline-2">
+<h2 id="editing-enhancement"><a id="org70941c6" name="org70941c6"></a><span class="section-number-2">4</span> Editing Enhancement</h2>
+<div class="outline-text-2" id="text-editing-enhancement">
+</div>
+
+<div id="outline-container-org8464b5f" class="outline-3">
+<h3 id="builtin-packages"><a id="org8464b5f" name="org8464b5f"></a><span class="section-number-3">4.1</span> Builtin Packages</h3>
+<div class="outline-text-3" id="text-builtin-packages">
+<dl class="org-dl">
+<dt><code>whitespace</code></dt><dd>automatically cleans up trailing spaces, empty lines at the
+beginning of files and etc.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org29d4fc2" class="outline-3">
+<h3 id="melpa-packages"><a id="org29d4fc2" name="org29d4fc2"></a><span class="section-number-3">4.2</span> MELPA Packages</h3>
+<div class="outline-text-3" id="text-melpa-packages">
+<dl class="org-dl">
+<dt><code>writeroom-mode</code></dt><dd>the buffer content is shown in the center, especially
+useful when you have a wide screen.  This is not compatible with
+<code>linum-mode</code>, which I never use.</dd>
+<dt><code>volatile-highlights</code></dt><dd>highlights the change region.  For example, when you
+redo or paste some texts to current buffer, the newly inserted texts are
+highlighted.</dd>
+<dt><code>multiple-cursors</code></dt><dd>edit multiple lines all at ones.</dd>
+<dt><code>rainbow-delimiters</code></dt><dd>change parenthesis colors according to the nested
+depth.  Especially useful when debugging source codes with unbalanced
+parenthesis.</dd>
+<dt><code>smartparens</code></dt><dd>close the parenthesis or any custom pairs in a smart way.</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<a class="author"
+           href="http://gongzhitaao.org">Zhitao Gong</a> / <span
+           class="date">2018-01-27 Sat 17:27</span><span class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="https://orgmode.org">Org</a> mode 9.1.6)</span>
+</div>
+</body>
+</html>

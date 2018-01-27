@@ -1,6 +1,8 @@
 #+TITLE: Living in Emacs
+#+OPTIONS: num:3 H:4 ^:{} pri:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
-#+MACRO: kbd <kbd>$1</kbd>
+#+MACRO: kbd @@html:<kbd>$1</kbd>@@
 
 * Package Manager
 :PROPERTIES:
