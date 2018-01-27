@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-27 13:20:52 gongzhitaao>
+;;; Time-stamp: <2018-01-27 15:41:41 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -372,9 +372,6 @@ for a file to visit if current buffer is not visiting a file."
 (define-key view-mode-map (kbd "z") #'delete-other-windows)
 
 (setq view-read-only t)
-
-(add-hook 'find-file-hook #'view-mode-enter)
-(add-hook 'after-save-hook #'view-mode-enter)
 
 ;; -------------------------------------------------------------------
 ;; Theme
