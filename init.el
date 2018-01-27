@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-27 15:41:41 gongzhitaao>
+;;; Time-stamp: <2018-01-27 17:16:08 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -97,7 +97,6 @@
 ;; -------------------------------------------------------------------
 
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
-;; esc view-mode
 (global-set-key (kbd "<escape>") #'view-mode)
 
 ;; -------------------------------------------------------------------
