@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-25 09:32:14 gongzhitaao>
+;;; Time-stamp: <2018-01-27 13:20:52 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -349,7 +349,7 @@ for a file to visit if current buffer is not visiting a file."
 (require 'view)
 
 ;; (defun me//view-mode-indicator ()
-;;   (cond (view-local-mode
+;;   (cond (view-mode
 ;;          (progn
 ;;            (set-face-background 'mode-line "red4")
 ;;            (set-face-foreground 'mode-line "gray")
@@ -364,7 +364,17 @@ for a file to visit if current buffer is not visiting a file."
 
 ;; (add-hook 'view-mode-hook #'me//view-mode-indicator)
 (define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
+(define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
+(define-key view-mode-map (kbd "b") #'helm-mini)
+(define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
+(define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
+(define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
+(define-key view-mode-map (kbd "z") #'delete-other-windows)
+
 (setq view-read-only t)
+
+(add-hook 'find-file-hook #'view-mode-enter)
+(add-hook 'after-save-hook #'view-mode-enter)
 
 ;; -------------------------------------------------------------------
 ;; Theme
@@ -630,7 +640,7 @@ going, at least for now.  Basically add every package path to
 
 (use-package ace-jump
   :bind ("M-j" . ace-jump-mode)
-  :config
+  :init
   (setq ace-jump-mode-case-fold nil))
 
 ;; -------------------------------------------------------------------

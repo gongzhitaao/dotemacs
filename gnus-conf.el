@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2017-12-27 16:53:27 gongzhitaao>
+;;; Time-stamp: <2018-01-27 13:19:48 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -206,8 +206,8 @@ for the header string.
 (setq message-citation-line-function #'message-insert-formatted-citation-line)
 (setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
 
-(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-(add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
+;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
 (add-hook 'message-mode-hook 'turn-on-orgstruct)
 (add-hook 'message-mode-hook 'turn-on-orgstruct++)
 (add-hook 'message-mode-hook 'turn-on-orgtbl)
@@ -218,6 +218,8 @@ for the header string.
 (add-hook 'gnus-group-mode-hook
           (lambda ()
             (hl-line-mode 1)))
+
+(setq gnus-always-read-dribble-file t)
 
 (when (display-graphic-p)
 
