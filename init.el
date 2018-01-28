@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-27 17:16:08 gongzhitaao>
+;;; Time-stamp: <2018-01-27 20:01:15 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -877,9 +877,30 @@ going, at least for now.  Basically add every package path to
   (interactive)
   (pdf-view-previous-line-or-previous-page 10))
 
+;; copied directly from view-window-size
+(defun me//window-size ()
+  ;; Return the height of the current window, excluding the mode line.  Using
+  ;; `window-line-height' accounts for variable-height fonts.
+  (let ((h (window-line-height -1)))
+    (if h
+        (1+ (nth 1 h))
+      ;; This should not happen, but if `window-line-height' returns
+      ;; nil, fall back on `window-height'.
+      (1- (window-height)))))
+
+(defun me//pdf-view-scroll-half-forward ()
+  (interactive)
+  (pdf-view-next-line-or-next-page (/ (me//window-size) 2)))
+
+(defun me//pdf-view-scroll-half-backward ()
+  (interactive)
+  (pdf-view-previous-line-or-previous-page (/ (me//window-size) 2)))
+
 (bind-key (kbd "<delete>") #'pdf-view-scroll-up-or-next-page pdf-view-mode-map)
 (bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
+(bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "u") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
