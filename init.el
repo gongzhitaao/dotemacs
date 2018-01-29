@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-28 18:29:45 gongzhitaao>
+;;; Time-stamp: <2018-01-29 07:48:06 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1371,9 +1371,9 @@ going, at least for now.  Basically add every package path to
            (file "capture/mail.org")
            :empty-lines 1
            :jump-to-captured t)
-          ("w" "New weekly summary" entry
+          ("w" "New weekly summary" plain
            (file+olp+datetree "time-machine.org")
-           nil
+           "%?"
            :empty-lines 1
            :jump-to-captured t
            :tree-type week)))
