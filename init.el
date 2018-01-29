@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-27 20:01:15 gongzhitaao>
+;;; Time-stamp: <2018-01-28 18:29:45 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -901,6 +901,8 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
 (bind-key (kbd "u") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
+(bind-key (kbd "k") nil pdf-view-mode-map nil)
+(bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
@@ -1357,6 +1359,7 @@ going, at least for now.  Basically add every package path to
 
   (setq org-use-fast-tag-selection 'auto)
 
+
   (setq org-capture-templates
         `(("t" "New TODO" entry
            (file "todo.org.gz")
@@ -1367,7 +1370,13 @@ going, at least for now.  Basically add every package path to
            (file "todo.org.gz")
            (file "capture/mail.org")
            :empty-lines 1
-           :jump-to-captured t)))
+           :jump-to-captured t)
+          ("w" "New weekly summary" entry
+           (file+olp+datetree "time-machine.org")
+           nil
+           :empty-lines 1
+           :jump-to-captured t
+           :tree-type week)))
 
   (setq org-latex-prefer-user-labels t)
 
