@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-29 10:37:42 gongzhitaao>
+;;; Time-stamp: <2018-01-29 12:50:07 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -942,11 +942,6 @@ going, at least for now.  Basically add every package path to
         bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
 
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
-
-(use-package helm-bbdb
-  :after (bbdb)
-  :config
-  (bind-key "b" #'helm-bbdb bbdb-mode-map))
 
 ;; -------------------------------------------------------------------
 ;; ibuffer
