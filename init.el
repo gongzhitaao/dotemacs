@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-29 07:48:06 gongzhitaao>
+;;; Time-stamp: <2018-01-29 10:37:42 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1245,7 +1245,7 @@ going, at least for now.  Basically add every package path to
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config
-  (setq org-directory (expand-file-name "org" me-emacs-data))
+  (setq org-directory me-emacs-data)
 
   (defun me//init-org ()
     (turn-on-auto-fill)
@@ -1359,18 +1359,33 @@ going, at least for now.  Basically add every package path to
 
   (setq org-use-fast-tag-selection 'auto)
 
-
   (setq org-capture-templates
-        `(("t" "New TODO" entry
-           (file "todo.org.gz")
-           (file "capture/todo.org")
-           :empty-lines 1
-           :jump-to-captured t)
-          ("m" "Save mail link" entry
+        `(("m" "Save mail link" entry
            (file "todo.org.gz")
            (file "capture/mail.org")
            :empty-lines 1
            :jump-to-captured t)
+
+          ("r" "Insert related work reference")
+          ("ra" "Adversarial attack/defense" checkitem
+           (file+headline "notes/bibliography/related/adversarial.org" "Recent Work"))
+          ("rc" "Compression and Quantization" checkitem
+           (file+headline "notes/bibliography/related/compression.org" "Recent Work"))
+          ("re" "Evolution" checkitem
+           (file+headline "notes/bibliography/related/evolution.org" "Recent Work"))
+          ("rn" "Natural Language Processing" checkitem
+           (file+headline "notes/bibliography/related/nlp.org" "Recent Work"))
+          ("rr" "Randomness" checkitem
+           (file+headline "notes/bibliography/related/random.org" "Recent Work"))
+          ("ru" "Miscellaneous" checkitem
+           (file+headline "notes/bibliography/related/misc.org" "Recent Work"))
+
+          ("t" "New TODO" entry
+           (file "todo.org.gz")
+           (file "capture/todo.org")
+           :empty-lines 1
+           :jump-to-captured t)
+
           ("w" "New weekly summary" plain
            (file+olp+datetree "time-machine.org")
            "%?"
