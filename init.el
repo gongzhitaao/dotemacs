@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-29 12:50:07 gongzhitaao>
+;;; Time-stamp: <2018-01-30 14:41:40 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -347,21 +347,13 @@ for a file to visit if current buffer is not visiting a file."
 
 (require 'view)
 
-;; (defun me//view-mode-indicator ()
-;;   (cond (view-mode
-;;          (progn
-;;            (set-face-background 'mode-line "red4")
-;;            (set-face-foreground 'mode-line "gray")
-;;            (set-face-background 'mode-line-inactive "gray30")
-;;            (set-face-foreground 'mode-line-inactive "red")))
-;;         (t
-;;          (progn
-;;            (set-face-background 'mode-line-inactive "gray30")
-;;            (set-face-foreground 'mode-line-inactive "gray80")
-;;            (set-face-background 'mode-line "gray75")
-;;            (set-face-foreground 'mode-line "black")))))
+(defun me//view-mode-indicator ()
+  (cond (buffer-read-only
+         (set-cursor-color "red"))
+        (t
+         (set-cursor-color "white"))))
 
-;; (add-hook 'view-mode-hook #'me//view-mode-indicator)
+(add-hook 'post-command-hook #'me//view-mode-indicator)
 (define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
 (define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
 (define-key view-mode-map (kbd "b") #'helm-mini)
@@ -953,7 +945,6 @@ going, at least for now.  Basically add every package path to
         `(("default"
            ("Planner"
             (or (mode . org-agenda-mode)
-                (filename . ,(expand-file-name "org" me-emacs-data))
                 (name . "\\.bbdb")
                 (mode . bbdb-mode)
                 (name . "^\\*Calendar\\*$")
@@ -1606,7 +1597,7 @@ going, at least for now.  Basically add every package path to
   :config
   (setq org-gcal-client-id "1061693727479-1tf1621pclk4b31gunogg1psdbn3t5r1.apps.googleusercontent.com"
         org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
-        org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/org/gcal.org"))))
+        org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/gcal.org"))))
 
 (defun me//calendar ()
   (interactive)
