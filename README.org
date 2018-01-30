@@ -36,6 +36,11 @@ accidental modification of the buffer when we only want to do non-modifying
 operations, e.g., view, search, navigate, copy, etc.  The major advantage over
 =evil-mode= is that =view-mode= is lightweight, builtin and non-obstructive.
 
+To give a visual hint that current buffer is in view mode, I change the cursor
+to red whenever the current buffer is in view mode.  The trick is that view mode
+is read-only.  So we can add a hook to =post-command-hook= to change cursor
+color by testing the variable =buffer-read-only=.
+
 * Bibliography Manager
 :PROPERTIES:
 :CUSTOM_ID: bibliography-manager
