@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-01-30 14:41:40 gongzhitaao>
+;;; Time-stamp: <2018-02-01 10:33:04 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -891,6 +891,7 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<delete>") #'pdf-view-scroll-up-or-next-page pdf-view-mode-map)
 (bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
+(bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
 (bind-key (kbd "u") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "k") nil pdf-view-mode-map nil)
