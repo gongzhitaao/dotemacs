@@ -1,11 +1,54 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2018-01-27 13:19:48 gongzhitaao>
+;;; Time-stamp: <2018-02-01 16:09:31 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
 
 (setq user-full-name "Zhitao Gong")
 (setq user-mail-address "zhitaao.gong@gmail.com")
+(setq message-signature-directory
+      (expand-file-name "signature" me-emacs-data))
+(setq message-signature-file "personal")
+
+(setq mail-user-agent 'gnus-user-agent)
+(setq read-mail-command 'gnus)
+(setq message-confirm-send t)
+
+(let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
+                        "\\(gongzhitaao@google\.com\\)\\|"
+                        "\\(\\(zzg0009\\|gongzhitaao\\|zhitaao\\|gong\\)@\\(tigermail\.\\)?auburn\.edu\\)\\|"
+                        "\\(me@gongzhitaao\.org\\)\\|"
+                        "\\(gongzhitaao@yahoo\.com\\)")))
+  (setq message-dont-reply-to-names my-mails))
+
+(add-hook 'message-send-hook 'ispell-message)
+(add-hook 'mail-send-hook  'ispell-message)
+
+(setq send-mail-function 'message-send-mail-with-sendmail)
+(setq sendmail-program "msmtp")
+
+(setq message-forward-ignored-headers ""
+      message-make-forward-subject-function 'message-forward-subject-fwd)
+
+(add-to-list 'mm-discouraged-alternatives "text/html")
+(add-to-list 'mm-discouraged-alternatives "image/.*")
+
+(setq mm-inline-large-images nil)
+(auto-image-file-mode t)
+(setq mm-inline-text-html-with-images nil)
+
+(setq message-forward-as-mime nil)
+(setq message-forward-before-signature nil)
+
+(setq message-citation-line-function #'message-insert-formatted-citation-line)
+(setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
+
+(add-hook 'message-mode-hook 'turn-on-orgstruct)
+(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+(add-hook 'message-mode-hook 'turn-on-orgtbl)
+
+;; Remove date, so delayed messages (C-c C-j) don't get a date until sent
+(setq message-draft-headers '(References From))
 
 (setq gnus-select-method
       '(nnimap "LocalMail"
@@ -113,11 +156,6 @@ for the header string.
         ("Personal" "nnimap+personal:Personal/sent")
         (".*" ,(format-time-string "sent/%Y-%m"))))
 
-(setq message-confirm-send t)
-
-(setq message-signature-directory
-      (expand-file-name "signature" me-emacs-data))
-
 (setq gnus-parameters
       `(("Tiger.*"
          (charset . utf-8)
@@ -155,23 +193,11 @@ for the header string.
               "^Personal/\\(inbox\\|sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
 
-(let ((my-mails (concat "\\(zhitaao\.gong@gmail\.com\\)\\|"
-                        "\\(gongzhitaao@google\.com\\)\\|"
-                        "\\(\\(zzg0009\\|gongzhitaao\\|zhitaao\\|gong\\)@\\(tigermail\.\\)?auburn\.edu\\)\\|"
-                        "\\(me@gongzhitaao\.org\\)\\|"
-                        "\\(gongzhitaao@yahoo\.com\\)")))
-  (setq message-dont-reply-to-names my-mails))
 (setq gnus-ignored-from-addresses (concat "\\(Zhitao\\( Gong\\)?\\)\\|"
                                           "\\(gongzhitaao\\)"))
 
-(add-hook 'message-send-hook 'ispell-message)
-(add-hook 'mail-send-hook  'ispell-message)
-
 ;; activation delayed message
 (gnus-delay-initialize)
-
-;; Remove date, so delayed messages (C-c C-j) don't get a date until sent
-(setq message-draft-headers '(References From))
 
 (gnus-demon-add-handler 'gnus-group-get-new-news 5 nil)
 (gnus-demon-add-handler 'gnus-delay-send-queue 30 nil)
@@ -181,36 +207,8 @@ for the header string.
 
 (add-hook 'gnus-after-getting-new-news-hook 'gnus-notifications)
 
-(setq send-mail-function 'message-send-mail-with-sendmail)
-(setq sendmail-program "msmtp")
-
 (add-hook 'gnus-article-prepare-hook 'gnus-article-date-local)
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
-
-(setq message-forward-ignored-headers ""
-      message-make-forward-subject-function 'message-forward-subject-fwd)
-
-(add-to-list 'mm-discouraged-alternatives "text/html")
-(add-to-list 'mm-discouraged-alternatives "image/.*")
-
-(setq mail-user-agent 'gnus-user-agent)
-(setq read-mail-command 'gnus)
-
-(setq mm-inline-large-images nil)
-(auto-image-file-mode t)
-(setq mm-inline-text-html-with-images nil)
-
-(setq message-forward-as-mime nil)
-(setq message-forward-before-signature nil)
-
-(setq message-citation-line-function #'message-insert-formatted-citation-line)
-(setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
-
-;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
-(add-hook 'message-mode-hook 'turn-on-orgstruct)
-(add-hook 'message-mode-hook 'turn-on-orgstruct++)
-(add-hook 'message-mode-hook 'turn-on-orgtbl)
 
 (add-hook 'gnus-summary-mode-hook
           (lambda ()
@@ -222,7 +220,6 @@ for the header string.
 (setq gnus-always-read-dribble-file t)
 
 (when (display-graphic-p)
-
   (setq display-time-mail-function
         (lambda () ;; Gnus launched?
           (catch 'break

@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-01 10:33:04 gongzhitaao>
+;;; Time-stamp: <2018-02-01 16:39:45 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -21,7 +21,7 @@
 ;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
-;; f12 -- gnus-other-frame
+(global-set-key (kbd "<f12>") #'gnus-other-frame)
 
 ;; Remaping
 ;; --------------------------------------------------------------------
@@ -33,6 +33,7 @@
 (global-set-key [remap list-buffers]     #'ibuffer)
 (global-set-key [remap switch-to-buffer] #'helm-mini)
 (global-set-key [remap yank-pop]         #'helm-show-kill-ring)
+(global-set-key (kbd "C-x m")            #'compose-mail-other-frame)
 
 ;; C-c key
 ;; --------------------------------------------------------------------
@@ -636,8 +637,22 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package anzu
-  :config (global-anzu-mode +1)
-  :diminish anzu-mode)
+  :diminish anzu-mode
+  :config
+  (global-anzu-mode +1)
+  (setq anzu-search-threshold 1000)
+  (set-face-attribute 'anzu-mode-line nil
+                      :foreground "green4" :weight 'bold))
+
+;; -------------------------------------------------------------------
+;; fci
+;; -------------------------------------------------------------------
+
+(use-package fill-column-indicator
+  :config
+  (setq fci-rule-color "gray50")
+  (add-hook 'prog-mode-hook #'fci-mode)
+  (add-hook 'text-mode-hook #'fci-mode))
 
 ;; -------------------------------------------------------------------
 ;; persistent scratch
@@ -1062,11 +1077,10 @@ going, at least for now.  Basically add every package path to
   (format-time-string "key-%FT%H%M%S.log") me-keylog))
 
 ;; -------------------------------------------------------------------
-;; Gnus
+;; mail
 ;; -------------------------------------------------------------------
 
 (require 'gnus)
-(global-set-key (kbd "<f12>") #'gnus-other-frame)
 (setq gnus-init-file (expand-file-name "gnus-conf.el" me-emacs))
 
 (defun me//seconds-from-now (interval &optional wait)
