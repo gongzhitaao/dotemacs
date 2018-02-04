@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-01 16:39:45 gongzhitaao>
+;;; Time-stamp: <2018-02-03 14:18:20 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1603,6 +1603,12 @@ going, at least for now.  Basically add every package path to
 
   (add-hook 'ess-mode-hook #'me//init-ess)
   (add-hook 'inferior-ess-mode-hook #'turn-on-smartparens-mode))
+
+;; -------------------------------------------------------------------
+;; json
+;; -------------------------------------------------------------------
+
+(setq json-reformat:indent-width 2)
 
 ;; -------------------------------------------------------------------
 ;; calendar in emacs
