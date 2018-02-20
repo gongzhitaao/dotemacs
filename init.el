@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-20 10:41:27 gongzhitaao>
+;;; Time-stamp: <2018-02-20 12:57:43 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -590,7 +590,7 @@ going, at least for now.  Basically add every package path to
   (setq writeroom-width (+ fill-column 15))
   (setq writeroom-major-modes
         '(text-mode prog-mode dired-mode conf-mode
-                    ein:notebook-multilang-mode Info-mode))
+                    ein:notebook-multilang-mode Info-mode calendar-mode))
   (setq writeroom-mode-line t)
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
