@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-20 08:01:57 gongzhitaao>
+;;; Time-stamp: <2018-02-20 10:41:27 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1191,6 +1191,9 @@ going, at least for now.  Basically add every package path to
   (setq org-ref-default-bibliography me-bib-files
         org-ref-pdf-directory me-bib-pdfs
         org-ref-notes-directory me-bib-notes)
+
+  (setq org-ref-ref-color "pale violet red")
+  (setq org-ref-cite-color "dark sea green")
 
   :config
   (defun me//org-ref-notes-function (thekey)
