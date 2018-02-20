@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-03 14:18:20 gongzhitaao>
+;;; Time-stamp: <2018-02-20 08:01:57 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -17,7 +17,7 @@
 ;; --------------------------------------------------------------------
 
 (global-set-key (kbd "<f5>") #'bookmark-bmenu-list)
-;; f6 -- calendar
+(global-set-key (kbd "<f6>") #'calendar)
 ;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
@@ -358,6 +358,7 @@ for a file to visit if current buffer is not visiting a file."
 (define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
 (define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
 (define-key view-mode-map (kbd "b") #'helm-mini)
+(define-key view-mode-map (kbd "f") #'helm-find-files)
 (define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
 (define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
 (define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
@@ -1040,6 +1041,21 @@ going, at least for now.  Basically add every package path to
 (setq calendar-view-diary-initially-flag t)
 (setq calendar-latitude 32.6)
 (setq calendar-longitude -85.5)
+(setq calendar-week-start-day 1)
+
+(copy-face font-lock-warning-face 'calendar-iso-week-face)
+(setq calendar-intermonth-text
+      '(propertize
+        (format "%2d"
+                (car
+                 (calendar-iso-from-absolute
+                  (calendar-absolute-from-gregorian (list month day year)))))
+        'font-lock-face 'calendar-iso-week-face))
+
+; Title for week number
+(copy-face font-lock-keyword-face 'calendar-iso-week-header-face)
+(setq calendar-intermonth-header
+      (propertize "Wk" 'font-lock-face 'calendar-iso-week-header-face))
 
 ;; -------------------------------------------------------------------
 ;; Appt
@@ -1374,6 +1390,8 @@ going, at least for now.  Basically add every package path to
            (file+headline "notes/bibliography/related/compression.org" "Recent Work"))
           ("re" "Evolution" checkitem
            (file+headline "notes/bibliography/related/evolution.org" "Recent Work"))
+          ("rl" "Reinforcement Learning" checkitem
+           (file+headline "notes/bibliography/related/rl.org" "Recent Work"))
           ("rn" "Natural Language Processing" checkitem
            (file+headline "notes/bibliography/related/nlp.org" "Recent Work"))
           ("rr" "Randomness" checkitem
@@ -1445,6 +1463,8 @@ going, at least for now.  Basically add every package path to
 
   (add-to-list 'org-beamer-environments-extra
                '("only" "O" "\\only%a{" "}"))
+  (add-to-list 'org-beamer-environments-extra
+               '("action" "A" "\\action%a{" "}"))
 
   (setq org-html-doctype "html5"
         org-html-html5-fancy t
@@ -1530,6 +1550,7 @@ going, at least for now.  Basically add every package path to
   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
   (local-set-key (kbd "M-<right>") #'increase-left-margin))
 (add-hook 'sh-mode-hook #'me//init-sh)
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 ;; -------------------------------------------------------------------
 ;; Lua
@@ -1620,55 +1641,55 @@ going, at least for now.  Basically add every package path to
         org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
         org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/gcal.org"))))
 
-(defun me//calendar ()
-  (interactive)
-  (let ((buf (get-buffer "*cfw-calendar*")))
-    (if buf
-        (pop-to-buffer buf nil)
-      (cfw:open-calendar-buffer
-       :contents-sources
-       (list (cfw:org-create-source "LightBlue")
-             (cfw:cal-create-source "Orange"))
-       :view 'week))))
+;; (defun me//calendar ()
+;;   (interactive)
+;;   (let ((buf (get-buffer "*cfw-calendar*")))
+;;     (if buf
+;;         (pop-to-buffer buf nil)
+;;       (cfw:open-calendar-buffer
+;;        :contents-sources
+;;        (list (cfw:org-create-source "LightBlue")
+;;              (cfw:cal-create-source "Orange"))
+;;        :view 'week))))
 
-(use-package calfw
-  :bind (("<f6>" . me//calendar)
-         :map cfw:calendar-mode-map
-         ("M-n" . cfw:navi-next-month-command)
-         ("M-p" . cfw:navi-previous-month-command)
-         ("j"   . cfw:navi-goto-date-command)
-         ("g"   . cfw:refresh-calendar-buffer)
-         ("G"   . org-gcal-sync)
-         ("d"   . cfw:change-view-day)
-         ("s" . org-save-all-org-buffers)
-         ("w" . cfw:change-view-week)
-         ("m" . cfw:change-view-month))
+;; (use-package calfw
+;;   :bind (("<f6>" . me//calendar)
+;;          :map cfw:calendar-mode-map
+;;          ("M-n" . cfw:navi-next-month-command)
+;;          ("M-p" . cfw:navi-previous-month-command)
+;;          ("j"   . cfw:navi-goto-date-command)
+;;          ("g"   . cfw:refresh-calendar-buffer)
+;;          ("G"   . org-gcal-sync)
+;;          ("d"   . cfw:change-view-day)
+;;          ("s" . org-save-all-org-buffers)
+;;          ("w" . cfw:change-view-week)
+;;          ("m" . cfw:change-view-month))
 
-  :commands cfw:open-calendar-buffer
+;;   :commands cfw:open-calendar-buffer
 
-  :config
-  (use-package calfw-cal)
-  (use-package calfw-org)
+;;   :config
+;;   (use-package calfw-cal)
+;;   (use-package calfw-org)
 
-  (custom-set-faces
-   '(cfw:face-title ((t (:foreground "#f0dfaf" :weight bold :height 2.0 :inherit variable-pitch))))
-   '(cfw:face-header ((t (:foreground "#d0bf8f" :weight bold))))
-   '(cfw:face-sunday ((t :foreground "#cc9393" :weight bold)))
-   '(cfw:face-saturday ((t :foreground "#8cd0d3"  :weight bold)))
-   '(cfw:face-holiday ((t :background "grey10" :foreground "#8c5353" :weight bold)))
-   '(cfw:face-grid ((t :foreground "#BADEAC")))
-   '(cfw:face-default-content ((t :foreground "#ffffff")))
-   '(cfw:face-periods ((t :foreground "#ffe259")))
-   '(cfw:face-day-title ((t :background "grey10")))
-   '(cfw:face-default-day ((t :foreground "#ffffff" :weight bold :inherit cfw:face-day-title)))
-   '(cfw:face-annotation ((t :foreground "#ffffff" :inherit cfw:face-day-title)))
-   '(cfw:face-disable ((t :foreground "DarkGray" :inherit cfw:face-day-title)))
-   '(cfw:face-today-title ((t :background "#7f9f7f" :weight bold)))
-   '(cfw:face-today ((t :background: "grey10" :weight bold)))
-   '(cfw:face-select ((t :background "#2f2f2f")))
-   '(cfw:face-toolbar ((t :foreground "SteelBlue4" :background "#3F3F3F")))
-   '(cfw:face-toolbar-button-off ((t :foreground "#f5f5f5" :weight bold))) ;;top botton
-   '(cfw:face-toolbar-button-on ((t :foreground "#ffffff" :weight bold)))))
+;;   (custom-set-faces
+;;    '(cfw:face-title ((t (:foreground "#f0dfaf" :weight bold :height 2.0 :inherit variable-pitch))))
+;;    '(cfw:face-header ((t (:foreground "#d0bf8f" :weight bold))))
+;;    '(cfw:face-sunday ((t :foreground "#cc9393" :weight bold)))
+;;    '(cfw:face-saturday ((t :foreground "#8cd0d3"  :weight bold)))
+;;    '(cfw:face-holiday ((t :background "grey10" :foreground "#8c5353" :weight bold)))
+;;    '(cfw:face-grid ((t :foreground "#BADEAC")))
+;;    '(cfw:face-default-content ((t :foreground "#ffffff")))
+;;    '(cfw:face-periods ((t :foreground "#ffe259")))
+;;    '(cfw:face-day-title ((t :background "grey10")))
+;;    '(cfw:face-default-day ((t :foreground "#ffffff" :weight bold :inherit cfw:face-day-title)))
+;;    '(cfw:face-annotation ((t :foreground "#ffffff" :inherit cfw:face-day-title)))
+;;    '(cfw:face-disable ((t :foreground "DarkGray" :inherit cfw:face-day-title)))
+;;    '(cfw:face-today-title ((t :background "#7f9f7f" :weight bold)))
+;;    '(cfw:face-today ((t :background: "grey10" :weight bold)))
+;;    '(cfw:face-select ((t :background "#2f2f2f")))
+;;    '(cfw:face-toolbar ((t :foreground "SteelBlue4" :background "#3F3F3F")))
+;;    '(cfw:face-toolbar-button-off ((t :foreground "#f5f5f5" :weight bold))) ;;top botton
+;;    '(cfw:face-toolbar-button-on ((t :foreground "#ffffff" :weight bold)))))
 
 (require 'server)
 (unless (server-running-p) (server-start))
