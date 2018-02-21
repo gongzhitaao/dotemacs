@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-20 12:57:43 gongzhitaao>
+;;; Time-stamp: <2018-02-21 15:14:12 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -357,10 +357,13 @@ for a file to visit if current buffer is not visiting a file."
 (add-hook 'post-command-hook #'me//view-mode-indicator)
 (define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
 (define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
+(define-key view-mode-map (kbd "a") #'move-beginning-of-line)
 (define-key view-mode-map (kbd "b") #'helm-mini)
+(define-key view-mode-map (kbd "e") #'move-end-of-line)
 (define-key view-mode-map (kbd "f") #'helm-find-files)
 (define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
 (define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
+(define-key view-mode-map (kbd "o") #'other-window)
 (define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
 (define-key view-mode-map (kbd "z") #'delete-other-windows)
 
@@ -909,6 +912,7 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
 (bind-key (kbd "u") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "k") nil pdf-view-mode-map nil)
 (bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
