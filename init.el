@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-21 15:14:12 gongzhitaao>
+;;; Time-stamp: <2018-02-27 13:01:50 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -54,7 +54,7 @@
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
 
-(global-set-key (kbd "C-:") #'comment-or-uncomment-region)
+(global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
 ;; M-s search
 ;; --------------------------------------------------------------------
@@ -364,6 +364,7 @@ for a file to visit if current buffer is not visiting a file."
 (define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
 (define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
 (define-key view-mode-map (kbd "o") #'other-window)
+(define-key view-mode-map (kbd "s") #'helm-swoop)
 (define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
 (define-key view-mode-map (kbd "z") #'delete-other-windows)
 
@@ -372,6 +373,8 @@ for a file to visit if current buffer is not visiting a file."
 ;; -------------------------------------------------------------------
 ;; Theme
 ;; -------------------------------------------------------------------
+
+(global-font-lock-mode)
 
 (add-to-list 'default-frame-alist '(background-color . "gray20"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
@@ -912,8 +915,8 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "e") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
-(bind-key (kbd "u") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "k") nil pdf-view-mode-map nil)
 (bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
 
@@ -1041,6 +1044,8 @@ going, at least for now.  Basically add every package path to
 ;; Calendar
 ;; -------------------------------------------------------------------
 
+(require 'calendar)
+
 (setq diary-file (expand-file-name "diary" me-emacs-data))
 (setq calendar-view-diary-initially-flag t)
 (setq calendar-latitude 32.6)
@@ -1073,8 +1078,8 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (set-face-attribute 'default nil
-                    :family "Ubuntu Mono"
-                    :height 140)
+                    :family "IosevkaCC"
+                    :height 135)
 
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
@@ -1083,10 +1088,11 @@ going, at least for now.  Basically add every package path to
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
-   (frame-parameter nil 'font) charset (font-spec :family "Noto Sans Mono CJK TC"
-                                                  :size 20)))
+   (frame-parameter nil 'font) charset (font-spec
+                                        :family "Noto Sans Mono CJK TC"
+                                        :size 18)))
 
-(set-face-attribute 'fixed-pitch nil :height 120)
+(set-face-attribute 'fixed-pitch nil :height 110)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
@@ -1403,6 +1409,8 @@ going, at least for now.  Basically add every package path to
            (file+headline "notes/bibliography/related/nlp.org" "Recent Work"))
           ("rr" "Randomness" checkitem
            (file+headline "notes/bibliography/related/random.org" "Recent Work"))
+          ("rt" "Theory" checkitem
+           (file+headline "notes/bibliography/related/theory.org" "Recent Work"))
           ("ru" "Miscellaneous" checkitem
            (file+headline "notes/bibliography/related/misc.org" "Recent Work"))
 
