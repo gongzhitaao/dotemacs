@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-02-27 13:01:50 gongzhitaao>
+;;; Time-stamp: <2018-03-04 09:36:34 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -349,8 +349,10 @@ for a file to visit if current buffer is not visiting a file."
 (require 'view)
 
 (defun me//view-mode-indicator ()
-  (cond (buffer-read-only
+  (cond (view-mode
          (set-cursor-color "red"))
+        (buffer-read-only
+         (set-cursor-color "cyan"))
         (t
          (set-cursor-color "white"))))
 
@@ -373,8 +375,6 @@ for a file to visit if current buffer is not visiting a file."
 ;; -------------------------------------------------------------------
 ;; Theme
 ;; -------------------------------------------------------------------
-
-(global-font-lock-mode)
 
 (add-to-list 'default-frame-alist '(background-color . "gray20"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
@@ -1051,6 +1051,7 @@ going, at least for now.  Basically add every package path to
 (setq calendar-latitude 32.6)
 (setq calendar-longitude -85.5)
 (setq calendar-week-start-day 1)
+(setq calendar-chinese-all-holidays-flag t)
 
 (copy-face font-lock-warning-face 'calendar-iso-week-face)
 (setq calendar-intermonth-text
@@ -1078,7 +1079,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (set-face-attribute 'default nil
-                    :family "IosevkaCC"
+                    :family "Iosevka"
                     :height 135)
 
 (set-fontset-font "fontset-default"
@@ -1089,7 +1090,7 @@ going, at least for now.  Basically add every package path to
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
-                                        :family "Noto Sans Mono CJK TC"
+                                        :family "Inziu IosevkaCC TC"
                                         :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
