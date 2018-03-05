@@ -15,6 +15,7 @@
 (depends-on "beacon")
 (depends-on "bind-key")
 (depends-on "bookmark+")
+(depends-on "cal-china-x")
 (depends-on "calfw")
 (depends-on "calfw-cal")
 (depends-on "calfw-org")

@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-04 09:36:34 gongzhitaao>
+;;; Time-stamp: <2018-03-05 15:10:46 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1066,6 +1066,18 @@ going, at least for now.  Basically add every package path to
 (copy-face font-lock-keyword-face 'calendar-iso-week-header-face)
 (setq calendar-intermonth-header
       (propertize "Wk" 'font-lock-face 'calendar-iso-week-header-face))
+
+(use-package cal-china-x
+  :config
+  (setq calendar-mark-holidays-flag t)
+  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+  (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
+  (setq calendar-holidays
+        (append cal-china-x-important-holidays
+                cal-china-x-general-holidays
+                holiday-other-holidays))
+  (set-face-background 'cal-china-x-important-holiday-face "dark red")
+  (set-face-background 'cal-china-x-general-holiday-face "forest green"))
 
 ;; -------------------------------------------------------------------
 ;; Appt
