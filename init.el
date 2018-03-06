@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-05 15:10:46 gongzhitaao>
+;;; Time-stamp: <2018-03-06 09:09:54 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1053,7 +1053,10 @@ going, at least for now.  Basically add every package path to
 (setq calendar-week-start-day 1)
 (setq calendar-chinese-all-holidays-flag t)
 
-(copy-face font-lock-warning-face 'calendar-iso-week-face)
+(defface calendar-iso-week-face
+  '((default :weight bold :foreground "pink"))
+  "Face for calendar week number")
+
 (setq calendar-intermonth-text
       '(propertize
         (format "%2d"
@@ -1062,8 +1065,10 @@ going, at least for now.  Basically add every package path to
                   (calendar-absolute-from-gregorian (list month day year)))))
         'font-lock-face 'calendar-iso-week-face))
 
-; Title for week number
-(copy-face font-lock-keyword-face 'calendar-iso-week-header-face)
+;; Title for week number
+(defface calendar-iso-week-header-face
+  '((default :foreground "cyan1")) "Face for calendar week title")
+
 (setq calendar-intermonth-header
       (propertize "Wk" 'font-lock-face 'calendar-iso-week-header-face))
 
