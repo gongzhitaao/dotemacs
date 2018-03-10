@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-06 09:09:54 gongzhitaao>
+;;; Time-stamp: <2018-03-10 10:02:07 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -731,8 +731,18 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package rainbow-delimiters
+  :requires cl-lib
   :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+  (let ((me//paren-dual-colors '("salmon" "navajo white")))
+    (cl-loop
+     for index from 1 to rainbow-delimiters-max-face-count
+     do
+     (set-face-foreground
+      (intern (format "rainbow-delimiters-depth-%d-face" index))
+      (elt me//paren-dual-colors
+           (if (cl-evenp index) 0 1))))))
 
 ;; -------------------------------------------------------------------
 ;; beacon
