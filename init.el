@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-10 10:02:07 gongzhitaao>
+;;; Time-stamp: <2018-03-16 13:57:08 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -469,16 +469,29 @@ going, at least for now.  Basically add every package path to
         helm-imenu-fuzzy-match                 t
         helm-M-x-fuzzy-match                   t)
 
-  (setq helm-buffer-max-length nil)
-
   ;; rebind tab to run persistent action
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   ;; make TAB works in terminal
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
   ;; list actions using C-z
   (define-key helm-map (kbd "C-z")  #'helm-select-action)
+  (setq helm-buffer-max-length 40))
 
-  (use-package helm-files))
+(use-package helm-files
+  :after helm-config)
+
+(use-package helm-regexp
+  :defer t
+  :init (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
+  :config
+  (defun isearch-from-helm-occur ()
+    (interactive)
+    (helm-run-after-exit
+     (lambda (initial)
+       (isearch-forward nil t)
+       (isearch-yank-string initial))
+     helm-pattern))
+  (bind-key "C-s" #'isearch-from-helm-occur helm-moccur-map))
 
 ;; -------------------------------------------------------------------
 ;; helm projectile
@@ -529,14 +542,21 @@ going, at least for now.  Basically add every package path to
 ;; dired+
 ;; -------------------------------------------------------------------
 
-(use-package dired+)
-(use-package mouse3)
-(use-package bookmark+)
+(use-package dired+
+  :load-path "site-lisp")
 
 (use-package ls-lisp
   :config
   (setq ls-lisp-dirs-first t)
   (setq ls-lisp-use-insert-directory-program nil))
+
+;; -------------------------------------------------------------------
+;; Async
+;; -------------------------------------------------------------------
+
+(use-package highlight-numbers
+  :config
+  (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 ;; -------------------------------------------------------------------
 ;; Async
@@ -1117,7 +1137,7 @@ going, at least for now.  Basically add every package path to
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
-                                        :family "Inziu IosevkaCC TC"
+                                        :family "Iosevka"
                                         :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
