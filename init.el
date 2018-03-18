@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-16 13:57:08 gongzhitaao>
+;;; Time-stamp: <2018-03-18 09:26:15 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1137,7 +1137,7 @@ going, at least for now.  Basically add every package path to
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
-                                        :family "Iosevka"
+                                        :family "Inziu Iosevka TC"
                                         :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
