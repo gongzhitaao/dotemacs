@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-18 09:26:15 gongzhitaao>
+;;; Time-stamp: <2018-03-18 18:07:46 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1106,7 +1106,9 @@ going, at least for now.  Basically add every package path to
   :config
   (setq calendar-mark-holidays-flag t)
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
-  (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
+  (setq cal-china-x-general-holidays
+        '((holiday-lunar 1 15 "元宵節")
+          (holiday-lunar 2 2 "中和節")))
   (setq calendar-holidays
         (append cal-china-x-important-holidays
                 cal-china-x-general-holidays
