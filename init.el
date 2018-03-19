@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-18 18:07:46 gongzhitaao>
+;;; Time-stamp: <2018-03-19 15:15:14 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1002,7 +1002,10 @@ going, at least for now.  Basically add every package path to
                 (name . "\\.bbdb")
                 (mode . bbdb-mode)
                 (name . "^\\*Calendar\\*$")
-                (name . "^diary$")))
+                (name . "^diary$")
+                (name . "todo.org")
+                (name . "gcal.org")
+                (name . "time-machine.org")))
            ("Dired" (mode . dired-mode))
            ("Web"
             (or (name . "\\.js")
@@ -1011,6 +1014,8 @@ going, at least for now.  Basically add every package path to
                 (name . "\\.php")
                 (name . "\\.xml")
                 (mode . yaml-mode)))
+           ("Bibliography"
+            (or (filename . "bibliography")))
            ("Text"
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
@@ -1065,7 +1070,7 @@ going, at least for now.  Basically add every package path to
 
   (setq ibuffer-formats
         '((mark modified read-only " "
-                (name 18 18 :left :elide) " "
+                (name 30 30 :left :elide) " "
                 (size-h 9 -1 :right) " "
                 (mode 16 16 :left :elide) " "
                 filename-and-process))))
