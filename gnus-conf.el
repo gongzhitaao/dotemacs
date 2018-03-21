@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2018-02-01 16:09:31 gongzhitaao>
+;;; Time-stamp: <2018-03-20 14:48:45 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -192,6 +192,9 @@ for the header string.
               "^Work/\\(inbox\\|sent\\)\\'\\|"
               "^Personal/\\(inbox\\|sent\\)\\'\\|"
               "^nndiary:Reminder\\'"))
+
+(setq gnus-auto-expirable-newsgroups "\\(trash\\)\\'")
+(setq gnus-agent-expire-days 180)
 
 (setq gnus-ignored-from-addresses (concat "\\(Zhitao\\( Gong\\)?\\)\\|"
                                           "\\(gongzhitaao\\)"))

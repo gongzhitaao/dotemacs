@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-19 15:15:14 gongzhitaao>
+;;; Time-stamp: <2018-03-20 13:35:12 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -542,8 +542,8 @@ going, at least for now.  Basically add every package path to
 ;; dired+
 ;; -------------------------------------------------------------------
 
-(use-package dired+
-  :load-path "site-lisp")
+;; (use-package dired+
+;;   :load-path "site-lisp")
 
 (use-package ls-lisp
   :config
@@ -1014,6 +1014,8 @@ going, at least for now.  Basically add every package path to
                 (name . "\\.php")
                 (name . "\\.xml")
                 (mode . yaml-mode)))
+           ("PDF"
+            (or (mode . pdf-view-mode)))
            ("Bibliography"
             (or (filename . "bibliography")))
            ("Text"
@@ -1021,8 +1023,6 @@ going, at least for now.  Basically add every package path to
                 (mode . org-mode)
                 (name . "\\.md")
                 (mode . text-mode)))
-           ("PDF"
-            (or (mode . pdf-view-mode)))
            ("Emacs Config"
             (or (mode . emacs-lisp-mode)))
            ("Coding"
@@ -1072,7 +1072,7 @@ going, at least for now.  Basically add every package path to
         '((mark modified read-only " "
                 (name 30 30 :left :elide) " "
                 (size-h 9 -1 :right) " "
-                (mode 16 16 :left :elide) " "
+                (mode 24 24 :left :elide) " "
                 filename-and-process))))
 
 ;; -------------------------------------------------------------------
