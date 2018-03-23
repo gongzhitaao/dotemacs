@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-20 13:35:12 gongzhitaao>
+;;; Time-stamp: <2018-03-23 17:24:32 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -897,7 +897,10 @@ going, at least for now.  Basically add every package path to
 (use-package undo-tree
   :bind ("C-c u" . undo-tree-visualize)
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode 1))
+  :config
+  (global-undo-tree-mode 1)
+  (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
+  (setq undo-tree-auto-save-history t))
 
 ;; -------------------------------------------------------------------
 ;; which key
