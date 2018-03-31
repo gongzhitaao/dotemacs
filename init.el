@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-25 10:36:51 gongzhitaao>
+;;; Time-stamp: <2018-03-31 08:36:11 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -174,6 +174,8 @@ for a file to visit if current buffer is not visiting a file."
 (display-time)
 
 (setq confirm-kill-emacs 'yes-or-no-p)
+
+(tooltip-mode -1)
 
 (setq-default indent-tabs-mode nil
               tab-width 2
@@ -950,9 +952,8 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
 (bind-key (kbd "e") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "j") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
-(bind-key (kbd "k") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
-(bind-key (kbd "k") nil pdf-view-mode-map nil)
+(bind-key (kbd "k") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
@@ -1092,6 +1093,7 @@ going, at least for now.  Basically add every package path to
 (setq calendar-longitude -85.5)
 (setq calendar-week-start-day 1)
 (setq calendar-chinese-all-holidays-flag t)
+(calendar-set-date-style 'iso)
 
 (defface calendar-iso-week-face
   '((default :weight bold :foreground "pink"))
@@ -1114,15 +1116,27 @@ going, at least for now.  Basically add every package path to
 
 (use-package cal-china-x
   :config
-  (setq calendar-mark-holidays-flag t)
+  (setq calendar-mark-holidays-flag t
+        calendar-view-holidays-initially-flag t
+        calendar-mark-diary-entries-flag t)
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
-  (setq cal-china-x-general-holidays
-        '((holiday-lunar 1 15 "元宵節")
-          (holiday-lunar 2 2 "中和節")))
+
+  (setq holiday-other-holidays
+        '((holiday-fixed 3  8  "妇女节")
+          (holiday-fixed 3  12 "植树节")
+          (holiday-fixed 5  4  "青年节")
+          (holiday-fixed 6  1  "儿童节")
+          (holiday-fixed 9  10 "教师节")
+          (holiday-lunar 1 15 "元宵節")
+          (holiday-lunar 2 2 "中和節")
+          (holiday-lunar 7 7  "七夕节")
+          (holiday-lunar 9 9  "重阳节")))
+
   (setq calendar-holidays
         (append cal-china-x-important-holidays
                 cal-china-x-general-holidays
                 holiday-other-holidays))
+
   (set-face-background 'cal-china-x-important-holiday-face "dark red")
   (set-face-background 'cal-china-x-general-holiday-face "forest green"))
 
@@ -1451,7 +1465,7 @@ going, at least for now.  Basically add every package path to
 
   (setq org-capture-templates
         `(("m" "Save mail link" entry
-           (file "todo.org.gz")
+           (file "todo.org")
            (file "capture/mail.org")
            :empty-lines 1
            :jump-to-captured t)
@@ -1475,7 +1489,7 @@ going, at least for now.  Basically add every package path to
            (file+headline "notes/bibliography/related/misc.org" "Recent Work"))
 
           ("t" "New TODO" entry
-           (file "todo.org.gz")
+           (file "todo.org")
            (file "capture/todo.org")
            :empty-lines 1
            :jump-to-captured t)
