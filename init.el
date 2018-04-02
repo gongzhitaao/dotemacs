@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-03-31 08:36:11 gongzhitaao>
+;;; Time-stamp: <2018-04-02 09:44:40 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -41,6 +41,7 @@
 ;; C-c b -- helm-bibtex
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c e") #'me//sudo-edit)
+;; C-c f -- file related commands
 ;; C-c g -- magit-status
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -581,7 +582,8 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package magit
-  :bind ("C-c g" . magit-status)
+  :bind (("C-c g" . magit-status)
+         ("C-c f h" . magit-log-buffer-file))
   :config
   (setq git-commit-major-mode 'org-mode))
 
@@ -1122,15 +1124,18 @@ going, at least for now.  Basically add every package path to
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
 
   (setq holiday-other-holidays
-        '((holiday-fixed 3  8  "妇女节")
-          (holiday-fixed 3  12 "植树节")
-          (holiday-fixed 5  4  "青年节")
-          (holiday-fixed 6  1  "儿童节")
-          (holiday-fixed 9  10 "教师节")
-          (holiday-lunar 1 15 "元宵節")
-          (holiday-lunar 2 2 "中和節")
-          (holiday-lunar 7 7  "七夕节")
-          (holiday-lunar 9 9  "重阳节")))
+        '((holiday-fixed 3  8  "婦女節")
+          (holiday-fixed 3  12 "植樹節")
+          (holiday-fixed 5  4  "青年節")
+          (holiday-fixed 6  1  "兒童節")
+          (holiday-fixed 9  10 "教師節")
+          ;; 阴历节日
+          (holiday-lunar 1 15  "元宵節 (上元節)")
+          (holiday-lunar 2 2   "中和節 (青龍節，龍抬頭)")
+          (holiday-lunar 7 7   "七夕節 (乞巧節)")
+          (holiday-lunar 7 15  "中元節 (鬼節)")
+          (holiday-lunar 9 9   "重陽節")
+          ))
 
   (setq calendar-holidays
         (append cal-china-x-important-holidays
@@ -1390,6 +1395,7 @@ going, at least for now.  Basically add every package path to
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
   ;; (define-key org-mode-map (kbd "C-c ]") nil)
+  (define-key org-agenda-mode-map (kbd "F") #'org-gcal-fetch)
 
   ;; Recursive update todo statistics
   (setq org-provide-todo-statistics      t
