@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-02 09:44:40 gongzhitaao>
+;;; Time-stamp: <2018-04-07 08:10:52 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -40,8 +40,9 @@
 
 ;; C-c b -- helm-bibtex
 ;; C-c d -- drag-stuff-mode
-(global-set-key (kbd "C-c e") #'me//sudo-edit)
 ;; C-c f -- file related commands
+;; C-c f h magit-log-buffer-file
+(global-set-key (kbd "C-c f s") #'me//sudo-edit)
 ;; C-c g -- magit-status
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -273,12 +274,16 @@ for a file to visit if current buffer is not visiting a file."
 ;; Dired
 ;; -------------------------------------------------------------------
 
+(require 'dired)
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always
       dired-recursive-copies 'always
       dired-listing-switches "-alh")
+
+(define-key dired-mode-map (kbd "b") #'helm-mini)
 
 ;; -------------------------------------------------------------------
 ;; recentf
@@ -1132,6 +1137,7 @@ going, at least for now.  Basically add every package path to
           ;; 阴历节日
           (holiday-lunar 1 15  "元宵節 (上元節)")
           (holiday-lunar 2 2   "中和節 (青龍節，龍抬頭)")
+          (holiday-lunar 3 3   "上巳節 (黄帝诞辰)")
           (holiday-lunar 7 7   "七夕節 (乞巧節)")
           (holiday-lunar 7 15  "中元節 (鬼節)")
           (holiday-lunar 9 9   "重陽節")
@@ -1171,7 +1177,7 @@ going, at least for now.  Basically add every package path to
                                         :family "Inziu Iosevka TC"
                                         :size 18)))
 
-(set-face-attribute 'fixed-pitch nil :height 110)
+(set-face-attribute 'fixed-pitch nil :height 120)
 
 ;; -------------------------------------------------------------------
 ;; Key logger
@@ -1281,7 +1287,7 @@ going, at least for now.  Basically add every package path to
         org-ref-pdf-directory me-bib-pdfs
         org-ref-notes-directory me-bib-notes)
 
-  (setq org-ref-ref-color "pale violet red")
+  (setq org-ref-ref-color "goldenrod")
   (setq org-ref-cite-color "dark sea green")
 
   :config
@@ -1371,7 +1377,11 @@ going, at least for now.  Basically add every package path to
     (add-to-list 'ispell-skip-region-alist '("=" "="))
     (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
 
+  (defun me//init-org-agenda ()
+    (define-key org-agenda-mode-map (kbd "F") #'org-gcal-fetch))
+
   (add-hook 'org-mode-hook #'me//init-org)
+  (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
 
   (setq org-adapt-indentation nil)
   (setq org-list-description-max-indent 0)
@@ -1394,8 +1404,6 @@ going, at least for now.  Basically add every package path to
 
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
-  ;; (define-key org-mode-map (kbd "C-c ]") nil)
-  (define-key org-agenda-mode-map (kbd "F") #'org-gcal-fetch)
 
   ;; Recursive update todo statistics
   (setq org-provide-todo-statistics      t
