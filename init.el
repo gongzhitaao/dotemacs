@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-07 08:10:52 gongzhitaao>
+;;; Time-stamp: <2018-04-10 16:08:35 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -47,6 +47,7 @@
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
+(global-set-key (kbd "C-c o s") #'me//org-sort-orgref-citation-list-by-year)
 (global-set-key (kbd "C-c r c") #'me//org-ref-open-citation)
 (global-set-key (kbd "C-c r n") #'me//org-ref-open-note)
 (global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
@@ -1353,6 +1354,29 @@ going, at least for now.  Basically add every package path to
 (use-package ox-extra)
 (use-package ox-gfm)
 
+(defun me//getkey-orgref ()
+  "Get the year part of org-ref citation."
+  (save-excursion
+    (re-search-forward org-ref-cite-re)
+    (let* ((bibkey (match-string 0))
+           (YYYY-re "\\([0-9]\\{4\\}\\)"))
+      (string-match YYYY-re bibkey)
+      (match-string 0 bibkey))))
+
+(defun me//org-sort-orgref-citation-list-by-year
+    (&optional with-case sorting-type)
+  "Sort the list of citations by year.
+
+The list looks like:
+- [X] cite:someone2017 dummy
+- [ ] cite:others2013 dummy
+- [ ] cite:hello2018 dummy
+
+I want to sort the list by year instead of by
+author (alphabetically)."
+  (interactive)
+  (org-sort-list with-case ?F #'me//getkey-orgref))
+
 (use-package org
   :init
   (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus
@@ -1630,20 +1654,68 @@ going, at least for now.  Basically add every package path to
 ;; Python
 ;; -------------------------------------------------------------------
 
-(defun me//init-python()
-  (local-set-key (kbd "M-<left>") #'decrease-left-margin)
-  (local-set-key (kbd "M-<right>") #'increase-left-margin)
-  (python-docstring-mode)
-  (diminish 'python-docstring-mode)
-  (set (make-local-variable 'comment-inline-offset) 2)
-  (setq fill-column 78)
-  (setq python-check-command "flake8"))
-(add-hook 'python-mode-hook #'me//init-python)
-
-(use-package ein
+(use-package python
   :config
-  (setq ein:jupyter-default-server-command
-        "/home/gongzhitaao/.local/env/py3/bin/jupyter"))
+  (defun me//init-python()
+    (local-set-key (kbd "M-<left>") #'decrease-left-margin)
+    (local-set-key (kbd "M-<right>") #'increase-left-margin)
+    (python-docstring-mode)
+    (diminish 'python-docstring-mode)
+    (set (make-local-variable 'comment-inline-offset) 2)
+    (setq fill-column 78)
+    (setq python-check-command "flake8"))
+  (add-hook 'python-mode-hook #'me//init-python)
+
+  (python-skeleton-define args
+      "Insert argpass template for Python script"
+    ""
+    "def parse_args():\n"
+    "    parser = argparse.ArgumentParser(description='TODO')\n"
+    "    parser.add_argument('--n', metavar='N', type=int)\n"
+    "    parser.add_argument('--varlist', metavar='N1 [N2 N3 ...]', nargs='+')\n"
+    "    parser.add_argument('--fixlist', metavar='A B C', nargs='3')\n"
+    "\n"
+    "    mut = parser.add_mutually_exclusive_group(required=True)\n"
+    "    mut.add_argument('--yes', dest='yes', action='store_true', help='TODO')\n"
+    "    mut.add_argument('--no', dest='yes', action='store_false', help='TODO')\n"
+    "    parser.set_defaults(mut=False)\n"
+    "\n"
+    "    return parser.parse_args()\n"
+    "\n\n"
+    "def main(args):\n"
+    "    pass\n"
+    "\n\n"
+    "if __name__ == '__main__':\n"
+    "    info('THE BEGIN')\n"
+    "    main(parse_args())\n"
+    "    info('THE END')\n")
+
+  (python-skeleton-define logging
+      "Insert logging template code."
+    ""
+    "logging.basicConfig(format='%(asctime)-15s %(message)s', level=logging.INFO)\n"
+    "logger = logging.getLogger(__name__)\n"
+    "info = logger.info\n")
+
+  (python-skeleton-define matplotlib
+      "Insert matplotlib template code."
+    ""
+    "import matplotlib\n"
+    "matplotlib.use('Agg')           # noqa: E402\n"
+    "import matplotlib.pyplot as plt\n"
+    "import matplotlib.gridspec as gridspec\n"
+    "\n"
+    "fig = plt.figure(figsize=(w, h))\n"
+    "gs = gridspec.GridSpec(row, col, width_ratios=0.5, wspace=0.01, hspace=0.01)\n"
+    "\n"
+    "ax = fig.add_subplot(gs[0, 0])\n"
+    "\n"
+    "gs.tight_layout(fig)\n"
+    "plt.savefig('name.png')\n")
+
+  (define-key python-mode-map (kbd "C-c C-t a") #'python-skeleton-args)
+  (define-key python-mode-map (kbd "C-c C-t l") #'python-skeleton-logging)
+  (define-key python-mode-map (kbd "C-c C-t m") #'python-skeleton-matplotlib))
 
 ;; -------------------------------------------------------------------
 ;; shell script
@@ -1743,56 +1815,6 @@ going, at least for now.  Basically add every package path to
   (setq org-gcal-client-id "1061693727479-1tf1621pclk4b31gunogg1psdbn3t5r1.apps.googleusercontent.com"
         org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
         org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/gcal.org"))))
-
-;; (defun me//calendar ()
-;;   (interactive)
-;;   (let ((buf (get-buffer "*cfw-calendar*")))
-;;     (if buf
-;;         (pop-to-buffer buf nil)
-;;       (cfw:open-calendar-buffer
-;;        :contents-sources
-;;        (list (cfw:org-create-source "LightBlue")
-;;              (cfw:cal-create-source "Orange"))
-;;        :view 'week))))
-
-;; (use-package calfw
-;;   :bind (("<f6>" . me//calendar)
-;;          :map cfw:calendar-mode-map
-;;          ("M-n" . cfw:navi-next-month-command)
-;;          ("M-p" . cfw:navi-previous-month-command)
-;;          ("j"   . cfw:navi-goto-date-command)
-;;          ("g"   . cfw:refresh-calendar-buffer)
-;;          ("G"   . org-gcal-sync)
-;;          ("d"   . cfw:change-view-day)
-;;          ("s" . org-save-all-org-buffers)
-;;          ("w" . cfw:change-view-week)
-;;          ("m" . cfw:change-view-month))
-
-;;   :commands cfw:open-calendar-buffer
-
-;;   :config
-;;   (use-package calfw-cal)
-;;   (use-package calfw-org)
-
-;;   (custom-set-faces
-;;    '(cfw:face-title ((t (:foreground "#f0dfaf" :weight bold :height 2.0 :inherit variable-pitch))))
-;;    '(cfw:face-header ((t (:foreground "#d0bf8f" :weight bold))))
-;;    '(cfw:face-sunday ((t :foreground "#cc9393" :weight bold)))
-;;    '(cfw:face-saturday ((t :foreground "#8cd0d3"  :weight bold)))
-;;    '(cfw:face-holiday ((t :background "grey10" :foreground "#8c5353" :weight bold)))
-;;    '(cfw:face-grid ((t :foreground "#BADEAC")))
-;;    '(cfw:face-default-content ((t :foreground "#ffffff")))
-;;    '(cfw:face-periods ((t :foreground "#ffe259")))
-;;    '(cfw:face-day-title ((t :background "grey10")))
-;;    '(cfw:face-default-day ((t :foreground "#ffffff" :weight bold :inherit cfw:face-day-title)))
-;;    '(cfw:face-annotation ((t :foreground "#ffffff" :inherit cfw:face-day-title)))
-;;    '(cfw:face-disable ((t :foreground "DarkGray" :inherit cfw:face-day-title)))
-;;    '(cfw:face-today-title ((t :background "#7f9f7f" :weight bold)))
-;;    '(cfw:face-today ((t :background: "grey10" :weight bold)))
-;;    '(cfw:face-select ((t :background "#2f2f2f")))
-;;    '(cfw:face-toolbar ((t :foreground "SteelBlue4" :background "#3F3F3F")))
-;;    '(cfw:face-toolbar-button-off ((t :foreground "#f5f5f5" :weight bold))) ;;top botton
-;;    '(cfw:face-toolbar-button-on ((t :foreground "#ffffff" :weight bold)))))
 
 (require 'server)
 (unless (server-running-p) (server-start))
