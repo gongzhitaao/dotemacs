@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-07 08:10:52 gongzhitaao>
+;;; Time-stamp: <2018-04-10 16:08:35 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -47,6 +47,7 @@
 ;; C-c m -- multiple-cursor
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
+(global-set-key (kbd "C-c o s") #'me//org-sort-orgref-citation-list-by-year)
 (global-set-key (kbd "C-c r c") #'me//org-ref-open-citation)
 (global-set-key (kbd "C-c r n") #'me//org-ref-open-note)
 (global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
@@ -1352,6 +1353,29 @@ going, at least for now.  Basically add every package path to
 (use-package ox-bibtex)
 (use-package ox-extra)
 (use-package ox-gfm)
+
+(defun me//getkey-orgref ()
+  "Get the year part of org-ref citation."
+  (save-excursion
+    (re-search-forward org-ref-cite-re)
+    (let* ((bibkey (match-string 0))
+           (YYYY-re "\\([0-9]\\{4\\}\\)"))
+      (string-match YYYY-re bibkey)
+      (match-string 0 bibkey))))
+
+(defun me//org-sort-orgref-citation-list-by-year
+    (&optional with-case sorting-type)
+  "Sort the list of citations by year.
+
+The list looks like:
+- [X] cite:someone2017 dummy
+- [ ] cite:others2013 dummy
+- [ ] cite:hello2018 dummy
+
+I want to sort the list by year instead of by
+author (alphabetically)."
+  (interactive)
+  (org-sort-list with-case ?F #'me//getkey-orgref))
 
 (use-package org
   :init
