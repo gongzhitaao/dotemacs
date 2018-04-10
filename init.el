@@ -1630,20 +1630,68 @@ going, at least for now.  Basically add every package path to
 ;; Python
 ;; -------------------------------------------------------------------
 
-(defun me//init-python()
-  (local-set-key (kbd "M-<left>") #'decrease-left-margin)
-  (local-set-key (kbd "M-<right>") #'increase-left-margin)
-  (python-docstring-mode)
-  (diminish 'python-docstring-mode)
-  (set (make-local-variable 'comment-inline-offset) 2)
-  (setq fill-column 78)
-  (setq python-check-command "flake8"))
-(add-hook 'python-mode-hook #'me//init-python)
-
-(use-package ein
+(use-package python
   :config
-  (setq ein:jupyter-default-server-command
-        "/home/gongzhitaao/.local/env/py3/bin/jupyter"))
+  (defun me//init-python()
+    (local-set-key (kbd "M-<left>") #'decrease-left-margin)
+    (local-set-key (kbd "M-<right>") #'increase-left-margin)
+    (python-docstring-mode)
+    (diminish 'python-docstring-mode)
+    (set (make-local-variable 'comment-inline-offset) 2)
+    (setq fill-column 78)
+    (setq python-check-command "flake8"))
+  (add-hook 'python-mode-hook #'me//init-python)
+
+  (python-skeleton-define args
+      "Insert argpass template for Python script"
+    ""
+    "def parse_args():\n"
+    "    parser = argparse.ArgumentParser(description='TODO')\n"
+    "    parser.add_argument('--n', metavar='N', type=int)\n"
+    "    parser.add_argument('--varlist', metavar='N1 [N2 N3 ...]', nargs='+')\n"
+    "    parser.add_argument('--fixlist', metavar='A B C', nargs='3')\n"
+    "\n"
+    "    mut = parser.add_mutually_exclusive_group(required=True)\n"
+    "    mut.add_argument('--yes', dest='yes', action='store_true', help='TODO')\n"
+    "    mut.add_argument('--no', dest='yes', action='store_false', help='TODO')\n"
+    "    parser.set_defaults(mut=False)\n"
+    "\n"
+    "    return parser.parse_args()\n"
+    "\n\n"
+    "def main(args):\n"
+    "    pass\n"
+    "\n\n"
+    "if __name__ == '__main__':\n"
+    "    info('THE BEGIN')\n"
+    "    main(parse_args())\n"
+    "    info('THE END')\n")
+
+  (python-skeleton-define logging
+      "Insert logging template code."
+    ""
+    "logging.basicConfig(format='%(asctime)-15s %(message)s', level=logging.INFO)\n"
+    "logger = logging.getLogger(__name__)\n"
+    "info = logger.info\n")
+
+  (python-skeleton-define matplotlib
+      "Insert matplotlib template code."
+    ""
+    "import matplotlib\n"
+    "matplotlib.use('Agg')           # noqa: E402\n"
+    "import matplotlib.pyplot as plt\n"
+    "import matplotlib.gridspec as gridspec\n"
+    "\n"
+    "fig = plt.figure(figsize=(w, h))\n"
+    "gs = gridspec.GridSpec(row, col, width_ratios=0.5, wspace=0.01, hspace=0.01)\n"
+    "\n"
+    "ax = fig.add_subplot(gs[0, 0])\n"
+    "\n"
+    "gs.tight_layout(fig)\n"
+    "plt.savefig('name.png')\n")
+
+  (define-key python-mode-map (kbd "C-c C-t a") #'python-skeleton-args)
+  (define-key python-mode-map (kbd "C-c C-t l") #'python-skeleton-logging)
+  (define-key python-mode-map (kbd "C-c C-t m") #'python-skeleton-matplotlib))
 
 ;; -------------------------------------------------------------------
 ;; shell script
