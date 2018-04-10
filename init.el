@@ -1744,56 +1744,6 @@ going, at least for now.  Basically add every package path to
         org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
         org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/gcal.org"))))
 
-;; (defun me//calendar ()
-;;   (interactive)
-;;   (let ((buf (get-buffer "*cfw-calendar*")))
-;;     (if buf
-;;         (pop-to-buffer buf nil)
-;;       (cfw:open-calendar-buffer
-;;        :contents-sources
-;;        (list (cfw:org-create-source "LightBlue")
-;;              (cfw:cal-create-source "Orange"))
-;;        :view 'week))))
-
-;; (use-package calfw
-;;   :bind (("<f6>" . me//calendar)
-;;          :map cfw:calendar-mode-map
-;;          ("M-n" . cfw:navi-next-month-command)
-;;          ("M-p" . cfw:navi-previous-month-command)
-;;          ("j"   . cfw:navi-goto-date-command)
-;;          ("g"   . cfw:refresh-calendar-buffer)
-;;          ("G"   . org-gcal-sync)
-;;          ("d"   . cfw:change-view-day)
-;;          ("s" . org-save-all-org-buffers)
-;;          ("w" . cfw:change-view-week)
-;;          ("m" . cfw:change-view-month))
-
-;;   :commands cfw:open-calendar-buffer
-
-;;   :config
-;;   (use-package calfw-cal)
-;;   (use-package calfw-org)
-
-;;   (custom-set-faces
-;;    '(cfw:face-title ((t (:foreground "#f0dfaf" :weight bold :height 2.0 :inherit variable-pitch))))
-;;    '(cfw:face-header ((t (:foreground "#d0bf8f" :weight bold))))
-;;    '(cfw:face-sunday ((t :foreground "#cc9393" :weight bold)))
-;;    '(cfw:face-saturday ((t :foreground "#8cd0d3"  :weight bold)))
-;;    '(cfw:face-holiday ((t :background "grey10" :foreground "#8c5353" :weight bold)))
-;;    '(cfw:face-grid ((t :foreground "#BADEAC")))
-;;    '(cfw:face-default-content ((t :foreground "#ffffff")))
-;;    '(cfw:face-periods ((t :foreground "#ffe259")))
-;;    '(cfw:face-day-title ((t :background "grey10")))
-;;    '(cfw:face-default-day ((t :foreground "#ffffff" :weight bold :inherit cfw:face-day-title)))
-;;    '(cfw:face-annotation ((t :foreground "#ffffff" :inherit cfw:face-day-title)))
-;;    '(cfw:face-disable ((t :foreground "DarkGray" :inherit cfw:face-day-title)))
-;;    '(cfw:face-today-title ((t :background "#7f9f7f" :weight bold)))
-;;    '(cfw:face-today ((t :background: "grey10" :weight bold)))
-;;    '(cfw:face-select ((t :background "#2f2f2f")))
-;;    '(cfw:face-toolbar ((t :foreground "SteelBlue4" :background "#3F3F3F")))
-;;    '(cfw:face-toolbar-button-off ((t :foreground "#f5f5f5" :weight bold))) ;;top botton
-;;    '(cfw:face-toolbar-button-on ((t :foreground "#ffffff" :weight bold)))))
-
 (require 'server)
 (unless (server-running-p) (server-start))
 
