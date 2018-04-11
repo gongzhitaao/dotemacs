@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-10 16:08:35 gongzhitaao>
+;;; Time-stamp: <2018-04-11 13:50:31 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1357,11 +1357,12 @@ going, at least for now.  Basically add every package path to
 (defun me//getkey-orgref ()
   "Get the year part of org-ref citation."
   (save-excursion
-    (re-search-forward org-ref-cite-re)
-    (let* ((bibkey (match-string 0))
-           (YYYY-re "\\([0-9]\\{4\\}\\)"))
-      (string-match YYYY-re bibkey)
-      (match-string 0 bibkey))))
+    (if (re-search-forward org-ref-cite-re nil t)
+        (let* ((bibkey (match-string 0))
+               (YYYY-re "\\([0-9]\\{4\\}\\)"))
+          (string-match YYYY-re bibkey)
+          (match-string 0 bibkey))
+      "")))
 
 (defun me//org-sort-orgref-citation-list-by-year
     (&optional with-case sorting-type)
