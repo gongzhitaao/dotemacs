@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-11 13:50:31 gongzhitaao>
+;;; Time-stamp: <2018-04-11 13:59:38 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -957,12 +957,17 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
+(bind-key (kbd "c") #'me//org-ref-open-citation pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
 (bind-key (kbd "e") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "j") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "n") #'me//org-ref-open-note pdf-view-mode-map)
 (bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
 (bind-key (kbd "k") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
+
+(bind-key (kbd "<right>") #'pdf-view-next-page-command pdf-view-mode-map)
+(bind-key (kbd "<left>") #'pdf-view-previous-page-command pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
