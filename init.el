@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-11 13:59:38 gongzhitaao>
+;;; Time-stamp: <2018-04-11 14:09:28 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1101,7 +1101,6 @@ going, at least for now.  Basically add every package path to
 (require 'calendar)
 
 (setq diary-file (expand-file-name "diary" me-emacs-data))
-(setq calendar-view-diary-initially-flag t)
 (setq calendar-latitude 32.6)
 (setq calendar-longitude -85.5)
 (setq calendar-week-start-day 1)
@@ -1130,7 +1129,8 @@ going, at least for now.  Basically add every package path to
 (use-package cal-china-x
   :config
   (setq calendar-mark-holidays-flag t
-        calendar-view-holidays-initially-flag t
+        calendar-view-diary-initially-flag nil
+        calendar-view-holidays-initially-flag nil
         calendar-mark-diary-entries-flag t)
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
 
