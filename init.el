@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-13 12:28:23 gongzhitaao>
+;;; Time-stamp: <2018-04-13 12:49:27 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -177,7 +177,7 @@ for a file to visit if current buffer is not visiting a file."
     map)
   "Buffer file related commands.")
 
-(defvar me-buffer-file-command-prefix (kbd "C-c f")
+(defvar me-buffer-file-command-prefix nil
   "Prefix key for my mnemonic file related commands")
 (define-prefix-command 'me-buffer-file-command-prefix)
 (fset 'me-buffer-file-command-prefix me-buffer-file-command-map)
@@ -196,7 +196,7 @@ for a file to visit if current buffer is not visiting a file."
     map)
   "Org mode related commands.")
 
-(defvar me-org-command-prefix (kbd "C-c o")
+(defvar me-org-command-prefix nil
   "Prefix key for my mnemonic orgmode related commands.")
 (define-prefix-command 'me-org-command-prefix)
 (fset 'me-org-command-prefix me-org-command-map)
@@ -270,6 +270,9 @@ for a file to visit if current buffer is not visiting a file."
     (load me-local-conf))
 
 (add-hook 'focus-out-hook #'garbage-collect)
+
+(setq select-enable-clipboard t
+      select-enable-primary t)
 
 ;; -------------------------------------------------------------------
 ;; backup
