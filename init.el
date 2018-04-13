@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-11 14:09:28 gongzhitaao>
+;;; Time-stamp: <2018-04-13 12:28:23 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -40,17 +40,10 @@
 
 ;; C-c b -- helm-bibtex
 ;; C-c d -- drag-stuff-mode
-;; C-c f -- file related commands
-;; C-c f h magit-log-buffer-file
-(global-set-key (kbd "C-c f s") #'me//sudo-edit)
+(global-set-key (kbd "C-c f") #'me-buffer-file-command-prefix)
 ;; C-c g -- magit-status
 ;; C-c m -- multiple-cursor
-(global-set-key (kbd "C-c o a") #'org-agenda)
-(global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c o s") #'me//org-sort-orgref-citation-list-by-year)
-(global-set-key (kbd "C-c r c") #'me//org-ref-open-citation)
-(global-set-key (kbd "C-c r n") #'me//org-ref-open-note)
-(global-set-key (kbd "C-c r p") #'me//org-ref-open-pdf)
+(global-set-key (kbd "C-c o") #'me-org-command-prefix)
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
 (global-set-key (kbd "C-c =") #'align-regexp)
@@ -167,6 +160,47 @@ for a file to visit if current buffer is not visiting a file."
 
 (me-with-region-or-line #'comment-or-uncomment-region)
 (me-with-region-or-line #'kill-ring-save)
+
+;; -------------------------------------------------------------------
+;; command map groups
+;; -------------------------------------------------------------------
+
+;; file command map
+
+(defvar me-buffer-file-command-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "l") #'magit-log-buffer-file)
+    (define-key map (kbd "s") #'set-buffer-file-coding-system)
+    (define-key map (kbd "s") #'me//sudo-edit)
+    (define-key map (kbd "v") #'add-file-local-variable)
+    (define-key map (kbd "V") #'add-file-local-variable-prop-line)
+    map)
+  "Buffer file related commands.")
+
+(defvar me-buffer-file-command-prefix (kbd "C-c f")
+  "Prefix key for my mnemonic file related commands")
+(define-prefix-command 'me-buffer-file-command-prefix)
+(fset 'me-buffer-file-command-prefix me-buffer-file-command-map)
+(setq me-buffer-file-command-prefix me-buffer-file-command-map)
+
+;; org command map
+
+(defvar me-org-command-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "a") #'org-agenda)
+    (define-key map (kbd "c") #'org-capture)
+    (define-key map (kbd "e") #'me//org-ref-open-entry)
+    (define-key map (kbd "s") #'me//org-sort-orgref-citation-list-by-year)
+    (define-key map (kbd "n") #'me//org-ref-open-note)
+    (define-key map (kbd "p") #'me//org-ref-open-pdf)
+    map)
+  "Org mode related commands.")
+
+(defvar me-org-command-prefix (kbd "C-c o")
+  "Prefix key for my mnemonic orgmode related commands.")
+(define-prefix-command 'me-org-command-prefix)
+(fset 'me-org-command-prefix me-org-command-map)
+(setq me-org-command-prefix me-org-command-map)
 
 ;; -------------------------------------------------------------------
 ;; Misc
@@ -957,7 +991,7 @@ going, at least for now.  Basically add every package path to
 (bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
 (bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
-(bind-key (kbd "c") #'me//org-ref-open-citation pdf-view-mode-map)
+(bind-key (kbd "c") #'me//org-ref-open-entry pdf-view-mode-map)
 (bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
 (bind-key (kbd "e") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "j") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
@@ -1321,7 +1355,7 @@ going, at least for now.  Basically add every package path to
           (org-open-file pdf-file)
         (message "no pdf found for %s" key)))))
 
-(defun me//org-ref-open-citation ()
+(defun me//org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
   (if (string= (file-name-extension (buffer-file-name)) "bib")
