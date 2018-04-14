@@ -190,6 +190,8 @@ for a file to visit if current buffer is not visiting a file."
     (define-key map (kbd "a") #'org-agenda)
     (define-key map (kbd "c") #'org-capture)
     (define-key map (kbd "e") #'me//org-ref-open-entry)
+    (define-key map (kbd "h") #'me//org-custom-id-get-create)
+    (define-key map (kbd "H") #'me//org-custom-id-get-create-all)
     (define-key map (kbd "s") #'me//org-sort-orgref-citation-list-by-year)
     (define-key map (kbd "n") #'me//org-ref-open-note)
     (define-key map (kbd "p") #'me//org-ref-open-pdf)
@@ -271,8 +273,7 @@ for a file to visit if current buffer is not visiting a file."
 
 (add-hook 'focus-out-hook #'garbage-collect)
 
-(setq select-enable-clipboard t
-      select-enable-primary t)
+(setq select-enable-clipboard t)
 
 ;; -------------------------------------------------------------------
 ;; backup
@@ -1418,7 +1419,8 @@ The list looks like:
 I want to sort the list by year instead of by
 author (alphabetically)."
   (interactive)
-  (org-sort-list with-case ?F #'me//getkey-orgref))
+  (when (and (derived-mode-p 'org-mode) (org-at-item-p))
+    (org-sort-list with-case ?F #'me//getkey-orgref)))
 
 (use-package org
   :init
@@ -1653,6 +1655,77 @@ author (alphabetically)."
            class=\"date\">%T</span><span class=\"creator\">%c</span>")))
 
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
+
+(require 'org-id)
+
+(defun me//clean-up-heading (heading)
+  (replace-regexp-in-string "[^[:alpha:][:digit:]_-]" "" (downcase heading)))
+
+(defun me//org-id-from-heading (heading &optional level sep)
+  "Format HEADING to use as custom ID and return it.
+
+This function normalize HEADING by replacing spaces with SEP.  if
+LEVEL is provided, the level of heading is prefixed.  SEP is the
+separator used to glue different parts."
+  (let ((sep (or sep "-")))
+    (concat (when org-id-prefix (format "%s%s" org-id-prefix sep))
+            (when level (format "h%d%s" level sep))
+            (replace-regexp-in-string "\\s-+" sep
+                                      (me//clean-up-heading heading))
+            (concat sep (me//org-id-hash (concat (buffer-name) heading))))))
+
+(defun me//org-id-hash (s &optional length)
+  "Generate a unique string hash."
+  (let ((length (or length 5))
+        (hash (secure-hash 'sha1 s)))
+    (substring-no-properties hash nil length)))
+
+(defun me//org-custom-id-get (&optional pom create prefix)
+  "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+
+If POM is nil, refer to the entry at point. If the entry does not
+have an CUSTOM_ID, the function returns nil.  However, when
+CREATE is non nil, create a CUSTOM_ID if none is present already.
+PREFIX will be passed through to `org-id-new'.  In any case, the
+CUSTOM_ID of the entry is returned."
+  (interactive)
+  (org-with-point-at pom
+    (let ((id (org-entry-get nil "CUSTOM_ID")))
+      (cond
+       ((and id (stringp id) (string-match "\\S-" id))
+        id)
+       (create
+        (setq id (me//org-id-from-heading (org-get-heading t t t t)
+                                          (org-current-level)
+                                          "-"))
+        (org-entry-put pom "CUSTOM_ID" id)
+        (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+        id)))))
+
+(defun me//org-custom-id-get-create (&optional force)
+  "Create an ID w/o a suffix for the current entry and return it.
+
+If the entry already has an ID, just return it.  With optional
+argument FORCE, force the creation of a new ID."
+  (interactive "P")
+  (when (derived-mode-p 'org-mode)
+    (when force
+      (org-entry-put (point) "CUSTOM_ID" nil))
+    (me//org-custom-id-get (point) 'create)))
+
+(defun me//org-custom-id-get-create-all (&optional force)
+  "Create custom ID for every heading."
+  (interactive "P")
+  (when (derived-mode-p 'org-mode)
+    (when force
+      (org-entry-put (point) "CUSTOM_ID" nil))
+    (let ((me//org-custom-id-get-wrapper
+           (if force
+               (lambda ()
+                 (org-entry-put (point) "CUSTOM_ID" nil)
+                 (me//org-custom-id-get (point) 'create))
+             (lambda () (me//org-custom-id-get (point) 'create)))))
+      (org-map-entries me//org-custom-id-get-wrapper))))
 
 ;; -------------------------------------------------------------------
 ;; C/C++
