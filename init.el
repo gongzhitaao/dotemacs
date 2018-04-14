@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-14 09:59:18 gongzhitaao>
+;;; Time-stamp: <2018-04-14 14:10:02 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1341,7 +1341,12 @@ going, at least for now.  Basically add every package path to
      (list (car (org-ref-get-bibtex-key-and-file thekey)))))
   (setq org-ref-notes-function #'me//org-ref-notes-function)
   (add-hook 'org-ref-clean-bibtex-entry-hook
-            #'org-ref-downcase-bibtex-entry))
+            #'org-ref-downcase-bibtex-entry)
+
+  (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
+  (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
+  (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
+  (define-key org-ref-cite-keymap (kbd "C-<right>") nil))
 
 ;; The following three functions jump among PDF, bibtex entry and note.  For
 ;; instance, me//org-ref-open-pdf opens the PDF file when your cursor is at the
