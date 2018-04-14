@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-13 12:49:27 gongzhitaao>
+;;; Time-stamp: <2018-04-13 20:21:59 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1339,6 +1339,7 @@ going, at least for now.  Basically add every package path to
     (bibtex-completion-edit-notes
      (list (car (org-ref-get-bibtex-key-and-file thekey)))))
   (setq org-ref-notes-function #'me//org-ref-notes-function)
+  (setq org-ref-show-citation-on-enter nil)
   (add-hook 'org-ref-clean-bibtex-entry-hook
             #'org-ref-downcase-bibtex-entry))
 
@@ -1348,45 +1349,58 @@ going, at least for now.  Basically add every package path to
 
 (defun me//org-ref-open-pdf ()
   (interactive)
-  (if (string= (file-name-extension (buffer-file-name)) "pdf")
-      nil
-    (let* ((key
-            (condition-case nil
-                (org-ref-get-bibtex-key-under-cursor)
-              ('error (file-name-base (buffer-file-name)))))
-           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-      (if (file-exists-p pdf-file)
-          (org-open-file pdf-file)
-        (message "no pdf found for %s" key)))))
+  (let* ((key (cond
+               ((derived-mode-p 'org-mode)
+                (condition-case nil
+                    (save-excursion
+                      (org-ref-get-bibtex-key-under-cursor))
+                  (error (file-name-base (buffer-file-name)))))
+               ((derived-mode-p 'bibtex-mode)
+                (save-excursion
+                  (bibtex-beginning-of-entry)
+                  (reftex-get-bib-field "=key=" (bibtex-parse-entry t))))
+               (t nil)))
+         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+    (if (file-exists-p pdf-file)
+        (org-open-file pdf-file)
+      (message "No PDF found with name %s" pdf-file))))
 
 (defun me//org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
-  (if (string= (file-name-extension (buffer-file-name)) "bib")
-      nil
-    (let* ((key
-            (condition-case nil
-                (org-ref-get-bibtex-key-under-cursor)
-              ('error (file-name-base (buffer-file-name)))))
-           (results (org-ref-get-bibtex-key-and-file key))
-           (bibfile (cdr results)))
-      (find-file bibfile)
-      (bibtex-search-entry key))))
+  (let* ((key (cond
+               ((derived-mode-p 'org-mode)
+                (condition-case nil
+                    (save-excursion
+                      (org-ref-get-bibtex-key-under-cursor))
+                  (error (file-name-base (buffer-file-name)))))
+               ((derived-mode-p 'pdf-view-mode)
+                (file-name-base (buffer-file-name)))
+               (t nil)))
+         (bibfile ""))
+    (if key
+        (progn
+          (setq bibfile (cdr (org-ref-get-bibtex-key-and-file key)))
+          (find-file bibfile)
+          (bibtex-search-entry key))
+      (message "Non existing key %s" key))))
 
 (defun me//org-ref-open-note ()
   (interactive)
-  (let* ((key
-         (condition-case nil
-             (org-ref-get-bibtex-key-under-cursor)
-           ('error (if (string= (file-name-extension (buffer-file-name)) "bib")
-                       (save-excursion
-                         (bibtex-beginning-of-entry)
-                         (reftex-get-bib-field "=key=" (bibtex-parse-entry t)))
-                     (file-name-base (buffer-file-name))))))
+  (let* ((key (cond
+               ((derived-mode-p 'org-mode)
+                (ignore-errors (org-ref-get-bibtex-key-under-cursor)))
+               ((derived-mode-p 'bibtex-mode)
+                (save-excursion
+                  (bibtex-beginning-of-entry)
+                  (reftex-get-bib-field "=key=" (bibtex-parse-entry t))))
+               ((derived-mode-p 'pdf-view-mode)
+                (file-name-base (buffer-file-name)))
+               (t nil)))
          (pdf-file (funcall org-ref-get-pdf-filename-function key)))
     (if (file-exists-p pdf-file)
         (org-ref-open-notes-at-point key)
-      (message "no pdf found for %s" key))))
+      (message "Not open note for non-existing PDF %s" key))))
 
 ;; -------------------------------------------------------------------
 ;; Orgmode
