@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-14 08:19:31 gongzhitaao>
+;;; Time-stamp: <2018-04-14 09:59:18 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1673,7 +1673,8 @@ author (alphabetically)."
 (require 'org-id)
 
 (defun me//clean-up-heading (heading)
-  (replace-regexp-in-string "[^[:alpha:][:digit:]_-]" "" (downcase heading)))
+  (replace-regexp-in-string "[^[:alpha:][:digit:][:space:]_-]" ""
+                            (downcase heading)))
 
 (defun me//org-id-from-heading (heading &optional level sep)
   "Format HEADING to use as custom ID and return it.
