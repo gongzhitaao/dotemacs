@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-13 20:21:59 gongzhitaao>
+;;; Time-stamp: <2018-04-14 08:19:31 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -1333,13 +1333,13 @@ going, at least for now.  Basically add every package path to
 
   (setq org-ref-ref-color "goldenrod")
   (setq org-ref-cite-color "dark sea green")
+  (setq org-ref-show-citation-on-enter nil)
 
   :config
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
      (list (car (org-ref-get-bibtex-key-and-file thekey)))))
   (setq org-ref-notes-function #'me//org-ref-notes-function)
-  (setq org-ref-show-citation-on-enter nil)
   (add-hook 'org-ref-clean-bibtex-entry-hook
             #'org-ref-downcase-bibtex-entry))
 
