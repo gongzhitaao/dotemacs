@@ -1,5 +1,5 @@
 ;;; init.el
-;;; Time-stamp: <2018-04-14 14:10:02 gongzhitaao>
+;;; Time-stamp: <2018-04-16 12:52:28 gongzhitaao>
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -268,8 +268,6 @@ for a file to visit if current buffer is not visiting a file."
 
 (if (file-exists-p custom-file)
     (load custom-file))
-(if (file-exists-p me-local-conf)
-    (load me-local-conf))
 
 (add-hook 'focus-out-hook #'garbage-collect)
 
@@ -1946,11 +1944,8 @@ argument FORCE, force the creation of a new ID."
 ;; calendar in emacs
 ;; -------------------------------------------------------------------
 
-(use-package org-gcal
-  :config
-  (setq org-gcal-client-id "1061693727479-1tf1621pclk4b31gunogg1psdbn3t5r1.apps.googleusercontent.com"
-        org-gcal-client-secret "v8lcgsDYuCw5klOJMpO5o2eL"
-        org-gcal-file-alist '(("zhitaao.gong@gmail.com" .  "~/Dropbox/dotfiles/emacs.d/data/gcal.org"))))
+(if (file-exists-p me-local-conf)
+    (load me-local-conf))
 
 (require 'server)
 (unless (server-running-p) (server-start))
