@@ -1,10 +1,17 @@
-;;; init.el
-;;; Time-stamp: <2018-04-16 12:52:28 gongzhitaao>
+;;; init.el --- Yet another Emacs config
+;;; Time-stamp: <2018-04-17 10:49:45 gongzhitaao>
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+;;; Naming conventions:
+;; me/xxx: mostly interactive functions, may be executed with M-x or keys
+;; me//xxx: internal helper functions, not called directly by user
+;; me-xxx: custom variables
+
+;; Added by Package.el.  This must come before configurations of installed
+;; packages.  Don't delete this line.  If you don't want it, just comment it out
+;; by adding a semicolon to the start of the line.  You may delete these
+;; explanatory comments.
+;;; Code:
+
 (package-initialize)
 
 ;; -------------------------------------------------------------------
@@ -12,6 +19,8 @@
 ;; -------------------------------------------------------------------
 
 (global-set-key (kbd "C-z") #'delete-other-windows)
+(global-set-key (kbd "<backtab>") #'decrease-left-margin)
+(global-set-key (kbd "<escape>") #'view-mode)
 
 ;; FN keys
 ;; --------------------------------------------------------------------
@@ -35,7 +44,7 @@
 (global-set-key [remap yank-pop]         #'helm-show-kill-ring)
 (global-set-key (kbd "C-x m")            #'compose-mail-other-frame)
 
-;; C-c key
+;; C-c user key
 ;; --------------------------------------------------------------------
 
 ;; C-c b -- helm-bibtex
@@ -52,16 +61,7 @@
 
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
-;; M-s search
-;; --------------------------------------------------------------------
-
-;; M-s a helm-do-ag
-(global-set-key (kbd "M-s g") #'helm-do-grep-ag)
-;; M-s h highlight-xxx
-(global-set-key (kbd "M-s q") #'vr/query-replace)
-;; M-s s helm-swoop
-
-;; Meta
+;; M- meta keys
 ;; --------------------------------------------------------------------
 
 ;; M-a backward-sentence
@@ -90,11 +90,13 @@
 ;; M-y helm-show-kill-ring
 ;; M-z zap-to-char
 
-;; special key
-;; -------------------------------------------------------------------
+;;; M-s search
 
-(global-set-key (kbd "<backtab>") #'decrease-left-margin)
-(global-set-key (kbd "<escape>") #'view-mode)
+;; M-s a helm-do-ag
+(global-set-key (kbd "M-s g") #'helm-do-grep-ag)
+;; M-s h highlight-xxx
+(global-set-key (kbd "M-s q") #'vr/query-replace)
+;; M-s s helm-swoop
 
 ;; -------------------------------------------------------------------
 ;; Variable
@@ -121,7 +123,8 @@
 ;; -------------------------------------------------------------------
 
 (defun me--ad-with-region-or-line (args)
-  "Operate on line or region."
+  "Operate on line or region.
+Argument ARGS region if provided."
   (if (region-active-p)
       args
     (let ((bol (+ (line-beginning-position) (current-indentation)))
@@ -131,7 +134,8 @@
       (list bol eol (nth 2 args)))))
 
 (defun me-with-region-or-line (func &optional remove)
-  "If not REMOVE, add advice to FUNC, i.e., when called with no
+  "Call FUNC on region if region is active, otherwise line.
+If not REMOVE, add advice to FUNC, i.e., when called with no
 active region, call FUNC on current line.  Otherwise remove
 advice."
   (if remove
@@ -146,7 +150,7 @@ advice."
      (comint-truncate-buffer)
      (setq comint-buffer-maximum-size old-max)))
 
-(defun me//sudo-edit (&optional arg)
+(defun me/sudo-edit (&optional arg)
   "Edit file as root.
 
 With a prefix ARG prompt for a file to visit.  Will also prompt
@@ -171,14 +175,14 @@ for a file to visit if current buffer is not visiting a file."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "l") #'magit-log-buffer-file)
     (define-key map (kbd "s") #'set-buffer-file-coding-system)
-    (define-key map (kbd "s") #'me//sudo-edit)
+    (define-key map (kbd "s") #'me/sudo-edit)
     (define-key map (kbd "v") #'add-file-local-variable)
     (define-key map (kbd "V") #'add-file-local-variable-prop-line)
     map)
   "Buffer file related commands.")
 
 (defvar me-buffer-file-command-prefix nil
-  "Prefix key for my mnemonic file related commands")
+  "Prefix key for my mnemonic file related commands.")
 (define-prefix-command 'me-buffer-file-command-prefix)
 (fset 'me-buffer-file-command-prefix me-buffer-file-command-map)
 (setq me-buffer-file-command-prefix me-buffer-file-command-map)
@@ -189,12 +193,12 @@ for a file to visit if current buffer is not visiting a file."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "a") #'org-agenda)
     (define-key map (kbd "c") #'org-capture)
-    (define-key map (kbd "e") #'me//org-ref-open-entry)
-    (define-key map (kbd "h") #'me//org-custom-id-get-create)
-    (define-key map (kbd "H") #'me//org-custom-id-get-create-all)
-    (define-key map (kbd "s") #'me//org-sort-orgref-citation-list-by-year)
-    (define-key map (kbd "n") #'me//org-ref-open-note)
-    (define-key map (kbd "p") #'me//org-ref-open-pdf)
+    (define-key map (kbd "e") #'me/org-ref-open-entry)
+    (define-key map (kbd "h") #'me/org-custom-id-get-create)
+    (define-key map (kbd "H") #'me/org-custom-id-get-create-all)
+    (define-key map (kbd "s") #'me/org-sort-orgref-citation-list-by-year)
+    (define-key map (kbd "n") #'me/org-ref-open-note)
+    (define-key map (kbd "p") #'me/org-ref-open-pdf)
     map)
   "Org mode related commands.")
 
@@ -311,6 +315,10 @@ for a file to visit if current buffer is not visiting a file."
 ;; Dired
 ;; -------------------------------------------------------------------
 
+
+;;; Commentary:
+;;
+
 (require 'dired)
 
 (put 'dired-find-alternate-file 'disabled nil)
@@ -394,6 +402,7 @@ for a file to visit if current buffer is not visiting a file."
 (require 'view)
 
 (defun me//view-mode-indicator ()
+  "Change cursor when variable ‘view-mode’ or read-only."
   (cond (view-mode
          (set-cursor-color "red"))
         (buffer-read-only
@@ -576,10 +585,12 @@ going, at least for now.  Basically add every package path to
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (defun me//diminish-view ()
+  "Diminish variable `view-mode'."
   (diminish 'view-mode))
 (add-hook 'view-mode-hook #'me//diminish-view)
 
 (defun me//diminish-auto-revert ()
+  "Set icon for command `auto-revert-mode'."
   (diminish 'auto-revert-mode " "))
 (add-hook 'auto-revert-mode-hook #'me//diminish-auto-revert)
 
@@ -962,44 +973,48 @@ going, at least for now.  Basically add every package path to
 
 (pdf-tools-install)
 
-(defun me//pdf-view-next-few-lines ()
+(defun me/pdf-view-next-few-lines ()
+  "Scroll down few lines."
   (interactive)
   (pdf-view-next-line-or-next-page 10))
 
-(defun me//pdf-view-prev-few-lines ()
+(defun me/pdf-view-prev-few-lines ()
+  "Score up few lines."
   (interactive)
   (pdf-view-previous-line-or-previous-page 10))
 
 ;; copied directly from view-window-size
 (defun me//window-size ()
-  ;; Return the height of the current window, excluding the mode line.  Using
-  ;; `window-line-height' accounts for variable-height fonts.
+   "Return the height of the current window, excluding the mode line.
+Using `window-line-height' accounts for variable-height fonts."
   (let ((h (window-line-height -1)))
     (if h
         (1+ (nth 1 h))
-      ;; This should not happen, but if `window-line-height' returns
+      ;; This should not happen, just in case `window-line-height' returns
       ;; nil, fall back on `window-height'.
       (1- (window-height)))))
 
-(defun me//pdf-view-scroll-half-forward ()
+(defun me/pdf-view-scroll-half-forward ()
+  "Score down half page."
   (interactive)
   (pdf-view-next-line-or-next-page (/ (me//window-size) 2)))
 
-(defun me//pdf-view-scroll-half-backward ()
+(defun me/pdf-view-scroll-half-backward ()
+  "Score up half page."
   (interactive)
   (pdf-view-previous-line-or-previous-page (/ (me//window-size) 2)))
 
 (bind-key (kbd "<delete>") #'pdf-view-scroll-up-or-next-page pdf-view-mode-map)
-(bind-key (kbd "<down>") #'me//pdf-view-next-few-lines pdf-view-mode-map)
-(bind-key (kbd "<up>") #'me//pdf-view-prev-few-lines pdf-view-mode-map)
+(bind-key (kbd "<down>") #'me/pdf-view-next-few-lines pdf-view-mode-map)
+(bind-key (kbd "<up>") #'me/pdf-view-prev-few-lines pdf-view-mode-map)
 (bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
-(bind-key (kbd "c") #'me//org-ref-open-entry pdf-view-mode-map)
-(bind-key (kbd "d") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
-(bind-key (kbd "e") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
-(bind-key (kbd "j") #'me//pdf-view-scroll-half-forward pdf-view-mode-map)
-(bind-key (kbd "n") #'me//org-ref-open-note pdf-view-mode-map)
+(bind-key (kbd "c") #'me/org-ref-open-entry pdf-view-mode-map)
+(bind-key (kbd "d") #'me/pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "e") #'me/pdf-view-scroll-half-backward pdf-view-mode-map)
+(bind-key (kbd "j") #'me/pdf-view-scroll-half-forward pdf-view-mode-map)
+(bind-key (kbd "n") #'me/org-ref-open-note pdf-view-mode-map)
 (bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
-(bind-key (kbd "k") #'me//pdf-view-scroll-half-backward pdf-view-mode-map)
+(bind-key (kbd "k") #'me/pdf-view-scroll-half-backward pdf-view-mode-map)
 (bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
 
 (bind-key (kbd "<right>") #'pdf-view-next-page-command pdf-view-mode-map)
@@ -1021,6 +1036,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (defun me//init-LaTeX ()
+  "Initialize LaTeX mode."
   (TeX-fold-mode 1)
   (turn-on-auto-fill)
   (flyspell-mode)
@@ -1237,6 +1253,7 @@ going, at least for now.  Basically add every package path to
 (setq gnus-init-file (expand-file-name "gnus-conf.el" me-emacs))
 
 (defun me//seconds-from-now (interval &optional wait)
+  "Calculate INTERVAL seconds from now."
   (let* ((m (mod (string-to-int (format-time-string "%M")) interval))
          (s (string-to-int (format-time-string "%S")))
          (elapsed (+ (* m 60) s))
@@ -1246,6 +1263,7 @@ going, at least for now.  Basically add every package path to
       (- (+ (* interval 60) w) elapsed))))
 
 (defun me//start-gnus-bg ()
+  "Start gnus in background."
   (gnus)
   (switch-to-prev-buffer))
 (run-at-time (me//seconds-from-now 5) nil #'me//start-gnus-bg)
@@ -1347,10 +1365,11 @@ going, at least for now.  Basically add every package path to
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil))
 
 ;; The following three functions jump among PDF, bibtex entry and note.  For
-;; instance, me//org-ref-open-pdf opens the PDF file when your cursor is at the
+;; instance, me/org-ref-open-pdf opens the PDF file when your cursor is at the
 ;; bibtex entry or the note that is associated with this bibtex entry.
 
-(defun me//org-ref-open-pdf ()
+(defun me/org-ref-open-pdf ()
+  "Open the associated PDF."
   (interactive)
   (let* ((key (cond
                ((derived-mode-p 'org-mode)
@@ -1368,7 +1387,7 @@ going, at least for now.  Basically add every package path to
         (org-open-file pdf-file)
       (message "No PDF found with name %s" pdf-file))))
 
-(defun me//org-ref-open-entry ()
+(defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
   (let* ((key (cond
@@ -1388,7 +1407,8 @@ going, at least for now.  Basically add every package path to
           (bibtex-search-entry key))
       (message "Non existing key %s" key))))
 
-(defun me//org-ref-open-note ()
+(defun me/org-ref-open-note ()
+  "Open the associated note file."
   (interactive)
   (let* ((key (cond
                ((derived-mode-p 'org-mode)
@@ -1415,7 +1435,7 @@ going, at least for now.  Basically add every package path to
 (use-package ox-gfm)
 
 (defun me//getkey-orgref ()
-  "Get the year part of org-ref citation."
+  "Get the year part of orgref citation."
   (save-excursion
     (if (re-search-forward org-ref-cite-re nil t)
         (let* ((bibkey (match-string 0))
@@ -1676,6 +1696,7 @@ author (alphabetically)."
 (require 'org-id)
 
 (defun me//clean-up-heading (heading)
+  "Clean up heading text."
   (replace-regexp-in-string "[^[:alpha:][:digit:][:space:]_-]" ""
                             (downcase heading)))
 
@@ -1698,11 +1719,11 @@ separator used to glue different parts."
         (hash (secure-hash 'sha1 s)))
     (substring-no-properties hash nil length)))
 
-(defun me//org-custom-id-get (&optional pom create prefix)
+(defun me/org-custom-id-get (&optional pom create prefix)
   "Get the CUSTOM_ID property of the entry at point-or-marker POM.
 
-If POM is nil, refer to the entry at point. If the entry does not
-have an CUSTOM_ID, the function returns nil.  However, when
+If POM is nil, refer to the entry at point.  If the entry does
+not have an CUSTOM_ID, the function returns nil.  However, when
 CREATE is non nil, create a CUSTOM_ID if none is present already.
 PREFIX will be passed through to `org-id-new'.  In any case, the
 CUSTOM_ID of the entry is returned."
@@ -1720,7 +1741,7 @@ CUSTOM_ID of the entry is returned."
         (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
         id)))))
 
-(defun me//org-custom-id-get-create (&optional force)
+(defun me/org-custom-id-get-create (&optional force)
   "Create an ID w/o a suffix for the current entry and return it.
 
 If the entry already has an ID, just return it.  With optional
@@ -1729,9 +1750,9 @@ argument FORCE, force the creation of a new ID."
   (when (derived-mode-p 'org-mode)
     (when force
       (org-entry-put (point) "CUSTOM_ID" nil))
-    (me//org-custom-id-get (point) 'create)))
+    (me/org-custom-id-get (point) 'create)))
 
-(defun me//org-custom-id-get-create-all (&optional force)
+(defun me/org-custom-id-get-create-all (&optional force)
   "Create custom ID for every heading."
   (interactive "P")
   (when (derived-mode-p 'org-mode)
@@ -1741,8 +1762,8 @@ argument FORCE, force the creation of a new ID."
            (if force
                (lambda ()
                  (org-entry-put (point) "CUSTOM_ID" nil)
-                 (me//org-custom-id-get (point) 'create))
-             (lambda () (me//org-custom-id-get (point) 'create)))))
+                 (me/org-custom-id-get (point) 'create))
+             (lambda () (me/org-custom-id-get (point) 'create)))))
       (org-map-entries me//org-custom-id-get-wrapper))))
 
 ;; -------------------------------------------------------------------
@@ -1865,7 +1886,7 @@ argument FORCE, force the creation of a new ID."
 ;; Lua
 ;; -------------------------------------------------------------------
 
-(defun me//lua-send-current-line-and-next()
+(defun me/lua-send-current-line-and-next()
   (lua-send-current-line)
   (next-line))
 
@@ -1880,7 +1901,7 @@ argument FORCE, force the creation of a new ID."
   :config
   (add-hook 'lua-mode-hook #'me//init-lua)
   (define-key lua-mode-map (kbd "C-<return>")
-    #'me//lua-send-current-line-and-next)
+    #'me/lua-send-current-line-and-next)
   (define-key lua-mode-map (kbd "C-c b")   #'lua-send-buffer)
   (define-key lua-mode-map (kbd "C-c C-b") #'lua-send-buffer)
   (define-key lua-mode-map (kbd "C-c f")   #'lua-send-defun)
