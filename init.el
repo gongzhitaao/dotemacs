@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-17 10:49:45 gongzhitaao>
+;;; Time-stamp: <2018-04-18 08:08:05 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1444,7 +1444,7 @@ Using `window-line-height' accounts for variable-height fonts."
           (match-string 0 bibkey))
       "")))
 
-(defun me//org-sort-orgref-citation-list-by-year
+(defun me/org-sort-orgref-citation-list-by-year
     (&optional with-case sorting-type)
   "Sort the list of citations by year.
 

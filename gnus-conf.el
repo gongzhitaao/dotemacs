@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2018-03-20 14:48:45 gongzhitaao>
+;;; Time-stamp: <2018-04-17 14:27:52 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -43,9 +43,14 @@
 (setq message-citation-line-function #'message-insert-formatted-citation-line)
 (setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
 
-(add-hook 'message-mode-hook 'turn-on-orgstruct)
-(add-hook 'message-mode-hook 'turn-on-orgstruct++)
-(add-hook 'message-mode-hook 'turn-on-orgtbl)
+(defun me//init-message ()
+  "Init setup for message mode."
+  (turn-on-orgstruct)
+  (turn-on-orgstruct++)
+  (turn-on-orgtbl)
+  (setq fill-column 80))
+
+(add-hook 'message-mode-hook #'me//init-message)
 
 ;; Remove date, so delayed messages (C-c C-j) don't get a date until sent
 (setq message-draft-headers '(References From))
