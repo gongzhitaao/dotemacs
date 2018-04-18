@@ -1,17 +1,17 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-18 08:08:05 gongzhitaao>
+;;; Time-stamp: <2018-04-18 09:20:10 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
 ;; me//xxx: internal helper functions, not called directly by user
 ;; me-xxx: custom variables
 
+;;; Code:
+
 ;; Added by Package.el.  This must come before configurations of installed
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
 ;; by adding a semicolon to the start of the line.  You may delete these
 ;; explanatory comments.
-;;; Code:
-
 (package-initialize)
 
 ;; -------------------------------------------------------------------
@@ -677,6 +677,14 @@ going, at least for now.  Basically add every package path to
   (setq writeroom-mode-line t)
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
+
+;; -------------------------------------------------------------------
+;; regex builder
+;; -------------------------------------------------------------------
+
+(use-package re-builder
+  :config
+  (setq reb-re-syntax 'string))
 
 ;; -------------------------------------------------------------------
 ;; highlight-indent-guides
@@ -1435,13 +1443,19 @@ Using `window-line-height' accounts for variable-height fonts."
 (use-package ox-gfm)
 
 (defun me//getkey-orgref ()
-  "Get the year part of orgref citation."
+  "Get the year part of orgref citation.
+
+My bib key is (lastname)(YYYY)-(title), where title is the first
+non-trivial word in title, This function will
+return (YYYY)(lastname)(title).  Note the parenthesis is only for
+readability, no parenthesis actually exist."
   (save-excursion
     (if (re-search-forward org-ref-cite-re nil t)
         (let* ((bibkey (match-string 0))
                (YYYY-re "\\([0-9]\\{4\\}\\)"))
           (string-match YYYY-re bibkey)
-          (match-string 0 bibkey))
+          (concat (match-string 0 bibkey)
+                  (replace-regexp-in-string YYYY-re "" bibkey)))
       "")))
 
 (defun me/org-sort-orgref-citation-list-by-year
@@ -1453,8 +1467,8 @@ The list looks like:
 - [ ] cite:others2013 dummy
 - [ ] cite:hello2018 dummy
 
-I want to sort the list by year instead of by
-author (alphabetically)."
+I want to sort the list first by year (newest first), then
+alphabetically (in ascending or descending order)."
   (interactive)
   (when (and (derived-mode-p 'org-mode) (org-at-item-p))
     (org-sort-list with-case ?F #'me//getkey-orgref)))
