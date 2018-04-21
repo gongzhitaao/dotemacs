@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-18 09:20:10 gongzhitaao>
+;;; Time-stamp: <2018-04-21 09:26:14 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1359,6 +1359,8 @@ Using `window-line-height' accounts for variable-height fonts."
   (setq org-ref-cite-color "dark sea green")
   (setq org-ref-show-citation-on-enter nil)
 
+  :after (bibtex)
+
   :config
   (defun me//org-ref-notes-function (thekey)
     (bibtex-completion-edit-notes
@@ -1370,7 +1372,15 @@ Using `window-line-height' accounts for variable-height fonts."
   (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
   (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
   (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
-  (define-key org-ref-cite-keymap (kbd "C-<right>") nil))
+  (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
+
+  (setq bibtex-completion-display-formats
+        '((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
+          (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
+          (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
+          (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
+          (t             . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${keywords:62}")))
+  (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
 
 ;; The following three functions jump among PDF, bibtex entry and note.  For
 ;; instance, me/org-ref-open-pdf opens the PDF file when your cursor is at the
