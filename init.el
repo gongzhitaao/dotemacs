@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-21 09:26:14 gongzhitaao>
+;;; Time-stamp: <2018-04-21 11:14:09 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -579,19 +579,19 @@ going, at least for now.  Basically add every package path to
 (diminish 'global-visual-line-mode)
 (diminish 'visual-line-mode)
 
-(defun me//diminish-flyspell()
+(defun me//diminish-flyspell ()
   (diminish 'flyspell-mode))
 (add-hook 'flyspell-mode-hook #'me//diminish-flyspell)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (defun me//diminish-view ()
   "Diminish variable `view-mode'."
-  (diminish 'view-mode))
+  (diminish 'view-mode " "))
 (add-hook 'view-mode-hook #'me//diminish-view)
 
 (defun me//diminish-auto-revert ()
   "Set icon for command `auto-revert-mode'."
-  (diminish 'auto-revert-mode " "))
+  (diminish 'auto-revert-mode " "))
 (add-hook 'auto-revert-mode-hook #'me//diminish-auto-revert)
 
 ;; -------------------------------------------------------------------
@@ -963,9 +963,10 @@ going, at least for now.  Basically add every package path to
   :bind ("C-c u" . undo-tree-visualize)
   :diminish undo-tree-mode
   :config
-  (global-undo-tree-mode 1)
+  (setq undo-tree-visualizer-diff t)
   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history t))
+  (setq undo-tree-auto-save-history t)
+  (global-undo-tree-mode 1))
 
 ;; -------------------------------------------------------------------
 ;; which key
@@ -1234,8 +1235,8 @@ Using `window-line-height' accounts for variable-height fonts."
 
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
-                        (decode-char 'ucs #xF295))
-                  (font-spec :family "FontAwesome" :size 16))
+                        (decode-char 'ucs #xF4E3))
+                  (font-spec :family "Font Awesome 5 Free" :size 16))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
@@ -1328,8 +1329,8 @@ Using `window-line-height' accounts for variable-height fonts."
         bibtex-completion-library-path me-bib-pdfs
         bibtex-completion-notes-path me-bib-notes)
   (setq bibtex-completion-notes-extension ".org")
-  (setq bibtex-completion-pdf-symbol ""
-        bibtex-completion-notes-symbol ""))
+  (setq bibtex-completion-pdf-symbol "⚐"
+        bibtex-completion-notes-symbol "✔"))
 
 ;; -------------------------------------------------------------------
 ;; reftex
