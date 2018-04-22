@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-21 11:14:09 gongzhitaao>
+;;; Time-stamp: <2018-04-22 13:08:47 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -30,7 +30,7 @@
 ;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
-(global-set-key (kbd "<f12>") #'gnus-other-frame)
+(global-set-key (kbd "<f12>") #'mu4e)
 
 ;; Remaping
 ;; --------------------------------------------------------------------
@@ -284,6 +284,9 @@ for a file to visit if current buffer is not visiting a file."
 (setq backup-directory-alist `((".*" . ,me-emacs-tmp)))
 (setq auto-save-list-file-prefix
       (expand-file-name ".saves-" me-emacs-tmp))
+
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 (setq backup-by-copying    t
       delete-old-versions  t
@@ -1060,13 +1063,14 @@ Using `window-line-height' accounts for variable-height fonts."
 
 (use-package bbdb
   :config
-  (bbdb-initialize 'gnus 'mail 'message 'anniv 'sc)
+  (bbdb-initialize 'gnus 'mail 'message 'anniv 'sc 'mu4e)
 
   (setq bbdb-complete-mail-allow-cycling t
         bbdb-allow-duplicates t
         bbdb-message-all-addresses t
         bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
 
+  (setq bbdb-mail-user-agent 'message-user-agent)
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; -------------------------------------------------------------------
@@ -1114,7 +1118,8 @@ Using `window-line-height' accounts for variable-height fonts."
                 (name . "\\.R")
                 (name . "\\.lua")))
            ("Mail"
-            (or (mode . message-mode)))
+            (or (mode . message-mode)
+                (mode . mu4e-compose-mode)))
            ("Console"
             (or (mode . inferior-ess-mode)
                 (mode . inferior-python-mode)
@@ -1258,24 +1263,8 @@ Using `window-line-height' accounts for variable-height fonts."
 ;; mail
 ;; -------------------------------------------------------------------
 
-(require 'gnus)
-(setq gnus-init-file (expand-file-name "gnus-conf.el" me-emacs))
-
-(defun me//seconds-from-now (interval &optional wait)
-  "Calculate INTERVAL seconds from now."
-  (let* ((m (mod (string-to-int (format-time-string "%M")) interval))
-         (s (string-to-int (format-time-string "%S")))
-         (elapsed (+ (* m 60) s))
-         (w (or wait 30)))
-    (if (< elapsed (- w 15))
-        w
-      (- (+ (* interval 60) w) elapsed))))
-
-(defun me//start-gnus-bg ()
-  "Start gnus in background."
-  (gnus)
-  (switch-to-prev-buffer))
-(run-at-time (me//seconds-from-now 5) nil #'me//start-gnus-bg)
+(add-to-list 'load-path user-emacs-directory)
+(require 'mu4e-conf)
 
 ;; -------------------------------------------------------------------
 ;; BibTeX
