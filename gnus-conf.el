@@ -1,5 +1,5 @@
 ;;; gnus-conf.el
-;;; Time-stamp: <2018-04-17 14:27:52 gongzhitaao>
+;;; Time-stamp: <2018-04-21 16:07:38 gongzhitaao>
 
 (require 'gnus)
 (require 'gnus-diary)
@@ -121,32 +121,39 @@ for the header string.
  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
  gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
 
+(setq gnus-simplify-subject-functions '(gnus-simplify-whitespace
+                                        gnus-simplify-subject-re))
+
 (setq
- gnus-summary-to-prefix               "" ;[#xF061]
+ gnus-summary-to-prefix               "▶ " ;[#xF061]
  gnus-summary-newsgroup-prefix        "" ;[#xF1EA]
- gnus-ancient-mark                    ? ;[#xF00C]
- gnus-ticked-mark                     ? ;[#xF024]
- gnus-dormant-mark                    ? ;[#xF11D]
- gnus-expirable-mark                  ? ;[#xF1B8]
- gnus-read-mark                       ? ;[#xF046]
- gnus-del-mark                        ? ;[#xF00D]
- gnus-canceled-mark                   ? ;[#xF00D]
- gnus-killed-mark                     ? ;[#xF00D]
- gnus-replied-mark                    ? ;[#xF112]
- gnus-forwarded-mark                  ? ;[#xF064]
- gnus-cached-mark                     ? ;[#xF0C5]
- gnus-recent-mark                     ? ;[#xF006]
- gnus-unseen-mark                     ? ;[#xF096]
- gnus-unread-mark                     ? ;[#xF003]
- gnus-score-over-mark                 ? ;[#xF148]
- gnus-score-below-mark                ? ;[#xF149]
- gnus-sum-thread-tree-false-root      " " ;[#xF10C]
- gnus-sum-thread-tree-single-indent   " " ;[#xF192]
- gnus-sum-thread-tree-indent          "  "
- gnus-sum-thread-tree-root            "  " ;[#xF111]
- gnus-sum-thread-tree-leaf-with-other " " ;[#xF178]
- gnus-sum-thread-tree-single-leaf     " " ;[#xF178]
- gnus-sum-thread-tree-vertical        "| ")
+ gnus-ancient-mark                    ?░ ;[#xF00C]
+ gnus-ticked-mark                     ?█ ;[#xF024]
+ gnus-dormant-mark                    ?⚐ ;[#xF11D]
+ gnus-expirable-mark                  ?※ ;[#xF1B8]
+ gnus-read-mark                       ?░ ;[#xF046]
+ gnus-del-mark                        ?░ ;[#xF00D]
+ gnus-canceled-mark                   ?✖ ;[#xF00D]
+ gnus-killed-mark                     ?✖ ;[#xF00D]
+ gnus-replied-mark                    ? ;[#xF112]
+ gnus-forwarded-mark                  ?⍄ ;[#xF064]
+ gnus-cached-mark                     ?✚ ;[#xF0C5]
+ gnus-recent-mark                     ?⋆ ;[#xF006]
+ gnus-unseen-mark                     ?▒ ;[#xF096]
+ gnus-unread-mark                     ?▒ ;[#xF003]
+ gnus-score-over-mark                 ?∆ ;[#xF148]
+ gnus-score-below-mark                ?∇ ;[#xF149]
+ gnus-sum-thread-tree-false-root      " ○╮" ;[#xF10C]
+ gnus-sum-thread-tree-single-indent   " ● " ;[#xF192]
+ gnus-sum-thread-tree-indent          ""
+ gnus-sum-thread-tree-root            " ●╮"
+ gnus-sum-thread-tree-leaf-with-other "├─ "
+ gnus-sum-thread-tree-single-leaf     "╰─ "
+ gnus-sum-thread-tree-vertical        "│  ")
+
+(setq gnus-thread-indent-level 2)
+
+(setq gnus-summary-stop-at-end-of-message t)
 
 (setq gnus-gcc-mark-as-read t)
 (setq gnus-face-properties-alist
@@ -161,6 +168,7 @@ for the header string.
         ("Personal" "nnimap+personal:Personal/sent")
         (".*" ,(format-time-string "sent/%Y-%m"))))
 
+(setq gnus-article-banner-alist '(banner . signature))
 (setq gnus-parameters
       `(("Tiger.*"
          (charset . utf-8)
@@ -193,9 +201,9 @@ for the header string.
 (setq gnus-treat-display-x-face 'head)
 
 (setq gnus-permanently-visible-groups
-      (concat "^Tiger/\\(inbox\\|sent\\)\\'\\|"
+      (concat "^Tiger/\\(inbox\\|sent\\|archive\\)\\'\\|"
               "^Work/\\(inbox\\|sent\\)\\'\\|"
-              "^Personal/\\(inbox\\|sent\\)\\'\\|"
+              "^Personal/\\(inbox\\|sent\\|archive\\)\\'\\|"
               "^nndiary:Reminder\\'"))
 
 (setq gnus-auto-expirable-newsgroups "\\(trash\\)\\'")
@@ -242,7 +250,7 @@ for the header string.
              gnus-newsrc-alist)
             nil)))
 
-  (setq display-time-mail-string " "
+  (setq display-time-mail-string " "
         display-time-use-mail-icon nil
         ;; display-time-mail-icon
         ;; `(image :type png
