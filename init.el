@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;;; Time-stamp: <2018-04-22 13:08:47 gongzhitaao>
+;;; Time-stamp: <2018-04-22 15:44:45 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -42,7 +42,6 @@
 (global-set-key [remap list-buffers]     #'ibuffer)
 (global-set-key [remap switch-to-buffer] #'helm-mini)
 (global-set-key [remap yank-pop]         #'helm-show-kill-ring)
-(global-set-key (kbd "C-x m")            #'compose-mail-other-frame)
 
 ;; C-c user key
 ;; --------------------------------------------------------------------
@@ -1058,22 +1057,6 @@ Using `window-line-height' accounts for variable-height fonts."
 (add-hook 'LaTeX-mode-hook #'me//init-LaTeX)
 
 ;; -------------------------------------------------------------------
-;; BBDB
-;; -------------------------------------------------------------------
-
-(use-package bbdb
-  :config
-  (bbdb-initialize 'gnus 'mail 'message 'anniv 'sc 'mu4e)
-
-  (setq bbdb-complete-mail-allow-cycling t
-        bbdb-allow-duplicates t
-        bbdb-message-all-addresses t
-        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
-
-  (setq bbdb-mail-user-agent 'message-user-agent)
-  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
-
-;; -------------------------------------------------------------------
 ;; ibuffer
 ;; -------------------------------------------------------------------
 
@@ -1263,8 +1246,8 @@ Using `window-line-height' accounts for variable-height fonts."
 ;; mail
 ;; -------------------------------------------------------------------
 
-(add-to-list 'load-path user-emacs-directory)
-(require 'mu4e-conf)
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(require 'mail-conf)
 
 ;; -------------------------------------------------------------------
 ;; BibTeX

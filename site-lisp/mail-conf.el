@@ -1,4 +1,4 @@
-;;; mu4e-conf.el --- mu4e config
+;;; mail-conf.el --- mail config
 
 ;;; Commentary:
 ;; Setup mu4e, dependencies include message from Gnus (compose), mu4e-alert
@@ -53,6 +53,7 @@
       '("zhitaao.gong@gmail.com" "zzg0009@auburn.edu" "gong@auburn.edu"
         "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
+(setq mu4e-context-policy 'pick-first)
 (setq mu4e-compose-context-policy nil)
 (setq mu4e-view-mode-hook '(bbdb-mua-auto-update))
 (setq mu4e-compose-complete-addresses t)
@@ -64,10 +65,26 @@ Gmail/IMAP takes care of copying sent messages to sent folder.
 So we just delete it locally."
   (if (string-match-p "\\(@gmail\\.com\\)" (message-sendmail-envelope-from))
       'delete 'sent))
-(setq mu4e-sent-messages-behavior 'sent)
+(setq mu4e-sent-messages-behavior #'me//process-sent-messages)
 
 (add-to-list 'mu4e-bookmarks
              '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
+
+;; -------------------------------------------------------------------
+;; BBDB contacts
+;; -------------------------------------------------------------------
+
+(use-package bbdb
+  :config
+  (bbdb-initialize 'gnus 'message 'anniv 'mu4e)
+
+  (setq bbdb-complete-mail-allow-cycling t
+        bbdb-allow-duplicates t
+        bbdb-message-all-addresses t
+        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
+
+  (setq bbdb-mail-user-agent 'message-user-agent)
+  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; -----------------------------------------------------------------------------
 ;; visual look
@@ -186,6 +203,6 @@ So we just delete it locally."
   (mu4e t))
 (run-at-time (me//seconds-from-now 5) nil #'me//start-mu4e-bg)
 
-(provide 'mu4e-conf)
+(provide 'mail-conf)
 
-;;; mu4e-conf.el ends here
+;;; mail-conf.el ends here
