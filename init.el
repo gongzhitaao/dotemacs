@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-22 16:14:56 gongzhitaao>
+;; Time-stamp: <2018-04-23 16:10:37 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -975,59 +975,6 @@ going, at least for now.  Basically add every package path to
 (use-package which-key
   :config (which-key-mode)
   :diminish which-key-mode)
-
-;; -------------------------------------------------------------------
-;; PDF tools
-;; -------------------------------------------------------------------
-
-(pdf-tools-install)
-
-(defun me/pdf-view-next-few-lines ()
-  "Scroll down few lines."
-  (interactive)
-  (pdf-view-next-line-or-next-page 10))
-
-(defun me/pdf-view-prev-few-lines ()
-  "Score up few lines."
-  (interactive)
-  (pdf-view-previous-line-or-previous-page 10))
-
-;; copied directly from view-window-size
-(defun me//window-size ()
-   "Return the height of the current window, excluding the mode line.
-Using `window-line-height' accounts for variable-height fonts."
-  (let ((h (window-line-height -1)))
-    (if h
-        (1+ (nth 1 h))
-      ;; This should not happen, just in case `window-line-height' returns
-      ;; nil, fall back on `window-height'.
-      (1- (window-height)))))
-
-(defun me/pdf-view-scroll-half-forward ()
-  "Score down half page."
-  (interactive)
-  (pdf-view-next-line-or-next-page (/ (me//window-size) 2)))
-
-(defun me/pdf-view-scroll-half-backward ()
-  "Score up half page."
-  (interactive)
-  (pdf-view-previous-line-or-previous-page (/ (me//window-size) 2)))
-
-(bind-key (kbd "<delete>") #'pdf-view-scroll-up-or-next-page pdf-view-mode-map)
-(bind-key (kbd "<down>") #'me/pdf-view-next-few-lines pdf-view-mode-map)
-(bind-key (kbd "<up>") #'me/pdf-view-prev-few-lines pdf-view-mode-map)
-(bind-key (kbd "b") #'helm-mini pdf-view-mode-map)
-(bind-key (kbd "c") #'me/org-ref-open-entry pdf-view-mode-map)
-(bind-key (kbd "d") #'me/pdf-view-scroll-half-forward pdf-view-mode-map)
-(bind-key (kbd "e") #'me/pdf-view-scroll-half-backward pdf-view-mode-map)
-(bind-key (kbd "j") #'me/pdf-view-scroll-half-forward pdf-view-mode-map)
-(bind-key (kbd "n") #'me/org-ref-open-note pdf-view-mode-map)
-(bind-key (kbd "g") #'pdf-view-goto-page pdf-view-mode-map)
-(bind-key (kbd "k") #'me/pdf-view-scroll-half-backward pdf-view-mode-map)
-(bind-key (kbd "z") #'delete-other-windows pdf-view-mode-map)
-
-(bind-key (kbd "<right>") #'pdf-view-next-page-command pdf-view-mode-map)
-(bind-key (kbd "<left>") #'pdf-view-previous-page-command pdf-view-mode-map)
 
 ;; -------------------------------------------------------------------
 ;; ssh-config-mode
