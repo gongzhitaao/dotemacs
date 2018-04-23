@@ -280,29 +280,31 @@ for a file to visit if current buffer is not visiting a file."
 ;; backup
 ;; -------------------------------------------------------------------
 
-(setq backup-directory-alist `((".*" . ,me-emacs-tmp)))
 (setq auto-save-list-file-prefix
       (expand-file-name ".saves-" me-emacs-tmp))
-
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+(setq backup-directory-alist `((".*" . ,me-emacs-tmp)))
 (setq backup-by-copying    t
       delete-old-versions  t
       kept-new-versions    6
       kept-old-versions    2
       version-control      t)
 
-(let ((week (* 60 60 24 7))
-      (current (float-time (current-time))))
-  (message "Deleting old backup files...")
-  (dolist (file (directory-files temporary-file-directory t))
-    (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth
-                                          (file-attributes file))))
-                  week))
-      (message "%s" file)
-      (delete-file file))))
+(defun me//cleanup-old-files (directory nday)
+  "Cleanup DIRECTORY files older than NDAY."
+  (let ((age (* 60 60 24 (or nday 7)))
+        (current (float-time (current-time))))
+    (message "Deleting old backup files...")
+    (dolist (file (directory-files directory t))
+      (when (and (backup-file-name-p file)
+                 (> (- current (float-time (fifth (file-attributes file))))
+                    age))
+        (message "delete: %s" file)
+        (delete-file file)))))
+
+(me//cleanup-old-files me-emacs-tmp 7)
 
 ;; -------------------------------------------------------------------
 ;; Encoding
