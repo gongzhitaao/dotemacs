@@ -319,11 +319,8 @@ for a file to visit if current buffer is not visiting a file."
 ;; Dired
 ;; -------------------------------------------------------------------
 
-
-;;; Commentary:
-;;
-
 (require 'dired)
+(require 'dired-x)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -639,8 +636,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package magit
-  :bind (("C-c g" . magit-status)
-         ("C-c f h" . magit-log-buffer-file))
+  :bind ("C-c g" . magit-status)
   :config
   (setq git-commit-major-mode 'org-mode))
 
