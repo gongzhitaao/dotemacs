@@ -44,13 +44,14 @@
             (mu4e-sent-folder . "/Tiger/sent")
             (mu4e-drafts-folder . "/Tiger/draft")
             (mu4e-refile-folder . "/Tiger/archive")
-            (user-mail-address . "zzg0009@auburn.com")
+            (user-mail-address . "zzg0009@auburn.edu")
             (message-signature-file . ,(expand-file-name "signature/tiger"
                                                          me-emacs-data))))))
 
 (setq mu4e-compose-dont-reply-to-self t)
 (setq mu4e-user-mail-address-list
-      '("zhitaao.gong@gmail.com" "zzg0009@auburn.edu" "gong@auburn.edu"
+      '("zzg0009@auburn.edu" "zzg0009@tigermail.auburn.edu" "gong@auburn.edu"
+        "zhitaao.gong@gmail.com"
         "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
 (setq mu4e-context-policy 'pick-first)
