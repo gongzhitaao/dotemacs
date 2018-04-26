@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-25 16:41:16 gongzhitaao>
+;; Time-stamp: <2018-04-26 11:58:55 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -50,7 +50,7 @@
 ;; C-c d -- drag-stuff-mode
 (global-set-key (kbd "C-c f") #'me-buffer-file-command-prefix)
 ;; C-c g -- magit-status
-;; C-c m -- multiple-cursor
+(global-set-key (kbd "C-c m") #'me-multiple-cursors-command-prefix)
 (global-set-key (kbd "C-c o") #'me-org-command-prefix)
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
@@ -421,6 +421,7 @@ for a file to visit if current buffer is not visiting a file."
 (define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
 (define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
 (define-key view-mode-map (kbd "o") #'other-window)
+(define-key view-mode-map (kbd "q") #'bury-buffer)
 (define-key view-mode-map (kbd "s") #'helm-swoop)
 (define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
 (define-key view-mode-map (kbd "z") #'delete-other-windows)
@@ -645,12 +646,21 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package multiple-cursors
-  :bind (("C-c m C-a" . mc/edit-beginnings-of-lines)
-         ("C-c m C-e" . mc/edit-ends-of-lines)
-         ("C-c m a"   . mc/mark-all-like-this-dwin)
-         ("C-c m l" . mc/edit-lines)
-         ("C-c m m" . mc/mc/mark-more-like-this-extended)
-         ("C-c m r" . vr/mc-mark)))
+  :config
+  (defvar me-multiple-cursors-command-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-a") #'mc/edit-beginnings-of-lines)
+      (define-key map (kbd "C-e") #'mc/edit-ends-of-lines)
+      (define-key map (kbd "a") #'mc/mark-all-like-this-dwim)
+      (define-key map (kbd "l") #'mc/edit-lines)
+      map)
+    "Multiple cursors editing key mappings.")
+
+  (defvar me-multiple-cursors-command-prefix nil
+    "Prefix key for multiple cursors editing.")
+  (define-prefix-command 'me-multiple-cursors-command-prefix)
+  (fset 'me-multiple-cursors-command-prefix me-multiple-cursors-command-map)
+  (setq me-multiple-cursors-command-prefix me-multiple-cursors-command-map))
 
 ;; -------------------------------------------------------------------
 ;; tramp
