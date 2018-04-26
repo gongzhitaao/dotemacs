@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-23 16:10:37 gongzhitaao>
+;; Time-stamp: <2018-04-25 16:41:16 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys

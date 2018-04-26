@@ -30,7 +30,6 @@
             (mu4e-drafts-folder . "/Personal/draft")
             (mu4e-refile-folder . "/Personal/archive")
             (user-mail-address . "zhitaao.gong@gmail.com")
-            (mu4e-sent-messages-behavior . 'delete)
             (message-signature-file . ,(expand-file-name "signature/personal"
                                                          me-emacs-data))))
         ,(make-mu4e-context
@@ -67,6 +66,8 @@ So we just delete it locally."
   (if (string-match-p "\\(@gmail\\.com\\)" (message-sendmail-envelope-from))
       'delete 'sent))
 (setq mu4e-sent-messages-behavior #'me//process-sent-messages)
+
+(setq mu4e-attachment-dir (expand-file-name "Downloads" me-home))
 
 (add-to-list 'mu4e-bookmarks
              '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
