@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-26 11:58:55 gongzhitaao>
+;; Time-stamp: <2018-04-27 09:50:21 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -280,6 +280,9 @@ for a file to visit if current buffer is not visiting a file."
 ;; backup
 ;; -------------------------------------------------------------------
 
+(require 'bookmark)
+(setq bookmark-default-file (expand-file-name "bookmarks" me-emacs-data))
+
 (setq auto-save-list-file-prefix
       (expand-file-name ".saves-" me-emacs-tmp))
 (setq auto-save-file-name-transforms
@@ -299,7 +302,7 @@ for a file to visit if current buffer is not visiting a file."
     (message "Deleting old backup files...")
     (dolist (file (directory-files directory t))
       (when (and (backup-file-name-p file)
-                 (> (- current (float-time (fifth (file-attributes file))))
+                 (> (- current (float-time (nth 5 (file-attributes file))))
                     age))
         (message "delete: %s" file)
         (delete-file file)))))
@@ -973,10 +976,11 @@ going, at least for now.  Basically add every package path to
   :bind ("C-c u" . undo-tree-visualize)
   :diminish undo-tree-mode
   :config
+  (setq undo-tree-enable-undo-in-region nil)
   (setq undo-tree-visualizer-diff t)
+  (global-undo-tree-mode)
   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history t)
-  (global-undo-tree-mode 1))
+  (setq undo-tree-auto-save-history t))
 
 ;; -------------------------------------------------------------------
 ;; which key
@@ -1184,7 +1188,7 @@ going, at least for now.  Basically add every package path to
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
-                                        :family "Inziu Iosevka TC"
+                                        :family "Sarasa Gothic TC"
                                         :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
