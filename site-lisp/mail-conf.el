@@ -137,6 +137,7 @@ So we just delete it locally."
 (set-face-foreground 'mu4e-context-face "dark green")
 (set-face-foreground 'mu4e-modeline-face "DarkOrange4")
 (set-face-background 'mu4e-header-highlight-face "black")
+(set-face-foreground 'mu4e-cited-2-face "SteelBlue2")
 
 ;; -----------------------------------------------------------------------------
 ;; Message buffer
