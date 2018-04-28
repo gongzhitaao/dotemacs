@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-04-23 12:51:36 gongzhitaao>
+;; Time-stamp: <2018-04-28 18:04:02 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -26,14 +26,23 @@
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex))
 
+(defun me/bibtex-find-text-begin ()
+  "Go to the beginning of a field entry."
+  (interactive)
+  (bibtex-find-text t))
+
 (use-package bibtex
   :config
   (defun me//init-bibtex ()
-    (local-set-key [remap fill-paragraph] #'bibtex-fill-entry)
-    (local-set-key [remap bibtex-clean-entry] #'org-ref-clean-bibtex-entry)
-    (local-set-key (kbd "C-c C-v") #'bibtex-validate)
     (setq fill-column 140))
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
+
+  (define-key bibtex-mode-map [remap fill-paragraph] #'bibtex-fill-entry)
+  (define-key bibtex-mode-map [remap bibtex-clean-entry] #'org-ref-clean-bibtex-entry)
+  (define-key bibtex-mode-map (kbd "C-c C-v") #'bibtex-validate)
+  (define-key bibtex-mode-map (kbd "<backtab>") #'me/bibtex-find-text-begin)
+  (define-key bibtex-mode-map (kbd "M-<down>") #'bibtex-end-of-entry)
+  (define-key bibtex-mode-map (kbd "M-<up>") #'bibtex-beginning-of-entry)
 
   (setq bibtex-dialect 'biblatex)
   (setq bibtex-align-at-equal-sign t)
@@ -87,8 +96,6 @@
   (setq org-ref-ref-color "goldenrod")
   (setq org-ref-cite-color "dark sea green")
   (setq org-ref-show-citation-on-enter nil)
-
-  :after (bibtex)
 
   :config
   (defun me//org-ref-notes-function (thekey)
