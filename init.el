@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-27 09:50:21 gongzhitaao>
+;; Time-stamp: <2018-04-28 15:42:49 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -21,6 +21,9 @@
 (global-set-key (kbd "C-z") #'delete-other-windows)
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
 (global-set-key (kbd "<escape>") #'view-mode)
+
+(global-set-key (kbd "C-|") #'fci-mode)
+(global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
 ;; FN keys
 ;; --------------------------------------------------------------------
@@ -57,8 +60,6 @@
 (global-set-key (kbd "C-c =") #'align-regexp)
 
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
-
-(global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
 ;; M- meta keys
 ;; --------------------------------------------------------------------
@@ -195,6 +196,9 @@ for a file to visit if current buffer is not visiting a file."
     (define-key map (kbd "e") #'me/org-ref-open-entry)
     (define-key map (kbd "h") #'me/org-custom-id-get-create)
     (define-key map (kbd "H") #'me/org-custom-id-get-create-all)
+    (define-key map (kbd "l b") #'org-ref-extract-bibtex-entries)
+    (define-key map (kbd "l f") #'org-ref-list-of-figures)
+    (define-key map (kbd "l t") #'org-ref-list-of-tables)
     (define-key map (kbd "s") #'me/org-sort-orgref-citation-list-by-year)
     (define-key map (kbd "n") #'me/org-ref-open-note)
     (define-key map (kbd "p") #'me/org-ref-open-pdf)
@@ -343,6 +347,7 @@ for a file to visit if current buffer is not visiting a file."
 (setq recentf-max-saved-items 20)
 (add-to-list 'recentf-exclude (expand-file-name ".*" me-emacs-tmp))
 (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
+(add-to-list 'recentf-exclude "~/Mail")
 (add-to-list 'recentf-exclude me-emacs-data)
 (recentf-mode 1)
 
@@ -397,7 +402,9 @@ for a file to visit if current buffer is not visiting a file."
                               space-before-tab))
 
 (add-hook 'before-save-hook 'whitespace-cleanup)
-(add-hook 'text-mode-hook 'whitespace-mode)
+(add-hook 'org-mode-hook 'whitespace-mode)
+(add-hook 'tex-mode-hook 'whitespace-mode)
+(add-hook 'message-mode-hook 'whitespace-mode)
 
 ;; -------------------------------------------------------------------
 ;; view mode
@@ -557,7 +564,7 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 
 (use-package projectile
-  :config (projectile-global-mode 1)
+  :config (projectile-mode 1)
   :diminish projectile-mode)
 (use-package helm-projectile
   :config
@@ -685,8 +692,8 @@ going, at least for now.  Basically add every package path to
   (setq writeroom-maximize-window nil)
   (setq writeroom-width (+ fill-column 15))
   (setq writeroom-major-modes
-        '(text-mode prog-mode dired-mode conf-mode
-                    ein:notebook-multilang-mode Info-mode calendar-mode))
+        '(prog-mode dired-mode conf-mode Info-mode calendar-mode prog-mode
+                    tex-mode org-mode mu4e-compose-mode))
   (setq writeroom-mode-line t)
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
@@ -756,8 +763,10 @@ going, at least for now.  Basically add every package path to
 (use-package fill-column-indicator
   :config
   (setq fci-rule-color "gray50")
-  (add-hook 'prog-mode-hook #'fci-mode)
-  (add-hook 'text-mode-hook #'fci-mode))
+  (add-hook 'prog-mode-hook #'turn-on-fci-mode)
+  (add-hook 'org-mode-hook #'turn-on-fci-mode)
+  (add-hook 'tex-mode-hook #'turn-on-fci-mode)
+  (add-hook 'message-mode-hook #'turn-on-fci-mode))
 
 ;; -------------------------------------------------------------------
 ;; persistent scratch
