@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-28 15:42:49 gongzhitaao>
+;; Time-stamp: <2018-04-29 08:22:08 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -347,8 +347,9 @@ for a file to visit if current buffer is not visiting a file."
 (setq recentf-max-saved-items 20)
 (add-to-list 'recentf-exclude (expand-file-name ".*" me-emacs-tmp))
 (add-to-list 'recentf-exclude (expand-file-name "~/.newsrc*"))
-(add-to-list 'recentf-exclude "~/Mail")
-(add-to-list 'recentf-exclude me-emacs-data)
+(add-to-list 'recentf-exclude (expand-file-name "Mail/.*" me-home))
+(add-to-list 'recentf-exclude (expand-file-name ".cask/.*" user-emacs-directory))
+(add-to-list 'recentf-exclude (expand-file-name "/usr/.*"))
 (recentf-mode 1)
 
 ;; -------------------------------------------------------------------
