@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-29 08:22:08 gongzhitaao>
+;; Time-stamp: <2018-04-30 13:17:13 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -23,6 +23,7 @@
 (global-set-key (kbd "<escape>") #'view-mode)
 
 (global-set-key (kbd "C-|") #'fci-mode)
+(global-set-key (kbd "C->") #'me/join-next-line)
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
 ;; FN keys
@@ -164,6 +165,16 @@ for a file to visit if current buffer is not visiting a file."
 
 (me-with-region-or-line #'comment-or-uncomment-region)
 (me-with-region-or-line #'kill-ring-save)
+
+(defun me/join-next-line (arg)
+  "Join this line with next line.
+
+Convenient extension to `delete-indentation' which joins this
+line with previous line."
+  (interactive "P")
+  (save-excursion
+    (forward-line)
+    (delete-indentation arg)))
 
 ;; -------------------------------------------------------------------
 ;; command map groups
@@ -1198,7 +1209,7 @@ going, at least for now.  Basically add every package path to
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
-                                        :family "Sarasa Gothic TC"
+                                        :family "Sarasa Mono TC"
                                         :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
