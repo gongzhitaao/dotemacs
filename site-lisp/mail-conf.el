@@ -1,8 +1,8 @@
 ;;; mail-conf.el --- mail config
 
 ;;; Commentary:
-;; Setup mu4e, dependencies include message from Gnus (compose), mu4e-alert
-;; (destop alert new emails), msmtp (sending mails), BBDB (contact database).
+;; Setup mu4e, dependencies include mu4e-alert (destop alert new emails), msmtp
+;; (sending mails), BBDB (contact database).
 
 ;;; Code:
 
@@ -78,7 +78,7 @@ So we just delete it locally."
 
 (use-package bbdb
   :config
-  (bbdb-initialize 'gnus 'message 'anniv 'mu4e)
+  (bbdb-initialize 'message 'anniv 'mu4e)
 
   (setq bbdb-complete-mail-allow-cycling t
         bbdb-allow-duplicates t

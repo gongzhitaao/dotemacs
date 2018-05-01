@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-30 13:17:13 gongzhitaao>
+;; Time-stamp: <2018-04-30 15:42:06 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -23,8 +23,10 @@
 (global-set-key (kbd "<escape>") #'view-mode)
 
 (global-set-key (kbd "C-|") #'fci-mode)
-(global-set-key (kbd "C->") #'me/join-next-line)
+(global-set-key (kbd "C-+") #'me/join-next-line)
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
+(global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
+(global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
 
 ;; FN keys
 ;; --------------------------------------------------------------------
@@ -675,6 +677,8 @@ going, at least for now.  Basically add every package path to
       (define-key map (kbd "C-e") #'mc/edit-ends-of-lines)
       (define-key map (kbd "a") #'mc/mark-all-like-this-dwim)
       (define-key map (kbd "l") #'mc/edit-lines)
+      (define-key map (kbd "i n") #'mc/insert-numbers)
+      (define-key map (kbd "i l") #'mc/insert-letters)
       map)
     "Multiple cursors editing key mappings.")
 
