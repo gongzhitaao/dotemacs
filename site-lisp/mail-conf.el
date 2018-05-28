@@ -13,6 +13,7 @@
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
 (setq mu4e-maildir (expand-file-name "Mail" me-home))
@@ -23,12 +24,12 @@
           :match-func
           (lambda (msg)
             (when msg (string-prefix-p
-                       "/Personal" (mu4e-message-field msg :maildir))))
+                       "/personal" (mu4e-message-field msg :maildir))))
           :vars
-          `((mu4e-trash-folder . "/Personal/trash")
-            (mu4e-sent-folder . "/Personal/sent")
-            (mu4e-drafts-folder . "/Personal/draft")
-            (mu4e-refile-folder . "/Personal/archive")
+          `((mu4e-trash-folder . "/personal/trash")
+            (mu4e-sent-folder . "/personal/sent")
+            (mu4e-drafts-folder . "/personal/draft")
+            (mu4e-refile-folder . "/personal/archive")
             (user-mail-address . "zhitaao.gong@gmail.com")
             (message-signature-file . ,(expand-file-name "signature/personal"
                                                          me-emacs-data))))
@@ -37,14 +38,28 @@
           :match-func
           (lambda (msg)
             (when msg (string-prefix-p
-                       "/Tiger" (mu4e-message-field msg :maildir))))
+                       "/tiger" (mu4e-message-field msg :maildir))))
           :vars
-          `((mu4e-trash-folder . "/Tiger/trash")
-            (mu4e-sent-folder . "/Tiger/sent")
-            (mu4e-drafts-folder . "/Tiger/draft")
-            (mu4e-refile-folder . "/Tiger/archive")
+          `((mu4e-trash-folder . "/tiger/trash")
+            (mu4e-sent-folder . "/tiger/sent")
+            (mu4e-drafts-folder . "/tiger/draft")
+            (mu4e-refile-folder . "/tiger/archive")
             (user-mail-address . "zzg0009@auburn.edu")
             (message-signature-file . ,(expand-file-name "signature/tiger"
+                                                         me-emacs-data))))
+        ,(make-mu4e-context
+          :name "Work"
+          :match-func
+          (lambda (msg)
+            (when msg (string-prefix-p
+                       "/work" (mu4e-message-field msg :maildir))))
+          :vars
+          `((mu4e-trash-folder . "/work/trash")
+            (mu4e-sent-folder . "/work/sent")
+            (mu4e-drafts-folder . "/work/draft")
+            (mu4e-refile-folder . "/work/archive")
+            (user-mail-address . "gongzhitaao@fb.com")
+            (message-signature-file . ,(expand-file-name "signature/work"
                                                          me-emacs-data))))))
 
 (setq mu4e-compose-dont-reply-to-self t)
@@ -57,6 +72,7 @@
 (setq mu4e-compose-context-policy nil)
 (setq mu4e-view-mode-hook '(bbdb-mua-auto-update))
 (setq mu4e-compose-complete-addresses t)
+(setq mu4e-change-filenames-when-moving t)
 
 (defun me//process-sent-messages ()
   "Post-process sent messages based on email address.

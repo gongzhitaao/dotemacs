@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-04-30 15:42:06 gongzhitaao>
+;; Time-stamp: <2018-05-11 10:29:40 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -289,7 +289,7 @@ line with previous line."
 (if (file-exists-p custom-file)
     (load custom-file))
 
-(add-hook 'focus-out-hook #'garbage-collect)
+;; (add-hook 'focus-out-hook #'garbage-collect)
 
 (setq select-enable-clipboard t)
 
@@ -460,7 +460,7 @@ line with previous line."
 (add-to-list 'default-frame-alist '(foreground-color . "gray90"))
 
 (global-hl-line-mode)
-(set-face-background 'hl-line "gray10")
+(set-face-background 'hl-line "black")
 
 ;; -------------------------------------------------------------------
 ;; Vendor minimal
@@ -721,6 +721,18 @@ going, at least for now.  Basically add every package path to
 (use-package re-builder
   :config
   (setq reb-re-syntax 'string))
+
+;; -------------------------------------------------------------------
+;; yasnippets
+;; -------------------------------------------------------------------
+
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs
+        `(,(expand-file-name "snippets" me-emacs-data)))
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  (add-hook 'org-mode-hook #'yas-minor-mode))
 
 ;; -------------------------------------------------------------------
 ;; highlight-indent-guides
@@ -1001,11 +1013,11 @@ going, at least for now.  Basically add every package path to
   :bind ("C-c u" . undo-tree-visualize)
   :diminish undo-tree-mode
   :config
-  (setq undo-tree-enable-undo-in-region nil)
+  (setq undo-tree-enable-undo-in-region t)
   (setq undo-tree-visualizer-diff t)
-  (global-undo-tree-mode)
   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history t))
+  (setq undo-tree-auto-save-history t)
+  (global-undo-tree-mode))
 
 ;; -------------------------------------------------------------------
 ;; which key

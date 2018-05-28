@@ -1,5 +1,5 @@
 ;;; org-conf.el --- Orgmode configuration
-;; Time-stamp: <2018-04-22 16:03:41 gongzhitaao>
+;; Time-stamp: <2018-05-28 08:26:15 gongzhitaao>
 
 ;;; Commentary:
 ;;
@@ -163,6 +163,9 @@
           ("ru" "Miscellaneous" checkitem
            (file+headline "notes/bibliography/related/misc.org" "Recent Work"))
 
+          ("s" "Saved for later" item
+           (file+headline "readlist.org" "Reading List"))
+
           ("t" "New TODO" entry
            (file "todo.org")
            (file "capture/todo.org")
@@ -182,9 +185,9 @@
         (quote ("PDFLATEX=%latex texi2dvi --shell-escape --pdf --clean --verbose --batch %f")))
 
   (setq org-latex-listings 'minted)
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
-  (add-to-list 'org-latex-packages-alist '("" "geometry"))
+  ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+  ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
+  ;; (add-to-list 'org-latex-packages-alist '("" "geometry"))
 
   (add-to-list 'org-latex-classes
                '("ctexart"

@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-04-28 18:04:02 gongzhitaao>
+;; Time-stamp: <2018-05-11 11:23:11 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -209,9 +209,9 @@ alphabetically (in ascending or descending order)."
 ;; instance, me/org-ref-open-pdf opens the PDF file when your cursor is at the
 ;; bibtex entry or the note that is associated with this bibtex entry.
 
-(defun me/org-ref-open-pdf ()
+(defun me/org-ref-open-pdf (&optional arg)
   "Open the associated PDF."
-  (interactive)
+  (interactive "P")
   (let* ((key (cond
                ((derived-mode-p 'org-mode)
                 (condition-case nil
@@ -222,11 +222,17 @@ alphabetically (in ascending or descending order)."
                 (save-excursion
                   (bibtex-beginning-of-entry)
                   (reftex-get-bib-field "=key=" (bibtex-parse-entry t))))
+               (arg
+                (file-name-base (buffer-name)))
                (t nil)))
          (pdf-file (funcall org-ref-get-pdf-filename-function key)))
     (if (file-exists-p pdf-file)
-        (org-open-file pdf-file)
-      (message "No PDF found with name %s" pdf-file))))
+        (if arg
+            (start-process "xdg-open" nil "xdg-open" pdf-file)
+          (org-open-file pdf-file))
+      (if (derived-mode-p 'pdf-view-mode)
+          (message "Already opened")
+        (message "No PDF found with name %s" pdf-file)))))
 
 (defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
