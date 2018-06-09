@@ -16,7 +16,7 @@
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
-(setq mu4e-maildir (expand-file-name "Mail" me-home))
+(setq mu4e-maildir (expand-file-name ".mail" me-home))
 
 (setq mu4e-contexts
       `(,(make-mu4e-context
@@ -60,6 +60,20 @@
             (mu4e-refile-folder . "/work/archive")
             (user-mail-address . "gongzhitaao@fb.com")
             (message-signature-file . ,(expand-file-name "signature/work"
+                                                         me-emacs-data))))
+        ,(make-mu4e-context
+          :name "Reg"
+          :match-func
+          (lambda (msg)
+            (when msg (string-prefix-p
+                       "/reg" (mu4e-message-field msg :maildir))))
+          :vars
+          `((mu4e-trash-folder . "/reg/trash")
+            (mu4e-sent-folder . "/reg/sent")
+            (mu4e-drafts-folder . "/reg/draft")
+            (mu4e-refile-folder . "/reg/archive")
+            (user-mail-address . "zhitaao.gong.reg@gmail.com")
+            (message-signature-file . ,(expand-file-name "signature/personal"
                                                          me-emacs-data))))))
 
 (setq mu4e-compose-dont-reply-to-self t)
