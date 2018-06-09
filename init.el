@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-05-11 10:29:40 gongzhitaao>
+;; Time-stamp: <2018-06-08 22:19:00 gongzhitaao>
 
 ;;; Naming conventions:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -289,6 +289,9 @@ line with previous line."
 (if (file-exists-p custom-file)
     (load custom-file))
 
+;(if (file-exists-p me-local-conf)
+;    (load me-local-conf))
+
 ;; (add-hook 'focus-out-hook #'garbage-collect)
 
 (setq select-enable-clipboard t)
@@ -305,12 +308,18 @@ line with previous line."
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(setq backup-directory-alist `((".*" . ,me-emacs-tmp)))
+(setq backup-directory-alist `(("." . ,me-emacs-tmp)))
 (setq backup-by-copying    t
       delete-old-versions  t
-      kept-new-versions    6
-      kept-old-versions    2
+      kept-new-versions    30
+      kept-old-versions    30
       version-control      t)
+
+;; Backup buffer before each save.
+(defun me//force-backup-of-buffer ()
+  "Force to backup buffer."
+  (setq-local buffer-backed-up nil))
+(add-hook 'before-save-hook  #'me//force-backup-of-buffer)
 
 (defun me//cleanup-old-files (directory nday)
   "Cleanup DIRECTORY files older than NDAY."
@@ -503,6 +512,7 @@ going, at least for now.  Basically add every package path to
 ;; (me//init-package)
 
 (require 'cask "~/.cask/cask.el")
+
 (cask-initialize)
 
 (require 'pallet)
@@ -620,6 +630,16 @@ going, at least for now.  Basically add every package path to
   (diminish 'auto-revert-mode " "))
 (add-hook 'auto-revert-mode-hook #'me//diminish-auto-revert)
 
+(defun me//diminish-py-docstring ()
+  "Diminish `python-docstring'."
+  (diminish 'python-docstring-mode))
+(add-hook 'python-docstring-mode-hook #'me//diminish-py-docstring)
+
+(defun me//diminish-yapf ()
+  "Diminish `yapf-mode'."
+  (diminish 'yapf-mode))
+(add-hook 'yapf-mode-hook #'me//diminish-yapf)
+
 ;; -------------------------------------------------------------------
 ;; dired+
 ;; -------------------------------------------------------------------
@@ -709,7 +729,7 @@ going, at least for now.  Basically add every package path to
   (setq writeroom-width (+ fill-column 15))
   (setq writeroom-major-modes
         '(prog-mode dired-mode conf-mode Info-mode calendar-mode prog-mode
-                    tex-mode org-mode mu4e-compose-mode))
+                    markdown-mode tex-mode org-mode mu4e-compose-mode))
   (setq writeroom-mode-line t)
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
@@ -793,6 +813,7 @@ going, at least for now.  Basically add every package path to
   (setq fci-rule-color "gray50")
   (add-hook 'prog-mode-hook #'turn-on-fci-mode)
   (add-hook 'org-mode-hook #'turn-on-fci-mode)
+  (add-hook 'markdown-mode-hook #'turn-on-fci-mode)
   (add-hook 'tex-mode-hook #'turn-on-fci-mode)
   (add-hook 'message-mode-hook #'turn-on-fci-mode))
 
@@ -1011,10 +1032,10 @@ going, at least for now.  Basically add every package path to
 
 (use-package undo-tree
   :bind ("C-c u" . undo-tree-visualize)
+  :demand
   :diminish undo-tree-mode
   :config
   (setq undo-tree-enable-undo-in-region t)
-  (setq undo-tree-visualizer-diff t)
   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
   (setq undo-tree-auto-save-history t)
   (global-undo-tree-mode))
@@ -1215,7 +1236,7 @@ going, at least for now.  Basically add every package path to
 
 (set-face-attribute 'default nil
                     :family "Iosevka"
-                    :height 135)
+                    :height 130)
 
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
@@ -1290,13 +1311,14 @@ going, at least for now.  Basically add every package path to
 ;; Python
 ;; -------------------------------------------------------------------
 
+(use-package sphinx-doc)
+(use-package yapfify)
+
 (use-package python
   :config
   (defun me//init-python()
-    (local-set-key (kbd "M-<left>") #'decrease-left-margin)
-    (local-set-key (kbd "M-<right>") #'increase-left-margin)
     (python-docstring-mode)
-    (diminish 'python-docstring-mode)
+    (sphinx-doc-mode)
     (set (make-local-variable 'comment-inline-offset) 2)
     (setq fill-column 78)
     (setq python-check-command "flake8"))
@@ -1351,7 +1373,10 @@ going, at least for now.  Basically add every package path to
 
   (define-key python-mode-map (kbd "C-c C-t a") #'python-skeleton-args)
   (define-key python-mode-map (kbd "C-c C-t l") #'python-skeleton-logging)
-  (define-key python-mode-map (kbd "C-c C-t m") #'python-skeleton-matplotlib))
+  (define-key python-mode-map (kbd "C-c C-t m") #'python-skeleton-matplotlib)
+  (define-key python-mode-map (kbd "M-<left>") #'python-indent-shift-left)
+  (define-key python-mode-map (kbd "M-<right>") #'python-indent-shift-right)
+  (define-key python-mode-map (kbd "C-!") #'yapfify-region))
 
 ;; -------------------------------------------------------------------
 ;; shell script
@@ -1445,9 +1470,6 @@ going, at least for now.  Basically add every package path to
 ;; -------------------------------------------------------------------
 ;; calendar in emacs
 ;; -------------------------------------------------------------------
-
-(if (file-exists-p me-local-conf)
-    (load me-local-conf))
 
 (require 'server)
 (unless (server-running-p) (server-start))
