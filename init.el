@@ -1,7 +1,7 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-06-08 22:19:00 gongzhitaao>
+;; Time-stamp: <2018-06-27 16:28:28 gongzhitaao>
 
-;;; Naming conventions:
+;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
 ;; me//xxx: internal helper functions, not called directly by user
 ;; me-xxx: custom variables
@@ -27,6 +27,7 @@
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
+(global-set-key (kbd "M-\"") #'flycheck-keymap-prefix)
 
 ;; FN keys
 ;; --------------------------------------------------------------------
@@ -145,6 +146,7 @@ advice."
       (advice-remove func #'me--ad-with-region-or-line)
     (advice-add func :filter-args #'me--ad-with-region-or-line)))
 
+(defvar comint-buffer-maximum-size)
 (defun me-clear-shell ()
   "Clear shell window."
    (interactive)
@@ -169,7 +171,7 @@ for a file to visit if current buffer is not visiting a file."
 (me-with-region-or-line #'kill-ring-save)
 
 (defun me/join-next-line (arg)
-  "Join this line with next line.
+  "Join this line with next line.  ARG passed to `delete-indentation'.
 
 Convenient extension to `delete-indentation' which joins this
 line with previous line."
@@ -187,7 +189,7 @@ line with previous line."
 (defvar me-buffer-file-command-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "l") #'magit-log-buffer-file)
-    (define-key map (kbd "s") #'set-buffer-file-coding-system)
+    (define-key map (kbd "S") #'set-buffer-file-coding-system)
     (define-key map (kbd "s") #'me/sudo-edit)
     (define-key map (kbd "v") #'add-file-local-variable)
     (define-key map (kbd "V") #'add-file-local-variable-prop-line)
@@ -228,6 +230,7 @@ line with previous line."
 ;; Misc
 ;; -------------------------------------------------------------------
 
+(defvar display-time-24hr-format)
 (setq display-time-24hr-format t
       display-time-day-and-date nil)
 (display-time)
@@ -490,25 +493,25 @@ line with previous line."
 ;;    ("gnu"          . "https://elpa.gnu.org/packages/")
 ;;    ("sc"           . "http://joseito.republika.pl/sunrise-commander/")))
 
-(defun me//init-package ()
-  "Load packages manually in just in case cask fails.
+;; (defun me//init-package ()
+;;   "Load packages manually in just in case cask fails.
 
-If cask fails mysteriously, use the following code to get things
-going, at least for now.  Basically add every package path to
-`load-path', and autoload the functions."
-  (dolist (elem
-           (directory-files-and-attributes
-            "~/.emacs.d/.cask/24.5/elpa/" t))
-    (let ((path (car elem))
-          (dir (cadr elem))
-          (auto nil))
-      (if (and dir
-               (not (string= path "."))
-               (not (string= path "..")))
-          (progn
-            (add-to-list 'load-path path)
-            (setq auto (directory-files path nil "-autoloads\.el$"))
-            (if auto (autoload (car auto))))))))
+;; If cask fails mysteriously, use the following code to get things
+;; going, at least for now.  Basically add every package path to
+;; `load-path', and autoload the functions."
+;;   (dolist (elem
+;;            (directory-files-and-attributes
+;;             "~/.emacs.d/.cask/24.5/elpa/" t))
+;;     (let ((path (car elem))
+;;           (dir (cadr elem))
+;;           (auto nil))
+;;       (if (and dir
+;;                (not (string= path "."))
+;;                (not (string= path "..")))
+;;           (progn
+;;             (add-to-list 'load-path path)
+;;             (setq auto (directory-files path nil "-autoloads\.el$"))
+;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
 (require 'cask "~/.cask/cask.el")
@@ -616,6 +619,7 @@ going, at least for now.  Basically add every package path to
 (diminish 'visual-line-mode)
 
 (defun me//diminish-flyspell ()
+  "Diminish variable `flyspell-mode'."
   (diminish 'flyspell-mode))
 (add-hook 'flyspell-mode-hook #'me//diminish-flyspell)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
@@ -891,7 +895,7 @@ going, at least for now.  Basically add every package path to
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-  (let ((me//paren-dual-colors '("salmon" "navajo white")))
+  (let ((me//paren-dual-colors '("deep sky blue" "navajo white")))
     (cl-loop
      for index from 1 to rainbow-delimiters-max-face-count
      do
@@ -1030,15 +1034,18 @@ going, at least for now.  Basically add every package path to
 ;; undo tree
 ;; -------------------------------------------------------------------
 
-(use-package undo-tree
-  :bind ("C-c u" . undo-tree-visualize)
-  :demand
-  :diminish undo-tree-mode
-  :config
-  (setq undo-tree-enable-undo-in-region t)
-  (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history t)
-  (global-undo-tree-mode))
+;; (use-package undo-tree
+;;   :bind ("C-c u" . undo-tree-visualize)
+;;   :demand t
+;;   :diminish undo-tree-mode
+;;   :config
+;;   (setq undo-tree-enable-undo-in-region t)
+;;   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
+;;   (setq undo-tree-auto-save-history t)
+;;   (setq undo-limit 80000)
+;;   (global-undo-tree-mode))
+
+(setq undo-limit 100000000)              ;100M
 
 ;; -------------------------------------------------------------------
 ;; which key
@@ -1260,6 +1267,18 @@ going, at least for now.  Basically add every package path to
   (format-time-string "key-%FT%H%M%S.log") me-keylog))
 
 ;; -------------------------------------------------------------------
+;; flycheck
+;; -------------------------------------------------------------------
+
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config
+  (setq flycheck-python-flake8-executable "flake8")
+  (define-prefix-command 'flycheck-keymap-prefix)
+  (fset 'flycheck-keymap-prefix flycheck-command-map)
+  (setq flycheck-keymap-prefix flycheck-command-map))
+
+;; -------------------------------------------------------------------
 ;; mail
 ;; -------------------------------------------------------------------
 
@@ -1277,7 +1296,7 @@ going, at least for now.  Basically add every package path to
 
 (use-package clang-format
   :bind (:map c++-mode-map
-              ("C-M-q" . clang-format-region)))
+              ("C-!" . clang-format-region)))
 
 ;; -------------------------------------------------------------------
 ;; Javascript
@@ -1313,6 +1332,12 @@ going, at least for now.  Basically add every package path to
 
 (use-package sphinx-doc)
 (use-package yapfify)
+
+;; (use-package flymake-python-pyflakes
+;;   :config
+;;   (setq flymake-python-pyflakes-executable "flake8")
+;;   (setq flymake-run-in-place nil)
+;;   (add-hook 'python-mode-hook 'flymake-python-pyflakes-load))
 
 (use-package python
   :config

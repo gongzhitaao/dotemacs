@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-05-11 11:23:11 gongzhitaao>
+;; Time-stamp: <2018-06-27 22:24:14 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -228,7 +228,7 @@ alphabetically (in ascending or descending order)."
          (pdf-file (funcall org-ref-get-pdf-filename-function key)))
     (if (file-exists-p pdf-file)
         (if arg
-            (start-process "xdg-open" nil "xdg-open" pdf-file)
+            (start-process "xdg-open" nil "setsid" "xdg-open" pdf-file)
           (org-open-file pdf-file))
       (if (derived-mode-p 'pdf-view-mode)
           (message "Already opened")

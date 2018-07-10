@@ -43,6 +43,8 @@
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
 (depends-on "flycheck-tip")
+(depends-on "flymake")
+(depends-on "flymake-python-pyflakes")
 (depends-on "fuzzy")
 (depends-on "ggtags")
 (depends-on "git")

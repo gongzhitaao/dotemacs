@@ -1,5 +1,5 @@
 ;;; org-conf.el --- Orgmode configuration
-;; Time-stamp: <2018-05-28 08:26:15 gongzhitaao>
+;; Time-stamp: <2018-06-20 07:20:44 gongzhitaao>
 
 ;;; Commentary:
 ;;
@@ -122,6 +122,41 @@
           (tags     . " %i %-12:T")
           (search   . " %i %-12:T")))
 
+  (defun me//org-skip-subtree-if-habit ()
+    "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (if (string= (org-entry-get nil "STYLE") "habit")
+          subtree-end
+        nil)))
+
+  (defun me//org-skip-subtree-if-priority (priority)
+    "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (pri-value (* 1000 (- org-lowest-priority priority)))
+          (pri-current (org-get-priority (thing-at-point 'line t))))
+      (if (= pri-value pri-current)
+          subtree-end
+        nil)))
+
+(setq org-agenda-custom-commands
+      '(("d" "Daily agenda and all TODOs"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header
+                  "High-priority unfinished tasks:")))
+          (agenda "" ((org-agenda-ndays 1)))
+          (alltodo ""
+                   ((org-agenda-skip-function
+                     '(or (me//org-skip-subtree-if-habit)
+                          (me//org-skip-subtree-if-priority ?A)
+                          (org-agenda-skip-if nil '(scheduled deadline))))
+                    (org-agenda-overriding-header
+                     "ALL normal priority tasks:"))))
+         ((org-agenda-compact-blocks nil)))))
+
   (setq org-agenda-tags-column         -100
         org-agenda-start-with-log-mode t)
   (setq org-habit-graph-column         50
@@ -172,7 +207,7 @@
            :empty-lines 1
            :jump-to-captured t)
 
-          ("w" "New weekly summary" plain
+          ("l" "New daily/weekly plan/log" plain
            (file+olp+datetree "time-machine.org")
            "%?"
            :empty-lines 1
