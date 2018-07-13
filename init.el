@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-06-27 16:28:28 gongzhitaao>
+;; Time-stamp: <2018-07-13 12:06:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -28,6 +28,11 @@
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
 (global-set-key (kbd "M-\"") #'flycheck-keymap-prefix)
+
+(global-set-key (kbd "C-s-<up>") #'windmove-up)
+(global-set-key (kbd "C-s-<right>") #'windmove-right)
+(global-set-key (kbd "C-s-<down>") #'windmove-down)
+(global-set-key (kbd "C-s-<left>") #'windmove-left)
 
 ;; FN keys
 ;; --------------------------------------------------------------------

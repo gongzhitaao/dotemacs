@@ -5,7 +5,6 @@
 
 (depends-on "ace-isearch")
 (depends-on "ace-jump-mode")
-(depends-on "ace-window")
 (depends-on "ag")
 (depends-on "anzu")
 (depends-on "async")
