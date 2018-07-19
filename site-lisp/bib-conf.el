@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-06-27 22:24:14 gongzhitaao>
+;; Time-stamp: <2018-07-16 03:45:59 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -169,6 +169,8 @@ Using `window-line-height' accounts for variable-height fonts."
 
 (bind-key (kbd "<right>") #'pdf-view-next-page-command pdf-view-mode-map)
 (bind-key (kbd "<left>") #'pdf-view-previous-page-command pdf-view-mode-map)
+
+(setq pdf-view-midnight-colors '("#e5e5e5" . "#333333"))
 
 ;; -----------------------------------------------------------------------------
 ;; helper functions

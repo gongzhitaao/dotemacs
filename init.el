@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-07-13 12:06:18 gongzhitaao>
+;; Time-stamp: <2018-07-19 09:30:09 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1259,7 +1259,7 @@ line with previous line."
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
                                         :family "Sarasa Mono TC"
-                                        :size 18)))
+                                        :size 16)))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
 
