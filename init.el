@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-07-19 09:30:09 gongzhitaao>
+;; Time-stamp: <2018-08-18 08:21:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -184,6 +184,31 @@ line with previous line."
   (save-excursion
     (forward-line)
     (delete-indentation arg)))
+
+;; The following me//colir-xxx functions are copied from
+;; https://oremacs.com/2015/04/28/blending-faces
+
+(defun me//colir-join (r g b)
+  "Build a color from R G B.
+Inverse of `color-values'."
+  (format "#%02x%02x%02x"
+          (ash r -8)
+          (ash g -8)
+          (ash b -8)))
+
+(defun me//colir-blend (c1 c2 &optional alpha)
+  "Blend the two colors C1 and C2 with ALPHA.
+C1 and C2 are in the format of `color-values'.  ALPHA is a number
+between 0.0 and 1.0 which corresponds to the influence of C1 on
+the result."
+  (let ((alpha (or alpha 0.5))
+        (rgb1 (color-values c1))
+        (rgb2 (color-values c2)))
+    (apply #'me//colir-join
+           (cl-mapcar
+            (lambda (x y)
+              (round (+ (* x alpha) (* y (- 1 alpha)))))
+            rgb1 rgb2))))
 
 ;; -------------------------------------------------------------------
 ;; command map groups
