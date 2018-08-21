@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-07-16 03:45:59 gongzhitaao>
+;; Time-stamp: <2018-08-21 15:34:17 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -93,8 +93,8 @@
         org-ref-pdf-directory me-bib-pdfs
         org-ref-notes-directory me-bib-notes)
 
-  (setq org-ref-ref-color "goldenrod")
-  (setq org-ref-cite-color "dark sea green")
+  (setq org-ref-ref-color (me//colir-blend "goldenrod" "grey90" 0.4))
+  (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4))
   (setq org-ref-show-citation-on-enter nil)
 
   :config

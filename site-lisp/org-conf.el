@@ -1,5 +1,5 @@
 ;;; org-conf.el --- Orgmode configuration
-;; Time-stamp: <2018-06-20 07:20:44 gongzhitaao>
+;; Time-stamp: <2018-08-21 15:25:02 gongzhitaao>
 
 ;;; Commentary:
 ;;
@@ -102,6 +102,20 @@
           ("WAIT" :foreground "yellow"       :weight bold)
           ("HOLD" :foreground "magenta"      :weight bold)
           ("KILL" :foreground "forest green" :weight bold)))
+
+  (set-face-foreground 'org-level-1 (me//colir-blend "LightSalmon" "gray90" 0.3))
+  (set-face-foreground 'org-level-2 (me//colir-blend "yellow" "gray90" 0.2))
+  (set-face-foreground 'org-level-3 (me//colir-blend "LightGreen" "gray90" 0.3))
+  (set-face-foreground 'org-level-4 (me//colir-blend "LightSkyBlue" "gray90" 0.3))
+  (set-face-foreground 'org-level-5 (me//colir-blend "LightSkyBlue" "gray90" 0.1))
+  (set-face-foreground 'org-level-6 (me//colir-blend "LightGreen" "gray90" 0.1))
+  (set-face-foreground 'org-level-7 (me//colir-blend "yellow" "gray90" 0.1))
+  (set-face-foreground 'org-level-8 (me//colir-blend "LightSalmon" "gray90" 0.1))
+
+  (set-face-foreground 'org-special-keyword (me//colir-blend "SteelBlue" "gray60" 0.2))
+  (set-face-foreground 'org-date (me//colir-blend "goldenrod" "gray70" 0.3))
+  (set-face-foreground 'org-link (me//colir-blend "SteelBlue" "gray90" 0.2))
+  (set-face-foreground 'org-footnote (me//colir-blend "SteelBlue" "gray90" 0.5))
 
   ;; Files to be included in Agenda view.
   (setq org-agenda-files

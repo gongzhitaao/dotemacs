@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-08-18 08:21:29 gongzhitaao>
+;; Time-stamp: <2018-08-21 15:31:06 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1301,12 +1301,13 @@ the result."
 ;; -------------------------------------------------------------------
 
 (use-package flycheck
-  :init (global-flycheck-mode)
   :config
   (setq flycheck-python-flake8-executable "flake8")
   (define-prefix-command 'flycheck-keymap-prefix)
   (fset 'flycheck-keymap-prefix flycheck-command-map)
-  (setq flycheck-keymap-prefix flycheck-command-map))
+  (setq flycheck-keymap-prefix flycheck-command-map)
+  (setq flycheck-global-modes '(not org-mode))
+  (global-flycheck-mode))
 
 ;; -------------------------------------------------------------------
 ;; mail
