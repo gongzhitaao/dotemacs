@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-08-21 15:34:17 gongzhitaao>
+;; Time-stamp: <2018-08-25 15:51:42 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -110,11 +110,11 @@
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
   (setq bibtex-completion-display-formats
-        '((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
+        `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
           (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
           (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
           (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
-          (t             . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${keywords:62}")))
+          (t             . ,(format "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  %s  ${keywords:40}" (make-string 20 ? )))))
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
 
 ;; -----------------------------------------------------------------------------
