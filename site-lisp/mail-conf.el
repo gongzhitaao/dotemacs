@@ -87,6 +87,8 @@
 (setq mu4e-view-mode-hook '(bbdb-mua-auto-update))
 (setq mu4e-compose-complete-addresses t)
 (setq mu4e-change-filenames-when-moving t)
+(setq mu4e-view-show-addresses t)
+(setq mu4e-view-scroll-to-next nil)
 
 (defun me//process-sent-messages ()
   "Post-process sent messages based on email address.
