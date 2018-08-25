@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-08-21 15:31:06 gongzhitaao>
+;; Time-stamp: <2018-08-23 09:51:02 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1317,6 +1317,7 @@ the result."
 (require 'mail-conf)
 (require 'bib-conf)
 (require 'org-conf)
+(require 'gcal-conf)
 
 ;; -------------------------------------------------------------------
 ;; C/C++
