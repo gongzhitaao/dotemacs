@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-08-25 15:51:42 gongzhitaao>
+;; Time-stamp: <2018-08-27 10:41:27 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -204,8 +204,12 @@ The list looks like:
 I want to sort the list first by year (newest first), then
 alphabetically (in ascending or descending order)."
   (interactive)
-  (when (and (derived-mode-p 'org-mode) (org-at-item-p))
-    (org-sort-list with-case ?F #'me//getkey-orgref)))
+  (when (derived-mode-p 'org-mode)
+    (cond ((org-at-item-p)
+           (org-sort-list with-case ?F #'me//getkey-orgref))
+          ((org-at-heading-p)
+           (org-sort-entries with-case ?F #'me//getkey-orgref))
+          (t nil))))
 
 ;; The following three functions jump among PDF, bibtex entry and note.  For
 ;; instance, me/org-ref-open-pdf opens the PDF file when your cursor is at the
