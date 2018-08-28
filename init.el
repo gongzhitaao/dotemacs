@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-08-23 09:51:02 gongzhitaao>
+;; Time-stamp: <2018-08-28 13:36:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1434,6 +1434,13 @@ the result."
   (define-key python-mode-map (kbd "M-<left>") #'python-indent-shift-left)
   (define-key python-mode-map (kbd "M-<right>") #'python-indent-shift-right)
   (define-key python-mode-map (kbd "C-!") #'yapfify-region))
+
+(use-package image-mode
+  :config
+  (define-key image-mode-map (kbd "H") #'image-transform-fit-to-height)
+  (define-key image-mode-map (kbd "W") #'image-transform-fit-to-width)
+  (define-key image-mode-map (kbd "r") #'image-transform-set-rotation)
+  (define-key image-mode-map (kbd "SPC") #'image-transform-reset))
 
 ;; -------------------------------------------------------------------
 ;; shell script
