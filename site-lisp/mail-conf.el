@@ -204,8 +204,8 @@ So we just delete it locally."
 
 (require 'mu4e-alert)
 (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-(mu4e-alert-set-default-style 'notifications)
+;; (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+;; (mu4e-alert-set-default-style 'notifications)
 
 ;; -----------------------------------------------------------------------------
 ;; startup
