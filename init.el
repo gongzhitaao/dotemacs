@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-08-28 13:36:54 gongzhitaao>
+;; Time-stamp: <2018-08-28 14:08:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1171,7 +1171,9 @@ the result."
                 (mode . Info-mode)
                 (mode . help-mode)
                 (mode . ess-help-mode)
-                (name . "^\\*scratch\\*$"))))))
+                (name . "^\\*scratch\\*$")))
+           ("Image"
+            (or (mode . image-mode))))))
 
   (add-hook
    'ibuffer-mode-hook

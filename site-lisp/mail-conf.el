@@ -48,20 +48,6 @@
             (message-signature-file . ,(expand-file-name "signature/tiger"
                                                          me-emacs-data))))
         ,(make-mu4e-context
-          :name "Work"
-          :match-func
-          (lambda (msg)
-            (when msg (string-prefix-p
-                       "/work" (mu4e-message-field msg :maildir))))
-          :vars
-          `((mu4e-trash-folder . "/work/trash")
-            (mu4e-sent-folder . "/work/sent")
-            (mu4e-drafts-folder . "/work/draft")
-            (mu4e-refile-folder . "/work/archive")
-            (user-mail-address . "gongzhitaao@fb.com")
-            (message-signature-file . ,(expand-file-name "signature/work"
-                                                         me-emacs-data))))
-        ,(make-mu4e-context
           :name "Reg"
           :match-func
           (lambda (msg)
@@ -215,8 +201,10 @@ So we just delete it locally."
       mu4e-index-lazy-check t)
 
 (setq mu4e-update-interval 300)
+
 (require 'mu4e-alert)
 (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
 (mu4e-alert-set-default-style 'notifications)
 
 ;; -----------------------------------------------------------------------------
@@ -224,7 +212,7 @@ So we just delete it locally."
 ;; -----------------------------------------------------------------------------
 
 (defun me//seconds-from-now (interval &optional wait)
-  "Calculate INTERVAL seconds from now."
+  "Calculate INTERVAL+WAIT seconds from now."
   (let* ((m (mod (string-to-int (format-time-string "%M")) interval))
          (s (string-to-int (format-time-string "%S")))
          (elapsed (+ (* m 60) s))
