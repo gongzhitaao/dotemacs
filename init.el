@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-08-28 14:08:56 gongzhitaao>
+;; Time-stamp: <2018-09-09 15:15:22 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -20,7 +20,6 @@
 
 (global-set-key (kbd "C-z") #'delete-other-windows)
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
-(global-set-key (kbd "<escape>") #'view-mode)
 
 (global-set-key (kbd "C-|") #'fci-mode)
 (global-set-key (kbd "C-+") #'me/join-next-line)
@@ -466,33 +465,32 @@ the result."
 ;; view mode
 ;; -------------------------------------------------------------------
 
-(require 'view)
+;; (require 'view)
 
-(defun me//view-mode-indicator ()
-  "Change cursor when variable ‘view-mode’ or read-only."
-  (cond (view-mode
-         (set-cursor-color "red"))
-        (buffer-read-only
-         (set-cursor-color "cyan"))
-        (t
-         (set-cursor-color "white"))))
+;; (defun me//set-evil-state-cursor-color ()
+;;   "Change cursor color for different evil state"
+;;   (cond ((or view-mode buffer-read-only)
+;;          (set-cursor-color "red"))
+;;         (t
+;;          (set-cursor-color "white"))))
+;; (remove-hook 'post-command-hook #'me//view-mode-indicator)
 
-(add-hook 'post-command-hook #'me//view-mode-indicator)
-(define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
-(define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
-(define-key view-mode-map (kbd "a") #'move-beginning-of-line)
-(define-key view-mode-map (kbd "b") #'helm-mini)
-(define-key view-mode-map (kbd "e") #'move-end-of-line)
-(define-key view-mode-map (kbd "f") #'helm-find-files)
-(define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
-(define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
-(define-key view-mode-map (kbd "o") #'other-window)
-(define-key view-mode-map (kbd "q") #'bury-buffer)
-(define-key view-mode-map (kbd "s") #'helm-swoop)
-(define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
-(define-key view-mode-map (kbd "z") #'delete-other-windows)
+;; (define-key view-mode-map (kbd "<delete>") #'View-scroll-page-forward)
+;; (define-key view-mode-map (kbd "^") #'dired-jump) ; relies on dired+
+;; (define-key view-mode-map (kbd "a") #'move-beginning-of-line)
+;; (define-key view-mode-map (kbd "b") #'helm-mini)
+;; (define-key view-mode-map (kbd "c") #'View-scroll-page-backward)
+;; (define-key view-mode-map (kbd "e") #'move-end-of-line)
+;; (define-key view-mode-map (kbd "f") #'helm-find-files)
+;; (define-key view-mode-map (kbd "j") #'View-scroll-line-forward)
+;; (define-key view-mode-map (kbd "k") #'View-scroll-line-backward)
+;; (define-key view-mode-map (kbd "o") #'other-window)
+;; (define-key view-mode-map (kbd "q") #'bury-buffer)
+;; (define-key view-mode-map (kbd "s") #'helm-swoop)
+;; (define-key view-mode-map (kbd "Q") #'View-kill-and-leave)
+;; (define-key view-mode-map (kbd "z") #'delete-other-windows)
 
-(setq view-read-only t)
+;; (setq view-read-only t)
 
 ;; -------------------------------------------------------------------
 ;; Theme
@@ -647,6 +645,7 @@ the result."
 (diminish 'global-whitespace-mode)
 (diminish 'global-visual-line-mode)
 (diminish 'visual-line-mode)
+(diminish 'subword-mode)
 
 (defun me//diminish-flyspell ()
   "Diminish variable `flyspell-mode'."
@@ -1064,16 +1063,16 @@ the result."
 ;; undo tree
 ;; -------------------------------------------------------------------
 
-;; (use-package undo-tree
-;;   :bind ("C-c u" . undo-tree-visualize)
-;;   :demand t
-;;   :diminish undo-tree-mode
-;;   :config
-;;   (setq undo-tree-enable-undo-in-region t)
-;;   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-;;   (setq undo-tree-auto-save-history t)
-;;   (setq undo-limit 80000)
-;;   (global-undo-tree-mode))
+(use-package undo-tree
+  :bind ("C-c u" . undo-tree-visualize)
+  :demand t
+  :diminish undo-tree-mode
+  :config
+  (setq undo-tree-enable-undo-in-region t)
+  (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
+  (setq undo-tree-auto-save-history t)
+  (setq undo-limit 80000)
+  (global-undo-tree-mode))
 
 (setq undo-limit 100000000)              ;100M
 
@@ -1309,17 +1308,8 @@ the result."
   (fset 'flycheck-keymap-prefix flycheck-command-map)
   (setq flycheck-keymap-prefix flycheck-command-map)
   (setq flycheck-global-modes '(not org-mode))
+  (setq flycheck-emacs-lisp-load-path 'inherit)
   (global-flycheck-mode))
-
-;; -------------------------------------------------------------------
-;; mail
-;; -------------------------------------------------------------------
-
-(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
-(require 'mail-conf)
-(require 'bib-conf)
-(require 'org-conf)
-(require 'gcal-conf)
 
 ;; -------------------------------------------------------------------
 ;; C/C++
@@ -1440,6 +1430,8 @@ the result."
 (use-package image-mode
   :config
   (define-key image-mode-map (kbd "H") #'image-transform-fit-to-height)
+  (define-key image-mode-map (kbd "q") #'quit-window)
+  (define-key image-mode-map (kbd "Q") #'kill-this-buffer)
   (define-key image-mode-map (kbd "W") #'image-transform-fit-to-width)
   (define-key image-mode-map (kbd "r") #'image-transform-set-rotation)
   (define-key image-mode-map (kbd "SPC") #'image-transform-reset))
@@ -1458,28 +1450,28 @@ the result."
 ;; Lua
 ;; -------------------------------------------------------------------
 
-(defun me/lua-send-current-line-and-next()
-  (lua-send-current-line)
-  (next-line))
+;; (defun me/lua-send-current-line-and-next()
+;;   (lua-send-current-line)
+;;   (next-line))
 
-(defun me//init-lua()
-  (local-set-key (kbd "M-<left>") #'decrease-left-margin)
-  (local-set-key (kbd "M-<right>") #'increase-left-margin)
-  (setq standard-indent 3)
-  (setq tab-stop-list (number-sequence 3 120 3)))
+;; (defun me//init-lua()
+;;   (local-set-key (kbd "M-<left>") #'decrease-left-margin)
+;;   (local-set-key (kbd "M-<right>") #'increase-left-margin)
+;;   (setq standard-indent 3)
+;;   (setq tab-stop-list (number-sequence 3 120 3)))
 
-(use-package lua-mode
-  :mode "\\.lua\\'"
-  :config
-  (add-hook 'lua-mode-hook #'me//init-lua)
-  (define-key lua-mode-map (kbd "C-<return>")
-    #'me/lua-send-current-line-and-next)
-  (define-key lua-mode-map (kbd "C-c b")   #'lua-send-buffer)
-  (define-key lua-mode-map (kbd "C-c C-b") #'lua-send-buffer)
-  (define-key lua-mode-map (kbd "C-c f")   #'lua-send-defun)
-  (define-key lua-mode-map (kbd "C-c C-f") #'lua-send-defun)
-  (define-key lua-mode-map (kbd "C-c r")   #'lua-send-region)
-  (define-key lua-mode-map (kbd "C-c C-r") #'lua-send-region))
+;; (use-package lua-mode
+;;   :mode "\\.lua\\'"
+;;   :config
+;;   (add-hook 'lua-mode-hook #'me//init-lua)
+;;   (define-key lua-mode-map (kbd "C-<return>")
+;;     #'me/lua-send-current-line-and-next)
+;;   (define-key lua-mode-map (kbd "C-c b")   #'lua-send-buffer)
+;;   (define-key lua-mode-map (kbd "C-c C-b") #'lua-send-buffer)
+;;   (define-key lua-mode-map (kbd "C-c f")   #'lua-send-defun)
+;;   (define-key lua-mode-map (kbd "C-c C-f") #'lua-send-defun)
+;;   (define-key lua-mode-map (kbd "C-c r")   #'lua-send-region)
+;;   (define-key lua-mode-map (kbd "C-c C-r") #'lua-send-region))
 
 ;; -------------------------------------------------------------------
 ;; R
@@ -1534,10 +1526,25 @@ the result."
 (setq json-reformat:indent-width 2)
 
 ;; -------------------------------------------------------------------
-;; calendar in emacs
+;; other separate config files
+;; -------------------------------------------------------------------
+
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(require 'mail-conf)
+(require 'bib-conf)
+(require 'org-conf)
+(require 'gcal-conf)
+(require 'evil-conf)
+
+;; -------------------------------------------------------------------
+;; Now start the server
 ;; -------------------------------------------------------------------
 
 (require 'server)
 (unless (server-running-p) (server-start))
 
 ;;; init.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:
