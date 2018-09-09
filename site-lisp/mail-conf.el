@@ -13,7 +13,7 @@
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
 (setq mu4e-maildir (expand-file-name ".mail" me-home))
@@ -229,3 +229,7 @@ So we just delete it locally."
 (provide 'mail-conf)
 
 ;;; mail-conf.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:

@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-09 15:15:22 gongzhitaao>
+;; Time-stamp: <2018-09-09 17:35:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1070,7 +1070,7 @@ the result."
   :config
   (setq undo-tree-enable-undo-in-region t)
   (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-auto-save-history nil)
   (setq undo-limit 80000)
   (global-undo-tree-mode))
 

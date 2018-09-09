@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-08-27 10:41:27 gongzhitaao>
+;; Time-stamp: <2018-09-09 17:50:58 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -196,6 +196,8 @@ readability, no parenthesis actually exist."
     (&optional with-case sorting-type)
   "Sort the list of citations by year.
 
+Case sensitive if WITH-CASE.  SORTING-TYPE is not used here.
+
 The list looks like:
 - [X] cite:someone2017 dummy
 - [ ] cite:others2013 dummy
@@ -216,7 +218,9 @@ alphabetically (in ascending or descending order)."
 ;; bibtex entry or the note that is associated with this bibtex entry.
 
 (defun me/org-ref-open-pdf (&optional arg)
-  "Open the associated PDF."
+  "Open the associated PDF.
+
+If ARG, open with external program.  Otherwise open in Emacs."
   (interactive "P")
   (let* ((key (cond
                ((derived-mode-p 'org-mode)
@@ -281,3 +285,7 @@ alphabetically (in ascending or descending order)."
 (provide 'bib-conf)
 
 ;;; bib-conf.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:
