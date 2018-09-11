@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-09 17:35:54 gongzhitaao>
+;; Time-stamp: <2018-09-11 08:09:31 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -780,6 +780,7 @@ the result."
 ;; -------------------------------------------------------------------
 
 (use-package yasnippet
+  :diminish yas-minor-mode
   :config
   (setq yas-snippet-dirs
         `(,(expand-file-name "snippets" me-emacs-data)))
@@ -791,7 +792,8 @@ the result."
 ;; highlight-indent-guides
 ;; -------------------------------------------------------------------
 
-(use-package highlight-indent-guides)
+(use-package highlight-indent-guides
+  :diminish)
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
