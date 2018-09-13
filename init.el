@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-11 08:09:31 gongzhitaao>
+;; Time-stamp: <2018-09-13 14:48:13 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1127,7 +1127,8 @@ the result."
                 (name . "^diary$")
                 (name . "todo.org")
                 (name . "gcal.org")
-                (name . "time-machine.org")))
+                (name . "time-machine.org")
+                (filename . "Dropbox/plan.*")))
            ("Dired" (mode . dired-mode))
            ("Web"
             (or (name . "\\.js")
@@ -1174,7 +1175,11 @@ the result."
                 (mode . ess-help-mode)
                 (name . "^\\*scratch\\*$")))
            ("Image"
-            (or (mode . image-mode))))))
+            (or (mode . image-mode)))
+           ("Magit"
+            (or (derived-mode . magit-mode)))
+           ("Helm"
+            (or (predicate string-match "Hmm" mode-name))))))
 
   (add-hook
    'ibuffer-mode-hook
