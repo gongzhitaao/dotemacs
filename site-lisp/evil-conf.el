@@ -40,6 +40,10 @@
 (define-key evil-motion-state-map (kbd "d") #'View-scroll-half-page-forward)
 (define-key evil-motion-state-map (kbd "u") #'View-scroll-half-page-backward)
 
+(add-to-list 'evil-emacs-state-modes 'image-mode)
+(add-to-list 'evil-emacs-state-modes 'dired-mode)
+(add-to-list 'evil-emacs-state-modes 'image-dired-thumbnail-mode)
+
 (defun me//evil-open-above (count)
   "Insert a new line above point and switch to Insert state.
 The insertion will be repeated COUNT times."
