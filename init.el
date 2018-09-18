@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-17 12:40:49 gongzhitaao>
+;; Time-stamp: <2018-09-18 07:46:10 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -303,10 +303,9 @@ the result."
 (file-name-shadow-mode t)
 
 (defun me//set-title-bar()
-  (let ((hostname
-         (or (file-remote-p (or buffer-file-name
-                                dired-directory) 'host) "localhost")))
-    (concat "@" hostname "     " (or buffer-file-name dired-directory))))
+  (let* ((name (or buffer-file-name dired-directory (buffer-name)))
+         (hostname (or (file-remote-p name 'host) "localhost")))
+    (concat "@" hostname "     " name)))
 
 (setq frame-title-format '((:eval (me//set-title-bar))))
 
