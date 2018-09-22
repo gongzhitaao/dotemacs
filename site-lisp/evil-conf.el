@@ -43,6 +43,7 @@
 (add-to-list 'evil-emacs-state-modes 'image-mode)
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'image-dired-thumbnail-mode)
+(add-to-list 'evil-emacs-state-modes 'mu4e-compose-mode)
 
 (defun me//evil-open-above (count)
   "Insert a new line above point and switch to Insert state.
@@ -88,18 +89,31 @@ LINES and COLUMNS set padding on lines/columns."
   "Displays the encoding of the buffer the same way Atom does.
 Set HIDE-UTF8 to display nothing for UTF-8, as it can be an assumed default.
 Adapted from doom-modeline."
-  (let ((sys (coding-system-plist buffer-file-coding-system)))
-    (cond ((memq (plist-get sys :category)
-                 '(coding-category-undecided coding-category-utf-8))
-           nil)
-          (t (upcase (symbol-name (plist-get sys :name)))))))
+  (unless (derived-mode-p 'special-mode)
+    (let ((sys (coding-system-plist buffer-file-coding-system)))
+      (cond ((memq (plist-get sys :category)
+                   '(coding-category-undecided coding-category-utf-8))
+             nil)
+            (t (upcase (symbol-name (plist-get sys :name))))))))
+
+(telephone-line-defsegment me//telephone-line-pdf-segment ()
+  (if (eq major-mode 'pdf-view-mode)
+      (propertize (me//pdf-view-page-number)
+                  'face '(:inherit)
+                  'display '(raise 0.0)
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map
+                              'mouse-1 (lambda ()
+                                         (interactive)
+                                         (pdf-view-goto-page))))))
 
 ;; The followings are telephone modeline, which is not part of the evil package.
 ;; However, it is better to combine these two settings.
 (setq telephone-line-lhs
       '((evil . (telephone-line-evil-tag-segment))
         (accent . (telephone-line-minor-mode-segment
-                   me//telephone-line-atom-encoding-segment))
+                   me//telephone-line-atom-encoding-segment
+                   me//telephone-line-pdf-segment))
         (nil . (telephone-line-vc-segment
                 telephone-line-buffer-segment))))
 (setq telephone-line-rhs

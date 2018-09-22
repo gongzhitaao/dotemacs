@@ -1,5 +1,5 @@
 ;;; bib-conf.el --- Bibliography manager
-;; Time-stamp: <2018-09-09 17:50:58 gongzhitaao>
+;; Time-stamp: <2018-09-22 09:15:55 gongzhitaao>
 
 ;;; Commentary:
 ;; A full-fledged bibliography manager, depends upon pdftools, org-ref,
@@ -281,6 +281,20 @@ If ARG, open with external program.  Otherwise open in Emacs."
     (if (file-exists-p pdf-file)
         (org-ref-open-notes-at-point key)
       (message "Not open note for non-existing PDF %s" key))))
+
+(define-pdf-cache-function pagelabels)
+(defun me//pdf-view-page-number ()
+  "For telephone-mode line."
+  (interactive)
+  (if (called-interactively-p)
+      (message "[pg %s/%s/%s]"
+               (nth (1- (pdf-view-current-page))
+                    (pdf-cache-pagelabels))
+               (number-to-string (pdf-view-current-page))
+               (number-to-string (pdf-cache-number-of-pages)))
+    (format "[%s/%s]"
+            (number-to-string (pdf-view-current-page))
+            (number-to-string (pdf-cache-number-of-pages)))))
 
 (provide 'bib-conf)
 
