@@ -113,9 +113,9 @@ Adapted from doom-modeline."
       '((evil . (telephone-line-evil-tag-segment))
         (accent . (telephone-line-minor-mode-segment
                    me//telephone-line-atom-encoding-segment
-                   me//telephone-line-pdf-segment))
-        (nil . (telephone-line-vc-segment
-                telephone-line-buffer-segment))))
+                   me//telephone-line-pdf-segment
+                   telephone-line-vc-segment))
+        (nil . (telephone-line-buffer-segment))))
 (setq telephone-line-rhs
       '((nil    . (telephone-line-process-segment
                    telephone-line-misc-info-segment))
