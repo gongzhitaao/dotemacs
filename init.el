@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-18 07:46:10 gongzhitaao>
+;; Time-stamp: <2018-09-24 14:58:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -217,6 +217,7 @@ the result."
 
 (defvar me-buffer-file-command-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "d") #'delete-duplicate-lines)
     (define-key map (kbd "l") #'magit-log-buffer-file)
     (define-key map (kbd "S") #'set-buffer-file-coding-system)
     (define-key map (kbd "s") #'me/sudo-edit)
@@ -825,10 +826,11 @@ the result."
 ;; ace-jump
 ;; -------------------------------------------------------------------
 
-(use-package ace-jump
-  :bind ("M-j" . ace-jump-mode)
-  :init
-  (setq ace-jump-mode-case-fold nil))
+(use-package avy
+  :bind (("M-j" . avy-goto-word-1)
+         ("s-j" . avy-goto-line))
+  :config
+  (setq avy-case-fold-search nil))
 
 ;; -------------------------------------------------------------------
 ;; anzu
