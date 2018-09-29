@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-29 17:50:31 gongzhitaao>
+;; Time-stamp: <2018-09-29 18:58:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1108,6 +1108,22 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
+(use-package org-habit
+  :config
+  (setq org-habit-graph-column         50
+        org-habit-preceding-days       28
+        org-habit-following-days       1))
+
+(use-package org-clock
+  :config
+  (setq org-clock-history-length 32
+        org-clock-in-resume t)
+  (setq org-log-into-drawer   t
+        org-clock-into-drawer t)
+
+  (setq org-clock-persist t)
+  (org-clock-persistence-insinuate))
+
 (use-package org-agenda
   :bind (:map org-agenda-mode-map
               ("F" . org-gcal-fetch))
@@ -1146,22 +1162,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                       (org-agenda-overriding-header
                        "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks nil))))))
-
-(use-package org-habit
-  :config
-  (setq org-habit-graph-column         50
-        org-habit-preceding-days       28
-        org-habit-following-days       1))
-
-(use-package org-clock
-  :config
-  (setq org-clock-history-length 32
-        org-clock-in-resume t)
-  (setq org-log-into-drawer   t
-        org-clock-into-drawer t)
-
-  (setq org-clock-persist t)
-  (org-clock-persistence-insinuate))
 
 (use-package org-capture
   :config
@@ -1410,6 +1410,11 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq helm-M-x-fuzzy-match t))
 
+(use-package flyspell
+  :bind (:map flyspell-mode-map
+              ("C-;" . helm-flyspell-correct)))
+
+(use-package helm-flyspell)
 
 ;; helm projectile
 ;; -----------------------------------------------------------------------------
