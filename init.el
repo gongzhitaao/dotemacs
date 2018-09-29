@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-29 16:29:20 gongzhitaao>
+;; Time-stamp: <2018-09-29 16:42:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1337,22 +1337,22 @@ argument FORCE, force the creation of a new ID."
   (helm-mode 1))
 
 (use-package helm-config
-  :demand
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ("M-s a" . helm-do-ag)
-         ("M-s g" . helm-do-grep-ag)
-         ("C-b" . helm-mini)
-         ("M-/" . helm-dabbrev)
-         :map helm-map
-         ("<tab>" . helm-execute-persistent-action)
-         ("C-i" . helm-execute-persistent-action)
-         ("C-z" . helm-select-action)
-         :map isearch-mode-map
-         ("M-i" . helm-occur-from-isearch)
-         :map helm-moccur-map
-         ("C-s" . me//isearch-from-helm-occur))
   :config
+  (bind-keys ("M-x" . helm-M-x)
+             ("C-x C-f" . helm-find-files)
+             ("M-s a" . helm-do-ag)
+             ("M-s g" . helm-do-grep-ag)
+             ("C-b" . helm-mini)
+             ("M-/" . helm-dabbrev)
+             :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-i" . helm-execute-persistent-action)
+             ("C-z" . helm-select-action)
+             :map isearch-mode-map
+             ("M-i" . helm-occur-from-isearch)
+             :map helm-moccur-map
+             ("C-s" . me//isearch-from-helm-occur))
+
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
 
@@ -1360,15 +1360,15 @@ argument FORCE, force the creation of a new ID."
 
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
-  (setq helm-split-window-inside-p t)
+  (setq helm-split-window-inside-p t))
 
-  (defun isearch-from-helm-occur ()
-    (interactive)
-    (helm-run-after-exit
-     (lambda (initial)
-       (isearch-forward nil t)
-       (isearch-yank-string initial))
-     helm-pattern)))
+(defun me//isearch-from-helm-occur ()
+  (interactive)
+  (helm-run-after-exit
+   (lambda (initial)
+     (isearch-forward nil t)
+     (isearch-yank-string initial))
+   helm-pattern))
 
 (use-package helm-buffers
   :config
