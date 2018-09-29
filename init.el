@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-29 16:42:27 gongzhitaao>
+;; Time-stamp: <2018-09-29 17:50:31 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -95,8 +95,6 @@
 ;; Remaping
 ;; -----------------------------------------------------------------------------
 
-;; (global-set-key [remap execute-extended-command] #'helm-M-x)
-;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key [remap isearch-backward] #'isearch-backward-regexp)
 (global-set-key [remap isearch-forward]  #'isearch-forward-regexp)
 (global-set-key [remap list-buffers]     #'ibuffer)
@@ -138,7 +136,10 @@
              ("a" . mc/mark-all-like-this-dwim)
              ("l" . mc/edit-lines)
              ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters)))
+             ("i l" . mc/insert-letters))
+  (setq mc/mode-line
+        `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
+                                (mc/num-cursors))))))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -193,7 +194,7 @@
 ;; M-s a helm-do-ag
 ;; (global-set-key (kbd "M-s g") #'helm-do-grep-ag)
 ;; M-s h highlight-xxx
-(global-set-key (kbd "M-s q") #'vr/query-replace)
+;; M-s q vr/query-replace
 ;; M-s s helm-swoop
 
 ;; =============================================================================
@@ -489,6 +490,11 @@ the result."
             (match-string 1 buf-coding)
           buf-coding))))
 
+  (set-face-background 'spaceline-flycheck-info "gray20")
+  (set-face-background 'spaceline-flycheck-error "gray20")
+  (set-face-background 'spaceline-flycheck-warning "gray20")
+  (setq spaceline-minor-modes-separator " | ")
+
   (spaceline-spacemacs-theme)
   (setq spaceline-highlight-face-func #'spaceline-highlight-face-evil-state)
   (spaceline-toggle-minor-modes-on)
@@ -527,6 +533,8 @@ the result."
 (setq delete-by-moving-to-trash t)
 (setq select-enable-clipboard t)
 (global-subword-mode 1)
+
+(setq view-read-only t)
 
 (use-package whitespace
   :config
@@ -579,6 +587,9 @@ the result."
   :config
   (global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
   (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up))
+
+(use-package visual-regex
+  :bind ("M-s q" . vr/query-replace))
 
 ;; Searching
 ;; -----------------------------------------------------------------------------
@@ -690,8 +701,9 @@ the result."
 
 ;; Syntax check
 (use-package flycheck
-  :bind-keymap ("M-\"" . flycheck-keymap-prefix)
+  :delight
   :config
+  (bind-keys ("M-\"" . flycheck-keymap-prefix))
   (setq flycheck-python-flake8-executable "flake8")
   (define-prefix-command 'flycheck-keymap-prefix)
   (fset 'flycheck-keymap-prefix flycheck-command-map)
@@ -993,6 +1005,7 @@ the result."
   (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
 
 (use-package org
+  :mode ("\\.org\\'" . org-mode)
   :init
   (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus
                                org-habit org-table))
@@ -1363,6 +1376,7 @@ argument FORCE, force the creation of a new ID."
   (setq helm-split-window-inside-p t))
 
 (defun me//isearch-from-helm-occur ()
+  "Continue isearch from helm-occur."
   (interactive)
   (helm-run-after-exit
    (lambda (initial)
@@ -1413,39 +1427,15 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 
 (delight
- '((auto-fill-function " ")
-   (isearch-mode " ")
+ '((auto-fill-function " " t)
    (auto-revert-mode " " autorevert)
-   (python-docstring-mode nil python-docstring)
-   (whitespace-mode nil whitespace)
+   (flyspell-mode nil flyspell)
    (global-subword-mode nil subword)
-   (subword-mode nil subword)))
-
-;; (defun me//diminish-flyspell ()
-;;   "Diminish variable `flyspell-mode'."
-;;   (diminish 'flyspell-mode))
-;; (add-hook 'flyspell-mode-hook #'me//diminish-flyspell)
-;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
-;; (defun me//diminish-view ()
-;;   "Diminish variable `view-mode'."
-;;   (diminish 'view-mode " "))
-;; (add-hook 'view-mode-hook #'me//diminish-view)
-
-;; (defun me//diminish-auto-revert ()
-;;   "Set icon for command `auto-revert-mode'."
-;;   (diminish 'auto-revert-mode " "))
-;; (add-hook 'auto-revert-mode-hook #'me//diminish-auto-revert)
-
-;; (defun me//diminish-py-docstring ()
-;;   "Diminish `python-docstring'."
-;;   (diminish 'python-docstring-mode))
-;; (add-hook 'python-docstring-mode-hook #'me//diminish-py-docstring)
-
-;; (defun me//diminish-yapf ()
-;;   "Diminish `yapf-mode'."
-;;   (diminish 'yapf-mode))
-;; (add-hook 'yapf-mode-hook #'me//diminish-yapf)
+   (isearch-mode " " t)
+   (python-docstring-mode nil python-docstring)
+   (subword-mode nil subword)
+   (view-mode " " view)
+   (whitespace-mode nil whitespace)))
 
 ;; -------------------------------------------------------------------
 ;; regex builder
