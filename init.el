@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-30 09:56:34 gongzhitaao>
+;; Time-stamp: <2018-09-30 10:09:44 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -537,11 +537,14 @@ the result."
 (setq view-read-only t)
 
 (use-package whitespace
+  :delight global-whitespace-mode
   :config
   (setq whitespace-line-column fill-column)
   (setq whitespace-style '(empty face indentation lines-tail
                                  space-after-tab space-before-tab
                                  spaces tabs trailing))
+  (setq whitespace-global-modes '(prog-mode org-mode))
+  (global-whitespace-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
 
 (use-package highlight-indent-guides
