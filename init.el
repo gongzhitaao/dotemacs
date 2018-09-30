@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-30 15:20:11 gongzhitaao>
+;; Time-stamp: <2018-09-30 15:45:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2071,6 +2071,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
              ("<backspace>" . View-scroll-half-page-backward)
              ("<delete>"    . View-scroll-half-page-forward)
              ("C-e"         . move-end-of-line)
+             ("C-z"      . delete-other-windows)
              ("b"           . helm-mini))
 
   (setq cursor-type 'box)
