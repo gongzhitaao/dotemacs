@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-29 18:58:04 gongzhitaao>
+;; Time-stamp: <2018-09-30 09:56:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1737,10 +1737,12 @@ So we just delete it locally."
 (defvar me-bib (expand-file-name ".local/data/bibliography" me-home)
   "My bibliography collection path.")
 (defvar me-bib-files
-  `(,(expand-file-name "refdb.bib" me-bib))
+  `(,(expand-file-name "refdb.bib" me-bib)
+    ,(expand-file-name "orphan.bib" me-bib))
   "My bibliography files.")
 (defvar me-bib-pdfs
-  `(,(expand-file-name "pdf" me-bib))
+  `(,(expand-file-name "pdf" me-bib)
+    ,(expand-file-name "orphan" me-bib))
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes
   (expand-file-name "notes" me-bib)
