@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-30 10:09:44 gongzhitaao>
+;; Time-stamp: <2018-09-30 15:20:11 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -57,10 +57,10 @@
 (require 'delight)
 (require 'bind-key)
 
-;; I'm always skeptical about cask and use-package, if they fail mysteriously,
-;; then I could not start my Email.  I guess a better way is to backup the
-;; packages every day just in case.  However, use-package, bind-keys, cask are
-;; so much more convenient, I surrender.
+;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
+;; I could not start my Emacs.  I guess a better way is to backup the packages
+;; every day just in case.  However, use-package, bind-keys and cask are so much
+;; more convenient, I surrender.
 
 ;; =============================================================================
 ;; Key binding
@@ -73,7 +73,6 @@
 (global-set-key (kbd "C-+") #'me/join-next-line)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
-;; (global-set-key (kbd "M-\"") #'flycheck-keymap-prefix)
 
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
@@ -136,7 +135,12 @@
              ("a" . mc/mark-all-like-this-dwim)
              ("l" . mc/edit-lines)
              ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters))
+             ("i l" . mc/insert-letters)
+             :map mc/keymap
+             ("C-<right>" . mc/skip-to-next-like-this)
+             ("C-<left>" . mc/skip-to-previous-like-this)
+             ("M-<left>" . mc/unmark-next-like-this)
+             ("M-<right>" . mc/unmark-previous-like-this))
   (setq mc/mode-line
         `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
                                 (mc/num-cursors))))))
@@ -1341,6 +1345,12 @@ argument FORCE, force the creation of a new ID."
              (lambda () (me/org-custom-id-get (point) 'create)))))
       (org-map-entries me//org-custom-id-get-wrapper))))
 
+;; The gcal contains some senstive information, thus in a separate file.
+;; -----------------------------------------------------------------------------
+
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(require 'gcal-conf)
+
 ;; =============================================================================
 ;; Helm
 ;; =============================================================================
@@ -1445,17 +1455,12 @@ argument FORCE, force the creation of a new ID."
    (view-mode " " view)
    (whitespace-mode nil whitespace)))
 
-;; -------------------------------------------------------------------
-;; regex builder
-;; -------------------------------------------------------------------
-
 (use-package re-builder
   :config
   (setq reb-re-syntax 'string))
 
-;; -------------------------------------------------------------------
 ;; ace-window
-;; -------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 ;; (use-package ace-window
 ;;   :bind ("M-p" . ace-window)
@@ -1471,9 +1476,8 @@ argument FORCE, force the creation of a new ID."
 ;; i - maximize window (select which window)
 ;; o - maximize current window
 
-;; -------------------------------------------------------------------
 ;; helm-gtags
-;; -------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 ;; (use-package helm-gtags
 ;;   :delight (helm-gtags-mode " ")
@@ -1484,9 +1488,8 @@ argument FORCE, force the creation of a new ID."
 ;;         helm-gtags-display-style 'detail
 ;;         helm-gtags-direct-helm-completing t))
 
-;; -------------------------------------------------------------------
 ;; deft
-;; -------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (use-package deft
   :bind ("<f8>" . deft)
@@ -1501,9 +1504,8 @@ argument FORCE, force the creation of a new ID."
                                  (nospace . "-")
                                  (case-fn . downcase))))
 
-;; -------------------------------------------------------------------
 ;; Appt
-;; -------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (appt-activate 1)
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
@@ -1512,11 +1514,9 @@ argument FORCE, force the creation of a new ID."
 ;; mail
 ;; =============================================================================
 
-
 (setq user-mail-address "zhitaao.gong@gmail.com"
       user-full-name "Zhitao Gong")
 
-;; -----------------------------------------------------------------------------
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
@@ -2036,12 +2036,9 @@ If ARG, open with external program.  Otherwise open in Emacs."
  (expand-file-name
   (format-time-string "key-%FT%H%M%S.log") me-keylog))
 
-;; -------------------------------------------------------------------
-;; other separate config files
-;; -------------------------------------------------------------------
-
-(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
-(require 'gcal-conf)
+;; The undo and Evil.  It is weird that I have to load undo-tree at the end,
+;; otherwise some pakcages, e.g., helm-elisp fails loading.
+;; -----------------------------------------------------------------------------
 
 (use-package undo-tree
   :init (global-undo-tree-mode)
@@ -2083,6 +2080,8 @@ If ARG, open with external program.  Otherwise open in Emacs."
         evil-visual-state-cursor "gray"
         evil-motion-state-cursor "plum3")
 
+  (evil-make-overriding-map help-mode-map 'motion)
+
   ;; Use emacs state instead of insert mode
   (defalias 'evil-insert-state 'evil-emacs-state)
   (setq-default evil-shift-width 2)
@@ -2090,9 +2089,9 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (mapc (lambda (x) (add-to-list 'evil-emacs-state-modes x))
         '(dired-mode image-dired-thumbnail-mode image-mode mu4e-compose-mode)))
 
-;; -------------------------------------------------------------------
+;; =============================================================================
 ;; Now start the server
-;; -------------------------------------------------------------------
+;; =============================================================================
 
 (require 'server)
 (unless (server-running-p) (server-start))
