@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-09-30 15:45:17 gongzhitaao>
+;; Time-stamp: <2018-10-01 08:34:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -378,7 +378,7 @@ the result."
   (setq writeroom-fullscreen-effect nil
         writeroom-maximize-window nil
         writeroom-mode-line t)
-  (setq writeroom-width (+ fill-column 15))
+  (setq writeroom-width 100)
   (setq writeroom-use-derived-modes t)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode))
