@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-01 08:34:18 gongzhitaao>
+;; Time-stamp: <2018-10-02 08:07:41 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -588,7 +588,12 @@ the result."
 (use-package avy
   :bind (("M-j" . avy-goto-word-1)
          ("s-j" . avy-goto-line))
-  :config (setq avy-case-fold-search nil))
+  :config
+  (setq avy-background t)
+  (set-face-background
+   'avy-lead-face (me//colir-blend (face-attribute 'avy-lead-face :background)
+                                   "gray10" 0.7))
+  (setq avy-case-fold-search nil))
 
 (use-package golden-ratio-scroll-screen
   :config
@@ -1596,6 +1601,7 @@ So we just delete it locally."
   (setq mu4e-change-filenames-when-moving t)
   (setq mu4e-view-show-addresses t)
   (setq mu4e-view-scroll-to-next nil)
+  (setq mu4e-headers-results-limit 100)
 
   (setq mu4e-sent-messages-behavior #'me//process-sent-messages)
 
