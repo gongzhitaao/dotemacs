@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-02 08:07:41 gongzhitaao>
+;; Time-stamp: <2018-10-03 10:05:51 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -488,11 +488,10 @@ the result."
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))
-      (if (eq major-mode 'pdf-view-mode)
-          "PDF"
-        (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
-            (match-string 1 buf-coding)
-          buf-coding))))
+      (if (derived-mode-p 'text-mode 'prog-mode)
+          (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
+              (match-string 1 buf-coding)
+            buf-coding))))
 
   (set-face-background 'spaceline-flycheck-info "gray20")
   (set-face-background 'spaceline-flycheck-error "gray20")
