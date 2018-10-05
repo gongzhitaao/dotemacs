@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-03 10:05:51 gongzhitaao>
+;; Time-stamp: <2018-10-03 15:52:30 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -939,12 +939,11 @@ the result."
 (use-package cc-mode
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
-  (use-package clang-format
-    :after c++-mode
-    :bind (:map c++-mode-map
-                ("C-!" . clang-format-region))))
+(use-package clang-format
+  :bind (:map c++-mode-map
+              ("C-!" . clang-format-region)))
 
 (use-package web-mode
   :mode "\\.\\(html\\|htm\\)\\'"
