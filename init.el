@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-03 15:52:30 gongzhitaao>
+;; Time-stamp: <2018-10-07 09:36:19 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -539,24 +539,24 @@ the result."
 
 (setq view-read-only t)
 
+;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
+;; no guides are shown.
+(use-package highlight-indent-guides
+  :config (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+  :delight)
+
 (use-package whitespace
+  :after highlight-indent-guides
   :delight global-whitespace-mode
   :config
   (setq whitespace-line-column fill-column)
   (setq whitespace-style '(empty face indentation lines-tail
                                  space-after-tab space-before-tab
                                  spaces tabs trailing))
-  (setq whitespace-global-modes '(prog-mode org-mode))
-  (global-whitespace-mode)
+  (setq whitespace-global-modes t)
+  (add-hook 'prog-mode-hook #'whitespace-mode)
+  ;; (global-whitespace-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
-
-(use-package highlight-indent-guides
-  :config (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-  :delight)
-
-;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
-;; no guides are shown.
-;; (add-hook 'prog-mode-hook #'whitespace-mode)
 
 (use-package volatile-highlights
   :config (volatile-highlights-mode t)
