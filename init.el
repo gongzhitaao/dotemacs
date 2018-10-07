@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-07 09:36:19 gongzhitaao>
+;; Time-stamp: <2018-10-07 10:38:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -112,6 +112,7 @@
 
 (bind-keys :prefix-map me-editing-command-map
            :prefix "C-c e"
+           ("2" . me/double-space-after-dot)
            ("c" . set-buffer-file-coding-system)
            ("d" . delete-duplicate-lines)
            ("l" . magit-log-buffer-file)
@@ -323,6 +324,21 @@ the result."
             (lambda (x y)
               (round (+ (* x alpha) (* y (- 1 alpha)))))
             rgb1 rgb2))))
+
+(defun me/double-space-after-dot (beg end)
+  "Exactly two spaces after dot in region (BEG, END).
+
+I use `sentence-end-double-space', thus I need a way to replace
+all '.<space>' with '.<space><space>'."
+  (interactive "*r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (let ((old "\\.[[:blank:]]+")
+            (new ".  "))
+        (while (re-search-forward old nil t)
+          (replace-match new))))))
 
 ;; =============================================================================
 ;; Appearance
