@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-07 10:38:00 gongzhitaao>
+;; Time-stamp: <2018-10-09 09:26:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -69,6 +69,7 @@
 (global-set-key (kbd "C-z") #'delete-other-windows)
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
 
+(global-set-key (kbd "C-t") #'transpose-sexps)
 (global-set-key (kbd "C-|") #'fci-mode)
 (global-set-key (kbd "C-+") #'me/join-next-line)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
