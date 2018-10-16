@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-16 15:22:03 gongzhitaao>
+;; Time-stamp: <2018-10-16 15:48:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1543,7 +1543,9 @@ argument FORCE, force the creation of a new ID."
 
 Gmail/IMAP takes care of copying sent messages to sent folder.
 So we just delete it locally."
-  (if (string-match-p "\\(@gmail\\.com\\)" (message-sendmail-envelope-from))
+  (if (string-match-p
+       (regexp-opt '("@gmail.com" "@tigermail.auburn.edu" "@auburn.edu"))
+       (message-sendmail-envelope-from))
       'delete 'sent))
 
 (use-package time
@@ -1613,7 +1615,6 @@ So we just delete it locally."
   (setq mu4e-view-show-addresses t)
   (setq mu4e-view-scroll-to-next nil)
   (setq mu4e-headers-results-limit 100)
-  (setq mu4e-headers-skip-duplicates t)
 
   (setq mu4e-sent-messages-behavior #'me//process-sent-messages)
 
