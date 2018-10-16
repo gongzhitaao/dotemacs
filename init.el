@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-09 09:26:18 gongzhitaao>
+;; Time-stamp: <2018-10-16 15:22:03 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -131,18 +131,13 @@
 (use-package multiple-cursors
   :config
   (bind-keys :prefix-map me-multiple-cursors-command-map
-             :prefix "C-x m"
+             :prefix "C-c m"
              ("C-a" . mc/edit-beginnings-of-lines)
              ("C-e" . mc/edit-ends-of-lines)
              ("a" . mc/mark-all-like-this-dwim)
              ("l" . mc/edit-lines)
              ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters)
-             :map mc/keymap
-             ("C-<right>" . mc/skip-to-next-like-this)
-             ("C-<left>" . mc/skip-to-previous-like-this)
-             ("M-<left>" . mc/unmark-next-like-this)
-             ("M-<right>" . mc/unmark-previous-like-this))
+             ("i l" . mc/insert-letters))
   (setq mc/mode-line
         `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
                                 (mc/num-cursors))))))
@@ -571,7 +566,8 @@ all '.<space>' with '.<space><space>'."
                                  space-after-tab space-before-tab
                                  spaces tabs trailing))
   (setq whitespace-global-modes t)
-  (add-hook 'prog-mode-hook #'whitespace-mode)
+  (dolist (hook '(prog-mode-hook))
+    (add-hook hook #'whitespace-mode))
   ;; (global-whitespace-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
 
@@ -1617,6 +1613,7 @@ So we just delete it locally."
   (setq mu4e-view-show-addresses t)
   (setq mu4e-view-scroll-to-next nil)
   (setq mu4e-headers-results-limit 100)
+  (setq mu4e-headers-skip-duplicates t)
 
   (setq mu4e-sent-messages-behavior #'me//process-sent-messages)
 
