@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-16 15:48:18 gongzhitaao>
+;; Time-stamp: <2018-10-16 15:55:12 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -504,6 +504,8 @@ all '.<space>' with '.<space><space>'."
           (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
               (match-string 1 buf-coding)
             buf-coding))))
+
+  (setq powerline-default-separator 'bar)
 
   (set-face-background 'spaceline-flycheck-info "gray20")
   (set-face-background 'spaceline-flycheck-error "gray20")
