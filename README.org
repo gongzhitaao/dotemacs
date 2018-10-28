@@ -46,9 +46,9 @@ color by testing the variable =buffer-read-only=.
 :CUSTOM_ID: bibliography-manager
 :END:
 
-*Dependencies*: helm, helm-bibtex, org-ref, PDF-tools, deft.
+*Requires*: helm, helm-bibtex, org-ref, PDF-tools, deft.
 
-My configuration provide the following functionalities:
+The configuration provide the following functionalities:
 - Viewing PDF inside Emacs.
 - Fuzzy-search bibtex entries by authors name, title, year and keywords.
 - Associate PDF file, note file with a bibtex entry, and jump among them.
