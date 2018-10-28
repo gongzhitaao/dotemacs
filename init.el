@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-16 15:55:12 gongzhitaao>
+;; Time-stamp: <2018-10-25 09:08:26 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -532,9 +532,6 @@ all '.<space>' with '.<space><space>'."
               standard-indent 2
               tab-stop-list (number-sequence 2 120 2))
 (setq tab-always-indent 'complete)
-(use-package aggressive-indent
-  :config (global-aggressive-indent-mode 1)
-  :delight)
 
 (delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
@@ -768,14 +765,18 @@ all '.<space>' with '.<space><space>'."
 ;; Dired
 ;; -----------------------------------------------------------------------------
 
+(use-package ffap)
+
 (use-package dired
+  :bind (:map dired-mode-map
+              ("b" . helm-mini)
+              ("f" . find-file-literally-at-point))
   :config
   (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
         dired-recursive-copies 'always
-        dired-listing-switches "-alh")
-  (define-key dired-mode-map (kbd "b") #'helm-mini))
+        dired-listing-switches "-alh"))
 
 (use-package dired-x)
 
@@ -2091,8 +2092,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
              :map evil-motion-state-map
              ("<backspace>" . View-scroll-half-page-backward)
              ("<delete>"    . View-scroll-half-page-forward)
+             ("<down>"      . evil-next-visual-line)
+             ("<up>"        . evil-previous-visual-line)
              ("C-e"         . move-end-of-line)
-             ("C-z"      . delete-other-windows)
+             ("C-z"         . delete-other-windows)
              ("b"           . helm-mini))
 
   (setq cursor-type 'box)
@@ -2115,7 +2118,13 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; Now start the server
 ;; =============================================================================
 
-(require 'server)
-(unless (server-running-p) (server-start))
+(use-package edit-server
+  :config
+  (setq edit-server-default-major-mode 'org-mode)
+  (edit-server-start))
+
+(use-package server
+  :config
+  (unless (server-running-p) (server-start)))
 
 ;;; init.el ends here
