@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-10-25 09:08:26 gongzhitaao>
+;; Time-stamp: <2018-11-06 09:55:09 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -472,7 +472,7 @@ all '.<space>' with '.<space><space>'."
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
                                         :family "Sarasa Mono TC"
-                                        :size 16)))
+                                        :size 18)))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
 
@@ -776,7 +776,14 @@ all '.<space>' with '.<space><space>'."
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
         dired-recursive-copies 'always
-        dired-listing-switches "-alh"))
+        dired-listing-switches "-alh")
+
+  (defface me-dired-dim-date-0 '((default :foreground "gray60"))
+    "face for dired date"
+    :group 'dired-faces)
+  (defface me-dired-dim-date-1 '((default :foreground "gray50"))
+    "face for dired date"
+    :group 'dired-faces))
 
 (use-package dired-x)
 
@@ -1014,6 +1021,10 @@ all '.<space>' with '.<space><space>'."
          ("/known_hosts\\'" . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
+(use-package sh-script
+  :config
+  (set-face-attribute 'sh-heredoc-face nil :weight 'normal :foreground "yellow2"))
+
 (defun me//init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
@@ -1199,7 +1210,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t)
 
           ("r" "Related Work" item
-           (file+headline "notes/bibliography/related/orphan.org" "Recent Work"))
+           (file+headline "bibliography/related/orphan.org" "Recent Work"))
 
           ("t" "TODO" entry
            (file "todo.org")
