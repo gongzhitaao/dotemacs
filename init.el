@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-06 09:55:09 gongzhitaao>
+;; Time-stamp: <2018-11-10 14:32:59 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -778,12 +778,45 @@ all '.<space>' with '.<space><space>'."
         dired-recursive-copies 'always
         dired-listing-switches "-alh")
 
-  (defface me-dired-dim-date-0 '((default :foreground "gray60"))
-    "face for dired date"
-    :group 'dired-faces)
-  (defface me-dired-dim-date-1 '((default :foreground "gray50"))
-    "face for dired date"
-    :group 'dired-faces))
+  (defface me-dired-dim-0 '((t (:foreground "gray70")))
+    "Dimmed face."
+    :group 'me-dired)
+
+  (defface me-dired-dim-1 '((t (:foreground "gray50")))
+    "Dimmed face."
+    :group 'me-dired)
+
+  (defface me-dired-executable '((t (:foreground "green")))
+    "face for executables"
+    :group 'me-dired)
+
+  (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]+"
+                                   "\\(?:.*?\\)[ ]+"
+                                   "\\(.*?\\)[ ]+"
+                                   "\\(.*?\\)[ ]+"
+                                   "\\(?:.*?\\)[ ]+"))
+         (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
+         (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
+         (executable (concat "^..[^d]\\(?:.*x.*?\\)[ ]"
+                             "\\(?:.*?\\(?:[0-9][0-9]:[0-9][0-9]\\)\\|"
+                             "\\(?:[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)\\)[ ]+"
+                             "\\(.*$\\)")))
+    (font-lock-add-keywords 'dired-mode
+                            `((,user-group-anchor
+                               (1 'me-dired-dim-1)
+                               (2 'me-dired-dim-1)
+                               (,date-0 nil nil (0 'me-dired-dim-0))
+                               (,date-1 nil nil (0 'me-dired-dim-1)))
+                              (,executable
+                               (1 'me-dired-executable))))
+    (font-lock-add-keywords 'wdired-mode
+                            `((,user-group-anchor
+                               (1 'me-dired-dim-1)
+                               (2 'me-dired-dim-1)
+                               (,date-0 nil nil (0 'me-dired-dim-0))
+                               (,date-1 nil nil (0 'me-dired-dim-1)))
+                              (,executable
+                               (1 'me-dired-executable))))))
 
 (use-package dired-x)
 
