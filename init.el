@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-11 10:56:53 gongzhitaao>
+;; Time-stamp: <2018-11-11 11:05:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -534,6 +534,13 @@ all '.<space>' with '.<space><space>'."
               standard-indent 2
               tab-stop-list (number-sequence 2 120 2)
               tab-width 4)
+
+(use-package aggressive-indent
+  :delight
+  :config
+  (global-aggressive-indent-mode)
+  (dolist (m '(html-mode sh-mode))
+    (add-to-list 'aggressive-indent-excluded-modes m)))
 
 (delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
