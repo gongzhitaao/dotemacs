@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-10 14:32:59 gongzhitaao>
+;; Time-stamp: <2018-11-11 10:56:53 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -113,16 +113,16 @@
 
 (bind-keys :prefix-map me-editing-command-map
            :prefix "C-c e"
-           ("2" . me/double-space-after-dot)
-           ("c" . set-buffer-file-coding-system)
-           ("d" . delete-duplicate-lines)
-           ("l" . magit-log-buffer-file)
+           ("2"   . me/double-space-after-dot)
+           ("c"   . set-buffer-file-coding-system)
+           ("d"   . delete-duplicate-lines)
+           ("l"   . magit-log-buffer-file)
            ("s l" . sort-lines)
            ("s s" . me/sort-symbols)
            ("s w" . me/sort-words)
-           ("S" . me/sudo-edit)
-           ("v" . add-file-local-variable)
-           ("V" . add-file-local-variable-prop-line))
+           ("S"   . me/sudo-edit)
+           ("v"   . add-file-local-variable)
+           ("V"   . add-file-local-variable-prop-line))
 
 (use-package magit
   :bind ("C-c g" . magit-status)
@@ -134,8 +134,8 @@
              :prefix "C-c m"
              ("C-a" . mc/edit-beginnings-of-lines)
              ("C-e" . mc/edit-ends-of-lines)
-             ("a" . mc/mark-all-like-this-dwim)
-             ("l" . mc/edit-lines)
+             ("a"   . mc/mark-all-like-this-dwim)
+             ("l"   . mc/edit-lines)
              ("i n" . mc/insert-numbers)
              ("i l" . mc/insert-letters))
   (setq mc/mode-line
@@ -144,17 +144,17 @@
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
-           ("a" . org-agenda)
-           ("c" . org-capture)
-           ("e" . me/org-ref-open-entry)
-           ("h" . me/org-custom-id-get-create)
-           ("H" . me/org-custom-id-get-create-all)
+           ("a"   . org-agenda)
+           ("c"   . org-capture)
+           ("e"   . me/org-ref-open-entry)
+           ("h"   . me/org-custom-id-get-create)
+           ("H"   . me/org-custom-id-get-create-all)
            ("l b" . org-ref-extract-bibtex-entries)
            ("l f" . org-ref-list-of-figures)
            ("l t" . org-ref-list-of-tables)
-           ("n" . me/org-ref-open-note)
-           ("p" . me/org-ref-open-pdf)
-           ("s" . me/org-sort-orgref-citation-list-by-year))
+           ("n"   . me/org-ref-open-note)
+           ("p"   . me/org-ref-open-pdf)
+           ("s"   . me/org-sort-orgref-citation-list-by-year))
 
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
@@ -389,9 +389,9 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq writeroom-fullscreen-effect nil
         writeroom-maximize-window nil
-        writeroom-mode-line t)
-  (setq writeroom-width 100)
-  (setq writeroom-use-derived-modes t)
+        writeroom-mode-line t
+        writeroom-use-derived-modes t
+        writeroom-width 100)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -411,36 +411,37 @@ all '.<space>' with '.<space><space>'."
   :delight smartparens-mode
   :config
   (bind-keys ("M-<backspace>" . sp-backward-unwrap-sexp)
-             ("M-<delete>" . sp-unwrap-sexp)
+             ("M-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
              :prefix "C-c s"
              ("<backspace>" . sp-splice-sexp-killing-backward)
-             ("<delete>" . sp-splice-sexp-killing-forward)
-             ("<left>" . sp-backward-slurp-sexp)
-             ("<right>" . sp-forward-slurp-sexp)
-             ("a" . sp-beginning-of-sexp)
-             ("b" . sp-backward-sexp)
-             ("C-<delete>" . sp-splice-sexp-killing-around)
-             ("C-<left>" . sp-forward-barf-sexp)
-             ("C-<right>" . sp-backward-barf-sexp)
-             ("D" . sp-backward-down-sexp)
-             ("d" . sp-down-sexp)
-             ("e" . sp-end-of-sexp)
-             ("E" . sp-up-sexp)
-             ("f" . sp-forward-sexp)
-             ("k" . sp-kill-sexp)
-             ("n" . sp-next-sexp)
-             ("p" . sp-previous-sexp)
-             ("r" . sp-rewrap-sexp)
-             ("s" . sp-split-sexp)
-             ("t" . sp-transpose-sexp)
-             ("w" . sp-copy-sexp))
+             ("<delete>"    . sp-splice-sexp-killing-forward)
+             ("<left>"      . sp-backward-slurp-sexp)
+             ("<right>"     . sp-forward-slurp-sexp)
+             ("a"           . sp-beginning-of-sexp)
+             ("b"           . sp-backward-sexp)
+             ("C-<delete>"  . sp-splice-sexp-killing-around)
+             ("C-<left>"    . sp-forward-barf-sexp)
+             ("C-<right>"   . sp-backward-barf-sexp)
+             ("D"           . sp-backward-down-sexp)
+             ("d"           . sp-down-sexp)
+             ("e"           . sp-end-of-sexp)
+             ("E"           . sp-up-sexp)
+             ("f"           . sp-forward-sexp)
+             ("k"           . sp-kill-sexp)
+             ("n"           . sp-next-sexp)
+             ("p"           . sp-previous-sexp)
+             ("r"           . sp-rewrap-sexp)
+             ("s"           . sp-split-sexp)
+             ("t"           . sp-transpose-sexp)
+             ("w"           . sp-copy-sexp))
 
   (smartparens-global-mode)
   (show-smartparens-global-mode)
 
-  (setq sp-highlight-pair-overlay nil)
-  (setq sp-show-pair-from-inside t)
+  (setq sp-highlight-pair-overlay nil
+        sp-show-pair-from-inside t
+        sp-cancel-autoskip-on-backward-movement nil)
 
   (sp-with-modes
       '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
@@ -453,8 +454,7 @@ all '.<space>' with '.<space><space>'."
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`"
                  nil :when '(sp-in-string-p))
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
-                 nil :actions nil)
-  (setq sp-cancel-autoskip-on-backward-movement nil))
+                 nil :actions nil))
 
 ;; fonts
 ;; -----------------------------------------------------------------------------
@@ -505,15 +505,15 @@ all '.<space>' with '.<space><space>'."
               (match-string 1 buf-coding)
             buf-coding))))
 
-  (setq powerline-default-separator 'bar)
+  (setq powerline-default-separator 'bar
+        spaceline-minor-modes-separator " | "
+        spaceline-highlight-face-func #'spaceline-highlight-face-evil-state)
 
   (set-face-background 'spaceline-flycheck-info "gray20")
   (set-face-background 'spaceline-flycheck-error "gray20")
   (set-face-background 'spaceline-flycheck-warning "gray20")
-  (setq spaceline-minor-modes-separator " | ")
 
   (spaceline-spacemacs-theme)
-  (setq spaceline-highlight-face-func #'spaceline-highlight-face-evil-state)
   (spaceline-toggle-minor-modes-on)
   (spaceline-toggle-flycheck-error-on)
   (spaceline-toggle-selection-info-on))
@@ -522,16 +522,18 @@ all '.<space>' with '.<space><space>'."
 ;; General editing
 ;; =============================================================================
 
-(setq-default sort-fold-case t)
+(setq confirm-kill-emacs 'yes-or-no-p
+      delete-by-moving-to-trash t
+      select-enable-clipboard t
+      tab-always-indent 'complete
+      view-read-only t)
 
-(setq confirm-kill-emacs 'yes-or-no-p)
-
-(setq-default fill-column 80)
-(setq-default indent-tabs-mode nil
-              tab-width 4
+(setq-default fill-column 80
+              indent-tabs-mode nil
+              sort-fold-case t
               standard-indent 2
-              tab-stop-list (number-sequence 2 120 2))
-(setq tab-always-indent 'complete)
+              tab-stop-list (number-sequence 2 120 2)
+              tab-width 4)
 
 (delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
@@ -544,11 +546,7 @@ all '.<space>' with '.<space><space>'."
 (put 'upcase-region    'disabled nil)
 (put 'downcase-region  'disabled nil)
 
-(setq delete-by-moving-to-trash t)
-(setq select-enable-clipboard t)
 (global-subword-mode 1)
-
-(setq view-read-only t)
 
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
@@ -727,12 +725,12 @@ all '.<space>' with '.<space><space>'."
   :delight
   :config
   (bind-keys ("M-\"" . flycheck-keymap-prefix))
-  (setq flycheck-python-flake8-executable "flake8")
   (define-prefix-command 'flycheck-keymap-prefix)
   (fset 'flycheck-keymap-prefix flycheck-command-map)
-  (setq flycheck-keymap-prefix flycheck-command-map)
-  (setq flycheck-global-modes '(not org-mode))
-  (setq flycheck-emacs-lisp-load-path 'inherit)
+  (setq flycheck-emacs-lisp-load-path 'inherit
+        flycheck-global-modes '(not org-mode)
+        flycheck-keymap-prefix flycheck-command-map
+        flycheck-python-flake8-executable "flake8")
   (global-flycheck-mode))
 
 ;; Edit remote files
@@ -740,8 +738,9 @@ all '.<space>' with '.<space><space>'."
   :config (setq tramp-default-method "ssh"))
 
 (use-package tramp-cache
-  :config (setq tramp-persistency-file-name
-                (expand-file-name "tramp" me-emacs-tmp)))
+  :config
+  (setq tramp-persistency-file-name
+        (expand-file-name "tramp" me-emacs-tmp)))
 
 (use-package bookmark
   :config
@@ -826,8 +825,8 @@ all '.<space>' with '.<space><space>'."
 
 (use-package ls-lisp
   :config
-  (setq ls-lisp-dirs-first t)
-  (setq ls-lisp-use-insert-directory-program nil))
+  (setq ls-lisp-dirs-first t
+        ls-lisp-use-insert-directory-program nil))
 
 ;; Calendar
 ;; -----------------------------------------------------------------------------
@@ -839,9 +838,9 @@ all '.<space>' with '.<space><space>'."
 
 (use-package calendar
   :config
-  (setq calendar-week-start-day 1)
-  (setq calendar-chinese-all-holidays-flag t)
-  (setq diary-file (expand-file-name "diary" me-emacs-data))
+  (setq calendar-week-start-day 1
+        calendar-chinese-all-holidays-flag t
+        diary-file (expand-file-name "diary" me-emacs-data))
   (calendar-set-date-style 'iso)
 
   (defface calendar-iso-week-face
@@ -1007,8 +1006,8 @@ all '.<space>' with '.<space><space>'."
   (defun me//init-web-mode()
     (setq web-mode-markup-indent-offset 2
           web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2)
-    (setq web-mode-enable-current-element-highlight t))
+          web-mode-code-indent-offset 2
+          web-mode-enable-current-element-highlight t))
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
 (defun me//init-python()
@@ -1041,22 +1040,24 @@ all '.<space>' with '.<space><space>'."
 
 (use-package image-mode
   :bind (:map image-mode-map
-              ("H" . image-transform-fit-to-height)
-              ("q" . quit-window)
-              ("Q" . kill-this-buffer)
-              ("r" . image-transform-set-rotation)
-              ("W" . image-transform-fit-to-width)
+              ("H"   . image-transform-fit-to-height)
+              ("q"   . quit-window)
+              ("Q"   . kill-this-buffer)
+              ("r"   . image-transform-set-rotation)
+              ("W"   . image-transform-fit-to-width)
               ("SPC" . image-transform-reset)))
 
 (use-package ssh-config-mode
-  :mode (("/\\.ssh/config\\'" . ssh-config-mode)
-         ("/sshd?_config\\'" . ssh-config-mode)
-         ("/known_hosts\\'" . ssh-known-hosts-mode)
+  :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
+         ("/sshd?_config\\'"      . ssh-config-mode)
+         ("/known_hosts\\'"       . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
 (use-package sh-script
   :config
-  (set-face-attribute 'sh-heredoc-face nil :weight 'normal :foreground "yellow2"))
+  (set-face-attribute 'sh-heredoc-face nil
+                      :weight 'normal
+                      :foreground "yellow2"))
 
 (defun me//init-org ()
   "Init orgmode."
@@ -1108,21 +1109,13 @@ all '.<space>' with '.<space><space>'."
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
 
-  ;; Recursive update todo statistics
-  (setq org-provide-todo-statistics      t
-        org-hierarchical-todo-statistics nil)
-
-  ;; Fontify src blocks
-  (setq org-src-fontify-natively t
-        org-src-preserve-indentation t)
-
-  (setq org-catch-invisible-edits 'smart)
-
-  ;; Use prefix key as tag selection
-  (setq org-use-fast-todo-selection t)
-
-  ;; Bypassing logging if change state with Shift key
-  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+  (setq org-catch-invisible-edits 'smart
+        org-hierarchical-todo-statistics nil
+        org-provide-todo-statistics      t
+        org-src-fontify-natively t
+        org-src-preserve-indentation t
+        org-treat-S-cursor-todo-selection-as-state-change nil
+        org-use-fast-todo-selection t)
 
   (setq org-todo-keywords
         '((sequence
@@ -1180,31 +1173,31 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-habit
   :config
-  (setq org-habit-graph-column         50
-        org-habit-preceding-days       28
-        org-habit-following-days       1))
+  (setq org-habit-graph-column   50
+        org-habit-preceding-days 28
+        org-habit-following-days 1))
 
 (use-package org-clock
   :config
   (setq org-clock-history-length 32
-        org-clock-in-resume t)
-  (setq org-log-into-drawer   t
-        org-clock-into-drawer t)
-
-  (setq org-clock-persist t)
+        org-clock-in-resume t
+        org-clock-into-drawer t
+        org-clock-persist t
+        org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
 (use-package org-agenda
   :bind (:map org-agenda-mode-map
               ("F" . org-gcal-fetch))
   :config
-  (setq org-agenda-include-diary t)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-  (setq org-agenda-files
-        (expand-file-name "orgfile" org-directory))
-  (setq org-agenda-dim-blocked-tasks            t
-        org-agenda-compact-blocks               nil
-        org-agenda-show-all-dates               t)
+  (setq org-agenda-compact-blocks nil
+        org-agenda-dim-blocked-tasks t
+        org-agenda-files (expand-file-name "orgfile" org-directory)
+        org-agenda-include-diary t
+        org-agenda-show-all-dates t
+        org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+        org-agenda-start-with-log-mode t
+        org-agenda-tags-column -100)
 
   (setq org-agenda-prefix-format
         '((agenda   . " %i %-15:c%?-12t% s")
@@ -1212,9 +1205,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           (todo     . " %i %-15:T")
           (tags     . " %i %-15:T")
           (search   . " %i %-15:T")))
-
-  (setq org-agenda-tags-column         -100
-        org-agenda-start-with-log-mode t)
 
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
@@ -1264,11 +1254,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package ox-html
   :config
-  (setq org-html-doctype "html5"
-        org-html-html5-fancy t
+  (setq org-html-allow-name-attribute-in-anchors t
+        org-html-doctype "html5"
         org-html-head-include-default-style nil
         org-html-head-include-scripts nil
-        org-html-allow-name-attribute-in-anchors t
+        org-html-html5-fancy t
         org-html-htmlize-output-type 'css)
 
   ;; Postamble.
@@ -1557,12 +1547,12 @@ argument FORCE, force the creation of a new ID."
 (use-package deft
   :bind ("<f8>" . deft)
   :config
-  (setq deft-default-extension "org")
-  (setq deft-directory (expand-file-name "notes" me-emacs-data))
-  (setq deft-use-filename-as-title nil)
-  (setq deft-use-filter-string-for-filename t)
-  (setq deft-recursive t)
-  (setq deft-auto-save-interval 0)
+  (setq deft-auto-save-interval 0
+        deft-default-extension "org"
+        deft-directory (expand-file-name "notes" me-emacs-data)
+        deft-recursive t
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t)
   (setq deft-file-naming-rules '((noslash . "-")
                                  (nospace . "-")
                                  (case-fn . downcase))))
@@ -1654,47 +1644,41 @@ So we just delete it locally."
           "zhitaao.gong@gmail.com"
           "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy nil)
-  (setq mu4e-view-mode-hook '(bbdb-mua-auto-update))
-  (setq mu4e-compose-complete-addresses t)
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-view-scroll-to-next nil)
-  (setq mu4e-headers-results-limit 100)
-
-  (setq mu4e-sent-messages-behavior #'me//process-sent-messages)
-
-  (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home))
-
-  ;; (setq mu4e-get-mail-command "true")
-  (setq mu4e-index-cleanup nil
-        mu4e-index-lazy-check t)
-
-  (setq mu4e-update-interval 300)
+  (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home)
+        mu4e-change-filenames-when-moving t
+        mu4e-compose-complete-addresses t
+        mu4e-compose-context-policy nil
+        mu4e-context-policy 'pick-first
+        mu4e-headers-results-limit 100
+        mu4e-index-cleanup nil
+        mu4e-index-lazy-check t
+        mu4e-sent-messages-behavior #'me//process-sent-messages
+        mu4e-update-interval 300
+        mu4e-use-fancy-chars t
+        mu4e-view-mode-hook '(bbdb-mua-auto-update)
+        mu4e-view-scroll-to-next nil
+        mu4e-view-show-addresses t)
 
   (add-to-list 'mu4e-bookmarks
                '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
 
-  (setq mu4e-use-fancy-chars t)
-
-  (setq mu4e-headers-has-child-prefix    '("+"  . "○╮")
-        mu4e-headers-empty-parent-prefix '("-"  . "● ")
-        mu4e-headers-first-child-prefix  '("\\" . "╰─")
+  (setq mu4e-headers-attach-mark         '("a" . "◥")
+        mu4e-headers-default-prefix      '("|"  . "● ")
+        mu4e-headers-draft-mark          '("D" . "℮")
         mu4e-headers-duplicate-prefix    '("="  . "≡ ")
-        mu4e-headers-default-prefix      '("|"  . "● "))
-
-  (setq mu4e-headers-draft-mark     '("D" . "℮")
-        mu4e-headers-flagged-mark   '("F" . "⚐")
-        mu4e-headers-new-mark       '("N" . "⋆")
-        mu4e-headers-passed-mark    '("P" . "⟫")
-        mu4e-headers-replied-mark   '("R" . "")
-        mu4e-headers-seen-mark      '("S" . "░")
-        mu4e-headers-trashed-mark   '("T" . "✖")
-        mu4e-headers-attach-mark    '("a" . "◥")
-        mu4e-headers-encrypted-mark '("x" . "")
-        mu4e-headers-signed-mark    '("s" . "☡")
-        mu4e-headers-unread-mark    '("u" . "█"))
+        mu4e-headers-empty-parent-prefix '("-"  . "● ")
+        mu4e-headers-encrypted-mark      '("x" . "")
+        mu4e-headers-first-child-prefix  '("\\" . "╰─")
+        mu4e-headers-flagged-mark        '("F" . "⚐")
+        mu4e-headers-has-child-prefix    '("+"  . "○╮")
+        mu4e-headers-new-mark            '("N" . "⋆")
+        mu4e-headers-passed-mark         '("P" . "⟫")
+        mu4e-headers-replied-mark        '("R" . "")
+        mu4e-headers-seen-mark           '("S" . "░")
+        mu4e-headers-signed-mark         '("s" . "☡")
+        mu4e-headers-trashed-mark        '("T" . "✖")
+        mu4e-headers-unread-mark         '("u" . "█")
+        mu4e-headers-from-or-to-prefix   '("" . "▶ "))
 
   (let ((marks '((refile  . ("r" . "▶"))
                  (delete  . ("D" . "✖"))
@@ -1710,8 +1694,6 @@ So we just delete it locally."
                  (something . ("*" . "♯")))))
     (dolist (elm marks)
       (plist-put (alist-get (car elm) mu4e-marks) :char (cdr elm))))
-
-  (setq mu4e-headers-from-or-to-prefix '("" . "▶ "))
 
   (setq mu4e-headers-fields '((:human-date . 18)
                               (:flags . 10)
@@ -1729,11 +1711,11 @@ So we just delete it locally."
 (use-package bbdb
   :config
   (bbdb-initialize 'message 'anniv 'mu4e)
-  (setq bbdb-complete-mail-allow-cycling t
-        bbdb-allow-duplicates t
-        bbdb-message-all-addresses t
-        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data))
-  (setq bbdb-mail-user-agent 'message-user-agent)
+  (setq bbdb-allow-duplicates t
+        bbdb-complete-mail-allow-cycling t
+        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data)
+        bbdb-mail-user-agent 'message-user-agent
+        bbdb-message-all-addresses t)
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; Message buffer
@@ -1749,15 +1731,12 @@ So we just delete it locally."
 
 (use-package message
   :config
-  (setq message-forward-ignored-headers ""
+  (setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n"
+        message-citation-line-function #'message-insert-formatted-citation-line
+        message-forward-as-mime nil
+        message-forward-before-signature nil
+        message-forward-ignored-headers ""
         message-make-forward-subject-function #'message-forward-subject-fwd)
-
-  (setq message-forward-as-mime nil)
-  (setq message-forward-before-signature nil)
-
-  (setq message-citation-line-function #'message-insert-formatted-citation-line)
-  (setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n")
-
   (add-hook 'message-mode-hook #'me//init-message)
   (add-hook 'message-send-hook 'ispell-message))
 
@@ -1766,8 +1745,8 @@ So we just delete it locally."
 
 (use-package sendmail
   :config
-  (setq send-mail-function 'message-send-mail-with-sendmail)
-  (setq sendmail-program "msmtp")
+  (setq send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp")
   (add-hook 'mail-send-hook  'ispell-message))
 
 ;; message notification, only in the modeline
@@ -1840,30 +1819,28 @@ So we just delete it locally."
   :config
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
-  (setq bibtex-dialect 'biblatex)
-  (setq bibtex-align-at-equal-sign t)
-  (setq bibtex-text-indentation 20)
-
   (add-to-list 'bibtex-entry-format 'unify-case)
   (add-to-list 'bibtex-entry-format 'sort-fields)
   (add-to-list 'bibtex-entry-format 'whitespace)
   (add-to-list 'bibtex-entry-format 'last-comma)
 
-  (setq bibtex-autokey-year-length 4
+  (setq bibtex-align-at-equal-sign t
         bibtex-autokey-name-year-separator ""
-        bibtex-autokey-year-title-separator "-"
+        bibtex-autokey-titleword-length nil
         bibtex-autokey-titleword-separator "_"
         bibtex-autokey-titlewords 1
         bibtex-autokey-titlewords-stretch 0
-        bibtex-autokey-titleword-length nil)
-  (setq bibtex-maintain-sorted-entries t)
-
-  (setq bibtex-completion-bibliography me-bib-files
+        bibtex-autokey-year-length 4
+        bibtex-autokey-year-title-separator "-"
+        bibtex-completion-bibliography me-bib-files
         bibtex-completion-library-path me-bib-pdfs
-        bibtex-completion-notes-path me-bib-notes)
-  (setq bibtex-completion-notes-extension ".org")
-  (setq bibtex-completion-pdf-symbol "⚐"
-        bibtex-completion-notes-symbol "✔"))
+        bibtex-completion-notes-extension ".org"
+        bibtex-completion-notes-path me-bib-notes
+        bibtex-completion-notes-symbol "✔"
+        bibtex-completion-pdf-symbol "⚐"
+        bibtex-dialect 'biblatex
+        bibtex-maintain-sorted-entries t
+        bibtex-text-indentation 20))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
@@ -1886,13 +1863,12 @@ So we just delete it locally."
 
 (use-package org-ref
   :init
-  (setq org-ref-default-bibliography me-bib-files
+  (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4)
+        org-ref-default-bibliography me-bib-files
+        org-ref-notes-directory me-bib-notes
         org-ref-pdf-directory me-bib-pdfs
-        org-ref-notes-directory me-bib-notes)
-
-  (setq org-ref-ref-color (me//colir-blend "goldenrod" "grey90" 0.4))
-  (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4))
-  (setq org-ref-show-citation-on-enter nil)
+        org-ref-ref-color (me//colir-blend "goldenrod" "grey90" 0.4)
+        org-ref-show-citation-on-enter nil)
 
   :config
   (setq org-ref-notes-function #'me//org-ref-notes-function)
@@ -1994,19 +1970,19 @@ Using `window-line-height' accounts for variable-height fonts."
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
               ("<delete>" . pdf-view-scroll-up-or-next-page)
-              ("<down>" . me/pdf-view-next-few-lines)
-              ("<left>" . pdf-view-previous-page-command)
-              ("<right>" . pdf-view-next-page-command)
-              ("<up>" . me/pdf-view-prev-few-lines)
-              ("b" . helm-mini)
-              ("c" . me/org-ref-open-entry)
-              ("d" . me/pdf-view-scroll-half-forward)
-              ("e" . me/pdf-view-scroll-half-backward)
-              ("g" . pdf-view-goto-page)
-              ("j" . me/pdf-view-scroll-half-forward)
-              ("k" . me/pdf-view-scroll-half-backward)
-              ("n" . me/org-ref-open-note)
-              ("z" . delete-other-windows))
+              ("<down>"   . me/pdf-view-next-few-lines)
+              ("<left>"   . pdf-view-previous-page-command)
+              ("<right>"  . pdf-view-next-page-command)
+              ("<up>"     . me/pdf-view-prev-few-lines)
+              ("b"        . helm-mini)
+              ("c"        . me/org-ref-open-entry)
+              ("d"        . me/pdf-view-scroll-half-forward)
+              ("e"        . me/pdf-view-scroll-half-backward)
+              ("g"        . pdf-view-goto-page)
+              ("j"        . me/pdf-view-scroll-half-forward)
+              ("k"        . me/pdf-view-scroll-half-backward)
+              ("n"        . me/org-ref-open-note)
+              ("z"        . delete-other-windows))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
@@ -2111,10 +2087,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :delight
   :bind ("C-c u" . undo-tree-visualize)
   :config
-  (setq undo-tree-enable-undo-in-region t)
-  (setq undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
-  (setq undo-tree-auto-save-history nil)
-  (setq undo-limit 80000))
+  (setq undo-limit 80000
+        undo-tree-auto-save-history nil
+        undo-tree-enable-undo-in-region t
+        undo-tree-history-directory-alist `(("." . ,me-emacs-tmp))))
 
 ;; Evil
 ;; -----------------------------------------------------------------------------
