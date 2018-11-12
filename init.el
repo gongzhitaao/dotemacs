@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-11 11:05:00 gongzhitaao>
+;; Time-stamp: <2018-11-12 08:58:48 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2121,8 +2121,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
              ("<delete>"    . View-scroll-half-page-forward)
              ("<down>"      . evil-next-visual-line)
              ("<up>"        . evil-previous-visual-line)
+             ("C-b"         . helm-mini)
              ("C-e"         . move-end-of-line)
              ("C-z"         . delete-other-windows)
+             ("C-v"         . golden-ratio-scroll-screen-up)
              ("b"           . helm-mini))
 
   (setq cursor-type 'box)
@@ -2131,6 +2133,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
         evil-normal-state-cursor "DarkGoldenrod2"
         evil-visual-state-cursor "gray"
         evil-motion-state-cursor "plum3")
+  (setq evil-move-beyond-eol t)
 
   (evil-make-overriding-map help-mode-map 'motion)
 
