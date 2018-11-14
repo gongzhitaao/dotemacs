@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-12 08:58:48 gongzhitaao>
+;; Time-stamp: <2018-11-12 15:19:35 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -803,7 +803,7 @@ all '.<space>' with '.<space><space>'."
                                    "\\(?:.*?\\)[ ]+"))
          (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
          (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
-         (executable (concat "^..[^d]\\(?:.*x.*?\\)[ ]"
+         (executable (concat "^..-\\(?:.*x.*?\\)[ ]"
                              "\\(?:.*?\\(?:[0-9][0-9]:[0-9][0-9]\\)\\|"
                              "\\(?:[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)\\)[ ]+"
                              "\\(.*$\\)")))
