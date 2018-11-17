@@ -180,6 +180,7 @@
 ;; M-o ???
 ;; M-p ace-window
 ;; M-q fill-paragraph
+(global-set-key (kbd "M-Q") #'me/unfill-paragraph)
 ;; M-r move-to-window-line-top-bottom
 ;; M-s search
 ;; M-t transpose-word
@@ -335,6 +336,14 @@ all '.<space>' with '.<space><space>'."
             (new ".  "))
         (while (re-search-forward old nil t)
           (replace-match new))))))
+
+(defun me/unfill-paragraph (&optional region)
+  "Unfill paragraph, in the REGION if provided."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
 
 ;; =============================================================================
 ;; Appearance
