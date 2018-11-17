@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-12 15:19:35 gongzhitaao>
+;; Time-stamp: <2018-11-17 09:24:19 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1864,10 +1864,20 @@ So we just delete it locally."
 (use-package reftex
   :diminish reftex-mode
   :config
-  (add-hook 'tex-mode-hook #'turn-on-reftex)
+  (add-hook 'TeX-mode-hook #'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
         reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
         reftex-default-bibliography me-bib-files))
+
+;; turn on flyspell on latex
+;; -----------------------------------------------------------------------------
+
+(defun me//init-tex()
+  (flyspell-mode))
+
+(use-package tex-mode
+  :config
+  (add-hook 'TeX-mode-hook #'me//init-tex))
 
 ;; org-ref
 ;; -----------------------------------------------------------------------------
