@@ -118,6 +118,7 @@
            ("c"   . set-buffer-file-coding-system)
            ("d"   . delete-duplicate-lines)
            ("l"   . magit-log-buffer-file)
+           ("M-w" . me/copy-region-escaped)
            ("s l" . sort-lines)
            ("s s" . me/sort-symbols)
            ("s w" . me/sort-words)
@@ -346,6 +347,18 @@ all '.<space>' with '.<space><space>'."
         ;; This would override `fill-column' if it's an integer.
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
+
+(defun me/copy-region-escaped (beg end)
+  "Copy buffer between BEG and END."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (let ((str (buffer-substring-no-properties beg end))
+            (print-escape-newlines t))
+        (kill-new (prin1-to-string str)))))
+  (setq deactivate-mark t)
+  nil)
 
 (defun me/gnome-terminal ()
   "Open gnome-terminal."
