@@ -122,6 +122,7 @@
            ("s s" . me/sort-symbols)
            ("s w" . me/sort-words)
            ("S"   . me/sudo-edit)
+           ("t"   . me/gnome-terminal)
            ("v"   . add-file-local-variable)
            ("V"   . add-file-local-variable-prop-line))
 
@@ -345,6 +346,11 @@ all '.<space>' with '.<space><space>'."
         ;; This would override `fill-column' if it's an integer.
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
+
+(defun me/gnome-terminal ()
+  "Open gnome-terminal."
+  (interactive)
+  (start-process "gnome-terminal" nil "gnome-terminal"))
 
 ;; =============================================================================
 ;; Appearance
