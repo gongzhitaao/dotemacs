@@ -1,5 +1,5 @@
-;;; init.el --- Yet another Emacs config
-;; Time-stamp: <2018-11-17 09:24:19 gongzhitaao>
+;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
+;; Time-stamp: <2018-11-25 15:21:32 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1363,6 +1363,28 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :config
   (add-to-list 'org-beamer-environments-extra '("only" "O" "\\only%a{" "}"))
   (add-to-list 'org-beamer-environments-extra '("action" "A" "\\action%a{" "}")))
+
+;; https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/
+(use-package org-src
+  :config
+  (add-to-list 'org-src-lang-modes '("latex-macro" . LaTeX))
+
+  (defvar org-babel-default-header-args:latex-macro
+    '((:results . "raw")
+      (:exports . "results")))
+
+  (defun me//prefix-all-lines (pre body)
+    (with-temp-buffer
+      (insert body)
+      (string-insert-rectangle (point-min) (point-max) pre)
+      (buffer-string)))
+
+  (defun org-babel-execute:latex-macro (body _params)
+    (concat
+     (me//prefix-all-lines "#+LATEX_HEADER: " body)
+     "\n#+HTML_HEAD_EXTRA: <div style=\"display: none\"> \\(\n"
+     (me//prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
+     "\n#+HTML_HEAD_EXTRA: \\)</div>\n")))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
