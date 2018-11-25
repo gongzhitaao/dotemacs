@@ -105,6 +105,7 @@
 ;; -----------------------------------------------------------------------------
 
 ;; C-c b -- helm-bibtex
+;; C-c c -- helm-flycheck
 
 (use-package drag-stuff
   :bind ("C-c d" . drag-stuff-mode)
@@ -524,7 +525,6 @@ all '.<space>' with '.<space><space>'."
 
   (spaceline-spacemacs-theme)
   (spaceline-toggle-minor-modes-on)
-  (spaceline-toggle-flycheck-error-on)
   (spaceline-toggle-selection-info-on))
 
 ;; =============================================================================
@@ -748,6 +748,9 @@ all '.<space>' with '.<space><space>'."
         flycheck-keymap-prefix flycheck-command-map
         flycheck-python-flake8-executable "flake8")
   (global-flycheck-mode))
+
+(use-package helm-flycheck
+  :bind ("C-c c" . helm-flycheck))
 
 ;; Edit remote files
 (use-package tramp
