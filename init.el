@@ -651,12 +651,16 @@ all '.<space>' with '.<space><space>'."
 ;; -----------------------------------------------------------------------------
 
 (use-package helm-ag
+  :after helm
   :bind ("M-s a" . helm-do-ag))
 
 (use-package helm-swoop
-  :bind ("M-s s" . helm-swoop)
+  :after helm
+  :bind (("M-s s" . helm-swoop)
+         :map isearch-mode-map
+         ("M-i" . helm-swoop-from-isearch))
   :config
-  (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch))
+  (setq helm-multi-swoop-edit-save t))
 
 ;; Completion
 ;; -----------------------------------------------------------------------------
@@ -1455,20 +1459,18 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-config
   :config
-  (bind-keys ("M-x" . helm-M-x)
+  (bind-keys ("M-x"     . helm-M-x)
              ("C-x C-f" . helm-find-files)
-             ("M-s a" . helm-do-ag)
-             ("M-s g" . helm-do-grep-ag)
-             ("C-b" . helm-mini)
-             ("M-/" . helm-dabbrev)
+             ("M-s a"   . helm-do-ag)
+             ("M-s g"   . helm-do-grep-ag)
+             ("C-b"     . helm-mini)
+             ("M-/"     . helm-dabbrev)
              :map helm-map
-             ("<tab>" . helm-execute-persistent-action)
-             ("C-i" . helm-execute-persistent-action)
-             ("C-z" . helm-select-action)
-             :map isearch-mode-map
-             ("M-i" . helm-occur-from-isearch)
+             ("<tab>"   . helm-execute-persistent-action)
+             ("C-i"     . helm-execute-persistent-action)
+             ("C-z"     . helm-select-action)
              :map helm-moccur-map
-             ("C-s" . me//isearch-from-helm-occur))
+             ("C-s"     . me//isearch-from-helm-occur))
 
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
@@ -1514,11 +1516,10 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq helm-M-x-fuzzy-match t))
 
+(use-package helm-flyspell)
 (use-package flyspell
   :bind (:map flyspell-mode-map
               ("C-;" . helm-flyspell-correct)))
-
-(use-package helm-flyspell)
 
 ;; helm projectile
 ;; -----------------------------------------------------------------------------
@@ -2165,8 +2166,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
              ("C-b"         . helm-mini)
              ("C-e"         . move-end-of-line)
              ("C-z"         . delete-other-windows)
-             ("C-v"         . golden-ratio-scroll-screen-up)
-             ("b"           . helm-mini))
+             ("C-v"         . golden-ratio-scroll-screen-up))
 
   (setq cursor-type 'box)
   (setq evil-insert-state-cursor "chartreuse3"
