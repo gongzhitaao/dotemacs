@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-11-25 15:21:32 gongzhitaao>
+;; Time-stamp: <2018-12-03 15:05:39 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1934,6 +1934,12 @@ So we just delete it locally."
   (bibtex-completion-edit-notes
    (list (car (org-ref-get-bibtex-key-and-file thekey)))))
 
+(defun me//org-ref-add-timestamp ()
+  "Add a timestamp field to a bibtex entry."
+  (interactive)
+  (bibtex-beginning-of-entry)
+  (bibtex-set-field "timestamp" (format-time-string "%Y%m%dT%H%M")))
+
 (use-package org-ref
   :init
   (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4)
@@ -1945,7 +1951,9 @@ So we just delete it locally."
 
   :config
   (setq org-ref-notes-function #'me//org-ref-notes-function)
-  (add-hook 'org-ref-clean-bibtex-entry-hook #'org-ref-downcase-bibtex-entry)
+
+  (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
+    (add-hook 'org-ref-clean-bibtex-entry-hook func))
 
   (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
   (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
@@ -1959,6 +1967,12 @@ So we just delete it locally."
           (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
           (t             . ,(format "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  %s  ${keywords:40}" (make-string 20 ? )))))
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
+
+(defun me/cleanup-bibtex-file (beg end)
+  "Cleanup entries in region BEG, END."
+  (interactive "r")
+  (bibtex-map-entries (lambda (_key _beg _end)
+                        (org-ref-clean-bibtex-entry))))
 
 ;; =============================================================================
 ;; Working with PDF
