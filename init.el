@@ -423,6 +423,8 @@ all '.<space>' with '.<space><space>'."
         writeroom-width 100)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode))
+  (setq writeroom-major-modes-exceptions
+        '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
 
@@ -1871,12 +1873,12 @@ So we just delete it locally."
 
 (use-package bibtex
   :bind (:map bibtex-mode-map
-              ([remap fill-paragraph] . bibtex-fill-entry)
+              ([remap fill-paragraph]     . bibtex-fill-entry)
               ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
-              ("C-c C-v" . bibtex-validate)
-              ("<backtab>" . me/bibtex-find-text-begin)
-              ("M-<down>" . bibtex-end-of-entry)
-              ("M-<up>" . bibtex-beginning-of-entry))
+              ("C-c C-v"                  . bibtex-validate)
+              ("<backtab>"                . me/bibtex-find-text-begin)
+              ("M-<down>"                 . bibtex-end-of-entry)
+              ("M-<up>"                   . bibtex-beginning-of-entry))
   :config
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
