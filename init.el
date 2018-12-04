@@ -831,8 +831,8 @@ all '.<space>' with '.<space><space>'."
     "face for executables"
     :group 'me-dired)
 
-  (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]+"
-                                   "\\(?:.*?\\)[ ]+"
+  (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]*"
+                                   "\\(?:[0-9]*?\\)[ ]+"
                                    "\\(.*?\\)[ ]+"
                                    "\\(.*?\\)[ ]+"
                                    "\\(?:.*?\\)[ ]+"))
