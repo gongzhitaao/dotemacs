@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-03 15:05:39 gongzhitaao>
+;; Time-stamp: <2018-12-11 09:35:52 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -150,8 +150,10 @@
            ("a"   . org-agenda)
            ("c"   . org-capture)
            ("e"   . me/org-ref-open-entry)
-           ("h"   . me/org-custom-id-get-create)
-           ("H"   . me/org-custom-id-get-create-all)
+           ("h"   . me/org-custom-id-get-create-hash)
+           ("H"   . me/org-custom-id-get-create-hash-all)
+           ("i"   . me/org-custom-id-get-create)
+           ("I"   . me/org-custom-id-get-create-all)
            ("l b" . org-ref-extract-bibtex-entries)
            ("l f" . org-ref-list-of-figures)
            ("l t" . org-ref-list-of-tables)
@@ -1398,18 +1400,21 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (replace-regexp-in-string "[^[:alpha:][:digit:][:space:]_-]" ""
                             (downcase heading)))
 
-(defun me//org-id-from-heading (heading &optional level sep)
+(defun me//org-id-from-heading (heading &optional level sep uniq)
   "Format HEADING to use as custom ID and return it.
 
 LEVEL is provided, the level of heading is prefixed.  This
-function normalize HEADING by replacing spaces with SEP.  if SEP
-is the separator used to glue different parts."
+function normalize HEADING by replacing spaces with SEP.  SEP is
+the separator used to glue different parts.  if UNIQ, append a 5
+digit hash ID."
   (let ((sep (or sep "-")))
     (concat (when org-id-prefix (format "%s%s" org-id-prefix sep))
             (when level (format "h%d%s" level sep))
             (replace-regexp-in-string "\\s-+" sep
                                       (me//clean-up-heading heading))
-            (concat sep (me//org-id-hash (concat (buffer-name) heading))))))
+            (if uniq
+                (concat sep (me//org-id-hash (concat (buffer-name) heading)))
+              ""))))
 
 (defun me//org-id-hash (s &optional length)
   "Generate a unique string hash for S, truncated at LENGTH."
@@ -1417,24 +1422,27 @@ is the separator used to glue different parts."
         (hash (secure-hash 'sha1 s)))
     (substring-no-properties hash nil length)))
 
-(defun me/org-custom-id-get (&optional pom create prefix)
+(defun me/org-custom-id-get (&optional pom create uniq)
   "Get the CUSTOM_ID property of the entry at point-or-marker POM.
 
 If POM is nil, refer to the entry at point.  If the entry does
 not have an CUSTOM_ID, the function returns nil.  However, when
 CREATE is non nil, create a CUSTOM_ID if none is present already.
-PREFIX will be passed through to `org-id-new'.  In any case, the
-CUSTOM_ID of the entry is returned."
+PREFIX will be passed through to `org-id-new'.  Append a 5-digit
+hash if UNIQ is non nil.  In any case, the CUSTOM_ID of the entry
+is returned."
   (interactive)
   (org-with-point-at pom
-    (let ((id (org-entry-get nil "CUSTOM_ID")))
+    (let ((id (if create nil
+                (org-entry-get nil "CUSTOM_ID"))))
       (cond
        ((and id (stringp id) (string-match "\\S-" id))
         id)
-       (create
+       (t
         (setq id (me//org-id-from-heading (org-get-heading t t t t)
                                           (org-current-level)
-                                          "-"))
+                                          "-"
+                                          uniq))
         (org-entry-put pom "CUSTOM_ID" id)
         (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
         id)))))
@@ -1446,9 +1454,16 @@ If the entry already has an ID, just return it.  With optional
 argument FORCE, force the creation of a new ID."
   (interactive "P")
   (when (derived-mode-p 'org-mode)
-    (when force
-      (org-entry-put (point) "CUSTOM_ID" nil))
-    (me/org-custom-id-get (point) 'create)))
+    (me/org-custom-id-get (point) force)))
+
+(defun me/org-custom-id-get-create-hash (&optional force)
+  "Create an ID w/o a suffix for the current entry and return it.
+
+If the entry already has an ID, just return it.  With optional
+argument FORCE, force the creation of a new ID."
+  (interactive "P")
+  (when (derived-mode-p 'org-mode)
+    (me/org-custom-id-get (point) force 'uniq)))
 
 (defun me/org-custom-id-get-create-all (&optional force)
   "Create custom ID for every heading.  Overwrite current if FORCE."
@@ -1462,6 +1477,16 @@ argument FORCE, force the creation of a new ID."
                  (org-entry-put (point) "CUSTOM_ID" nil)
                  (me/org-custom-id-get (point) 'create))
              (lambda () (me/org-custom-id-get (point) 'create)))))
+      (org-map-entries me//org-custom-id-get-wrapper))))
+
+(defun me/org-custom-id-get-create-hash-all (&optional force)
+  "Create custom ID for every heading.  Overwrite current if FORCE."
+  (interactive "P")
+  (when (derived-mode-p 'org-mode)
+    (when force
+      (org-entry-put (point) "CUSTOM_ID" nil))
+    (let ((me//org-custom-id-get-wrapper
+           (lambda () (me/org-custom-id-get (point) force 'uniq))))
       (org-map-entries me//org-custom-id-get-wrapper))))
 
 ;; The gcal contains some senstive information, thus in a separate file.
