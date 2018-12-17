@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-11 09:35:52 gongzhitaao>
+;; Time-stamp: <2018-12-17 14:27:39 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2005,7 +2005,36 @@ So we just delete it locally."
 
 (use-package pdf-tools
   :magic ("%PDF" . pdf-view-mode)
-  :config (pdf-tools-install))
+  :config
+  (pdf-tools-install)
+
+  (defun me/pdf-set-last-viewed-bookmark ()
+    (interactive)
+    (when (eq major-mode 'pdf-view-mode)
+      (bookmark-set (me//pdf-get-bookmark-name))))
+
+  (defun me//pdf-jump-last-viewed-bookmark ()
+    (bookmark-set "fake")
+    (let ((bmk (me//pdf-get-bookmark-name)))
+      (when (me//pdf-has-last-viewed-bookmark bmk)
+        (bookmark-jump bmk))))
+
+  (defun me//pdf-has-last-viewed-bookmark (bmk)
+    (assoc bmk bookmark-alist))
+
+  (defun me//pdf-get-bookmark-name ()
+    (concat "PDF-last-viewed: " (buffer-file-name)))
+
+  (defun me//pdf-set-all-last-viewed-bookmarks ()
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf (mu/pdf-set-last-viewed-bookmark))))
+
+  (add-hook 'kill-buffer-hook 'me/pdf-set-last-viewed-bookmark)
+  (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
+
+  ;; As `save-place-mode' does
+  (unless noninteractive
+    (add-hook 'kill-emacs-hook #'me//pdf-set-all-last-viewed-bookmarks)))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
