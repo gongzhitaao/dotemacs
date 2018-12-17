@@ -1047,7 +1047,7 @@ all '.<space>' with '.<space><space>'."
               ("C-!" . clang-format-region)))
 
 (use-package web-mode
-  :mode "\\.\\(html\\|htm\\)\\'"
+  :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
   :config
   (defun me//init-web-mode()
     (setq web-mode-markup-indent-offset 2
