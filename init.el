@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-17 14:27:39 gongzhitaao>
+;; Time-stamp: <2018-12-17 19:55:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2027,7 +2027,7 @@ So we just delete it locally."
 
   (defun me//pdf-set-all-last-viewed-bookmarks ()
     (dolist (buf (buffer-list))
-      (with-current-buffer buf (mu/pdf-set-last-viewed-bookmark))))
+      (with-current-buffer buf (me/pdf-set-last-viewed-bookmark))))
 
   (add-hook 'kill-buffer-hook 'me/pdf-set-last-viewed-bookmark)
   (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
