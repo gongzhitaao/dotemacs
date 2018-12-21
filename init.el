@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-21 15:22:37 gongzhitaao>
+;; Time-stamp: <2018-12-21 16:16:46 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1960,7 +1960,7 @@ So we just delete it locally."
   (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
-  (setq bibtex-completion-display-formats
+  (setq bibtex-completion-dispvlay-formats
         `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
           (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
           (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
@@ -2326,17 +2326,17 @@ If ARG, open with external program.  Otherwise open in Emacs."
    'me-theme
 
    `(default ((t (:foreground "gray95" :background "gray20"
-                              :distant-foreground "white"))))
+                              :distant-foreground ,atom-one-dark-gray))))
 
    ;; mode-line
    `(mode-line ((t (:background ,atom-one-dark-black
                                 :foreground ,atom-one-dark-silver
-                                :box (:color ,atom-one-dark-border :line-width 1)))))
+                                :box (:color ,atom-one-dark-border :line-width 6)))))
    `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1 :weight bold))))
    `(mode-line-emphasis ((t (:weight bold))))
    `(mode-line-inactive ((t (:background ,atom-one-dark-border
                                          :foreground ,atom-one-dark-gray
-                                         :box (:color ,atom-one-dark-border :line-width 1)))))
+                                         :box (:color ,atom-one-dark-border :line-width 6)))))
 
    ;; helm
    `(helm-header ((t (:foreground ,atom-one-dark-mono-2
@@ -2362,14 +2362,18 @@ If ARG, open with external program.  Otherwise open in Emacs."
    `(helm-selection ((t (:background ,atom-one-dark-black))))
    `(helm-selection-line ((t (:background ,atom-one-dark-green))))
 
-   `(helm-visible-mark ((t (:foreground ,atom-one-dark-black :background ,atom-one-dark-orange-2))))
+   `(helm-visible-mark
+     ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-black))))
    `(helm-candidate-number ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg-1))))
 
    `(helm-match ((t (:foreground ,atom-one-dark-red-1))))
 
-   `(helm-swoop-target-line-block-face ((t (:background ,atom-one-dark-mono-3 :foreground "#222222"))))
-   `(helm-swoop-target-line-face ((t (:background ,atom-one-dark-mono-3 :foreground "#222222"))))
-   `(helm-swoop-target-word-face ((t (:background ,atom-one-dark-purple :foreground "#ffffff"))))
+   `(helm-swoop-target-line-block-face
+     ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
+   `(helm-swoop-target-line-face
+     ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
+   `(helm-swoop-target-word-face
+     ((t (:background ,atom-one-dark-purple :foreground "#ffffff"))))
 
    ))
 
