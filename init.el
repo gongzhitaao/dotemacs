@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-21 16:25:10 gongzhitaao>
+;; Time-stamp: <2018-12-21 16:50:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2325,10 +2325,11 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (custom-theme-set-faces
    'me-theme
 
-   `(default ((t (:foreground "gray95" :background "gray20"
-                              :distant-foreground ,atom-one-dark-gray))))
+   `(default ((t (:foreground "gray90" :background "gray20"
+                              :distant-foreground "red"))))
 
-   `(window-divider ((t (:foreground ,atom-one-dark-border))))
+   `(window-divider ((t (:foreground ,atom-one-dark-border
+                                     :distant-foreground ,atom-one-dark-border))))
    `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
 
@@ -2339,6 +2340,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
    `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1 :weight bold))))
    `(mode-line-emphasis ((t (:weight bold))))
    `(mode-line-inactive ((t (:background ,atom-one-dark-border
+                                         :distant-foreground ,atom-one-dark-gray
                                          :foreground ,atom-one-dark-gray
                                          :box (:color ,atom-one-dark-border :line-width 6)))))
 
@@ -2378,6 +2380,15 @@ If ARG, open with external program.  Otherwise open in Emacs."
      ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
    `(helm-swoop-target-word-face
      ((t (:background ,atom-one-dark-purple :foreground "#ffffff"))))
+
+   `(magit-hash ((t (:foreground ,atom-one-dark-purple))))
+
+   `(mu4e-context-face ((t (:foreground ,atom-one-dark-green))))
+
+   `(ido-first-match ((t (:foreground ,atom-one-dark-purple :weight bold))))
+   `(ido-only-match ((t (:foreground ,atom-one-dark-green :weight bold))))
+   `(ido-subdir ((t (:foreground ,atom-one-dark-blue))))
+   `(ido-virtual ((t (:foreground ,atom-one-dark-mono-3))))
 
    ))
 
