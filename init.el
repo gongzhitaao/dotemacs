@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-21 16:16:46 gongzhitaao>
+;; Time-stamp: <2018-12-21 16:25:10 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2327,6 +2327,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
    `(default ((t (:foreground "gray95" :background "gray20"
                               :distant-foreground ,atom-one-dark-gray))))
+
+   `(window-divider ((t (:foreground ,atom-one-dark-border))))
+   `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
+   `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
 
    ;; mode-line
    `(mode-line ((t (:background ,atom-one-dark-black
