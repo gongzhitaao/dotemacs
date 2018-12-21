@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-17 19:55:01 gongzhitaao>
+;; Time-stamp: <2018-12-21 15:22:37 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -392,9 +392,6 @@ all '.<space>' with '.<space><space>'."
     (concat "@" hostname "     " name)))
 (setq frame-title-format '((:eval (me//set-title-bar))))
 
-(add-to-list 'default-frame-alist '(background-color . "gray20"))
-(add-to-list 'default-frame-alist '(foreground-color . "gray90"))
-
 (global-hl-line-mode)
 (set-face-background 'hl-line "black")
 
@@ -404,8 +401,8 @@ all '.<space>' with '.<space><space>'."
   :config
   (global-anzu-mode +1)
   (setq anzu-search-threshold 1000)
-  (setq anzu-cons-mode-line-p nil)
-  (set-face-attribute 'anzu-mode-line nil :foreground "green4" :weight 'bold))
+  (set-face-attribute 'anzu-mode-line nil :foreground "wheat" :weight 'bold
+                      :background "gray20"))
 
 ;; Show a dimmed delimiter at fill-column.
 (use-package fill-column-indicator
@@ -527,28 +524,6 @@ all '.<space>' with '.<space><space>'."
         uniquify-after-kill-buffer-p t
         uniquify-buffer-name-style 'post-forward-angle-brackets
         uniquify-ignore-buffers-re "^\\*"))
-
-(use-package spaceline-config
-  :config
-  (spaceline-define-segment buffer-encoding-abbrev
-    "The line ending convention used in the buffer."
-    (let ((buf-coding (format "%s" buffer-file-coding-system)))
-      (if (derived-mode-p 'text-mode 'prog-mode)
-          (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
-              (match-string 1 buf-coding)
-            buf-coding))))
-
-  (setq powerline-default-separator 'bar
-        spaceline-minor-modes-separator " | "
-        spaceline-highlight-face-func #'spaceline-highlight-face-evil-state)
-
-  (set-face-background 'spaceline-flycheck-info "gray20")
-  (set-face-background 'spaceline-flycheck-error "gray20")
-  (set-face-background 'spaceline-flycheck-warning "gray20")
-
-  (spaceline-spacemacs-theme)
-  (spaceline-toggle-minor-modes-on)
-  (spaceline-toggle-selection-info-on))
 
 ;; =============================================================================
 ;; General editing
@@ -2261,11 +2236,36 @@ If ARG, open with external program.  Otherwise open in Emacs."
              ("C-v"         . golden-ratio-scroll-screen-up))
 
   (setq cursor-type 'box)
+
   (setq evil-insert-state-cursor "chartreuse3"
         evil-emacs-state-cursor "SkyBlue2"
         evil-normal-state-cursor "DarkGoldenrod2"
         evil-visual-state-cursor "gray"
         evil-motion-state-cursor "plum3")
+
+  (setq evil-normal-state-tag
+        (propertize " <N> " 'face
+                    `((:background ,(me//colir-blend "DarkGoldenrod2" "#21252B" 0.5)
+                                   :foreground "gray80")))
+        evil-emacs-state-tag
+        (propertize " <E> " 'face
+                    `((:background ,(me//colir-blend "SkyBlue2" "#21252B" 0.5)
+                                   :foreground "gray80")))
+        evil-insert-state-tag
+        (propertize " <I> " 'face
+                    '((:background "chartreuse3" :foreground "black")))
+        evil-replace-state-tag
+        (propertize " <R> " 'face
+                    '((:background "chocolate" :foreground "black")))
+        evil-motion-state-tag
+        (propertize " <M> " 'face
+                    '((:background "plum3" :foreground "black")))
+        evil-visual-state-tag
+        (propertize " <V> " 'face
+                    '((:background "gray" :foreground "black")))
+        evil-operator-state-tag
+        (propertize " <O> " 'face
+                    '((:background "sandy brown" :foreground "black"))))
   (setq evil-move-beyond-eol t)
 
   (evil-make-overriding-map help-mode-map 'motion)
@@ -2276,6 +2276,102 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
   (mapc (lambda (x) (add-to-list 'evil-emacs-state-modes x))
         '(dired-mode image-dired-thumbnail-mode image-mode mu4e-compose-mode)))
+
+;; =============================================================================
+;; Theme
+;; =============================================================================
+
+(deftheme me-theme
+  "My theme copied from various places.")
+
+(defvar me-colors-alist
+  (let* ((256color  (eq (display-color-cells (selected-frame)) 256))
+         (colors `(("atom-one-dark-accent"   . "#528BFF")
+                   ;; ("atom-one-dark-fg"       . (if ,256color "color-248" "#ABB2BF"))
+                   ;; ("atom-one-dark-bg"       . (if ,256color "color-235" "#282C34"))
+                   ("atom-one-dark-fg"       . (if ,256color "color-248" "gray90"))
+                   ("atom-one-dark-bg"       . (if ,256color "color-235" "gray20"))
+                   ("atom-one-dark-bg-1"     . (if ,256color "color-234" "#121417"))
+                   ("atom-one-dark-bg-hl"    . (if ,256color "color-236" "#2C323C"))
+                   ("atom-one-dark-gutter"   . (if ,256color "color-239" "#4B5363"))
+                   ("atom-one-dark-mono-1"   . (if ,256color "color-248" "#ABB2BF"))
+                   ("atom-one-dark-mono-2"   . (if ,256color "color-244" "#828997"))
+                   ("atom-one-dark-mono-3"   . (if ,256color "color-240" "#5C6370"))
+                   ("atom-one-dark-cyan"     . "#56B6C2")
+                   ("atom-one-dark-blue"     . "#61AFEF")
+                   ("atom-one-dark-purple"   . "#C678DD")
+                   ("atom-one-dark-green"    . "#98C379")
+                   ("atom-one-dark-red-1"    . "#E06C75")
+                   ("atom-one-dark-red-2"    . "#BE5046")
+                   ("atom-one-dark-orange-1" . "#D19A66")
+                   ("atom-one-dark-orange-2" . "#E5C07B")
+                   ("atom-one-dark-gray"     . (if ,256color "color-237" "#3E4451"))
+                   ("atom-one-dark-silver"   . (if ,256color "color-247" "#9DA5B4"))
+                   ("atom-one-dark-black"    . (if ,256color "color-233" "#21252B"))
+                   ("atom-one-dark-border"   . (if ,256color "color-232" "#181A1F")))))
+    colors)
+  "List of Atom One Dark colors.")
+
+(defmacro atom-one-dark-with-color-variables (&rest body)
+  "Bind the colors list around BODY."
+  (declare (indent 0))
+  `(let ((class '((class color) (min-colors 89)))
+         ,@ (mapcar (lambda (cons)
+                      (list (intern (car cons)) (cdr cons)))
+                    me-colors-alist))
+     ,@body))
+
+(atom-one-dark-with-color-variables
+  (custom-theme-set-faces
+   'me-theme
+
+   `(default ((t (:foreground "gray95" :background "gray20"
+                              :distant-foreground "white"))))
+
+   ;; mode-line
+   `(mode-line ((t (:background ,atom-one-dark-black
+                                :foreground ,atom-one-dark-silver
+                                :box (:color ,atom-one-dark-border :line-width 1)))))
+   `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1 :weight bold))))
+   `(mode-line-emphasis ((t (:weight bold))))
+   `(mode-line-inactive ((t (:background ,atom-one-dark-border
+                                         :foreground ,atom-one-dark-gray
+                                         :box (:color ,atom-one-dark-border :line-width 1)))))
+
+   ;; helm
+   `(helm-header ((t (:foreground ,atom-one-dark-mono-2
+                                  :background ,atom-one-dark-bg
+                                  :underline nil
+                                  :box (:line-width 6 :color ,atom-one-dark-bg)))))
+   `(helm-source-header ((t (:foreground ,atom-one-dark-orange-2
+                                         :background ,atom-one-dark-bg
+                                         :underline nil
+                                         :weight bold
+                                         :height 1.3
+                                         :family "Sans Serif"
+                                         :box (:line-width 6 :color ,atom-one-dark-bg)))))
+
+   `(helm-ff-dotted-directory ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg :weight bold))))
+   `(helm-ff-directory ((t (:foreground ,atom-one-dark-cyan :background ,atom-one-dark-bg :weight bold))))
+   `(helm-ff-file ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg :weight normal))))
+   `(helm-ff-executable ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg :weight normal))))
+   `(helm-ff-invalid-symlink ((t (:foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg :weight bold))))
+   `(helm-ff-symlink ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-bg :weight bold))))
+   `(helm-ff-prefix ((t (:foreground ,atom-one-dark-bg :background ,atom-one-dark-orange-2 :weight normal))))
+
+   `(helm-selection ((t (:background ,atom-one-dark-black))))
+   `(helm-selection-line ((t (:background ,atom-one-dark-green))))
+
+   `(helm-visible-mark ((t (:foreground ,atom-one-dark-black :background ,atom-one-dark-orange-2))))
+   `(helm-candidate-number ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg-1))))
+
+   `(helm-match ((t (:foreground ,atom-one-dark-red-1))))
+
+   `(helm-swoop-target-line-block-face ((t (:background ,atom-one-dark-mono-3 :foreground "#222222"))))
+   `(helm-swoop-target-line-face ((t (:background ,atom-one-dark-mono-3 :foreground "#222222"))))
+   `(helm-swoop-target-word-face ((t (:background ,atom-one-dark-purple :foreground "#ffffff"))))
+
+   ))
 
 ;; =============================================================================
 ;; Now start the server
