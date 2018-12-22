@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-21 16:50:29 gongzhitaao>
+;; Time-stamp: <2018-12-22 10:41:44 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2237,35 +2237,30 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
   (setq cursor-type 'box)
 
-  (setq evil-insert-state-cursor "chartreuse3"
-        evil-emacs-state-cursor "SkyBlue2"
-        evil-normal-state-cursor "DarkGoldenrod2"
-        evil-visual-state-cursor "gray"
-        evil-motion-state-cursor "plum3")
+  (defun me//propertize-evil-tag (str fg bg)
+    "Make the evil state notifier pertty.
 
-  (setq evil-normal-state-tag
-        (propertize " <N> " 'face
-                    `((:background ,(me//colir-blend "DarkGoldenrod2" "#21252B" 0.5)
-                                   :foreground "gray80")))
-        evil-emacs-state-tag
-        (propertize " <E> " 'face
-                    `((:background ,(me//colir-blend "SkyBlue2" "#21252B" 0.5)
-                                   :foreground "gray80")))
-        evil-insert-state-tag
-        (propertize " <I> " 'face
-                    '((:background "chartreuse3" :foreground "black")))
-        evil-replace-state-tag
-        (propertize " <R> " 'face
-                    '((:background "chocolate" :foreground "black")))
-        evil-motion-state-tag
-        (propertize " <M> " 'face
-                    '((:background "plum3" :foreground "black")))
-        evil-visual-state-tag
-        (propertize " <V> " 'face
-                    '((:background "gray" :foreground "black")))
-        evil-operator-state-tag
-        (propertize " <O> " 'face
-                    '((:background "sandy brown" :foreground "black"))))
+Propertize STR with foreground FG and background BG color."
+    (propertize str 'face
+                `((:box (:line-width 6 :color ,bg)
+                        :background ,bg
+                        :foreground ,fg))))
+
+  (let ((state-color-list '((:state "insert" :color "chartreuse3" :tag " <I> ")
+                            (:state "emacs" :color "SkyBlue2" :tag " <E> ")
+                            (:state "normal" :color "DarkGoldenrod2" :tag " <N> ")
+                            (:state "visual" :color "gray" :tag " <V> ")
+                            (:state "motion" :color "plum3" :tag " <M> ")))
+        (dim 0.5))
+    (dolist (elm state-color-list)
+      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
+           (plist-get elm :color))
+      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
+           (me//propertize-evil-tag (plist-get elm :tag)
+                                    "gray80"
+                                    (me//colir-blend (plist-get elm :color)
+                                                     "#21252B" dim)))))
+
   (setq evil-move-beyond-eol t)
 
   (evil-make-overriding-map help-mode-map 'motion)
