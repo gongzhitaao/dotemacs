@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-22 11:17:07 gongzhitaao>
+;; Time-stamp: <2018-12-22 16:20:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -114,18 +114,18 @@
 
 (bind-keys :prefix-map me-editing-command-map
            :prefix "C-c e"
-  ("2"   . me/double-space-after-dot)
-  ("c"   . set-buffer-file-coding-system)
-  ("d"   . delete-duplicate-lines)
-  ("l"   . magit-log-buffer-file)
-  ("M-w" . me/copy-region-escaped)
-  ("s l" . sort-lines)
-  ("s s" . me/sort-symbols)
-  ("s w" . me/sort-words)
-  ("S"   . me/sudo-edit)
-  ("t"   . me/gnome-terminal)
-  ("v"   . add-file-local-variable)
-  ("V"   . add-file-local-variable-prop-line))
+           ("2"   . me/double-space-after-dot)
+           ("c"   . set-buffer-file-coding-system)
+           ("d"   . delete-duplicate-lines)
+           ("l"   . magit-log-buffer-file)
+           ("M-w" . me/copy-region-escaped)
+           ("s l" . sort-lines)
+           ("s s" . me/sort-symbols)
+           ("s w" . me/sort-words)
+           ("S"   . me/sudo-edit)
+           ("t"   . me/gnome-terminal)
+           ("v"   . add-file-local-variable)
+           ("V"   . add-file-local-variable-prop-line))
 
 (use-package magit
   :bind ("C-c g" . magit-status)
@@ -135,31 +135,31 @@
   :config
   (bind-keys :prefix-map me-multiple-cursors-command-map
              :prefix "C-c m"
-    ("C-a" . mc/edit-beginnings-of-lines)
-    ("C-e" . mc/edit-ends-of-lines)
-    ("a"   . mc/mark-all-like-this-dwim)
-    ("l"   . mc/edit-lines)
-    ("i n" . mc/insert-numbers)
-    ("i l" . mc/insert-letters))
+             ("C-a" . mc/edit-beginnings-of-lines)
+             ("C-e" . mc/edit-ends-of-lines)
+             ("a"   . mc/mark-all-like-this-dwim)
+             ("l"   . mc/edit-lines)
+             ("i n" . mc/insert-numbers)
+             ("i l" . mc/insert-letters))
   (setq mc/mode-line
         `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
                                 (mc/num-cursors))))))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
-  ("a"   . org-agenda)
-  ("c"   . org-capture)
-  ("e"   . me/org-ref-open-entry)
-  ("h"   . me/org-custom-id-get-create-hash)
-  ("H"   . me/org-custom-id-get-create-hash-all)
-  ("i"   . me/org-custom-id-get-create)
-  ("I"   . me/org-custom-id-get-create-all)
-  ("l b" . org-ref-extract-bibtex-entries)
-  ("l f" . org-ref-list-of-figures)
-  ("l t" . org-ref-list-of-tables)
-  ("n"   . me/org-ref-open-note)
-  ("p"   . me/org-ref-open-pdf)
-  ("s"   . me/org-sort-orgref-citation-list-by-year))
+           ("a"   . org-agenda)
+           ("c"   . org-capture)
+           ("e"   . me/org-ref-open-entry)
+           ("h"   . me/org-custom-id-get-create-hash)
+           ("H"   . me/org-custom-id-get-create-hash-all)
+           ("i"   . me/org-custom-id-get-create)
+           ("I"   . me/org-custom-id-get-create-all)
+           ("l b" . org-ref-extract-bibtex-entries)
+           ("l f" . org-ref-list-of-figures)
+           ("l t" . org-ref-list-of-tables)
+           ("n"   . me/org-ref-open-note)
+           ("p"   . me/org-ref-open-pdf)
+           ("s"   . me/org-sort-orgref-citation-list-by-year))
 
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
@@ -444,33 +444,33 @@ all '.<space>' with '.<space><space>'."
              ("M-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
              :prefix "C-c s"
-    ("<backspace>" . sp-splice-sexp-killing-backward)
-    ("<delete>"    . sp-splice-sexp-killing-forward)
-    ("<left>"      . sp-backward-slurp-sexp)
-    ("<right>"     . sp-forward-slurp-sexp)
-    ("a"           . sp-beginning-of-sexp)
-    ("b"           . sp-backward-sexp)
-    ("C-<delete>"  . sp-splice-sexp-killing-around)
-    ("C-<left>"    . sp-forward-barf-sexp)
-    ("C-<right>"   . sp-backward-barf-sexp)
-    ("D"           . sp-backward-down-sexp)
-    ("d"           . sp-down-sexp)
-    ("e"           . sp-end-of-sexp)
-    ("E"           . sp-up-sexp)
-    ("f"           . sp-forward-sexp)
-    ("k"           . sp-kill-sexp)
-    ("n"           . sp-next-sexp)
-    ("p"           . sp-previous-sexp)
-    ("r"           . sp-rewrap-sexp)
-    ("s"           . sp-split-sexp)
-    ("t"           . sp-transpose-sexp)
-    ("w"           . sp-copy-sexp))
+             ("<backspace>" . sp-splice-sexp-killing-backward)
+             ("<delete>"    . sp-splice-sexp-killing-forward)
+             ("<left>"      . sp-backward-slurp-sexp)
+             ("<right>"     . sp-forward-slurp-sexp)
+             ("a"           . sp-beginning-of-sexp)
+             ("b"           . sp-backward-sexp)
+             ("C-<delete>"  . sp-splice-sexp-killing-around)
+             ("C-<left>"    . sp-forward-barf-sexp)
+             ("C-<right>"   . sp-backward-barf-sexp)
+             ("D"           . sp-backward-down-sexp)
+             ("d"           . sp-down-sexp)
+             ("e"           . sp-end-of-sexp)
+             ("E"           . sp-up-sexp)
+             ("f"           . sp-forward-sexp)
+             ("k"           . sp-kill-sexp)
+             ("n"           . sp-next-sexp)
+             ("p"           . sp-previous-sexp)
+             ("r"           . sp-rewrap-sexp)
+             ("s"           . sp-split-sexp)
+             ("t"           . sp-transpose-sexp)
+             ("w"           . sp-copy-sexp))
 
   (smartparens-global-mode)
   (show-smartparens-global-mode)
 
   (setq sp-highlight-pair-overlay nil
-        sp-show-pair-from-inside t
+        sp-show-pair-from-inside nil
         sp-cancel-autoskip-on-backward-movement nil)
 
   (sp-with-modes
@@ -1047,28 +1047,17 @@ Lisp function does not specify a special indentation."
        ((and (elt state 2)
              (or (not (looking-at "\\sw\\|\\s_"))
                  (looking-at ":")))
-        (if (not (> (save-excursion (forward-line 1) (point))
-                    calculate-lisp-indent-last-sexp))
-            (progn (goto-char calculate-lisp-indent-last-sexp)
-                   (beginning-of-line)
-                   (parse-partial-sexp (point)
-                                       calculate-lisp-indent-last-sexp 0 t)))
+        (unless (> (save-excursion (forward-line 1) (point))
+                   calculate-lisp-indent-last-sexp)
+          (goto-char calculate-lisp-indent-last-sexp)
+          (beginning-of-line)
+          (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t))
         ;; Indent under the list or under the first sexp on the same
         ;; line as calculate-lisp-indent-last-sexp.  Note that first
         ;; thing on that line has to be complete sexp since we are
         ;; inside the innermost containing sexp.
         (backward-prefix-chars)
         (current-column))
-       ((and (save-excursion
-               (goto-char indent-point)
-               (skip-syntax-forward " ")
-               (not (looking-at ":")))
-             (save-excursion
-               (goto-char orig-point)
-               (looking-at ":")))
-        (save-excursion
-          (goto-char (+ 2 (elt state 1)))
-          (current-column)))
        (t
         (let ((function (buffer-substring (point)
                                           (progn (forward-sexp 1) (point))))
@@ -1569,11 +1558,11 @@ argument FORCE, force the creation of a new ID."
              ("C-b"     . helm-mini)
              ("M-/"     . helm-dabbrev)
              :map helm-map
-    ("<tab>"   . helm-execute-persistent-action)
-    ("C-i"     . helm-execute-persistent-action)
-    ("C-z"     . helm-select-action)
-    :map helm-moccur-map
-    ("C-s"     . me//isearch-from-helm-occur))
+             ("<tab>"   . helm-execute-persistent-action)
+             ("C-i"     . helm-execute-persistent-action)
+             ("C-z"     . helm-select-action)
+             :map helm-moccur-map
+             ("C-s"     . me//isearch-from-helm-occur))
 
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
@@ -1740,45 +1729,45 @@ So we just delete it locally."
         `(,(make-mu4e-context
             :name "Personal"
             :match-func
-             (lambda (msg)
-               (when msg (string-prefix-p
-                          "/personal" (mu4e-message-field msg :maildir))))
-             :vars
-             `((mu4e-trash-folder . "/personal/trash")
-               (mu4e-sent-folder . "/personal/sent")
-               (mu4e-drafts-folder . "/personal/draft")
-               (mu4e-refile-folder . "/personal/archive")
-               (user-mail-address . "zhitaao.gong@gmail.com")
-               (message-signature-file . ,(expand-file-name "signature/personal"
-                                                            me-emacs-data))))
+            (lambda (msg)
+              (when msg (string-prefix-p
+                         "/personal" (mu4e-message-field msg :maildir))))
+            :vars
+            `((mu4e-trash-folder . "/personal/trash")
+              (mu4e-sent-folder . "/personal/sent")
+              (mu4e-drafts-folder . "/personal/draft")
+              (mu4e-refile-folder . "/personal/archive")
+              (user-mail-address . "zhitaao.gong@gmail.com")
+              (message-signature-file . ,(expand-file-name "signature/personal"
+                                                           me-emacs-data))))
           ,(make-mu4e-context
             :name "Tiger"
             :match-func
-             (lambda (msg)
-               (when msg (string-prefix-p
-                          "/tiger" (mu4e-message-field msg :maildir))))
-             :vars
-             `((mu4e-trash-folder . "/tiger/trash")
-               (mu4e-sent-folder . "/tiger/sent")
-               (mu4e-drafts-folder . "/tiger/draft")
-               (mu4e-refile-folder . "/tiger/archive")
-               (user-mail-address . "zzg0009@auburn.edu")
-               (message-signature-file . ,(expand-file-name "signature/tiger"
-                                                            me-emacs-data))))
+            (lambda (msg)
+              (when msg (string-prefix-p
+                         "/tiger" (mu4e-message-field msg :maildir))))
+            :vars
+            `((mu4e-trash-folder . "/tiger/trash")
+              (mu4e-sent-folder . "/tiger/sent")
+              (mu4e-drafts-folder . "/tiger/draft")
+              (mu4e-refile-folder . "/tiger/archive")
+              (user-mail-address . "zzg0009@auburn.edu")
+              (message-signature-file . ,(expand-file-name "signature/tiger"
+                                                           me-emacs-data))))
           ,(make-mu4e-context
             :name "Reg"
             :match-func
-             (lambda (msg)
-               (when msg (string-prefix-p
-                          "/reg" (mu4e-message-field msg :maildir))))
-             :vars
-             `((mu4e-trash-folder . "/reg/trash")
-               (mu4e-sent-folder . "/reg/sent")
-               (mu4e-drafts-folder . "/reg/draft")
-               (mu4e-refile-folder . "/reg/archive")
-               (user-mail-address . "zhitaao.gong.reg@gmail.com")
-               (message-signature-file . ,(expand-file-name "signature/personal"
-                                                            me-emacs-data))))))
+            (lambda (msg)
+              (when msg (string-prefix-p
+                         "/reg" (mu4e-message-field msg :maildir))))
+            :vars
+            `((mu4e-trash-folder . "/reg/trash")
+              (mu4e-sent-folder . "/reg/sent")
+              (mu4e-drafts-folder . "/reg/draft")
+              (mu4e-refile-folder . "/reg/archive")
+              (user-mail-address . "zhitaao.gong.reg@gmail.com")
+              (message-signature-file . ,(expand-file-name "signature/personal"
+                                                           me-emacs-data))))))
 
   (setq mu4e-compose-dont-reply-to-self t)
   (setq mu4e-user-mail-address-list
@@ -2296,23 +2285,23 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (evil-mode 1)
 
   (bind-keys :map evil-normal-state-map
-    ("<escape>" . evil-emacs-state)
-    ("C-z"      . delete-other-windows)
-    ("Q"        . kill-this-buffer)
-    ("q"        . bury-buffer)
-    ("s"        . helm-swoop)
-    :map evil-emacs-state-map
-    ("<escape>" . evil-force-normal-state)
-    ("C-z"      . delete-other-windows)
-    :map evil-motion-state-map
-    ("<backspace>" . View-scroll-half-page-backward)
-    ("<delete>"    . View-scroll-half-page-forward)
-    ("<down>"      . evil-next-visual-line)
-    ("<up>"        . evil-previous-visual-line)
-    ("C-b"         . helm-mini)
-    ("C-e"         . move-end-of-line)
-    ("C-z"         . delete-other-windows)
-    ("C-v"         . golden-ratio-scroll-screen-up))
+             ("<escape>" . evil-emacs-state)
+             ("C-z"      . delete-other-windows)
+             ("Q"        . kill-this-buffer)
+             ("q"        . bury-buffer)
+             ("s"        . helm-swoop)
+             :map evil-emacs-state-map
+             ("<escape>" . evil-force-normal-state)
+             ("C-z"      . delete-other-windows)
+             :map evil-motion-state-map
+             ("<backspace>" . View-scroll-half-page-backward)
+             ("<delete>"    . View-scroll-half-page-forward)
+             ("<down>"      . evil-next-visual-line)
+             ("<up>"        . evil-previous-visual-line)
+             ("C-b"         . helm-mini)
+             ("C-e"         . move-end-of-line)
+             ("C-z"         . delete-other-windows)
+             ("C-v"         . golden-ratio-scroll-screen-up))
 
   (setq cursor-type 'box)
 
