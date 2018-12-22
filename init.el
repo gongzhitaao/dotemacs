@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-22 16:20:08 gongzhitaao>
+;; Time-stamp: <2018-12-22 16:32:41 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2388,12 +2388,9 @@ Propertize STR with foreground FG and background BG color."
   (custom-theme-set-faces
    'me-theme
 
-   `(default ((t (:foreground "gray90"
-                  :background "gray20"
-                  :distant-foreground "red"))))
+   `(default ((t (:foreground "gray90" :background "gray20"))))
 
-   `(window-divider ((t (:foreground ,atom-one-dark-border
-                         :distant-foreground ,atom-one-dark-border))))
+   `(window-divider ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
 
@@ -2405,7 +2402,6 @@ Propertize STR with foreground FG and background BG color."
                               :weight bold))))
    `(mode-line-emphasis ((t (:weight bold))))
    `(mode-line-inactive ((t (:background ,atom-one-dark-border
-                             :distant-foreground ,atom-one-dark-gray
                              :foreground ,atom-one-dark-gray
                              :box (:color ,atom-one-dark-border
                                    :line-width 6)))))
