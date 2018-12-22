@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-22 11:03:13 gongzhitaao>
+;; Time-stamp: <2018-12-22 11:17:07 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -114,18 +114,18 @@
 
 (bind-keys :prefix-map me-editing-command-map
            :prefix "C-c e"
-           ("2"   . me/double-space-after-dot)
-           ("c"   . set-buffer-file-coding-system)
-           ("d"   . delete-duplicate-lines)
-           ("l"   . magit-log-buffer-file)
-           ("M-w" . me/copy-region-escaped)
-           ("s l" . sort-lines)
-           ("s s" . me/sort-symbols)
-           ("s w" . me/sort-words)
-           ("S"   . me/sudo-edit)
-           ("t"   . me/gnome-terminal)
-           ("v"   . add-file-local-variable)
-           ("V"   . add-file-local-variable-prop-line))
+  ("2"   . me/double-space-after-dot)
+  ("c"   . set-buffer-file-coding-system)
+  ("d"   . delete-duplicate-lines)
+  ("l"   . magit-log-buffer-file)
+  ("M-w" . me/copy-region-escaped)
+  ("s l" . sort-lines)
+  ("s s" . me/sort-symbols)
+  ("s w" . me/sort-words)
+  ("S"   . me/sudo-edit)
+  ("t"   . me/gnome-terminal)
+  ("v"   . add-file-local-variable)
+  ("V"   . add-file-local-variable-prop-line))
 
 (use-package magit
   :bind ("C-c g" . magit-status)
@@ -135,31 +135,31 @@
   :config
   (bind-keys :prefix-map me-multiple-cursors-command-map
              :prefix "C-c m"
-             ("C-a" . mc/edit-beginnings-of-lines)
-             ("C-e" . mc/edit-ends-of-lines)
-             ("a"   . mc/mark-all-like-this-dwim)
-             ("l"   . mc/edit-lines)
-             ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters))
+    ("C-a" . mc/edit-beginnings-of-lines)
+    ("C-e" . mc/edit-ends-of-lines)
+    ("a"   . mc/mark-all-like-this-dwim)
+    ("l"   . mc/edit-lines)
+    ("i n" . mc/insert-numbers)
+    ("i l" . mc/insert-letters))
   (setq mc/mode-line
         `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
                                 (mc/num-cursors))))))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
-           ("a"   . org-agenda)
-           ("c"   . org-capture)
-           ("e"   . me/org-ref-open-entry)
-           ("h"   . me/org-custom-id-get-create-hash)
-           ("H"   . me/org-custom-id-get-create-hash-all)
-           ("i"   . me/org-custom-id-get-create)
-           ("I"   . me/org-custom-id-get-create-all)
-           ("l b" . org-ref-extract-bibtex-entries)
-           ("l f" . org-ref-list-of-figures)
-           ("l t" . org-ref-list-of-tables)
-           ("n"   . me/org-ref-open-note)
-           ("p"   . me/org-ref-open-pdf)
-           ("s"   . me/org-sort-orgref-citation-list-by-year))
+  ("a"   . org-agenda)
+  ("c"   . org-capture)
+  ("e"   . me/org-ref-open-entry)
+  ("h"   . me/org-custom-id-get-create-hash)
+  ("H"   . me/org-custom-id-get-create-hash-all)
+  ("i"   . me/org-custom-id-get-create)
+  ("I"   . me/org-custom-id-get-create-all)
+  ("l b" . org-ref-extract-bibtex-entries)
+  ("l f" . org-ref-list-of-figures)
+  ("l t" . org-ref-list-of-tables)
+  ("n"   . me/org-ref-open-note)
+  ("p"   . me/org-ref-open-pdf)
+  ("s"   . me/org-sort-orgref-citation-list-by-year))
 
 ;; C-c s -- smartparens
 ;; C-c u -- undo-tree
@@ -259,11 +259,11 @@ advice."
 (defvar comint-buffer-maximum-size)
 (defun me-clear-shell ()
   "Clear shell window."
-   (interactive)
-   (let ((old-max comint-buffer-maximum-size))
-     (setq comint-buffer-maximum-size 0)
-     (comint-truncate-buffer)
-     (setq comint-buffer-maximum-size old-max)))
+  (interactive)
+  (let ((old-max comint-buffer-maximum-size))
+    (setq comint-buffer-maximum-size 0)
+    (comint-truncate-buffer)
+    (setq comint-buffer-maximum-size old-max)))
 
 (defun me/sudo-edit (&optional arg)
   "Edit file as root.
@@ -444,27 +444,27 @@ all '.<space>' with '.<space><space>'."
              ("M-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
              :prefix "C-c s"
-             ("<backspace>" . sp-splice-sexp-killing-backward)
-             ("<delete>"    . sp-splice-sexp-killing-forward)
-             ("<left>"      . sp-backward-slurp-sexp)
-             ("<right>"     . sp-forward-slurp-sexp)
-             ("a"           . sp-beginning-of-sexp)
-             ("b"           . sp-backward-sexp)
-             ("C-<delete>"  . sp-splice-sexp-killing-around)
-             ("C-<left>"    . sp-forward-barf-sexp)
-             ("C-<right>"   . sp-backward-barf-sexp)
-             ("D"           . sp-backward-down-sexp)
-             ("d"           . sp-down-sexp)
-             ("e"           . sp-end-of-sexp)
-             ("E"           . sp-up-sexp)
-             ("f"           . sp-forward-sexp)
-             ("k"           . sp-kill-sexp)
-             ("n"           . sp-next-sexp)
-             ("p"           . sp-previous-sexp)
-             ("r"           . sp-rewrap-sexp)
-             ("s"           . sp-split-sexp)
-             ("t"           . sp-transpose-sexp)
-             ("w"           . sp-copy-sexp))
+    ("<backspace>" . sp-splice-sexp-killing-backward)
+    ("<delete>"    . sp-splice-sexp-killing-forward)
+    ("<left>"      . sp-backward-slurp-sexp)
+    ("<right>"     . sp-forward-slurp-sexp)
+    ("a"           . sp-beginning-of-sexp)
+    ("b"           . sp-backward-sexp)
+    ("C-<delete>"  . sp-splice-sexp-killing-around)
+    ("C-<left>"    . sp-forward-barf-sexp)
+    ("C-<right>"   . sp-backward-barf-sexp)
+    ("D"           . sp-backward-down-sexp)
+    ("d"           . sp-down-sexp)
+    ("e"           . sp-end-of-sexp)
+    ("E"           . sp-up-sexp)
+    ("f"           . sp-forward-sexp)
+    ("k"           . sp-kill-sexp)
+    ("n"           . sp-next-sexp)
+    ("p"           . sp-previous-sexp)
+    ("r"           . sp-rewrap-sexp)
+    ("s"           . sp-split-sexp)
+    ("t"           . sp-transpose-sexp)
+    ("w"           . sp-copy-sexp))
 
   (smartparens-global-mode)
   (show-smartparens-global-mode)
@@ -789,8 +789,8 @@ all '.<space>' with '.<space><space>'."
 
 (use-package dired
   :bind (:map dired-mode-map
-              ("b" . helm-mini)
-              ("f" . find-file-literally-at-point))
+         ("b" . helm-mini)
+         ("f" . find-file-literally-at-point))
   :config
   (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
@@ -811,10 +811,10 @@ all '.<space>' with '.<space><space>'."
     :group 'me-dired)
 
   (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]*"
-                                   "\\(?:[0-9]*?\\)[ ]+"
-                                   "\\(.*?\\)[ ]+"
-                                   "\\(.*?\\)[ ]+"
-                                   "\\(?:.*?\\)[ ]+"))
+                                    "\\(?:[0-9]*?\\)[ ]+"
+                                    "\\(.*?\\)[ ]+"
+                                    "\\(.*?\\)[ ]+"
+                                    "\\(?:.*?\\)[ ]+"))
          (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
          (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
          (executable (concat "^[ ].-\\(?:.*x.*?\\)[ ]"
@@ -1017,7 +1017,7 @@ all '.<space>' with '.<space><space>'."
 (use-package lisp-mode
   :defer
   :config
-  (defun lisp-indent-function (indent-point state)
+  (defun me//lisp-indent-function (indent-point state)
     "This function is the normal value of the variable `lisp-indent-function'.
 The function `calculate-lisp-indent' calls this to determine
 if the arguments of a Lisp function call should be indented specially.
@@ -1085,7 +1085,11 @@ Lisp function does not specify a special indentation."
                  (lisp-indent-specform method state
                                        indent-point normal-indent))
                 (method
-                 (funcall method indent-point state)))))))))
+                 (funcall method indent-point state))))))))
+
+  (defun me//init-emacs-lisp()
+    (setq-local lisp-indent-function #'me//lisp-indent-function))
+  (add-hook 'emacs-lisp-mode-hook 'me//init-emacs-lisp))
 
 (use-package cc-mode
   :config
@@ -1094,7 +1098,7 @@ Lisp function does not specify a special indentation."
 
 (use-package clang-format
   :bind (:map c++-mode-map
-              ("C-!" . clang-format-region)))
+         ("C-!" . clang-format-region)))
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
@@ -1115,7 +1119,7 @@ Lisp function does not specify a special indentation."
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
-              ("C-!" . yapfify-region))
+         ("C-!" . yapfify-region))
   :config
   (use-package sphinx-doc)
   (use-package yapfify)
@@ -1136,12 +1140,12 @@ Lisp function does not specify a special indentation."
 
 (use-package image-mode
   :bind (:map image-mode-map
-              ("H"   . image-transform-fit-to-height)
-              ("q"   . quit-window)
-              ("Q"   . kill-this-buffer)
-              ("r"   . image-transform-set-rotation)
-              ("W"   . image-transform-fit-to-width)
-              ("SPC" . image-transform-reset)))
+         ("H"   . image-transform-fit-to-height)
+         ("q"   . quit-window)
+         ("Q"   . kill-this-buffer)
+         ("r"   . image-transform-set-rotation)
+         ("W"   . image-transform-fit-to-width)
+         ("SPC" . image-transform-reset)))
 
 (use-package ssh-config-mode
   :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
@@ -1284,7 +1288,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-agenda
   :bind (:map org-agenda-mode-map
-              ("F" . org-gcal-fetch))
+         ("F" . org-gcal-fetch))
   :config
   (setq org-agenda-compact-blocks nil
         org-agenda-dim-blocked-tasks t
@@ -1565,11 +1569,11 @@ argument FORCE, force the creation of a new ID."
              ("C-b"     . helm-mini)
              ("M-/"     . helm-dabbrev)
              :map helm-map
-             ("<tab>"   . helm-execute-persistent-action)
-             ("C-i"     . helm-execute-persistent-action)
-             ("C-z"     . helm-select-action)
-             :map helm-moccur-map
-             ("C-s"     . me//isearch-from-helm-occur))
+    ("<tab>"   . helm-execute-persistent-action)
+    ("C-i"     . helm-execute-persistent-action)
+    ("C-z"     . helm-select-action)
+    :map helm-moccur-map
+    ("C-s"     . me//isearch-from-helm-occur))
 
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
@@ -1618,7 +1622,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-flyspell)
 (use-package flyspell
   :bind (:map flyspell-mode-map
-              ("C-;" . helm-flyspell-correct)))
+         ("C-;" . helm-flyspell-correct)))
 
 ;; helm projectile
 ;; -----------------------------------------------------------------------------
@@ -1736,45 +1740,45 @@ So we just delete it locally."
         `(,(make-mu4e-context
             :name "Personal"
             :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/personal" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/personal/trash")
-              (mu4e-sent-folder . "/personal/sent")
-              (mu4e-drafts-folder . "/personal/draft")
-              (mu4e-refile-folder . "/personal/archive")
-              (user-mail-address . "zhitaao.gong@gmail.com")
-              (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))
+             (lambda (msg)
+               (when msg (string-prefix-p
+                          "/personal" (mu4e-message-field msg :maildir))))
+             :vars
+             `((mu4e-trash-folder . "/personal/trash")
+               (mu4e-sent-folder . "/personal/sent")
+               (mu4e-drafts-folder . "/personal/draft")
+               (mu4e-refile-folder . "/personal/archive")
+               (user-mail-address . "zhitaao.gong@gmail.com")
+               (message-signature-file . ,(expand-file-name "signature/personal"
+                                                            me-emacs-data))))
           ,(make-mu4e-context
             :name "Tiger"
             :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/tiger" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/tiger/trash")
-              (mu4e-sent-folder . "/tiger/sent")
-              (mu4e-drafts-folder . "/tiger/draft")
-              (mu4e-refile-folder . "/tiger/archive")
-              (user-mail-address . "zzg0009@auburn.edu")
-              (message-signature-file . ,(expand-file-name "signature/tiger"
-                                                           me-emacs-data))))
+             (lambda (msg)
+               (when msg (string-prefix-p
+                          "/tiger" (mu4e-message-field msg :maildir))))
+             :vars
+             `((mu4e-trash-folder . "/tiger/trash")
+               (mu4e-sent-folder . "/tiger/sent")
+               (mu4e-drafts-folder . "/tiger/draft")
+               (mu4e-refile-folder . "/tiger/archive")
+               (user-mail-address . "zzg0009@auburn.edu")
+               (message-signature-file . ,(expand-file-name "signature/tiger"
+                                                            me-emacs-data))))
           ,(make-mu4e-context
             :name "Reg"
             :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/reg" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/reg/trash")
-              (mu4e-sent-folder . "/reg/sent")
-              (mu4e-drafts-folder . "/reg/draft")
-              (mu4e-refile-folder . "/reg/archive")
-              (user-mail-address . "zhitaao.gong.reg@gmail.com")
-              (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))))
+             (lambda (msg)
+               (when msg (string-prefix-p
+                          "/reg" (mu4e-message-field msg :maildir))))
+             :vars
+             `((mu4e-trash-folder . "/reg/trash")
+               (mu4e-sent-folder . "/reg/sent")
+               (mu4e-drafts-folder . "/reg/draft")
+               (mu4e-refile-folder . "/reg/archive")
+               (user-mail-address . "zhitaao.gong.reg@gmail.com")
+               (message-signature-file . ,(expand-file-name "signature/personal"
+                                                            me-emacs-data))))))
 
   (setq mu4e-compose-dont-reply-to-self t)
   (setq mu4e-user-mail-address-list
@@ -1948,12 +1952,12 @@ So we just delete it locally."
 
 (use-package bibtex
   :bind (:map bibtex-mode-map
-              ([remap fill-paragraph]     . bibtex-fill-entry)
-              ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
-              ("C-c C-v"                  . bibtex-validate)
-              ("<backtab>"                . me/bibtex-find-text-begin)
-              ("M-<down>"                 . bibtex-end-of-entry)
-              ("M-<up>"                   . bibtex-beginning-of-entry))
+         ([remap fill-paragraph]     . bibtex-fill-entry)
+         ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
+         ("C-c C-v"                  . bibtex-validate)
+         ("<backtab>"                . me/bibtex-find-text-begin)
+         ("M-<down>"                 . bibtex-end-of-entry)
+         ("M-<up>"                   . bibtex-beginning-of-entry))
   :config
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
@@ -2160,20 +2164,20 @@ Using `window-line-height' accounts for variable-height fonts."
 
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
-              ("<delete>" . pdf-view-scroll-up-or-next-page)
-              ("<down>"   . me/pdf-view-next-few-lines)
-              ("<left>"   . pdf-view-previous-page-command)
-              ("<right>"  . pdf-view-next-page-command)
-              ("<up>"     . me/pdf-view-prev-few-lines)
-              ("b"        . helm-mini)
-              ("c"        . me/org-ref-open-entry)
-              ("d"        . me/pdf-view-scroll-half-forward)
-              ("e"        . me/pdf-view-scroll-half-backward)
-              ("g"        . pdf-view-goto-page)
-              ("j"        . me/pdf-view-scroll-half-forward)
-              ("k"        . me/pdf-view-scroll-half-backward)
-              ("n"        . me/org-ref-open-note)
-              ("z"        . delete-other-windows))
+         ("<delete>" . pdf-view-scroll-up-or-next-page)
+         ("<down>"   . me/pdf-view-next-few-lines)
+         ("<left>"   . pdf-view-previous-page-command)
+         ("<right>"  . pdf-view-next-page-command)
+         ("<up>"     . me/pdf-view-prev-few-lines)
+         ("b"        . helm-mini)
+         ("c"        . me/org-ref-open-entry)
+         ("d"        . me/pdf-view-scroll-half-forward)
+         ("e"        . me/pdf-view-scroll-half-backward)
+         ("g"        . pdf-view-goto-page)
+         ("j"        . me/pdf-view-scroll-half-forward)
+         ("k"        . me/pdf-view-scroll-half-backward)
+         ("n"        . me/org-ref-open-note)
+         ("z"        . delete-other-windows))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
@@ -2292,23 +2296,23 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (evil-mode 1)
 
   (bind-keys :map evil-normal-state-map
-             ("<escape>" . evil-emacs-state)
-             ("C-z"      . delete-other-windows)
-             ("Q"        . kill-this-buffer)
-             ("q"        . bury-buffer)
-             ("s"        . helm-swoop)
-             :map evil-emacs-state-map
-             ("<escape>" . evil-force-normal-state)
-             ("C-z"      . delete-other-windows)
-             :map evil-motion-state-map
-             ("<backspace>" . View-scroll-half-page-backward)
-             ("<delete>"    . View-scroll-half-page-forward)
-             ("<down>"      . evil-next-visual-line)
-             ("<up>"        . evil-previous-visual-line)
-             ("C-b"         . helm-mini)
-             ("C-e"         . move-end-of-line)
-             ("C-z"         . delete-other-windows)
-             ("C-v"         . golden-ratio-scroll-screen-up))
+    ("<escape>" . evil-emacs-state)
+    ("C-z"      . delete-other-windows)
+    ("Q"        . kill-this-buffer)
+    ("q"        . bury-buffer)
+    ("s"        . helm-swoop)
+    :map evil-emacs-state-map
+    ("<escape>" . evil-force-normal-state)
+    ("C-z"      . delete-other-windows)
+    :map evil-motion-state-map
+    ("<backspace>" . View-scroll-half-page-backward)
+    ("<delete>"    . View-scroll-half-page-forward)
+    ("<down>"      . evil-next-visual-line)
+    ("<up>"        . evil-previous-visual-line)
+    ("C-b"         . helm-mini)
+    ("C-e"         . move-end-of-line)
+    ("C-z"         . delete-other-windows)
+    ("C-v"         . golden-ratio-scroll-screen-up))
 
   (setq cursor-type 'box)
 
@@ -2318,8 +2322,8 @@ If ARG, open with external program.  Otherwise open in Emacs."
 Propertize STR with foreground FG and background BG color."
     (propertize str 'face
                 `((:box (:line-width 6 :color ,bg)
-                        :background ,bg
-                        :foreground ,fg))))
+                   :background ,bg
+                   :foreground ,fg))))
 
   (let ((state-color-list '((:state "insert" :color "chartreuse3" :tag " <I> ")
                             (:state "emacs" :color "SkyBlue2" :tag " <E> ")
@@ -2395,52 +2399,71 @@ Propertize STR with foreground FG and background BG color."
   (custom-theme-set-faces
    'me-theme
 
-   `(default ((t (:foreground "gray90" :background "gray20"
-                              :distant-foreground "red"))))
+   `(default ((t (:foreground "gray90"
+                  :background "gray20"
+                  :distant-foreground "red"))))
 
    `(window-divider ((t (:foreground ,atom-one-dark-border
-                                     :distant-foreground ,atom-one-dark-border))))
+                         :distant-foreground ,atom-one-dark-border))))
    `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
    `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
 
    ;; mode-line
    `(mode-line ((t (:background ,atom-one-dark-black
-                                :foreground ,atom-one-dark-silver
-                                :box (:color ,atom-one-dark-border :line-width 6)))))
-   `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1 :weight bold))))
+                    :foreground ,atom-one-dark-silver
+                    :box (:color ,atom-one-dark-border :line-width 6)))))
+   `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1
+                              :weight bold))))
    `(mode-line-emphasis ((t (:weight bold))))
    `(mode-line-inactive ((t (:background ,atom-one-dark-border
-                                         :distant-foreground ,atom-one-dark-gray
-                                         :foreground ,atom-one-dark-gray
-                                         :box (:color ,atom-one-dark-border :line-width 6)))))
+                             :distant-foreground ,atom-one-dark-gray
+                             :foreground ,atom-one-dark-gray
+                             :box (:color ,atom-one-dark-border
+                                   :line-width 6)))))
 
    ;; helm
    `(helm-header ((t (:foreground ,atom-one-dark-mono-2
-                                  :background ,atom-one-dark-bg
-                                  :underline nil
-                                  :box (:line-width 6 :color ,atom-one-dark-bg)))))
+                      :background ,atom-one-dark-bg
+                      :underline nil
+                      :box (:line-width 6
+                            :color ,atom-one-dark-bg)))))
    `(helm-source-header ((t (:foreground ,atom-one-dark-orange-2
-                                         :background ,atom-one-dark-bg
-                                         :underline nil
-                                         :weight bold
-                                         :height 1.3
-                                         :family "Sans Serif"
-                                         :box (:line-width 6 :color ,atom-one-dark-bg)))))
+                             :background ,atom-one-dark-bg
+                             :underline nil
+                             :weight bold
+                             :height 1.3
+                             :family "Sans Serif"
+                             :box (:line-width 6 :color ,atom-one-dark-bg)))))
 
-   `(helm-ff-dotted-directory ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg :weight bold))))
-   `(helm-ff-directory ((t (:foreground ,atom-one-dark-cyan :background ,atom-one-dark-bg :weight bold))))
-   `(helm-ff-file ((t (:foreground ,atom-one-dark-fg :background ,atom-one-dark-bg :weight normal))))
-   `(helm-ff-executable ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg :weight normal))))
-   `(helm-ff-invalid-symlink ((t (:foreground ,atom-one-dark-red-1 :background ,atom-one-dark-bg :weight bold))))
-   `(helm-ff-symlink ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-bg :weight bold))))
-   `(helm-ff-prefix ((t (:foreground ,atom-one-dark-bg :background ,atom-one-dark-orange-2 :weight normal))))
+   `(helm-ff-dotted-directory ((t (:foreground ,atom-one-dark-green
+                                   :background ,atom-one-dark-bg
+                                   :weight bold))))
+   `(helm-ff-directory ((t (:foreground ,atom-one-dark-cyan
+                            :background ,atom-one-dark-bg
+                            :weight bold))))
+   `(helm-ff-file ((t (:foreground ,atom-one-dark-fg
+                       :background ,atom-one-dark-bg
+                       :weight normal))))
+   `(helm-ff-executable ((t (:foreground ,atom-one-dark-green
+                             :background ,atom-one-dark-bg
+                             :weight normal))))
+   `(helm-ff-invalid-symlink ((t (:foreground ,atom-one-dark-red-1
+                                  :background ,atom-one-dark-bg
+                                  :weight bold))))
+   `(helm-ff-symlink ((t (:foreground ,atom-one-dark-orange-2
+                          :background ,atom-one-dark-bg
+                          :weight bold))))
+   `(helm-ff-prefix ((t (:foreground ,atom-one-dark-bg
+                         :background ,atom-one-dark-orange-2
+                         :weight normal))))
 
    `(helm-selection ((t (:background ,atom-one-dark-black))))
    `(helm-selection-line ((t (:background ,atom-one-dark-green))))
 
-   `(helm-visible-mark
-     ((t (:foreground ,atom-one-dark-orange-2 :background ,atom-one-dark-black))))
-   `(helm-candidate-number ((t (:foreground ,atom-one-dark-green :background ,atom-one-dark-bg-1))))
+   `(helm-visible-mark ((t (:foreground ,atom-one-dark-orange-2
+                            :background ,atom-one-dark-black))))
+   `(helm-candidate-number ((t (:foreground ,atom-one-dark-green
+                                :background ,atom-one-dark-bg-1))))
 
    `(helm-match ((t (:foreground ,atom-one-dark-red-1))))
 
