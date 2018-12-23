@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-22 16:32:41 gongzhitaao>
+;; Time-stamp: <2018-12-23 13:18:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2441,6 +2441,16 @@ Propertize STR with foreground FG and background BG color."
    `(helm-ff-prefix ((t (:foreground ,atom-one-dark-bg
                          :background ,atom-one-dark-orange-2
                          :weight normal))))
+
+   `(helm-buffer-directory ((t (:foreground ,atom-one-dark-cyan
+                                :background ,atom-one-dark-bg
+                                :weight bold))))
+   `(helm-buffer-file ((t (:foreground ,atom-one-dark-fg
+                           :background ,atom-one-dark-bg
+                           :weight normal))))
+   `(helm-non-file-buffer ((t (:foreground ,atom-one-dark-mono-2
+                               :background ,atom-one-dark-bg
+                               :slant italic))))
 
    `(helm-selection ((t (:background ,atom-one-dark-black))))
    `(helm-selection-line ((t (:background ,atom-one-dark-green))))
