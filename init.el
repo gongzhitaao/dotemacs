@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-23 13:18:34 gongzhitaao>
+;; Time-stamp: <2018-12-24 10:05:25 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -740,7 +740,6 @@ all '.<space>' with '.<space><space>'."
 
 ;; Syntax check
 (use-package flycheck
-  :delight
   :config
   (bind-keys ("M-\"" . flycheck-keymap-prefix))
   (define-prefix-command 'flycheck-keymap-prefix)
@@ -1176,10 +1175,6 @@ Lisp function does not specify a special indentation."
 
   (add-hook 'org-mode-hook #'me//init-org)
 
-  (setq org-adapt-indentation nil)
-  (setq org-list-description-max-indent 0)
-  (setq org-support-shift-select t)
-
   (add-to-list 'org-structure-template-alist '("A" "#+AUTHOR: ?" ""))
   (add-to-list 'org-structure-template-alist '("a" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
   (add-to-list 'org-structure-template-alist '("B" "#+BIBLIOGRAPHY: ?" ""))
@@ -1198,13 +1193,19 @@ Lisp function does not specify a special indentation."
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
 
-  (setq org-catch-invisible-edits 'smart
+  (setq org-adapt-indentation nil
+        org-catch-invisible-edits 'smart
+        org-hide-emphasis-markers t
+        org-hide-macro-markers t
         org-hierarchical-todo-statistics nil
+        org-list-description-max-indent 0
         org-provide-todo-statistics      t
         org-src-fontify-natively t
         org-src-preserve-indentation t
+        org-support-shift-select t
         org-treat-S-cursor-todo-selection-as-state-change nil
-        org-use-fast-todo-selection t)
+        org-use-fast-todo-selection t
+        org-use-fast-tag-selection 'auto)
 
   (setq org-todo-keywords
         '((sequence
@@ -1238,8 +1239,6 @@ Lisp function does not specify a special indentation."
 
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-
-  (setq org-use-fast-tag-selection 'auto)
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
 
 (defun me//org-skip-subtree-if-habit ()
@@ -1289,11 +1288,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-agenda-tags-column -100)
 
   (setq org-agenda-prefix-format
-        '((agenda   . " %i %-15:c%?-12t% s")
+        '((agenda   . " %i %-20:c%?-20t% s")
           (timeline . "  % s")
-          (todo     . " %i %-15:T")
-          (tags     . " %i %-15:T")
-          (search   . " %i %-15:T")))
+          (todo     . " %i %-20:T")
+          (tags     . " %i %-20:T")
+          (search   . " %i %-20:T")))
 
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
@@ -2461,6 +2460,10 @@ Propertize STR with foreground FG and background BG color."
                                 :background ,atom-one-dark-bg-1))))
 
    `(helm-match ((t (:foreground ,atom-one-dark-red-1))))
+
+   `(helm-grep-file ((t (:foreground ,atom-one-dark-fg))))
+   `(helm-grep-finish ((t (:foreground ,atom-one-dark-green))))
+   `(helm-grep-match ((t (:foreground nil :background nil :inherit helm-match))))
 
    `(helm-swoop-target-line-block-face
      ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
