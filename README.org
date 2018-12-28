@@ -6,7 +6,7 @@
 
 * Package Manager
 :PROPERTIES:
-:CUSTOM_ID: package-manager
+:CUSTOM_ID: h1-package-manager
 :END:
 
 *Dependencies*: Cask, pallet.
@@ -17,6 +17,9 @@ and byte-compile the packages listed in a file named =Cask=.  When you install
 packages inside Emacs, =pallet= makes sure that =Cask= is updated accordingly.
 
 * Org Mode
+:PROPERTIES:
+:CUSTOM_ID: h1-org-mode
+:END:
 
 #+ATTR_ORG: :width 700
 [[file:img/orgmode.png]]
@@ -29,7 +32,7 @@ packages inside Emacs, =pallet= makes sure that =Cask= is updated accordingly.
 
 * Bibliography Manager
 :PROPERTIES:
-:CUSTOM_ID: bibliography-manager
+:CUSTOM_ID: h1-bibliography-manager
 :END:
 
 This is a killer feature for scientific paper writing in Org-mode.
@@ -59,6 +62,9 @@ With the help of ~org-ref,~ we can quickly insert citations to org files, which
 can be exported to TeX, PDF or HTML with appropriate reference list.
 
 * Email
+:PROPERTIES:
+:CUSTOM_ID: h1-email
+:END:
 
 #+ATTR_ORG: :width 700
 [[file:img/mu4e.png]]
@@ -68,16 +74,22 @@ multiple Gmail and Office 365 accounts.
 
 * Editing Enhancement
 :PROPERTIES:
-:CUSTOM_ID: editing-enhancement
+:CUSTOM_ID: h1-editing-enhancement
 :END:
 
 ** Writeroom with Fill-column Indicator
+:PROPERTIES:
+:CUSTOM_ID: h2-writeroom-with-fill-column-indicator
+:END:
 
 The buffer content is centered, especially useful when you have a wide screen.
 This is not compatible with =linum-mode= (said to be fixed in Emacs 26), which I
 never use.  ~fill-column-indicator~ shows a dimmed white line at ~fill-column~.
 
 ** Whitespace
+:PROPERTIES:
+:CUSTOM_ID: h2-whitespace
+:END:
 
 It highlights trailing spaces, leading/trailing empty lines, and automatically
 cleans up them when saved.
