@@ -16,78 +16,71 @@ the terminal and enter the =emacs.d= directory, type =cask update= will update
 and byte-compile the packages listed in a file named =Cask=.  When you install
 packages inside Emacs, =pallet= makes sure that =Cask= is updated accordingly.
 
-* Separate Editing from Viewing
-:PROPERTIES:
-:CUSTOM_ID: separate-editing-from-viewing
-:END:
+* Org Mode
 
-View mode is a minor mode for *viewing* text but *not editing* it.
+#+ATTR_ORG: :width 700
+[[file:img/orgmode.png]]
 
-#+BEGIN_QUOTE
-When View mode is enabled, commands that do not change the buffer contents are
-available as usual.  Kill commands insert text in kill buffers but do not
-delete.  Most other commands beep and tell the user that the buffer is
-read-only.
-#+END_QUOTE
-
-Via =view-mode=, we can separate /editing mode/ from /viewing mode/ in Emacs,
-similar to editing/command mode separation in Vim.  The main purpose is to avoid
-accidental modification of the buffer when we only want to do non-modifying
-operations, e.g., view, search, navigate, copy, etc.  The major advantage over
-=evil-mode= is that =view-mode= is lightweight, builtin and non-obstructive.
-
-To give a visual hint that current buffer is in view mode, I change the cursor
-to red whenever the current buffer is in view mode.  The trick is that view mode
-is read-only.  So we can add a hook to =post-command-hook= to change cursor
-color by testing the variable =buffer-read-only=.
+- Scientific paper writing, with ~org-ref~ package.  The org file may be exported
+  to nearly all well-known format.  I've been using Org mode for dissertation,
+  conference paper, slides (~beamer~) and much more.
+- A complete TODO system, can be as simple or as complicated as possible.
+- Agenda, with habits tracking, compatible with Google Calendar events.
 
 * Bibliography Manager
 :PROPERTIES:
 :CUSTOM_ID: bibliography-manager
 :END:
 
-*Requires*: helm, helm-bibtex, org-ref, PDF-tools, deft.
+This is a killer feature for scientific paper writing in Org-mode.
 
-The configuration provide the following functionalities:
-- Viewing PDF inside Emacs.
-- Fuzzy-search bibtex entries by authors name, title, year and keywords.
-- Associate PDF file, note file with a bibtex entry, and jump among them.
-  Specifically, {{{kbd(C-c r p)}}} opens the PDF file, {{{kbd(C-c r n)}}} opens
-  the note file and {{{kbd(C-c r c)}}} jumps to the bibtex entry.  For example,
-  when you are viewing the PDF in Emacs, {{{kbd(C-c r n)}}} opens the note file
-  (create one if necessary), {{{kbd(C-c r c)}}} jumps to the bibtex entry for
-  this PDF file.
-- Fuzzy-search notes.
-- Quick insert citations to org files, which can be exported to TeX, PDF or HTML
-  with appropriate reference list.
-- Cleanup/format bibtex entries, auto construct keys for bibtex entries.
+~helm-bibtex~ allows fuzzy-search on the bibtex file.
+
+#+ATTR_ORG: :width 700
+[[file:img/bibtex-search.png]]
+
+Associate PDF file, note file with a bibtex entry, and jump among them.
+Specifically, {{{kbd(C-c o p)}}} opens the PDF file, {{{kbd(C-c o n)}}} opens the note file
+and {{{kbd(C-c o c)}}} jumps to the bibtex entry.  For example, when you are viewing
+the PDF in Emacs, {{{kbd(C-c o n)}}} opens the note file (create one if necessary),
+{{{kbd(C-c o c)}}} jumps to the bibtex entry for this PDF file.
+
+#+ATTR_ORG: :width 700
+[[file:img/bibtex-manager.png]]
+
+Cleanup/format bibtex entries, auto construct keys for bibtex entries.  You
+could copy a bibtex entry from online, and press {{{kbd(C-c C-c)}}}, the entries will
+be cleanup as follows.  The ~timestamp~ is automatically inserted.
+
+#+ATTR_ORG: :width 700
+[[file:img/bibtex.png]]
+
+With the help of ~org-ref,~ we can quickly insert citations to org files, which
+can be exported to TeX, PDF or HTML with appropriate reference list.
+
+* Email
+
+#+ATTR_ORG: :width 700
+[[file:img/mu4e.png]]
+
+A full-fledged email client with ~mu4e~.  Current settings are compatible with
+multiple Gmail and Office 365 accounts.
 
 * Editing Enhancement
 :PROPERTIES:
 :CUSTOM_ID: editing-enhancement
 :END:
 
-** Builtin Packages
-:PROPERTIES:
-:CUSTOM_ID: builtin-packages
-:END:
+** Writeroom with Fill-column Indicator
 
-- =whitespace= :: automatically cleans up trailing spaces, empty lines at the
-     beginning of files and etc.
+The buffer content is centered, especially useful when you have a wide screen.
+This is not compatible with =linum-mode= (said to be fixed in Emacs 26), which I
+never use.  ~fill-column-indicator~ shows a dimmed white line at ~fill-column~.
 
-** MELPA Packages
-:PROPERTIES:
-:CUSTOM_ID: melpa-packages
-:END:
+** Whitespace
 
-- =writeroom-mode= :: the buffer content is shown in the center, especially
-     useful when you have a wide screen.  This is not compatible with
-     =linum-mode=, which I never use.
-- =volatile-highlights= :: highlights the change region.  For example, when you
-     redo or paste some texts to current buffer, the newly inserted texts are
-     highlighted.
-- =multiple-cursors= :: edit multiple lines all at ones.
-- =rainbow-delimiters= :: change parenthesis colors according to the nested
-     depth.  Especially useful when debugging source codes with unbalanced
-     parenthesis.
-- =smartparens= :: close the parenthesis or any custom pairs in a smart way.
+It highlights trailing spaces, leading/trailing empty lines, and automatically
+cleans up them when saved.
+
+#+ATTR_ORG: :width 700
+[[file:img/whitespace.png]]
