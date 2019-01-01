@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2018-12-24 10:05:25 gongzhitaao>
+;; Time-stamp: <2019-01-01 10:31:50 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1166,7 +1166,7 @@ Lisp function does not specify a special indentation."
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :init
-  (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus
+  (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus org-tempo
                                org-habit org-table))
   (setq org-export-backends '(ascii beamer html latex md))
 
@@ -1174,21 +1174,6 @@ Lisp function does not specify a special indentation."
   (setq org-directory me-emacs-data)
 
   (add-hook 'org-mode-hook #'me//init-org)
-
-  (add-to-list 'org-structure-template-alist '("A" "#+AUTHOR: ?" ""))
-  (add-to-list 'org-structure-template-alist '("a" "#+BEGIN_abstract\n?\n#+END_abstract" ""))
-  (add-to-list 'org-structure-template-alist '("B" "#+BIBLIOGRAPHY: ?" ""))
-  (add-to-list 'org-structure-template-alist '("C" "#+CAPTION: ?" ""))
-  (add-to-list 'org-structure-template-alist '("D" "#+DESCRIPTION: ?" ""))
-  (add-to-list 'org-structure-template-alist '("K" "#+KEYWORDS: ?" ""))
-  (add-to-list 'org-structure-template-alist '("M" "#+MACRO: ?" ""))
-  (add-to-list 'org-structure-template-alist '("N" "#+NAME: ?" ""))
-  (add-to-list 'org-structure-template-alist '("O" "#+OPTIONS: ?" ""))
-  (add-to-list 'org-structure-template-alist '("p" "#+LATEX_HEADER: ?" ""))
-  (add-to-list 'org-structure-template-alist '("R" "#+ATTR_BEAMER: ?" ""))
-  (add-to-list 'org-structure-template-alist '("S" "#+SETUPFILE: ?" ""))
-  (add-to-list 'org-structure-template-alist '("T" "#+TITLE: ?" ""))
-  (add-to-list 'org-structure-template-alist '("X" "#+ATTR_LaTeX: ?" ""))
 
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
@@ -1205,7 +1190,8 @@ Lisp function does not specify a special indentation."
         org-support-shift-select t
         org-treat-S-cursor-todo-selection-as-state-change nil
         org-use-fast-todo-selection t
-        org-use-fast-tag-selection 'auto)
+        org-use-fast-tag-selection 'auto
+        org-image-actual-width nil)
 
   (setq org-todo-keywords
         '((sequence
