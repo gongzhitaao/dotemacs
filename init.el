@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-01-01 10:31:50 gongzhitaao>
+;; Time-stamp: <2019-01-08 09:40:37 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -56,6 +56,8 @@
   (require 'use-package))
 (require 'delight)
 (require 'bind-key)
+
+(setq load-prefer-newer t)
 
 ;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
 ;; I could not start my Emacs.  I guess a better way is to backup the packages
@@ -1765,6 +1767,7 @@ So we just delete it locally."
         mu4e-compose-complete-addresses t
         mu4e-compose-context-policy nil
         mu4e-context-policy 'pick-first
+        mu4e-headers-include-related nil
         mu4e-headers-results-limit 100
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
@@ -1839,8 +1842,7 @@ So we just delete it locally."
 
 (defun me//init-message ()
   "Init setup for message mode."
-  (turn-on-orgstruct)
-  (turn-on-orgstruct++)
+  (orgalist-mode)
   (turn-on-orgtbl)
   (turn-on-flyspell)
   (setq fill-column 80))
