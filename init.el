@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-01-08 09:40:37 gongzhitaao>
+;; Time-stamp: <2019-02-22 13:48:38 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1149,6 +1149,11 @@ Lisp function does not specify a special indentation."
                       :weight 'normal
                       :foreground "yellow2"))
 
+(use-package octave-mode
+  :mode "\\.m\\'"
+  :init
+  (setq octave-comment-char ?%))
+
 (defun me//init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
@@ -1324,6 +1329,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t
            :tree-type week))))
 
+(use-package ox
+  :config
+  (setq org-export-global-macros
+        '(("tex" . "@@latex:$1@@")
+          ("html" . "@@html:$1@@"))))
+
 (use-package ox-extra
   :config
   (ox-extras-activate '(ignore-headlines)))
@@ -1346,9 +1357,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package ox-latex
   :config
-  (setq org-latex-prefer-user-labels t)
+  (setq org-latex-prefer-user-labels t
+        org-latex-caption-above nil)
   (setq org-latex-pdf-process
-        (quote ("PDFLATEX=%latex texi2dvi --shell-escape --pdf --clean --verbose --batch %f")))
+        `(,(concat "PDFLATEX=%latex texi2dvi"
+                   " --shell-escape --pdf --tidy --verbose --batch %f")))
 
   (setq org-latex-listings 'minted)
   ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -1372,6 +1385,14 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("authesis"
+                 "\\documentclass{report}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
   (setq org-latex-hyperref-template "\\hypersetup{
       pdfauthor={%a},
@@ -1430,6 +1451,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (replace-regexp-in-string "[^[:alpha:][:digit:][:space:]_-]" ""
                             (downcase heading)))
 
+(defun me//preprocess-heading (heading sep)
+  "Preprocessing on HEADING with SEP as separator."
+  (let* ((words (split-string (me//clean-up-heading heading)))
+         (words2 (subseq words 0 (min 2 (length words)))))
+    (replace-regexp-in-string "\\s-+" sep (mapconcat 'identity words2 " "))))
+
 (defun me//org-id-from-heading (heading &optional level sep uniq)
   "Format HEADING to use as custom ID and return it.
 
@@ -1440,11 +1467,8 @@ digit hash ID."
   (let ((sep (or sep "-")))
     (concat (when org-id-prefix (format "%s%s" org-id-prefix sep))
             (when level (format "h%d%s" level sep))
-            (replace-regexp-in-string "\\s-+" sep
-                                      (me//clean-up-heading heading))
-            (if uniq
-                (concat sep (me//org-id-hash (concat (buffer-name) heading)))
-              ""))))
+            (me//preprocess-heading heading sep)
+            (when uniq (concat sep (substring (org-id-new) 0 5))))))
 
 (defun me//org-id-hash (s &optional length)
   "Generate a unique string hash for S, truncated at LENGTH."
@@ -1768,7 +1792,7 @@ So we just delete it locally."
         mu4e-compose-context-policy nil
         mu4e-context-policy 'pick-first
         mu4e-headers-include-related nil
-        mu4e-headers-results-limit 100
+        mu4e-headers-results-limit 50
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
         mu4e-sent-messages-behavior #'me//process-sent-messages
@@ -1996,6 +2020,9 @@ So we just delete it locally."
   (bibtex-set-field "timestamp" (format-time-string "%Y%m%dT%H%M")))
 
 (use-package org-ref
+  :demand
+  :bind (:map org-mode-map
+         ("C-c ]" . org-ref-insert-ref-link))
   :init
   (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4)
         org-ref-default-bibliography me-bib-files
@@ -2003,7 +2030,6 @@ So we just delete it locally."
         org-ref-pdf-directory me-bib-pdfs
         org-ref-ref-color (me//colir-blend "goldenrod" "grey90" 0.4)
         org-ref-show-citation-on-enter nil)
-
   :config
   (setq org-ref-notes-function #'me//org-ref-notes-function)
 
@@ -2227,7 +2253,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
           (message "Already opened")
         (message "No PDF found with name %s" pdf-file)))))
 
-(define-pdf-cache-function pagelabels)
+;; (define-pdf-cache-function pagelabels)
 (defun me//pdf-view-page-number ()
   "For telephone-mode line."
   (interactive)
@@ -2410,7 +2436,7 @@ Propertize STR with foreground FG and background BG color."
    `(helm-ff-dotted-directory ((t (:foreground ,atom-one-dark-green
                                    :background ,atom-one-dark-bg
                                    :weight bold))))
-   `(helm-ff-directory ((t (:foreground ,atom-one-dark-cyan
+   `(helm-ff-directory ((t (:foreground ,atom-one-dark-blue
                             :background ,atom-one-dark-bg
                             :weight bold))))
    `(helm-ff-file ((t (:foreground ,atom-one-dark-fg
