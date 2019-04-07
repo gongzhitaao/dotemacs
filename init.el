@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-02-22 13:48:38 gongzhitaao>
+;; Time-stamp: <2019-04-07 13:19:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -938,7 +938,7 @@ all '.<space>' with '.<space><space>'."
                 (name . "^diary$")
                 (name . "todo.org")
                 (name . "gcal.org")
-                (name . "time-machine.org")
+                (name . "time-machine.txt")
                 (filename . "Dropbox/plan.*")))
            ("Dired" (mode . dired-mode))
            ("Web"
@@ -1323,7 +1323,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t)
 
           ("l" "Log daily" plain
-           (file+olp+datetree "time-machine.org")
+           (file+olp+datetree "time-machine.txt")
            "%?"
            :empty-lines 1
            :jump-to-captured t
@@ -1354,6 +1354,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>"))))
+
+(use-package ox-bibtex)
 
 (use-package ox-latex
   :config
@@ -1416,7 +1418,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package ox-beamer
   :config
-  (add-to-list 'org-beamer-environments-extra '("only" "O" "\\only%a{" "}"))
+  (add-to-list 'org-beamer-environments-extra '("only" "o" "\\only%a{" "}"))
+  (add-to-list 'org-beamer-environments-extra '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
   (add-to-list 'org-beamer-environments-extra '("action" "A" "\\action%a{" "}")))
 
 ;; https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/
@@ -1572,8 +1575,9 @@ argument FORCE, force the creation of a new ID."
              ("<tab>"   . helm-execute-persistent-action)
              ("C-i"     . helm-execute-persistent-action)
              ("C-z"     . helm-select-action)
-             :map helm-moccur-map
-             ("C-s"     . me//isearch-from-helm-occur))
+             ;; :map helm-moccur-map
+             ;; ("C-s"     . me//isearch-from-helm-occur)
+             )
 
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
