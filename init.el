@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-07 13:19:18 gongzhitaao>
+;; Time-stamp: <2019-04-19 14:00:05 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -389,6 +389,7 @@ all '.<space>' with '.<space><space>'."
       resize-mini-windows t)
 
 (defun me//set-title-bar()
+  "Update title bar."
   (let* ((name (or buffer-file-name dired-directory (buffer-name)))
          (hostname (or (file-remote-p name 'host) "localhost")))
     (concat "@" hostname "     " name)))
@@ -492,7 +493,7 @@ all '.<space>' with '.<space><space>'."
 ;; -----------------------------------------------------------------------------
 
 (set-face-attribute 'default nil
-                    :family "Iosevka"
+                    :family "Iosevka Slab"
                     :height 130)
 
 (set-fontset-font "fontset-default"
@@ -1101,6 +1102,7 @@ Lisp function does not specify a special indentation."
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
 (defun me//init-python()
+  "Init python model."
   (python-docstring-mode)
   (sphinx-doc-mode)
   (set (make-local-variable 'comment-inline-offset) 2)
@@ -1145,7 +1147,7 @@ Lisp function does not specify a special indentation."
 
 (use-package sh-script
   :config
-  (set-face-attribute 'sh-heredoc-face nil
+  (set-face-attribute 'sh-heredoc nil
                       :weight 'normal
                       :foreground "yellow2"))
 
@@ -1862,6 +1864,7 @@ So we just delete it locally."
         bbdb-complete-mail-allow-cycling t
         bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data)
         bbdb-mail-user-agent 'message-user-agent
+        bbdb-mua-pop-up nil
         bbdb-message-all-addresses t)
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
@@ -2003,6 +2006,7 @@ So we just delete it locally."
 ;; -----------------------------------------------------------------------------
 
 (defun me//init-tex()
+  "Init tex mode."
   (flyspell-mode))
 
 (use-package tex-mode
@@ -2123,12 +2127,12 @@ Using `window-line-height' accounts for variable-height fonts."
 (defun me/pdf-view-scroll-half-forward ()
   "Score down half page."
   (interactive)
-  (pdf-view-next-line-or-next-page (/ (me//window-size) 2)))
+  (pdf-view-next-line-or-next-page 100))
 
 (defun me/pdf-view-scroll-half-backward ()
   "Score up half page."
   (interactive)
-  (pdf-view-previous-line-or-previous-page (/ (me//window-size) 2)))
+  (pdf-view-previous-line-or-previous-page 100))
 
 (defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
@@ -2446,7 +2450,7 @@ Propertize STR with foreground FG and background BG color."
    `(helm-ff-file ((t (:foreground ,atom-one-dark-fg
                        :background ,atom-one-dark-bg
                        :weight normal))))
-   `(helm-ff-executable ((t (:foreground ,atom-one-dark-green
+   `(helm-ff-executable ((t (:foreground "green"
                              :background ,atom-one-dark-bg
                              :weight normal))))
    `(helm-ff-invalid-symlink ((t (:foreground ,atom-one-dark-red-1
