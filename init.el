@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-19 14:12:59 gongzhitaao>
+;; Time-stamp: <2019-04-19 14:24:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2125,16 +2125,6 @@ Using `window-line-height' accounts for variable-height fonts."
       ;; nil, fall back on `window-height'.
       (1- (window-height)))))
 
-(defun me/pdf-view-scroll-half-forward ()
-  "Score down half page."
-  (interactive)
-  (pdf-view-next-line-or-next-page 100))
-
-(defun me/pdf-view-scroll-half-backward ()
-  "Score up half page."
-  (interactive)
-  (pdf-view-previous-line-or-previous-page 100))
-
 (defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
@@ -2176,17 +2166,17 @@ Using `window-line-height' accounts for variable-height fonts."
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
          ("<delete>" . pdf-view-scroll-up-or-next-page)
-         ("<down>"   . me/pdf-view-next-few-lines)
+         ("<down>"   . pdf-view-scroll-up-or-next-page)
          ("<left>"   . pdf-view-previous-page-command)
          ("<right>"  . pdf-view-next-page-command)
-         ("<up>"     . me/pdf-view-prev-few-lines)
+         ("<up>"     . pdf-view-scroll-down-or-previous-page)
          ("b"        . helm-mini)
          ("c"        . me/org-ref-open-entry)
-         ("d"        . me/pdf-view-scroll-half-forward)
-         ("e"        . me/pdf-view-scroll-half-backward)
+         ("d"        . me/pdf-view-next-few-lines)
+         ("e"        . me/pdf-view-prev-few-lines)
          ("g"        . pdf-view-goto-page)
-         ("j"        . me/pdf-view-scroll-half-forward)
-         ("k"        . me/pdf-view-scroll-half-backward)
+         ("j"        . me/pdf-view-next-few-lines)
+         ("k"        . me/pdf-view-prev-few-lines)
          ("n"        . me/org-ref-open-note)
          ("z"        . delete-other-windows))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
