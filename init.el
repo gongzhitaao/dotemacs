@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-19 14:00:05 gongzhitaao>
+;; Time-stamp: <2019-04-19 14:12:59 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1602,7 +1602,8 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-buffers
   :config
   (setq helm-buffer-max-length 40
-        helm-buffers-fuzzy-matching t))
+        helm-buffers-fuzzy-matching t)
+  (set-face-attribute 'helm-buffer-directory nil :inherit 'dired-directory))
 
 (use-package helm-files
   :config
