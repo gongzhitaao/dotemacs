@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-19 14:24:04 gongzhitaao>
+;; Time-stamp: <2019-04-21 09:59:11 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1655,7 +1655,8 @@ argument FORCE, force the creation of a new ID."
    (python-docstring-mode nil python-docstring)
    (subword-mode nil subword)
    (view-mode " " view)
-   (whitespace-mode nil whitespace)))
+   (whitespace-mode nil whitespace)
+   (eldoc-mode nil t)))
 
 (use-package re-builder
   :config
@@ -1996,7 +1997,7 @@ So we just delete it locally."
 ;; -----------------------------------------------------------------------------
 
 (use-package reftex
-  :diminish reftex-mode
+  :delight
   :config
   (add-hook 'TeX-mode-hook #'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t
