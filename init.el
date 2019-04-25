@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-21 09:59:11 gongzhitaao>
+;; Time-stamp: <2019-04-25 07:57:20 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1809,6 +1809,10 @@ So we just delete it locally."
         mu4e-view-mode-hook '(bbdb-mua-auto-update)
         mu4e-view-scroll-to-next nil
         mu4e-view-show-addresses t)
+
+  (add-to-list 'mu4e-view-actions
+               '("Brower" . mu4e-action-view-in-browser) t)
+  (setq browse-url-generic-program "web-browswer")
 
   (add-to-list 'mu4e-bookmarks
                '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
