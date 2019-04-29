@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-25 07:57:20 gongzhitaao>
+;; Time-stamp: <2019-04-29 13:38:40 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1804,7 +1804,7 @@ So we just delete it locally."
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
         mu4e-sent-messages-behavior #'me//process-sent-messages
-        mu4e-update-interval 300
+        mu4e-update-interval nil
         mu4e-use-fancy-chars t
         mu4e-view-mode-hook '(bbdb-mua-auto-update)
         mu4e-view-scroll-to-next nil
@@ -2177,8 +2177,8 @@ Using `window-line-height' accounts for variable-height fonts."
          ("<up>"     . pdf-view-scroll-down-or-previous-page)
          ("b"        . helm-mini)
          ("c"        . me/org-ref-open-entry)
-         ("d"        . me/pdf-view-next-few-lines)
-         ("e"        . me/pdf-view-prev-few-lines)
+         ("d"        . pdf-view-scroll-up-or-next-page)
+         ("e"        . pdf-view-scroll-down-or-previous-page)
          ("g"        . pdf-view-goto-page)
          ("j"        . me/pdf-view-next-few-lines)
          ("k"        . me/pdf-view-prev-few-lines)
