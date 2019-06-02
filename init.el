@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-04-29 13:38:40 gongzhitaao>
+;; Time-stamp: <2019-06-02 12:51:11 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -414,6 +414,11 @@ all '.<space>' with '.<space><space>'."
   (let ((hooks '(prog-mode-hook org-mode-hook markdown-mode-hook
                                 tex-mode-hook message-mode-hook)))
     (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks)))
+;; (use-package fill-column-indicator
+;;   :config
+;;   (setq fci-rule-color "gray50")
+;;   (let ((hooks '(c++-mode-hook)))
+;;     (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks)))
 
 ;; Center the editing content.
 (use-package writeroom-mode
@@ -1804,7 +1809,7 @@ So we just delete it locally."
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
         mu4e-sent-messages-behavior #'me//process-sent-messages
-        mu4e-update-interval nil
+        mu4e-update-interval 180
         mu4e-use-fancy-chars t
         mu4e-view-mode-hook '(bbdb-mua-auto-update)
         mu4e-view-scroll-to-next nil
@@ -1909,7 +1914,8 @@ So we just delete it locally."
 
 (use-package mu4e-alert
   :config
-  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+  (mu4e-alert-set-default-style 'mode-line))
 
 ;; Automatically start.
 ;;
