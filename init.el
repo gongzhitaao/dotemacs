@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-06-02 12:51:11 gongzhitaao>
+;; Time-stamp: <2019-06-07 13:16:45 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -494,6 +494,14 @@ all '.<space>' with '.<space><space>'."
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
                  nil :actions nil))
 
+;; (use-package hl-todo
+;;   :config
+;;   (let ((key-faces '(("TODO" . "#ff0000")
+;;                      ("FIXME" . "#ff0000"))))
+;;     (dolist (elm key-faces)
+;;       (setcdr (assoc "TODO" hl-todo-keyword-faces) (cdr elm))))
+;;   (global-hl-todo-mode))
+
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
@@ -920,7 +928,9 @@ all '.<space>' with '.<space><space>'."
                 holiday-other-holidays))
 
   (set-face-background 'cal-china-x-important-holiday-face "dark red")
-  (set-face-background 'cal-china-x-general-holiday-face "forest green"))
+  (set-face-background 'cal-china-x-general-holiday-face "forest green")
+
+  (setq calendar-date-display-form calendar-iso-date-display-form))
 
 ;; Show buffers
 (use-package ibuffer
@@ -1809,7 +1819,7 @@ So we just delete it locally."
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
         mu4e-sent-messages-behavior #'me//process-sent-messages
-        mu4e-update-interval 180
+        mu4e-update-interval 100
         mu4e-use-fancy-chars t
         mu4e-view-mode-hook '(bbdb-mua-auto-update)
         mu4e-view-scroll-to-next nil
