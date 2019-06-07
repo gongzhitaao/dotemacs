@@ -70,6 +70,7 @@
 (depends-on "helm-swoop")
 (depends-on "highlight-indent-guides")
 (depends-on "highlight-numbers")
+(depends-on "hl-todo")
 (depends-on "htmlize")
 (depends-on "hydra")
 (depends-on "ibuffer")
