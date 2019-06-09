@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-06-07 13:16:45 gongzhitaao>
+;; Time-stamp: <2019-06-09 10:46:38 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2317,6 +2317,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :config
   (evil-mode 1)
 
+  (mapc (lambda (x) (evil-set-initial-state x 'emacs))
+        '(dired-mode image-dired-thumbnail-mode image-mode
+                     mu4e-compose-mode calendar-mode org-capture-mode))
+
   (bind-keys :map evil-normal-state-map
              ("<escape>" . evil-emacs-state)
              ("C-z"      . delete-other-windows)
@@ -2368,10 +2372,7 @@ Propertize STR with foreground FG and background BG color."
 
   ;; Use emacs state instead of insert mode
   (defalias 'evil-insert-state 'evil-emacs-state)
-  (setq-default evil-shift-width 2)
-
-  (mapc (lambda (x) (add-to-list 'evil-emacs-state-modes x))
-        '(dired-mode image-dired-thumbnail-mode image-mode mu4e-compose-mode)))
+  (setq-default evil-shift-width 2))
 
 ;; =============================================================================
 ;; Theme
