@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-06-10 09:25:28 gongzhitaao>
+;; Time-stamp: <2019-06-24 15:48:25 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1806,7 +1806,7 @@ So we just delete it locally."
   (setq mu4e-compose-dont-reply-to-self t)
   (setq mu4e-user-mail-address-list
         '("zzg0009@auburn.edu" "zzg0009@tigermail.auburn.edu" "gong@auburn.edu"
-          "zhitaao.gong@gmail.com"
+          "zhitaao.gong@gmail.com" "zhitaao.gong.reg@gmail.com"
           "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
   (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home)
@@ -1817,7 +1817,7 @@ So we just delete it locally."
         mu4e-headers-include-related nil
         mu4e-headers-results-limit 50
         mu4e-index-cleanup nil
-        mu4e-index-lazy-check t
+        mu4e-index-lazy-check nil
         mu4e-sent-messages-behavior #'me//process-sent-messages
         mu4e-update-interval 100
         mu4e-use-fancy-chars t
@@ -2318,8 +2318,9 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (evil-mode 1)
 
   (mapc (lambda (x) (evil-set-initial-state x 'emacs))
-        '(dired-mode image-dired-thumbnail-mode image-mode diary-mode
-                     mu4e-compose-mode calendar-mode org-capture-mode))
+        '(dired-mode image-dired-thumbnail-mode image-mode
+                     diary-mode org-src-mode mu4e-compose-mode calendar-mode
+                     org-capture-mode))
 
   (bind-keys :map evil-normal-state-map
              ("<escape>" . evil-emacs-state)
