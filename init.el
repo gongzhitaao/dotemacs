@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-06-24 15:48:25 gongzhitaao>
+;; Time-stamp: <2019-08-14 18:44:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -46,6 +46,7 @@
 ;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 
@@ -58,6 +59,11 @@
 (require 'bind-key)
 
 (setq load-prefer-newer t)
+
+;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
+;; because it is site-specific or it contains sensitive information.  These
+;; configs will not go into the public git repo.
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 
 ;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
 ;; I could not start my Emacs.  I guess a better way is to backup the packages
@@ -1171,6 +1177,14 @@ Lisp function does not specify a special indentation."
   :init
   (setq octave-comment-char ?%))
 
+(use-package markdown-mode
+  :config
+  (add-hook 'markdown-mode-hook #'turn-on-flyspell)
+
+  (make-local-variable 'ispell-skip-region-alist)
+  (add-to-list 'ispell-skip-region-alist '("`" "`"))
+  (add-to-list 'ispell-skip-region-alist '("^```" . "^```")))
+
 (defun me//init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
@@ -1566,7 +1580,6 @@ argument FORCE, force the creation of a new ID."
 ;; The gcal contains some senstive information, thus in a separate file.
 ;; -----------------------------------------------------------------------------
 
-(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (require 'gcal-conf)
 
 ;; =============================================================================
@@ -1643,6 +1656,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-flyspell)
 (use-package flyspell
+  :after helm-flyspell
   :bind (:map flyspell-mode-map
          ("C-;" . helm-flyspell-correct)))
 
@@ -1738,142 +1752,142 @@ argument FORCE, force the creation of a new ID."
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 
-(defun me//process-sent-messages ()
-  "Post-process sent messages based on email address.
+;; (defun me//process-sent-messages ()
+;;   "Post-process sent messages based on email address.
 
-Gmail/IMAP takes care of copying sent messages to sent folder.
-So we just delete it locally."
-  (if (string-match-p
-       (regexp-opt '("@gmail.com" "@tigermail.auburn.edu" "@auburn.edu"))
-       (message-sendmail-envelope-from))
-      'delete 'sent))
+;; Gmail/IMAP takes care of copying sent messages to sent folder.
+;; So we just delete it locally."
+;;   (if (string-match-p
+;;        (regexp-opt '("@gmail.com" "@tigermail.auburn.edu" "@auburn.edu"))
+;;        (message-sendmail-envelope-from))
+;;       'delete 'sent))
 
-(use-package time
-  :config
-  (setq display-time-mail-string " "
-        display-time-use-mail-icon nil))
+;; (use-package time
+;;   :config
+;;   (setq display-time-mail-string " "
+;;         display-time-use-mail-icon nil))
 
-(use-package mu4e
-  :config
-  (setq mu4e-maildir (expand-file-name ".mail" me-home))
+;; (use-package mu4e
+;;   :config
+;;   (setq mu4e-maildir (expand-file-name ".mail" me-home))
 
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "Personal"
-            :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/personal" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/personal/trash")
-              (mu4e-sent-folder . "/personal/sent")
-              (mu4e-drafts-folder . "/personal/draft")
-              (mu4e-refile-folder . "/personal/archive")
-              (user-mail-address . "zhitaao.gong@gmail.com")
-              (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))
-          ,(make-mu4e-context
-            :name "Tiger"
-            :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/tiger" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/tiger/trash")
-              (mu4e-sent-folder . "/tiger/sent")
-              (mu4e-drafts-folder . "/tiger/draft")
-              (mu4e-refile-folder . "/tiger/archive")
-              (user-mail-address . "zzg0009@auburn.edu")
-              (message-signature-file . ,(expand-file-name "signature/tiger"
-                                                           me-emacs-data))))
-          ,(make-mu4e-context
-            :name "Reg"
-            :match-func
-            (lambda (msg)
-              (when msg (string-prefix-p
-                         "/reg" (mu4e-message-field msg :maildir))))
-            :vars
-            `((mu4e-trash-folder . "/reg/trash")
-              (mu4e-sent-folder . "/reg/sent")
-              (mu4e-drafts-folder . "/reg/draft")
-              (mu4e-refile-folder . "/reg/archive")
-              (user-mail-address . "zhitaao.gong.reg@gmail.com")
-              (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))))
+;;   (setq mu4e-contexts
+;;         `(,(make-mu4e-context
+;;             :name "Personal"
+;;             :match-func
+;;             (lambda (msg)
+;;               (when msg (string-prefix-p
+;;                          "/personal" (mu4e-message-field msg :maildir))))
+;;             :vars
+;;             `((mu4e-trash-folder . "/personal/trash")
+;;               (mu4e-sent-folder . "/personal/sent")
+;;               (mu4e-drafts-folder . "/personal/draft")
+;;               (mu4e-refile-folder . "/personal/archive")
+;;               (user-mail-address . "zhitaao.gong@gmail.com")
+;;               (message-signature-file . ,(expand-file-name "signature/personal"
+;;                                                            me-emacs-data))))
+;;           ,(make-mu4e-context
+;;             :name "Tiger"
+;;             :match-func
+;;             (lambda (msg)
+;;               (when msg (string-prefix-p
+;;                          "/tiger" (mu4e-message-field msg :maildir))))
+;;             :vars
+;;             `((mu4e-trash-folder . "/tiger/trash")
+;;               (mu4e-sent-folder . "/tiger/sent")
+;;               (mu4e-drafts-folder . "/tiger/draft")
+;;               (mu4e-refile-folder . "/tiger/archive")
+;;               (user-mail-address . "zzg0009@auburn.edu")
+;;               (message-signature-file . ,(expand-file-name "signature/tiger"
+;;                                                            me-emacs-data))))
+;;           ,(make-mu4e-context
+;;             :name "Reg"
+;;             :match-func
+;;             (lambda (msg)
+;;               (when msg (string-prefix-p
+;;                          "/reg" (mu4e-message-field msg :maildir))))
+;;             :vars
+;;             `((mu4e-trash-folder . "/reg/trash")
+;;               (mu4e-sent-folder . "/reg/sent")
+;;               (mu4e-drafts-folder . "/reg/draft")
+;;               (mu4e-refile-folder . "/reg/archive")
+;;               (user-mail-address . "zhitaao.gong.reg@gmail.com")
+;;               (message-signature-file . ,(expand-file-name "signature/personal"
+;;                                                            me-emacs-data))))))
 
-  (setq mu4e-compose-dont-reply-to-self t)
-  (setq mu4e-user-mail-address-list
-        '("zzg0009@auburn.edu" "zzg0009@tigermail.auburn.edu" "gong@auburn.edu"
-          "zhitaao.gong@gmail.com" "zhitaao.gong.reg@gmail.com"
-          "gongzhitaao@google.com" "gongzhitaao@fb.com"))
+;;   (setq mu4e-compose-dont-reply-to-self t)
+;;   (setq mu4e-user-mail-address-list
+;;         '("zzg0009@auburn.edu" "zzg0009@tigermail.auburn.edu" "gong@auburn.edu"
+;;           "zhitaao.gong@gmail.com" "zhitaao.gong.reg@gmail.com"
+;;           "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
-  (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home)
-        mu4e-change-filenames-when-moving t
-        mu4e-compose-complete-addresses t
-        mu4e-compose-context-policy nil
-        mu4e-context-policy 'pick-first
-        mu4e-headers-include-related nil
-        mu4e-headers-results-limit 50
-        mu4e-index-cleanup nil
-        mu4e-index-lazy-check nil
-        mu4e-sent-messages-behavior #'me//process-sent-messages
-        mu4e-update-interval 100
-        mu4e-use-fancy-chars t
-        mu4e-view-mode-hook '(bbdb-mua-auto-update)
-        mu4e-view-scroll-to-next nil
-        mu4e-view-show-addresses t)
+;;   (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home)
+;;         mu4e-change-filenames-when-moving t
+;;         mu4e-compose-complete-addresses t
+;;         mu4e-compose-context-policy nil
+;;         mu4e-context-policy 'pick-first
+;;         mu4e-headers-include-related nil
+;;         mu4e-headers-results-limit 50
+;;         mu4e-index-cleanup nil
+;;         mu4e-index-lazy-check t
+;;         mu4e-sent-messages-behavior #'me//process-sent-messages
+;;         mu4e-update-interval 100
+;;         mu4e-use-fancy-chars t
+;;         mu4e-view-mode-hook '(bbdb-mua-auto-update)
+;;         mu4e-view-scroll-to-next nil
+;;         mu4e-view-show-addresses t)
 
-  (add-to-list 'mu4e-view-actions
-               '("Brower" . mu4e-action-view-in-browser) t)
-  (setq browse-url-generic-program "web-browswer")
+;;   (add-to-list 'mu4e-view-actions
+;;                '("Brower" . mu4e-action-view-in-browser) t)
+;;   (setq browse-url-generic-program "web-browswer")
 
-  (add-to-list 'mu4e-bookmarks
-               '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
+;;   (add-to-list 'mu4e-bookmarks
+;;                '("flag:flagged AND NOT flag:trashed" "Flagged messages" ?f))
 
-  (setq mu4e-headers-attach-mark         '("a" . "◥")
-        mu4e-headers-default-prefix      '("|"  . "● ")
-        mu4e-headers-draft-mark          '("D" . "℮")
-        mu4e-headers-duplicate-prefix    '("="  . "≡ ")
-        mu4e-headers-empty-parent-prefix '("-"  . "● ")
-        mu4e-headers-encrypted-mark      '("x" . "")
-        mu4e-headers-first-child-prefix  '("\\" . "╰─")
-        mu4e-headers-flagged-mark        '("F" . "⚐")
-        mu4e-headers-has-child-prefix    '("+"  . "○╮")
-        mu4e-headers-new-mark            '("N" . "⋆")
-        mu4e-headers-passed-mark         '("P" . "⟫")
-        mu4e-headers-replied-mark        '("R" . "")
-        mu4e-headers-seen-mark           '("S" . "░")
-        mu4e-headers-signed-mark         '("s" . "☡")
-        mu4e-headers-trashed-mark        '("T" . "✖")
-        mu4e-headers-unread-mark         '("u" . "█")
-        mu4e-headers-from-or-to-prefix   '("" . "▶ "))
+;;   (setq mu4e-headers-attach-mark         '("a" . "◥")
+;;         mu4e-headers-default-prefix      '("|"  . "● ")
+;;         mu4e-headers-draft-mark          '("D" . "℮")
+;;         mu4e-headers-duplicate-prefix    '("="  . "≡ ")
+;;         mu4e-headers-empty-parent-prefix '("-"  . "● ")
+;;         mu4e-headers-encrypted-mark      '("x" . "")
+;;         mu4e-headers-first-child-prefix  '("\\" . "╰─")
+;;         mu4e-headers-flagged-mark        '("F" . "⚐")
+;;         mu4e-headers-has-child-prefix    '("+"  . "○╮")
+;;         mu4e-headers-new-mark            '("N" . "⋆")
+;;         mu4e-headers-passed-mark         '("P" . "⟫")
+;;         mu4e-headers-replied-mark        '("R" . "")
+;;         mu4e-headers-seen-mark           '("S" . "░")
+;;         mu4e-headers-signed-mark         '("s" . "☡")
+;;         mu4e-headers-trashed-mark        '("T" . "✖")
+;;         mu4e-headers-unread-mark         '("u" . "█")
+;;         mu4e-headers-from-or-to-prefix   '("" . "▶ "))
 
-  (let ((marks '((refile  . ("r" . "▶"))
-                 (delete  . ("D" . "✖"))
-                 (flag    . ("+" . "⚑"))
-                 (move    . ("m" . "▷"))
-                 (read    . ("!" . "░"))
-                 (trash   . ("d" . "♣"))
-                 (unflag  . ("-" . "⚐"))
-                 (untrash . ("=" . "♧"))
-                 (unread  . ("?" . "█"))
-                 (unmark  . (" " . " "))
-                 (action  . ("a" . "◯"))
-                 (something . ("*" . "♯")))))
-    (dolist (elm marks)
-      (plist-put (alist-get (car elm) mu4e-marks) :char (cdr elm))))
+;;   (let ((marks '((refile  . ("r" . "▶"))
+;;                  (delete  . ("D" . "✖"))
+;;                  (flag    . ("+" . "⚑"))
+;;                  (move    . ("m" . "▷"))
+;;                  (read    . ("!" . "░"))
+;;                  (trash   . ("d" . "♣"))
+;;                  (unflag  . ("-" . "⚐"))
+;;                  (untrash . ("=" . "♧"))
+;;                  (unread  . ("?" . "█"))
+;;                  (unmark  . (" " . " "))
+;;                  (action  . ("a" . "◯"))
+;;                  (something . ("*" . "♯")))))
+;;     (dolist (elm marks)
+;;       (plist-put (alist-get (car elm) mu4e-marks) :char (cdr elm))))
 
-  (setq mu4e-headers-fields '((:human-date . 18)
-                              (:flags . 10)
-                              (:from-or-to . 30)
-                              (:thread-subject)))
+;;   (setq mu4e-headers-fields '((:human-date . 18)
+;;                               (:flags . 10)
+;;                               (:from-or-to . 30)
+;;                               (:thread-subject)))
 
-  (set-face-foreground 'mu4e-context-face "dark green")
-  (set-face-foreground 'mu4e-modeline-face "DarkOrange4")
-  (set-face-background 'mu4e-header-highlight-face "black")
-  (set-face-foreground 'mu4e-cited-2-face "SteelBlue2"))
+;;   (set-face-foreground 'mu4e-context-face "dark green")
+;;   (set-face-foreground 'mu4e-modeline-face "DarkOrange4")
+;;   (set-face-background 'mu4e-header-highlight-face "black")
+;;   (set-face-foreground 'mu4e-cited-2-face "SteelBlue2"))
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
@@ -1922,10 +1936,10 @@ So we just delete it locally."
 ;; message notification, only in the modeline
 ;; -----------------------------------------------------------------------------
 
-(use-package mu4e-alert
-  :config
-  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-  (mu4e-alert-set-default-style 'mode-line))
+;; (use-package mu4e-alert
+;;   :config
+;;   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+;;   (mu4e-alert-set-default-style 'mode-line))
 
 ;; Automatically start.
 ;;
@@ -1947,7 +1961,7 @@ So we just delete it locally."
 (defun me//start-mu4e-bg ()
   "Start mu4e in background."
   (mu4e t))
-(run-at-time (me//seconds-from-now 5) nil #'me//start-mu4e-bg)
+;; (run-at-time (me//seconds-from-now 5) nil #'me//start-mu4e-bg)
 
 ;; =============================================================================
 ;; Bibliography manager
@@ -2376,6 +2390,12 @@ Propertize STR with foreground FG and background BG color."
   (setq-default evil-shift-width 2))
 
 ;; =============================================================================
+;; Other stuff
+;; =============================================================================
+
+(use-package dm)
+
+;; =============================================================================
 ;; Theme
 ;; =============================================================================
 
@@ -2522,11 +2542,6 @@ Propertize STR with foreground FG and background BG color."
 ;; =============================================================================
 ;; Now start the server
 ;; =============================================================================
-
-(use-package edit-server
-  :config
-  (setq edit-server-default-major-mode 'org-mode)
-  (edit-server-start))
 
 (use-package server
   :config
