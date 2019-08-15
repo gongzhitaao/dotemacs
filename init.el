@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-08-15 18:45:15 gongzhitaao>
+;; Time-stamp: <2019-08-15 18:56:52 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -880,7 +880,7 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq calendar-week-start-day 1
         calendar-chinese-all-holidays-flag t
-        diary-file (expand-file-name "diary" me-emacs-data))
+        diary-file (expand-file-name "org/diary" me-emacs-data))
   (calendar-set-date-style 'iso)
 
   (defface calendar-iso-week-face
