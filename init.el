@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-08-14 18:44:29 gongzhitaao>
+;; Time-stamp: <2019-08-15 18:05:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -217,9 +217,7 @@
 ;; =============================================================================
 
 (defconst me-home "~" "My home directory.")
-(defconst me-data (expand-file-name "Dropbox" me-home))
-(defconst me-emacs (expand-file-name "dotfiles/emacs.d" me-data))
-(defconst me-emacs-data (expand-file-name "data" me-emacs))
+(defconst me-emacs-data (expand-file-name "data" user-emacs-directory))
 
 (defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory))
 (unless (file-exists-p me-emacs-tmp)
@@ -232,7 +230,7 @@
 (defconst me-local-conf (expand-file-name "local.el" user-emacs-directory)
   "Local configuration not shared around machines.")
 
-(setq custom-file (expand-file-name "custom.el" me-emacs))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 ;; (if (file-exists-p custom-file)
 ;;     (load custom-file))
@@ -666,7 +664,7 @@ all '.<space>' with '.<space><space>'."
 ;; Completion
 ;; -----------------------------------------------------------------------------
 
-(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs))
+(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data))
 
 (use-package yasnippet
   :delight yas-minor-mode
@@ -1209,7 +1207,7 @@ Lisp function does not specify a special indentation."
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config
-  (setq org-directory me-emacs-data)
+  (setq org-directory (expand-file-name "org" me-emacs-data))
 
   (add-hook 'org-mode-hook #'me//init-org)
 
