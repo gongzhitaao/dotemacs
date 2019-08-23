@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-08-15 18:56:52 gongzhitaao>
+;; Time-stamp: <2019-08-22 17:05:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1692,10 +1692,10 @@ argument FORCE, force the creation of a new ID."
 ;; ace-window
 ;; -----------------------------------------------------------------------------
 
-;; (use-package ace-window
-;;   :bind ("M-p" . ace-window)
-;;   :config
-;;   (setq aw-dispatch-always t))
+(use-package ace-window
+  :bind ("M-p" . ace-window)
+  :config
+  (setq aw-dispatch-always t))
 
 ;; x - delete window
 ;; m - swap (move) window

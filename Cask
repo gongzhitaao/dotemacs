@@ -5,6 +5,7 @@
 
 (depends-on "ace-isearch")
 (depends-on "ace-jump-mode")
+(depends-on "ace-window")
 (depends-on "ag")
 (depends-on "aggressive-indent")
 (depends-on "anzu")
