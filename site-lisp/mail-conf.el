@@ -106,7 +106,7 @@ So we just delete it locally."
           "gongzhitaao@google.com" "gongzhitaao@fb.com"))
 
   (setq mu4e-attachment-dir (expand-file-name "Downloads" me-home)
-        mu4e-change-filenames-when-moving t
+        mu4e-change-filenames-when-moving nil
         mu4e-compose-complete-addresses t
         mu4e-compose-context-policy nil
         mu4e-context-policy 'pick-first
