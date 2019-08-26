@@ -115,7 +115,7 @@ So we just delete it locally."
         mu4e-index-cleanup nil
         mu4e-index-lazy-check t
         mu4e-sent-messages-behavior #'me//process-sent-messages
-        mu4e-update-interval 100
+        mu4e-update-interval 300
         mu4e-use-fancy-chars t
         mu4e-view-mode-hook '(bbdb-mua-auto-update)
         mu4e-view-scroll-to-next nil
