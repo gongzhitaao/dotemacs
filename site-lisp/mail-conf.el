@@ -50,11 +50,26 @@ So we just delete it locally."
             :vars
             `((mu4e-trash-folder . "/personal/trash")
               (mu4e-sent-folder . "/personal/sent")
-              (mu4e-drafts-folder . "/personal/draft")
+              (mu4e-drafts-folder . "/personal/drafts")
               (mu4e-refile-folder . "/personal/archive")
               (user-mail-address . "zhitaao.gong@gmail.com")
               (message-signature-file . ,(expand-file-name "signature/personal"
                                                            me-emacs-data))))
+          ,(make-mu4e-context
+            :name "Work"
+            :match-func
+            (lambda (msg)
+              (when msg (string-prefix-p
+                         "/work" (mu4e-message-field msg :maildir))))
+            :vars
+            `((mu4e-trash-folder . "/work/trash")
+              (mu4e-sent-folder . "/work/sent")
+              (mu4e-drafts-folder . "/work/drafts")
+              (mu4e-refile-folder . "/work/archive")
+              (user-mail-address . "gongzhitaao@google.com")
+              (message-signature-file . ,(expand-file-name
+                                          "signature/work.google"
+                                          me-emacs-data))))
           ,(make-mu4e-context
             :name "Tiger"
             :match-func

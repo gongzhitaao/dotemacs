@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-08-22 17:05:01 gongzhitaao>
+;; Time-stamp: <2019-08-25 09:32:05 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1744,7 +1744,7 @@ argument FORCE, force the creation of a new ID."
 ;; mail
 ;; =============================================================================
 
-;; (use-package mail-conf)
+(use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
