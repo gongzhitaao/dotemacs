@@ -112,8 +112,8 @@ So we just delete it locally."
         mu4e-context-policy 'pick-first
         mu4e-headers-include-related nil
         mu4e-headers-results-limit 50
-        mu4e-index-cleanup nil
-        mu4e-index-lazy-check t
+        mu4e-index-cleanup t
+        mu4e-index-lazy-check nil
         mu4e-sent-messages-behavior #'me//process-sent-messages
         mu4e-update-interval 300
         mu4e-use-fancy-chars t
