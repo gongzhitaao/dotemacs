@@ -22,6 +22,7 @@
       (gogolink-mode)
     (gogolink-prog-mode)))
 
+(defvar gogolink)
 (use-package gogolink
   :config
   (defface me-gogolink-link-face
@@ -31,6 +32,11 @@
     "gogolink link face")
   (setq gogolink-link-face 'me-gogolink-link-face)
   (add-hook 'find-file-hook #'me//turn-on-gogolink))
+
+;; (use-package google3-eglot
+;;   :config
+;;   (setq google3-eglot-c++-server 'clangd)
+;;   (google3-eglot-setup))
 
 (provide 'dm)
 ;;; dm.el ends here

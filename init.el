@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-08-25 09:32:05 gongzhitaao>
+;; Time-stamp: <2019-09-11 10:19:45 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -128,6 +128,7 @@
            ("l"   . magit-log-buffer-file)
            ("M-w" . me/copy-region-escaped)
            ("s l" . sort-lines)
+           ("s L" . sort-fields)
            ("s s" . me/sort-symbols)
            ("s w" . me/sort-words)
            ("S"   . me/sudo-edit)
