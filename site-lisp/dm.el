@@ -7,7 +7,6 @@
 (use-package google
   :defer 2)
 
-(defvar org-capture-templates)          ; make linter happy
 (add-to-list 'org-capture-templates
              '("d" "DeepMind Tech Log" plain
                (file+olp+datetree "dm.org")
@@ -15,6 +14,10 @@
                :empty-lines 1
                :jump-to-captured t
                :tree-type week))
+
+(use-package writeroom-mode
+  :config
+  (add-to-list 'writeroom-major-modes 'protobuf-mode))
 
 (defun me//turn-on-gogolink ()
   "Turn on gogolink whenver appropriate."
@@ -32,6 +35,10 @@
     "gogolink link face")
   (setq gogolink-link-face 'me-gogolink-link-face)
   (add-hook 'find-file-hook #'me//turn-on-gogolink))
+
+(use-package google-cc-extras
+  :bind (:map c++-mode-map
+         ("C-!" . google-clang-format)))
 
 ;; (use-package google3-eglot
 ;;   :config

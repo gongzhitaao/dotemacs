@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-11 10:19:45 gongzhitaao>
+;; Time-stamp: <2019-09-16 15:33:31 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -582,6 +582,9 @@ all '.<space>' with '.<space><space>'."
 (put 'downcase-region  'disabled nil)
 
 (global-subword-mode 1)
+
+;; This is slow if enabled.
+(setq blink-matching-paren nil)
 
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
