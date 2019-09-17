@@ -40,6 +40,16 @@
   :bind (:map c++-mode-map
          ("C-!" . google-clang-format)))
 
+(use-package typescript-mode
+  :bind (:map typescript-mode-map
+         ("C-!" . google-clang-format))
+  :config
+  (setq typescript-indent-level 2)
+  (setq tide-tsserver-directory
+        (concat "/google/src/head/depot/google3"
+                "/third_party/javascript/node_modules"
+                "/typescript/stable/lib")))
+
 ;; (use-package google3-eglot
 ;;   :config
 ;;   (setq google3-eglot-c++-server 'clangd)
