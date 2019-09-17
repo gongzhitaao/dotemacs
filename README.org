@@ -1,6 +1,6 @@
 #+TITLE: Living in Emacs
 #+OPTIONS: num:3 H:4 ^:{} pri:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
 
 #+MACRO: kbd @@html:<kbd>$1</kbd>@@
 
@@ -22,7 +22,7 @@ packages inside Emacs, =pallet= makes sure that =Cask= is updated accordingly.
 :END:
 
 #+ATTR_ORG: :width 700
-[[file:img/orgmode.png]]
+[[file:docs_src/img/orgmode.png]]
 
 - Scientific paper writing, with ~org-ref~ package.  The org file may be exported
   to nearly all well-known format.  I've been using Org mode for dissertation,
@@ -40,7 +40,7 @@ This is a killer feature for scientific paper writing in Org-mode.
 ~helm-bibtex~ allows fuzzy-search on the bibtex file.
 
 #+ATTR_ORG: :width 700
-[[file:img/bibtex-search.png]]
+[[file:docs_src/img/bibtex-search.png]]
 
 Associate PDF file, note file with a bibtex entry, and jump among them.
 Specifically, {{{kbd(C-c o p)}}} opens the PDF file, {{{kbd(C-c o n)}}} opens the note file
@@ -49,14 +49,14 @@ the PDF in Emacs, {{{kbd(C-c o n)}}} opens the note file (create one if necessar
 {{{kbd(C-c o c)}}} jumps to the bibtex entry for this PDF file.
 
 #+ATTR_ORG: :width 700
-[[file:img/bibtex-manager.png]]
+[[file:docs_src/img/bibtex-manager.png]]
 
 Cleanup/format bibtex entries, auto construct keys for bibtex entries.  You
 could copy a bibtex entry from online, and press {{{kbd(C-c C-c)}}}, the entries will
 be cleanup as follows.  The ~timestamp~ is automatically inserted.
 
 #+ATTR_ORG: :width 700
-[[file:img/bibtex.png]]
+[[file:docs_src/img/bibtex.png]]
 
 With the help of ~org-ref,~ we can quickly insert citations to org files, which
 can be exported to TeX, PDF or HTML with appropriate reference list.
@@ -67,7 +67,7 @@ can be exported to TeX, PDF or HTML with appropriate reference list.
 :END:
 
 #+ATTR_ORG: :width 700
-[[file:img/mu4e.png]]
+[[file:docs_src/img/mu4e.png]]
 
 A full-fledged email client with ~mu4e~.  Current settings are compatible with
 multiple Gmail and Office 365 accounts.
@@ -95,4 +95,4 @@ It highlights trailing spaces, leading/trailing empty lines, and automatically
 cleans up them when saved.
 
 #+ATTR_ORG: :width 700
-[[file:img/whitespace.png]]
+[[file:docs_src/img/whitespace.png]]
