@@ -50,6 +50,10 @@
                 "/third_party/javascript/node_modules"
                 "/typescript/stable/lib")))
 
+(use-package google3-build-mode
+  :config
+  (setq google3-build-cleanup-on-save 'reformat-file))
+
 ;; (use-package google3-eglot
 ;;   :config
 ;;   (setq google3-eglot-c++-server 'clangd)
