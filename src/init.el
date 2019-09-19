@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-16 15:33:31 gongzhitaao>
+;; Time-stamp: <2019-09-19 19:41:43 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -511,7 +511,7 @@ all '.<space>' with '.<space><space>'."
 ;; -----------------------------------------------------------------------------
 
 (set-face-attribute 'default nil
-                    :family "Iosevka Slab"
+                    :family "Iosevka SS09"
                     :height 130)
 
 (set-fontset-font "fontset-default"
