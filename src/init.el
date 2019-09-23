@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-21 20:18:54 gongzhitaao>
+;; Time-stamp: <2019-09-23 09:20:36 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -523,7 +523,7 @@ all '.<space>' with '.<space><space>'."
   (set-fontset-font
    (frame-parameter nil 'font) charset (font-spec
                                         :family "Sarasa Mono TC"
-                                        :size 18)))
+                                        :size 20)))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
 
