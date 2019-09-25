@@ -7,14 +7,6 @@
 (use-package google
   :defer 2)
 
-(add-to-list 'org-capture-templates
-             '("d" "DeepMind Tech Log" plain
-               (file+olp+datetree "dm.org")
-               "%?"
-               :empty-lines 1
-               :jump-to-captured t
-               :tree-type week))
-
 (use-package writeroom-mode
   :config
   (add-to-list 'writeroom-major-modes 'protobuf-mode))
@@ -25,7 +17,6 @@
       (gogolink-mode)
     (gogolink-prog-mode)))
 
-(defvar gogolink)
 (use-package gogolink
   :config
   (defface me-gogolink-link-face
