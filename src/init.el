@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-30 17:03:21 gongzhitaao>
+;; Time-stamp: <2019-09-30 17:32:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -735,8 +735,7 @@ all '.<space>' with '.<space><space>'."
   (setq recentf-max-saved-items 50)
   (let ((ignores `(,(expand-file-name ".*" me-emacs-tmp)
                    ,(expand-file-name ".mail/.*" me-home)
-                   ,(expand-file-name ".cask/.*" user-emacs-directory)
-                   ,(expand-file-name "/usr/.*"))))
+                   ,(expand-file-name ".cask/.*" user-emacs-directory))))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
   (recentf-mode 1))
 
