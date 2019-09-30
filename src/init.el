@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-23 09:20:36 gongzhitaao>
+;; Time-stamp: <2019-09-30 17:03:21 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -385,6 +385,9 @@ all '.<space>' with '.<space><space>'."
 (blink-cursor-mode 0)
 (mouse-avoidance-mode 'animate)
 
+(setq-default display-line-numbers t)
+(set-face-foreground 'line-number-current-line "Lime")
+
 (scroll-bar-mode 0)
 (setq scroll-margin 0
       scroll-preserve-screen-position 1)
@@ -400,8 +403,8 @@ all '.<space>' with '.<space><space>'."
     (concat "@" hostname "     " name)))
 (setq frame-title-format '((:eval (me//set-title-bar))))
 
-(global-hl-line-mode)
-(set-face-background 'hl-line "black")
+;; (global-hl-line-mode)
+;; (set-face-background 'hl-line "black")
 
 ;; Show the search result count.
 (use-package anzu
