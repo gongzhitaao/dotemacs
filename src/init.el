@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-09-30 17:32:17 gongzhitaao>
+;; Time-stamp: <2019-10-03 09:25:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1906,6 +1906,10 @@ argument FORCE, force the creation of a new ID."
 ;; Working with PDF
 ;; =============================================================================
 
+(defun me//init-pdf-view-mode ()
+  "Initailize pdf view mode."
+  (setq-local display-line-numbers nil))
+
 (use-package pdf-tools
   :magic ("%PDF" . pdf-view-mode)
   :config
@@ -1934,6 +1938,7 @@ argument FORCE, force the creation of a new ID."
 
   (add-hook 'kill-buffer-hook 'me/pdf-set-last-viewed-bookmark)
   (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
+  (add-hook 'pdf-view-mode-hook 'me//init-pdf-view-mode)
 
   ;; As `save-place-mode' does
   (unless noninteractive
