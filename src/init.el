@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-10-03 09:25:29 gongzhitaao>
+;; Time-stamp: <2019-10-04 20:38:03 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -444,9 +444,9 @@ all '.<space>' with '.<space><space>'."
   (global-writeroom-mode))
 
 ;; Highlight the cursor when jumping around.
-(use-package beacon
-  :delight
-  :config (beacon-mode))
+;; (use-package beacon
+;;   :delight
+;;   :config (beacon-mode))
 
 ;; Select interesting regions
 (use-package expand-region
