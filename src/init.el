@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-10-04 20:38:03 gongzhitaao>
+;; Time-stamp: <2019-10-07 09:42:22 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -204,6 +204,11 @@
 ;; M-x helm-M-x execute command
 ;; M-y helm-show-kill-ring
 ;; M-z zap-to-char
+
+(global-set-key (kbd "M-<right>") #'sp-forward-sexp)
+(global-set-key (kbd "M-<down>") #'sp-down-sexp)
+(global-set-key (kbd "M-<left>") #'sp-backward-sexp)
+(global-set-key (kbd "M-<up>") #'sp-up-sexp)
 
 ;;; M-s search
 
