@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-10-10 11:05:53 gongzhitaao>
+;; Time-stamp: <2019-11-18 17:31:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1356,9 +1356,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            (file "capture/mail.org")
            :empty-lines 1
            :jump-to-captured t)
-
-          ("r" "Related Work" item
-           (file+headline "bibliography/related/orphan.org" "Recent Work"))
 
           ("t" "TODO" entry
            (file "todo.org")
