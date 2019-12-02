@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-01 19:35:49 gongzhitaao>
+;; Time-stamp: <2019-12-02 09:35:03 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2134,7 +2134,11 @@ If ARG, open with external program.  Otherwise open in Emacs."
         undo-tree-visualizer-timestamps t
         undo-tree-auto-save-history t
         undo-tree-enable-undo-in-region t
-        undo-tree-history-directory-alist `(("." . ,me-emacs-tmp))))
+        undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
+
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat ad-return-value ".gz"))))
 
 ;; Evil
 ;; -----------------------------------------------------------------------------

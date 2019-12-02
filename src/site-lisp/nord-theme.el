@@ -63,7 +63,7 @@
   color brightness has been increased by 10% by default.  Please
   see https://github.com/arcticicestudio/nord-emacs/issues/73 for
   more details."
-  (nth 10 nord-theme--brightened-comments))
+  (nth 20 nord-theme--brightened-comments))
 
 (make-obsolete
  'nord-theme--brightened-comment-color
