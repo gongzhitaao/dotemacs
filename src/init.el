@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-11-18 17:31:29 gongzhitaao>
+;; Time-stamp: <2019-12-01 19:35:49 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -82,6 +82,7 @@
 (global-set-key (kbd "C-+") #'me/join-next-line)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
+(global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
@@ -420,9 +421,7 @@ all '.<space>' with '.<space><space>'."
   :delight
   :config
   (global-anzu-mode +1)
-  (setq anzu-search-threshold 1000)
-  (set-face-attribute 'anzu-mode-line nil :foreground "wheat" :weight 'bold
-                      :background "gray20"))
+  (setq anzu-search-threshold 1000))
 
 ;; Show a dimmed delimiter at fill-column.
 (use-package fill-column-indicator
@@ -649,9 +648,6 @@ all '.<space>' with '.<space><space>'."
          ("s-j" . avy-goto-line))
   :config
   (setq avy-background t)
-  (set-face-background
-   'avy-lead-face (me//colir-blend (face-attribute 'avy-lead-face :background)
-                                   "gray10" 0.7))
   (setq avy-case-fold-search nil))
 
 (use-package golden-ratio-scroll-screen
@@ -2132,8 +2128,11 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :delight
   :bind ("C-c u" . undo-tree-visualize)
   :config
-  (setq undo-limit 80000
-        undo-tree-auto-save-history nil
+  (setq undo-limit 800000
+        undo-strong-limit 12000000
+        undo-outer-limit 120000000
+        undo-tree-visualizer-timestamps t
+        undo-tree-auto-save-history t
         undo-tree-enable-undo-in-region t
         undo-tree-history-directory-alist `(("." . ,me-emacs-tmp))))
 
@@ -2213,145 +2212,11 @@ Propertize STR with foreground FG and background BG color."
 ;; Theme
 ;; =============================================================================
 
-(deftheme me-theme
-  "My theme copied from various places.")
+;; (use-package adhoc-theme)
+;; (load-theme 'adhoc t)
 
-(defvar me-colors-alist
-  (let* ((256color  (eq (display-color-cells (selected-frame)) 256))
-         (colors `(("atom-one-dark-accent"   . "#528BFF")
-                   ;; ("atom-one-dark-fg"       . (if ,256color "color-248" "#ABB2BF"))
-                   ;; ("atom-one-dark-bg"       . (if ,256color "color-235" "#282C34"))
-                   ("atom-one-dark-fg"       . (if ,256color "color-248" "gray90"))
-                   ("atom-one-dark-bg"       . (if ,256color "color-235" "gray20"))
-                   ("atom-one-dark-bg-1"     . (if ,256color "color-234" "#121417"))
-                   ("atom-one-dark-bg-hl"    . (if ,256color "color-236" "#2C323C"))
-                   ("atom-one-dark-gutter"   . (if ,256color "color-239" "#4B5363"))
-                   ("atom-one-dark-mono-1"   . (if ,256color "color-248" "#ABB2BF"))
-                   ("atom-one-dark-mono-2"   . (if ,256color "color-244" "#828997"))
-                   ("atom-one-dark-mono-3"   . (if ,256color "color-240" "#5C6370"))
-                   ("atom-one-dark-cyan"     . "#56B6C2")
-                   ("atom-one-dark-blue"     . "#61AFEF")
-                   ("atom-one-dark-purple"   . "#C678DD")
-                   ("atom-one-dark-green"    . "#98C379")
-                   ("atom-one-dark-red-1"    . "#E06C75")
-                   ("atom-one-dark-red-2"    . "#BE5046")
-                   ("atom-one-dark-orange-1" . "#D19A66")
-                   ("atom-one-dark-orange-2" . "#E5C07B")
-                   ("atom-one-dark-gray"     . (if ,256color "color-237" "#3E4451"))
-                   ("atom-one-dark-silver"   . (if ,256color "color-247" "#9DA5B4"))
-                   ("atom-one-dark-black"    . (if ,256color "color-233" "#21252B"))
-                   ("atom-one-dark-border"   . (if ,256color "color-232" "#181A1F")))))
-    colors)
-  "List of Atom One Dark colors.")
-
-(defmacro atom-one-dark-with-color-variables (&rest body)
-  "Bind the colors list around BODY."
-  (declare (indent 0))
-  `(let ((class '((class color) (min-colors 89)))
-         ,@ (mapcar (lambda (cons)
-                      (list (intern (car cons)) (cdr cons)))
-                    me-colors-alist))
-     ,@body))
-
-(atom-one-dark-with-color-variables
-  (custom-theme-set-faces
-   'me-theme
-
-   `(default ((t (:foreground "gray90" :background "gray20"))))
-
-   `(window-divider ((t (:foreground ,atom-one-dark-border))))
-   `(window-divider-first-pixel ((t (:foreground ,atom-one-dark-border))))
-   `(window-divider-last-pixel ((t (:foreground ,atom-one-dark-border))))
-
-   ;; mode-line
-   `(mode-line ((t (:background ,atom-one-dark-black
-                    :foreground ,atom-one-dark-silver
-                    :box (:color ,atom-one-dark-border :line-width 6)))))
-   `(mode-line-buffer-id ((t (:foreground ,atom-one-dark-orange-1
-                              :weight bold))))
-   `(mode-line-emphasis ((t (:weight bold))))
-   `(mode-line-inactive ((t (:background ,atom-one-dark-border
-                             :foreground ,atom-one-dark-gray
-                             :box (:color ,atom-one-dark-border
-                                   :line-width 6)))))
-
-   ;; helm
-   `(helm-header ((t (:foreground ,atom-one-dark-mono-2
-                      :background ,atom-one-dark-bg
-                      :underline nil
-                      :box (:line-width 6
-                            :color ,atom-one-dark-bg)))))
-   `(helm-source-header ((t (:foreground ,atom-one-dark-orange-2
-                             :background ,atom-one-dark-bg
-                             :underline nil
-                             :weight bold
-                             :height 1.3
-                             :family "Sans Serif"
-                             :box (:line-width 6 :color ,atom-one-dark-bg)))))
-
-   `(helm-ff-dotted-directory ((t (:foreground ,atom-one-dark-green
-                                   :background ,atom-one-dark-bg
-                                   :weight bold))))
-   `(helm-ff-directory ((t (:foreground ,atom-one-dark-blue
-                            :background ,atom-one-dark-bg
-                            :weight bold))))
-   `(helm-ff-file ((t (:foreground ,atom-one-dark-fg
-                       :background ,atom-one-dark-bg
-                       :weight normal))))
-   `(helm-ff-executable ((t (:foreground "green"
-                             :background ,atom-one-dark-bg
-                             :weight normal))))
-   `(helm-ff-invalid-symlink ((t (:foreground ,atom-one-dark-red-1
-                                  :background ,atom-one-dark-bg
-                                  :weight bold))))
-   `(helm-ff-symlink ((t (:foreground ,atom-one-dark-orange-2
-                          :background ,atom-one-dark-bg
-                          :weight bold))))
-   `(helm-ff-prefix ((t (:foreground ,atom-one-dark-bg
-                         :background ,atom-one-dark-orange-2
-                         :weight normal))))
-
-   `(helm-buffer-directory ((t (:foreground ,atom-one-dark-cyan
-                                :background ,atom-one-dark-bg
-                                :weight bold))))
-   `(helm-buffer-file ((t (:foreground ,atom-one-dark-fg
-                           :background ,atom-one-dark-bg
-                           :weight normal))))
-   `(helm-non-file-buffer ((t (:foreground ,atom-one-dark-mono-2
-                               :background ,atom-one-dark-bg
-                               :slant italic))))
-
-   `(helm-selection ((t (:background ,atom-one-dark-black))))
-   `(helm-selection-line ((t (:background ,atom-one-dark-green))))
-
-   `(helm-visible-mark ((t (:foreground ,atom-one-dark-orange-2
-                            :background ,atom-one-dark-black))))
-   `(helm-candidate-number ((t (:foreground ,atom-one-dark-green
-                                :background ,atom-one-dark-bg-1))))
-
-   `(helm-match ((t (:foreground ,atom-one-dark-red-1))))
-
-   `(helm-grep-file ((t (:foreground ,atom-one-dark-fg))))
-   `(helm-grep-finish ((t (:foreground ,atom-one-dark-green))))
-   `(helm-grep-match ((t (:foreground nil :background nil :inherit helm-match))))
-
-   `(helm-swoop-target-line-block-face
-     ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
-   `(helm-swoop-target-line-face
-     ((t (:background ,(me//colir-blend "green" atom-one-dark-bg 0.2)))))
-   `(helm-swoop-target-word-face
-     ((t (:background ,atom-one-dark-purple :foreground "#ffffff"))))
-
-   `(magit-hash ((t (:foreground ,atom-one-dark-purple))))
-
-   `(mu4e-context-face ((t (:foreground ,atom-one-dark-green))))
-
-   `(ido-first-match ((t (:foreground ,atom-one-dark-purple :weight bold))))
-   `(ido-only-match ((t (:foreground ,atom-one-dark-green :weight bold))))
-   `(ido-subdir ((t (:foreground ,atom-one-dark-blue))))
-   `(ido-virtual ((t (:foreground ,atom-one-dark-mono-3))))
-
-   ))
+(use-package nord-theme)
+(load-theme 'nord t)
 
 ;; =============================================================================
 ;; Now start the server
