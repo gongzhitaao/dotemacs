@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-02 09:35:03 gongzhitaao>
+;; Time-stamp: <2019-12-08 14:12:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2010,20 +2010,22 @@ Using `window-line-height' accounts for variable-height fonts."
 
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
-         ("<delete>" . pdf-view-scroll-up-or-next-page)
-         ("<down>"   . pdf-view-scroll-up-or-next-page)
-         ("<left>"   . pdf-view-previous-page-command)
-         ("<right>"  . pdf-view-next-page-command)
-         ("<up>"     . pdf-view-scroll-down-or-previous-page)
-         ("b"        . helm-mini)
-         ("c"        . me/org-ref-open-entry)
-         ("d"        . pdf-view-scroll-up-or-next-page)
-         ("e"        . pdf-view-scroll-down-or-previous-page)
-         ("g"        . pdf-view-goto-page)
-         ("j"        . me/pdf-view-next-few-lines)
-         ("k"        . me/pdf-view-prev-few-lines)
-         ("n"        . me/org-ref-open-note)
-         ("z"        . delete-other-windows))
+         ("<delete>"   . pdf-view-scroll-up-or-next-page)
+         ("<down>"     . me/pdf-view-next-few-lines)
+         ("<left>"     . pdf-view-previous-page-command)
+         ("<right>"    . pdf-view-next-page-command)
+         ("<up>"       . me/pdf-view-prev-few-lines)
+         ("<pageup>"   . pdf-view-scroll-down-or-previous-page)
+         ("<pagedown>" . pdf-view-scroll-up-or-next-page)
+         ("b"          . helm-mini)
+         ("c"          . me/org-ref-open-entry)
+         ("d"          . pdf-view-scroll-up-or-next-page)
+         ("e"          . pdf-view-scroll-down-or-previous-page)
+         ("g"          . pdf-view-goto-page)
+         ("j"          . pdf-view-scroll-up-or-next-page)
+         ("k"          . pdf-view-scroll-down-or-previous-page)
+         ("n"          . me/org-ref-open-note)
+         ("z"          . delete-other-windows))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
