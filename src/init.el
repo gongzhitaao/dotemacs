@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-08 19:33:34 gongzhitaao>
+;; Time-stamp: <2019-12-10 12:23:32 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -574,12 +574,12 @@ all '.<space>' with '.<space><space>'."
               tab-stop-list (number-sequence 2 120 2)
               tab-width 4)
 
-(use-package aggressive-indent
-  :delight
-  :config
-  (global-aggressive-indent-mode)
-  (dolist (m '(html-mode sh-mode))
-    (add-to-list 'aggressive-indent-excluded-modes m)))
+;; (use-package aggressive-indent
+;;   :delight
+;;   :config
+;;   (global-aggressive-indent-mode)
+;;   (dolist (m '(html-mode sh-mode))
+;;     (add-to-list 'aggressive-indent-excluded-modes m)))
 
 (delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
@@ -1301,6 +1301,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-clock
   :config
   (setq org-clock-history-length 32
+        org-clock-idle-time 10
         org-clock-in-resume t
         org-clock-into-drawer t
         org-clock-persist t
