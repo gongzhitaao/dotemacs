@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-08 14:12:08 gongzhitaao>
+;; Time-stamp: <2019-12-08 19:33:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2015,8 +2015,8 @@ Using `window-line-height' accounts for variable-height fonts."
          ("<left>"     . pdf-view-previous-page-command)
          ("<right>"    . pdf-view-next-page-command)
          ("<up>"       . me/pdf-view-prev-few-lines)
-         ("<pageup>"   . pdf-view-scroll-down-or-previous-page)
-         ("<pagedown>" . pdf-view-scroll-up-or-next-page)
+         ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
+         ("<PageDown>" . pdf-view-scroll-up-or-next-page)
          ("b"          . helm-mini)
          ("c"          . me/org-ref-open-entry)
          ("d"          . pdf-view-scroll-up-or-next-page)
