@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-10 12:23:32 gongzhitaao>
+;; Time-stamp: <2019-12-27 15:56:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -7,6 +7,67 @@
 ;; me-xxx: custom variables
 
 ;;; Code:
+
+;; copied from spacemacs
+(defun me//remove-gui-elements ()
+  "Remove the menu bar, tool bar and scroll bars."
+  (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
+    (tool-bar-mode -1))
+  (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
+    (menu-bar-mode -1))
+  (when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
+    (scroll-bar-mode -1))
+  (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
+    (tooltip-mode -1)))
+
+(defvar-local hidden-mode-line-mode nil)
+(defvar-local hide-mode-line nil)
+(define-minor-mode hidden-mode-line-mode
+  "Minor mode to hide the mode-line in the current buffer."
+  :init-value nil
+  :global t
+  :variable hidden-mode-line-mode
+  (if hidden-mode-line-mode
+      (setq hide-mode-line mode-line-format
+            mode-line-format nil)
+    (setq mode-line-format hide-mode-line
+          hide-mode-line nil))
+  (force-mode-line-update)
+  ;; Apparently force-mode-line-update is not always enough to
+  ;; redisplay the mode-line
+  (redraw-display)
+  (when (and (called-interactively-p 'interactive)
+             hidden-mode-line-mode)
+    (run-with-idle-timer
+     0 nil 'message
+     (concat "Hidden Mode Line Mode enabled.  "
+             "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+
+(defvar file-name-handler-alist-original file-name-handler-alist)
+(defun me//pre-emacs-startup ()
+  "Adjust some settings to make the startup more smooth."
+
+  ;; set to 100Mib for startup
+  (setq gc-cons-threshold (* 100 1024 1024))
+
+  (setq file-name-handler-alist nil)
+
+  (me//remove-gui-elements)
+  (hidden-mode-line-mode))
+
+(me//pre-emacs-startup)
+
+(defun me//post-emacs-startup ()
+  "Cleanup after EMACS startup."
+
+  ;; reset to 64MiB
+  (setq gc-cons-threshold (* 64 1024 1024))
+
+  (setq file-name-handler-alist file-name-handler-alist-original)
+  (makunbound 'file-name-handler-alist-original)
+  (menu-bar-mode 1))
+
+(add-hook 'emacs-startup-hook #'me//post-emacs-startup)
 
 ;; Added by Package.el.  This must come before configurations of installed
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
@@ -383,10 +444,6 @@ all '.<space>' with '.<space><space>'."
 ;; =============================================================================
 ;; Appearance
 ;; =============================================================================
-
-(tooltip-mode -1)
-(tool-bar-mode 0)
-(menu-bar-mode 1)
 
 (blink-cursor-mode 0)
 (mouse-avoidance-mode 'animate)
@@ -1753,7 +1810,9 @@ argument FORCE, force the creation of a new ID."
 ;; mail
 ;; =============================================================================
 
-(use-package mail-conf)
+;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
+;; fine, but replying mail is not working.
+;(use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
@@ -2131,9 +2190,9 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :delight
   :bind ("C-c u" . undo-tree-visualize)
   :config
-  (setq undo-limit 800000
-        undo-strong-limit 12000000
-        undo-outer-limit 120000000
+  (setq undo-limit (* 8 1024 2014)
+        undo-strong-limit (* 12 1024 1024)
+        undo-outer-limit (* 120 1014 1014)
         undo-tree-visualizer-timestamps t
         undo-tree-auto-save-history t
         undo-tree-enable-undo-in-region t

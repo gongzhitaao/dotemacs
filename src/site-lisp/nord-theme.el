@@ -192,6 +192,7 @@
    `(custom-state ((,class (:foreground ,nord14))))
    `(custom-themed ((,class (:foreground ,nord8 :background ,nord2))))
    `(cursor ((,class (:background ,nord4))))
+   `(dired-perm-write ((,class (:foreground ,nord11))))
    `(fringe ((,class (:foreground ,nord4 :background ,nord0))))
    `(file-name-shadow ((,class (:inherit shadow))))
    `(header-line ((,class (:foreground ,nord4 :background ,nord2))))
@@ -320,39 +321,6 @@
    `(font-latex-script-char-face ((,class (:inherit font-lock-warning-face))))
    `(font-latex-string-face ((,class (:inherit font-lock-string-face))))
    `(font-latex-warning-face ((,class (:inherit font-lock-warning-face))))
-
-   ;; ;; > Elixir
-   ;; `(elixir-attribute-face ((,class (:foreground ,nord-annotation))))
-   ;; `(elixir-atom-face ((,class (:foreground ,nord4 :weight bold))))
-
-   ;; ;; > Enhanced Ruby
-   ;; `(enh-ruby-heredoc-delimiter-face ((,class (:foreground ,nord14))))
-   ;; `(enh-ruby-op-face ((,class (:foreground ,nord9))))
-   ;; `(enh-ruby-regexp-delimiter-face ((,class (:foreground ,nord13))))
-   ;; `(enh-ruby-regexp-face ((,class (:foreground ,nord13))))
-   ;; `(enh-ruby-string-delimiter-face ((,class (:foreground ,nord14))))
-   ;; `(erm-syn-errline ((,class (:foreground ,nord11 :underline t))))
-   ;; `(erm-syn-warnline ((,class (:foreground ,nord13 :underline t))))
-
-   ;; ;; > Java Development Environment for Emacs
-   ;; `(jdee-db-active-breakpoint-face ((,class (:background ,nord2 :weight bold))))
-   ;; `(jdee-bug-breakpoint-cursor ((,class (:background ,nord2))))
-   ;; `(jdee-db-requested-breakpoint-face ((,class (:foreground ,nord13 :background ,nord2 :weight bold))))
-   ;; `(jdee-db-spec-breakpoint-face ((,class (:foreground ,nord14 :background ,nord2 :weight bold))))
-   ;; `(jdee-font-lock-api-face ((,class (:foreground ,nord4))))
-   ;; `(jdee-font-lock-code-face ((,class (:slant italic))))
-   ;; `(jdee-font-lock-constant-face ((,class (:foreground ,nord-keyword))))
-   ;; `(jdee-font-lock-constructor-face ((,class (:foreground ,nord-method))))
-   ;; `(jdee-font-lock-doc-tag-face ((,class (:foreground ,nord7))))
-   ;; `(jdee-font-lock-link-face ((,class (:underline t))))
-   ;; `(jdee-font-lock-modifier-face ((,class (:foreground ,nord-keyword))))
-   ;; `(jdee-font-lock-number-face ((,class (:foreground ,nord-numeric))))
-   ;; `(jdee-font-lock-operator-fac ((,class (:foreground ,nord-operator))))
-   ;; `(jdee-font-lock-package-face ((,class (:foreground ,nord-class))))
-   ;; `(jdee-font-lock-pre-face ((,class (:foreground ,nord-comment :slant italic))))
-   ;; `(jdee-font-lock-private-face ((,class (:foreground ,nord-keyword))))
-   ;; `(jdee-font-lock-public-face ((,class (:foreground ,nord-keyword))))
-   ;; `(jdee-font-lock-variable-face ((,class (:foreground ,nord-variable))))
 
    ;; > JavaScript 2
    `(js2-function-call ((,class (:foreground ,nord8))))
