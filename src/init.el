@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-29 16:23:48 gongzhitaao>
+;; Time-stamp: <2019-12-29 18:48:40 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1681,8 +1681,6 @@ argument FORCE, force the creation of a new ID."
 
   (helm-autoresize-mode t)
   (helm-adaptive-mode 1)
-
-  (set-face-background 'helm-selection "#097209")
 
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
