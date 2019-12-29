@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-27 15:56:58 gongzhitaao>
+;; Time-stamp: <2019-12-29 08:25:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -60,8 +60,8 @@
 (defun me//post-emacs-startup ()
   "Cleanup after EMACS startup."
 
-  ;; reset to 64MiB
-  (setq gc-cons-threshold (* 64 1024 1024))
+  ;; reset to 150MiB
+  (setq gc-cons-threshold (* 150 1024 1024))
 
   (setq file-name-handler-alist file-name-handler-alist-original)
   (makunbound 'file-name-handler-alist-original)
@@ -2192,7 +2192,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :config
   (setq undo-limit (* 8 1024 2014)
         undo-strong-limit (* 12 1024 1024)
-        undo-outer-limit (* 120 1014 1014)
+        undo-outer-limit (* 120 1024 1024)
         undo-tree-visualizer-timestamps t
         undo-tree-auto-save-history t
         undo-tree-enable-undo-in-region t
