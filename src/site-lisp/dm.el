@@ -41,14 +41,6 @@
                 "/third_party/javascript/node_modules"
                 "/typescript/stable/lib")))
 
-(add-to-list 'org-capture-templates
-             '("w" "Work log" plain
-               (file+olp+datetree "/google/src/cloud/gongzhitaao/worklog/google3/experimental/deepmind/gongzhitaao/worklog/worklog.org")
-               "%?"
-               :empty-lines 1
-               :jump-to-captured t
-               :tree-type week) t)
-
 (use-package google3-build-mode
   :config
   (setq google3-build-cleanup-on-save 'reformat-file))

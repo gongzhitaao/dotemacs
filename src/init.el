@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-29 08:25:04 gongzhitaao>
+;; Time-stamp: <2019-12-29 16:23:48 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1422,7 +1422,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            "%?"
            :empty-lines 1
            :jump-to-captured t
-           :tree-type week))))
+           :tree-type week)
+
+          ("w" "Work TODO" entry
+           (file "work.org")
+           (file "capture/todo.org")
+           :empty-lines 1
+           :jump-to-captured t))))
 
 (use-package ox
   :config
