@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-29 18:48:40 gongzhitaao>
+;; Time-stamp: <2019-12-30 17:19:14 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -139,7 +139,6 @@
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
 
 (global-set-key (kbd "C-t") #'transpose-sexps)
-(global-set-key (kbd "C-|") #'fci-mode)
 (global-set-key (kbd "C-+") #'me/join-next-line)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
@@ -236,6 +235,8 @@
 ;; C-c u -- undo-tree
 (global-set-key (kbd "C-c =") #'align-regexp)
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
+
+;; C-c | -- fci-mode
 
 ;; M- meta keys
 ;; -----------------------------------------------------------------------------
@@ -482,11 +483,13 @@ all '.<space>' with '.<space><space>'."
 
 ;; Show a dimmed delimiter at fill-column.
 (use-package fill-column-indicator
+  :bind ("C-c |" . fci-mode)
   :config
   (setq fci-rule-color "gray50")
-  (let ((hooks '(prog-mode-hook org-mode-hook markdown-mode-hook
-                                tex-mode-hook message-mode-hook)))
-    (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks)))
+  ;; (let ((hooks '(prog-mode-hook org-mode-hook markdown-mode-hook
+  ;;                               tex-mode-hook message-mode-hook)))
+  ;;   (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks))
+  )
 ;; (use-package fill-column-indicator
 ;;   :config
 ;;   (setq fci-rule-color "gray50")

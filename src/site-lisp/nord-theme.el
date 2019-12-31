@@ -266,7 +266,7 @@
    `(term-color-magenta ((,class (:foreground ,nord15 :background ,nord15))))
    `(tool-bar ((,class (:foreground ,nord4 :background ,nord3))))
    `(tooltip ((,class (:foreground ,nord0 :background ,nord4))))
-   `(trailing-whitespace ((,class (:foreground ,nord3))))
+   `(trailing-whitespace ((,class (:foreground ,nord10))))
    `(tty-menu-disabled-face ((,class (:foreground ,nord1))))
    `(tty-menu-enabled-face ((,class (:background ,nord2 foreground ,nord4))))
    `(tty-menu-selected-face ((,class (:foreground ,nord8 :underline t))))
@@ -288,13 +288,13 @@
    `(whitespace-big-indent ((,class (:foreground ,nord3 :background ,nord0))))
    `(whitespace-empty ((,class (:foreground ,nord3 :background ,nord0))))
    `(whitespace-hspace ((,class (:foreground ,nord3 :background ,nord0))))
-   `(whitespace-indentation ((,class (:foreground ,nord3 :background ,nord0))))
-   `(whitespace-line ((,class (:background ,nord0))))
+   `(whitespace-indentation ((,class (:foreground ,nord3 :background ,nord9))))
+   `(whitespace-line ((,class (:foreground ,nord3))))
    `(whitespace-newline ((,class (:foreground ,nord3 :background ,nord0))))
    `(whitespace-space ((,class (:foreground ,nord3 :background ,nord0))))
    `(whitespace-space-after-tab ((,class (:foreground ,nord3 :background ,nord0))))
    `(whitespace-space-before-tab ((,class (:foreground ,nord3 :background ,nord0))))
-   `(whitespace-tab ((,class (:foreground ,nord3 :background ,nord0))))
+   `(whitespace-tab ((,class (:foreground ,nord3 :background ,nord10))))
    `(whitespace-trailing ((,class (:inherit trailing-whitespace))))
    `(widget-button-pressed ((,class (:foreground ,nord9 :background ,nord1))))
    `(widget-documentation ((,class (:foreground ,nord4))))
@@ -304,9 +304,10 @@
    `(window-divider-first-pixel ((,class (:foreground ,nord3))))
    `(window-divider-last-pixel ((,class (:foreground ,nord3))))
 
-    ;;;; +-----------------+
-    ;;;; + Package Support +
-    ;;;; +-----------------+
+   ;;;; +-----------------+
+   ;;;; + Package Support +
+   ;;;; +-----------------+
+
    ;; +--- Syntax ---+
    ;; > Auctex
    `(font-latex-bold-face ((,class (:inherit bold))))
