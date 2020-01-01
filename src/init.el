@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-01 09:44:44 gongzhitaao>
+;; Time-stamp: <2020-01-01 10:41:51 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -632,7 +632,8 @@ all '.<space>' with '.<space><space>'."
               sort-fold-case t
               standard-indent 2
               tab-stop-list (number-sequence 2 120 2)
-              tab-width 4)
+              tab-width 4
+              truncate-lines t)
 
 ;; (use-package aggressive-indent
 ;;   :delight
