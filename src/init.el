@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-01 10:41:51 gongzhitaao>
+;; Time-stamp: <2020-01-01 17:05:38 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -713,6 +713,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package golden-ratio-scroll-screen
   :config
+  (setq golden-ratio-scroll-highlight-flag nil)
   (global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
   (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up))
 
