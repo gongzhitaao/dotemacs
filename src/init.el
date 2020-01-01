@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2019-12-30 17:19:14 gongzhitaao>
+;; Time-stamp: <2020-01-01 09:44:44 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1029,6 +1029,7 @@ all '.<space>' with '.<space><space>'."
                 (name . "^diary$")
                 (name . "todo.org")
                 (name . "gcal.org")
+                (name . "work.org")
                 (name . "time-machine.txt")
                 (filename . "Dropbox/plan.*")))
            ("Dired" (mode . dired-mode))
