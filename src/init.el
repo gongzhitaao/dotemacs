@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-01 17:05:38 gongzhitaao>
+;; Time-stamp: <2020-01-02 07:16:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1382,7 +1382,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-agenda-show-all-dates t
         org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
         org-agenda-start-with-log-mode t
-        org-agenda-tags-column -100)
+        org-agenda-tags-column -130)
 
   (setq org-agenda-prefix-format
         '((agenda   . " %i %-20:c%?-20t% s")
