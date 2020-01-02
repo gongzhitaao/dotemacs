@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-02 09:41:27 gongzhitaao>
+;; Time-stamp: <2020-01-02 09:57:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -962,7 +962,8 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq calendar-week-start-day 1
         calendar-chinese-all-holidays-flag t
-        diary-file (expand-file-name "org/diary" me-emacs-data-private))
+        diary-file (expand-file-name "org/time-machine/diary"
+                                     me-emacs-data-private))
   (calendar-set-date-style 'iso)
 
   (defface calendar-iso-week-face
@@ -1433,7 +1434,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t)
 
           ("l" "Log daily" plain
-           (file+olp+datetree "time-machine.txt")
+           (file+olp+datetree "time-machine/time-machine.txt")
            "%?"
            :empty-lines 1
            :jump-to-captured t
