@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-02 07:16:58 gongzhitaao>
+;; Time-stamp: <2020-01-02 09:41:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -286,13 +286,21 @@
 ;; =============================================================================
 
 (defconst me-home "~" "My home directory.")
-(defconst me-emacs-data (expand-file-name "data" user-emacs-directory))
 
-(defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory))
+(defconst me-emacs-data-private
+  (expand-file-name "data.private" user-emacs-directory)
+  "Private EMACS data synced to a private repo.")
+(defconst me-emacs-data-public
+  (expand-file-name "data.public" user-emacs-directory)
+  "Public EMACS data synced to a public repo.")
+
+(defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory)
+  "Directory for temporary files.")
 (unless (file-exists-p me-emacs-tmp)
   (mkdir me-emacs-tmp))
 
-(defconst me-keylog (expand-file-name "keylog" user-emacs-directory))
+(defconst me-keylog (expand-file-name "keylog" me-emacs-data-private)
+  "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
 
@@ -738,12 +746,12 @@ all '.<space>' with '.<space><space>'."
 ;; Completion
 ;; -----------------------------------------------------------------------------
 
-(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data))
+(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data-private))
 
 (use-package yasnippet
   :delight yas-minor-mode
   :config
-  (setq yas-snippet-dirs `(,(expand-file-name "snippets" me-emacs-data)))
+  (setq yas-snippet-dirs `(,(expand-file-name "snippets" me-emacs-data-public)))
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
@@ -857,7 +865,8 @@ all '.<space>' with '.<space><space>'."
 
 (use-package bookmark
   :config
-  (setq bookmark-default-file (expand-file-name "bookmarks" me-emacs-data)))
+  (setq bookmark-default-file
+        (expand-file-name "bookmarks" me-emacs-data-private)))
 
 ;; =============================================================================
 ;; General utilities
@@ -953,7 +962,7 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq calendar-week-start-day 1
         calendar-chinese-all-holidays-flag t
-        diary-file (expand-file-name "org/diary" me-emacs-data))
+        diary-file (expand-file-name "org/diary" me-emacs-data-private))
   (calendar-set-date-style 'iso)
 
   (defface calendar-iso-week-face
@@ -1281,7 +1290,7 @@ Lisp function does not specify a special indentation."
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config
-  (setq org-directory (expand-file-name "org" me-emacs-data))
+  (setq org-directory (expand-file-name "org" me-emacs-data-private))
 
   (add-hook 'org-mode-hook #'me//init-org)
 
@@ -1656,7 +1665,7 @@ argument FORCE, force the creation of a new ID."
 ;; The gcal contains some senstive information, thus in a separate file.
 ;; -----------------------------------------------------------------------------
 
-(require 'gcal-conf)
+;(require 'gcal-conf)
 
 ;; =============================================================================
 ;; Helm
@@ -1802,7 +1811,7 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq deft-auto-save-interval 0
         deft-default-extension "org"
-        deft-directory (expand-file-name "notes" me-emacs-data)
+        deft-directory (expand-file-name "notes" me-emacs-data-private)
         deft-recursive t
         deft-use-filename-as-title nil
         deft-use-filter-string-for-filename t)
@@ -1832,7 +1841,7 @@ argument FORCE, force the creation of a new ID."
   (bbdb-initialize 'message 'anniv 'mu4e)
   (setq bbdb-allow-duplicates t
         bbdb-complete-mail-allow-cycling t
-        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data)
+        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data-private)
         bbdb-mail-user-agent 'message-user-agent
         bbdb-mua-pop-up nil
         bbdb-message-all-addresses t)
@@ -1842,7 +1851,7 @@ argument FORCE, force the creation of a new ID."
 ;; Bibliography manager
 ;; =============================================================================
 
-(defvar me-bib (expand-file-name ".local/data/bibliography" me-home)
+(defvar me-bib (expand-file-name "bibliography" me-emacs-data-public)
   "My bibliography collection path.")
 (defvar me-bib-files
   `(,(expand-file-name "refdb.bib" me-bib)
