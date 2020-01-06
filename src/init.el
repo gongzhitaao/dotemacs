@@ -288,10 +288,10 @@
 (defconst me-home "~" "My home directory.")
 
 (defconst me-emacs-data-private
-  (expand-file-name "data.private" user-emacs-directory)
+  (expand-file-name "data/private" user-emacs-directory)
   "Private EMACS data synced to a private repo.")
 (defconst me-emacs-data-public
-  (expand-file-name "data.public" user-emacs-directory)
+  (expand-file-name "data/public" user-emacs-directory)
   "Public EMACS data synced to a public repo.")
 
 (defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory)
