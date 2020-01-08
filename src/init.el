@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-02 09:57:27 gongzhitaao>
+;; Time-stamp: <2020-01-07 12:58:44 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2206,21 +2206,18 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; -----------------------------------------------------------------------------
 
 (use-package undo-tree
-  :init (global-undo-tree-mode)
   :delight
   :bind ("C-c u" . undo-tree-visualize)
   :config
-  (setq undo-limit (* 8 1024 2014)
-        undo-strong-limit (* 12 1024 1024)
-        undo-outer-limit (* 120 1024 1024)
-        undo-tree-visualizer-timestamps t
-        undo-tree-auto-save-history t
-        undo-tree-enable-undo-in-region t
+  (setq undo-tree-visualizer-timestamps t
+        undo-tree-auto-save-history nil
         undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
 
   (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
-    (setq ad-return-value (concat ad-return-value ".gz"))))
+    (setq ad-return-value (concat ad-return-value ".gz")))
+
+  (global-undo-tree-mode))
 
 ;; Evil
 ;; -----------------------------------------------------------------------------
