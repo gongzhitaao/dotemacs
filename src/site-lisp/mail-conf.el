@@ -4,7 +4,7 @@
 ;;; Code:
 
 (defvar me-home)
-(defvar me-emacs-data)
+(defvar me-emacs-data-private)
 
 ;; =============================================================================
 ;; mail
@@ -54,7 +54,7 @@ So we just delete it locally."
               (mu4e-refile-folder . "/personal/archive")
               (user-mail-address . "zhitaao.gong@gmail.com")
               (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))
+                                                           me-emacs-data-private))))
           ,(make-mu4e-context
             :name "Work"
             :match-func
@@ -69,7 +69,7 @@ So we just delete it locally."
               (user-mail-address . "gongzhitaao@google.com")
               (message-signature-file . ,(expand-file-name
                                           "signature/work.google"
-                                          me-emacs-data))))
+                                          me-emacs-data-private))))
           ,(make-mu4e-context
             :name "Tiger"
             :match-func
@@ -83,7 +83,7 @@ So we just delete it locally."
               (mu4e-refile-folder . "/tiger/archive")
               (user-mail-address . "zzg0009@auburn.edu")
               (message-signature-file . ,(expand-file-name "signature/tiger"
-                                                           me-emacs-data))))
+                                                           me-emacs-data-private))))
           ,(make-mu4e-context
             :name "Reg"
             :match-func
@@ -97,7 +97,7 @@ So we just delete it locally."
               (mu4e-refile-folder . "/reg/archive")
               (user-mail-address . "zhitaao.gong.reg@gmail.com")
               (message-signature-file . ,(expand-file-name "signature/personal"
-                                                           me-emacs-data))))))
+                                                           me-emacs-data-private))))))
 
   (setq mu4e-compose-dont-reply-to-self t)
   (setq mu4e-user-mail-address-list

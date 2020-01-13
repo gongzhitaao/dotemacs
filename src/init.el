@@ -2210,7 +2210,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :bind ("C-c u" . undo-tree-visualize)
   :config
   (setq undo-tree-visualizer-timestamps t
-        undo-tree-auto-save-history nil
+        undo-tree-auto-save-history t 
         undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
 
   (defadvice undo-tree-make-history-save-file-name
