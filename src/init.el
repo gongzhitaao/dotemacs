@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-07 12:58:44 gongzhitaao>
+;; Time-stamp: <2020-01-21 13:51:12 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1209,6 +1209,7 @@ Lisp function does not specify a special indentation."
   (python-docstring-mode)
   (sphinx-doc-mode)
   (set (make-local-variable 'comment-inline-offset) 2)
+  (set (make-local-variable 'yas-indent-line) 'fixed)
   (setq fill-column 78))
 
 (use-package python
@@ -2210,7 +2211,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
   :bind ("C-c u" . undo-tree-visualize)
   :config
   (setq undo-tree-visualizer-timestamps t
-        undo-tree-auto-save-history t 
+        undo-tree-auto-save-history t
         undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
 
   (defadvice undo-tree-make-history-save-file-name
