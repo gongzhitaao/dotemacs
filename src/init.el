@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-21 13:51:12 gongzhitaao>
+;; Time-stamp: <2020-01-21 14:04:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -186,6 +186,7 @@
            ("2"   . me/double-space-after-dot)
            ("c"   . set-buffer-file-coding-system)
            ("d"   . delete-duplicate-lines)
+           ;; g - me/grab-google3-python-imports
            ("l"   . magit-log-buffer-file)
            ("M-w" . me/copy-region-escaped)
            ("s l" . sort-lines)

@@ -7,6 +7,28 @@
 (use-package google
   :defer 2)
 
+(bind-keys :prefix-map me-editing-command-map
+           :prefix "C-c e"
+           ("g"   . me/grab-google3-python-imports))
+
+(defun me//citc-file-p (file-name)
+  "Return non-nil if FILE-NAME is in citc client."
+  (string-match "google3" file-name))
+
+(defun me/grab-google3-python-imports ()
+  "Use current file as import."
+  (interactive)
+  (let ((google3-start-pos (me//citc-file-p buffer-file-name)))
+    (when google3-start-pos
+      (kill-new
+       (replace-regexp-in-string
+        "/" "."
+        ;; extracts google3/path/to/your/py/file sans .py
+        (substring buffer-file-name
+                   google3-start-pos
+                   ;; -3 for .py
+                   -3))))))
+
 (use-package writeroom-mode
   :config
   (add-to-list 'writeroom-major-modes 'protobuf-mode))
