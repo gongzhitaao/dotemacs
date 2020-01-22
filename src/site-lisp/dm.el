@@ -7,8 +7,7 @@
 (use-package google
   :defer 2)
 
-(bind-keys :prefix-map me-editing-command-map
-           :prefix "C-c e"
+(bind-keys :map me-editing-command-map
            ("g"   . me/grab-google3-python-imports))
 
 (defun me//citc-file-p (file-name)
