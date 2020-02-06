@@ -90,6 +90,7 @@
 (depends-on "markdown-mode")
 (depends-on "markdown-mode+")
 (depends-on "markup")
+(depends-on "mini-modeline")
 (depends-on "mu4e-alert")
 (depends-on "multiple-cursors")
 (depends-on "naquadah-theme")

@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-01-21 14:04:00 gongzhitaao>
+;; Time-stamp: <2020-02-06 17:02:07 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -587,6 +587,11 @@ all '.<space>' with '.<space><space>'."
 ;;       (setcdr (assoc "TODO" hl-todo-keyword-faces) (cdr elm))))
 ;;   (global-hl-todo-mode))
 
+;; (use-package mini-modeline
+;;   :delight
+;;   :config
+;;   (mini-modeline-mode t))
+
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
@@ -596,7 +601,7 @@ all '.<space>' with '.<space><space>'."
 
 (set-fontset-font "fontset-default"
                   (cons (decode-char 'ucs #xF000)
-                        (decode-char 'ucs #xF4E3))
+                        (decode-char 'ucs #xF940))
                   (font-spec :family "Font Awesome 5 Free" :size 16))
 
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
