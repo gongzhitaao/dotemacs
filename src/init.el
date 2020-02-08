@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-02-07 17:42:16 gongzhitaao>
+;; Time-stamp: <2020-02-08 17:28:20 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -480,9 +480,6 @@ all '.<space>' with '.<space><space>'."
     (concat "@" hostname "     " name)))
 (setq frame-title-format '((:eval (me//set-title-bar))))
 
-;; (global-hl-line-mode)
-;; (set-face-background 'hl-line "black")
-
 ;; Show the search result count.
 (use-package anzu
   :delight
@@ -578,19 +575,6 @@ all '.<space>' with '.<space><space>'."
                  nil :when '(sp-in-string-p))
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
                  nil :actions nil))
-
-;; (use-package hl-todo
-;;   :config
-;;   (let ((key-faces '(("TODO" . "#ff0000")
-;;                      ("FIXME" . "#ff0000"))))
-;;     (dolist (elm key-faces)
-;;       (setcdr (assoc "TODO" hl-todo-keyword-faces) (cdr elm))))
-;;   (global-hl-todo-mode))
-
-;; (use-package mini-modeline
-;;   :delight
-;;   :config
-;;   (mini-modeline-mode t))
 
 ;; fonts
 ;; -----------------------------------------------------------------------------
@@ -696,23 +680,21 @@ all '.<space>' with '.<space><space>'."
   :config (volatile-highlights-mode t)
   :delight)
 
-(use-package highlight-numbers
-  :config (add-hook 'prog-mode-hook #'highlight-numbers-mode))
-
 ;; two-color scheme for blanket.
 (use-package rainbow-delimiters
   :requires cl-lib
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-  (let ((me//paren-dual-colors '("deep sky blue" "navajo white")))
-    (cl-loop
-     for index from 1 to rainbow-delimiters-max-face-count
-     do
-     (set-face-foreground
-      (intern (format "rainbow-delimiters-depth-%d-face" index))
-      (elt me//paren-dual-colors
-           (if (cl-evenp index) 0 1))))))
+  ;; (let ((me//paren-dual-colors '("deep sky blue" "navajo white")))
+  ;;   (cl-loop
+  ;;    for index from 1 to rainbow-delimiters-max-face-count
+  ;;    do
+  ;;    (set-face-foreground
+  ;;     (intern (format "rainbow-delimiters-depth-%d-face" index))
+  ;;     (elt me//paren-dual-colors
+  ;;          (if (cl-evenp index) 0 1)))))
+  )
 
 (use-package wgrep
   :config (setq wgrep-auto-save-buffer t))
@@ -1020,9 +1002,6 @@ all '.<space>' with '.<space><space>'."
                 cal-china-x-general-holidays
                 holiday-other-holidays))
 
-  (set-face-background 'cal-china-x-important-holiday-face "dark red")
-  (set-face-background 'cal-china-x-general-holiday-face "forest green")
-
   (setq calendar-date-display-form calendar-iso-date-display-form))
 
 ;; Show buffers
@@ -1255,11 +1234,7 @@ Lisp function does not specify a special indentation."
          ("/known_hosts\\'"       . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
-(use-package sh-script
-  :config
-  (set-face-attribute 'sh-heredoc nil
-                      :weight 'normal
-                      :foreground "yellow2"))
+;; (use-package sh-script)
 
 (use-package octave-mode
   :mode "\\.m\\'"
@@ -1335,20 +1310,6 @@ Lisp function does not specify a special indentation."
           ("WAIT" :foreground "yellow"       :weight bold)
           ("HOLD" :foreground "magenta"      :weight bold)
           ("KILL" :foreground "forest green" :weight bold)))
-
-  (set-face-foreground 'org-level-1 (me//colir-blend "LightSalmon" "gray90" 0.3))
-  (set-face-foreground 'org-level-2 (me//colir-blend "yellow" "gray90" 0.2))
-  (set-face-foreground 'org-level-3 (me//colir-blend "LightGreen" "gray90" 0.3))
-  (set-face-foreground 'org-level-4 (me//colir-blend "LightSkyBlue" "gray90" 0.3))
-  (set-face-foreground 'org-level-5 (me//colir-blend "LightSkyBlue" "gray90" 0.1))
-  (set-face-foreground 'org-level-6 (me//colir-blend "LightGreen" "gray90" 0.1))
-  (set-face-foreground 'org-level-7 (me//colir-blend "yellow" "gray90" 0.1))
-  (set-face-foreground 'org-level-8 (me//colir-blend "LightSalmon" "gray90" 0.1))
-
-  (set-face-foreground 'org-special-keyword (me//colir-blend "SteelBlue" "gray60" 0.2))
-  (set-face-foreground 'org-date (me//colir-blend "goldenrod" "gray70" 0.3))
-  (set-face-foreground 'org-link (me//colir-blend "SteelBlue" "gray90" 0.2))
-  (set-face-foreground 'org-footnote (me//colir-blend "SteelBlue" "gray90" 0.5))
 
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))

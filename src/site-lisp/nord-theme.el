@@ -104,7 +104,7 @@
       (nord-regexp (if (display-graphic-p) "#EBCB8B" "yellow"))
       (nord-string (if (display-graphic-p) "#A3BE8C" "green"))
       (nord-tag (if (display-graphic-p) "#81A1C1" "blue"))
-      (nord-variable (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
+      (nord-variable (if (display-graphic-p) "#a3a3a3" "#D8DEE9"))
       (nord-region-highlight-foreground (if (or
                                              (string= nord-region-highlight "frost")
                                              (string= nord-region-highlight "snowstorm")) "#2E3440" nil))
@@ -138,7 +138,7 @@
    `(font-lock-regexp-grouping-construct ((,class (:foreground ,nord13))))
    `(font-lock-string-face ((,class (:foreground ,nord14))))
    `(font-lock-type-face ((,class (:foreground ,nord7))))
-   `(font-lock-variable-name-face ((,class (:foreground ,nord4))))
+   `(font-lock-variable-name-face ((,class (:foreground "#a3a3a3"))))
    `(font-lock-warning-face ((,class (:foreground ,nord13))))
    `(italic ((,class (:slant italic))))
    `(shadow ((,class (:foreground ,nord3))))
@@ -631,6 +631,13 @@
    `(org-agenda-date-today ((,class (:foreground ,nord8 :weight bold))))
    `(org-agenda-done ((,class (:foreground ,nord14))))
    `(org-verbatim ((,class (:foreground ,nord7))))
+
+   ;; my custom face
+
+   `(cal-china-x-important-holiday-face ((,class (:background ,nord11))))
+   `(cal-china-x-general-holiday-face ((,class (:background ,nord14))))
+
+   `(sh-heredoc nil ((,class (:foreground ,nord13 :weight normal))))
 
    ))
 
