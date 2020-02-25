@@ -66,6 +66,30 @@
   :config
   (setq google3-build-cleanup-on-save 'reformat-file))
 
+(let ((google-unorthodox-hooks '(google-maybe-untabify-buffer
+                                 google-maybe-delete-trailing-whitespace
+                                 google-maybe-trim-newlines)))
+  (dolist (hook google-unorthodox-hooks)
+    (remove-hook 'write-file-hooks hook)
+    (add-hook 'before-save-hook hook)))
+
+
+(defun me//init-spansdl ()
+  (set (make-local-variable 'c-line-comment-starter) "#")
+  (set (make-local-variable 'comment-start) "#"))
+
+(use-package spansdl-mode
+  :config
+  (add-hook 'spansdl-mode-hook #'me//init-spansdl))
+
+;; (defun me//init-go ()
+;;   (whitespace-mode -1)
+;;   (flycheck-mode -1))
+
+;; (require 'go-mode)
+;; (add-to-list 'writeroom-major-modes-exceptions 'go-mode)
+;; (add-hook 'go-mode-hook #'me//init-go)
+
 ;; (use-package google3-eglot
 ;;   :config
 ;;   (setq google3-eglot-c++-server 'clangd)
