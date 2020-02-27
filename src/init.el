@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-02-08 17:28:20 gongzhitaao>
+;; Time-stamp: <2020-02-26 20:20:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -579,20 +579,21 @@ all '.<space>' with '.<space><space>'."
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
-(set-face-attribute 'default nil
-                    :family "Iosevka SS09"
-                    :height 140)
+(when (display-graphic-p)
+  (set-face-attribute 'default nil
+		      :family "Iosevka SS09"
+		      :height 140)
 
-(set-fontset-font "fontset-default"
-                  (cons (decode-char 'ucs #xF000)
-                        (decode-char 'ucs #xF940))
-                  (font-spec :family "Font Awesome 5 Free" :size 16))
+  (set-fontset-font "fontset-default"
+                    (cons (decode-char 'ucs #xF000)
+                          (decode-char 'ucs #xF940))
+                    (font-spec :family "Font Awesome 5 Free" :size 16))
 
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-  (set-fontset-font
-   (frame-parameter nil 'font) charset (font-spec
-                                        :family "Sarasa Mono TC"
-                                        :size 20)))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font
+     (frame-parameter nil 'font) charset (font-spec
+                                          :family "Sarasa Mono TC"
+                                          :size 20))))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
 
