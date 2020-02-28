@@ -4,8 +4,7 @@
 
 ;;; Code:
 
-(use-package google
-  :defer 2)
+(use-package google)
 
 (bind-keys :map me-editing-command-map
            ("g"   . me/grab-google3-python-imports))
@@ -82,13 +81,12 @@
   :config
   (add-hook 'spansdl-mode-hook #'me//init-spansdl))
 
-;; (defun me//init-go ()
-;;   (whitespace-mode -1)
-;;   (flycheck-mode -1))
+(defun me//init-go ()
+  (whitespace-mode -1)
+  (set (make-local-variable 'fill-column) 130)
+  (set (make-local-variable 'writeroom-width) 150))
 
-;; (require 'go-mode)
-;; (add-to-list 'writeroom-major-modes-exceptions 'go-mode)
-;; (add-hook 'go-mode-hook #'me//init-go)
+(add-hook 'go-mode-hook #'me//init-go)
 
 ;; (use-package google3-eglot
 ;;   :config
