@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-02-26 20:20:58 gongzhitaao>
+;; Time-stamp: <2020-03-06 17:15:21 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -107,7 +107,7 @@
 ;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 
@@ -459,6 +459,7 @@ all '.<space>' with '.<space><space>'."
 (mouse-avoidance-mode 'animate)
 
 (defun me//init-prog-mode ()
+  "Display line numbers only in `prog-mode'."
   (setq-local display-line-numbers t))
 
 (add-hook 'prog-mode-hook #'me//init-prog-mode)
@@ -581,19 +582,19 @@ all '.<space>' with '.<space><space>'."
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-		      :family "Iosevka SS09"
-		      :height 140)
+              :family "Iosevka SS09"
+              :height 135)
 
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
                           (decode-char 'ucs #xF940))
-                    (font-spec :family "Font Awesome 5 Free" :size 16))
+                    (font-spec :family "Font Awesome 5 Free" :size 14))
 
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          :size 20))))
+                                          :size 18))))
 
 (set-face-attribute 'fixed-pitch nil :height 120)
 
@@ -1286,7 +1287,7 @@ Lisp function does not specify a special indentation."
         org-hide-emphasis-markers t
         org-hide-macro-markers t
         org-hierarchical-todo-statistics nil
-        org-list-description-max-indent 0
+        ;; org-list-description-max-indent 0
         org-provide-todo-statistics      t
         org-src-fontify-natively t
         org-src-preserve-indentation t
@@ -1644,8 +1645,6 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-mode
   :delight
   :config
-  (setq helm-mode-fuzzy-match t
-        helm-completion-in-region-fuzzy-match t)
   (helm-mode 1))
 
 (use-package helm-config
@@ -1702,10 +1701,6 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-locate
   :config
   (setq helm-locate-fuzzy-match t))
-
-(use-package helm-command
-  :config
-  (setq helm-M-x-fuzzy-match t))
 
 (use-package helm-flyspell)
 (use-package flyspell
@@ -1939,7 +1934,7 @@ argument FORCE, force the creation of a new ID."
   (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
-  (setq bibtex-completion-dispvlay-formats
+  (setq bibtex-completion-display-formats
         `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
           (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
           (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
@@ -2227,7 +2222,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
 Propertize STR with foreground FG and background BG color."
     (propertize str 'face
-                `((:box (:line-width 6 :color ,bg)
+                `((
                    :background ,bg
                    :foreground ,fg))))
 

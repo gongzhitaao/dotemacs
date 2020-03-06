@@ -219,8 +219,7 @@
    `(message-separator ((,class (:inherit shadow))))
    `(minibuffer-prompt ((,class (:foreground ,nord8 :weight bold))))
    `(mm-command-output ((,class (:foreground ,nord8))))
-   `(mode-line ((,class (:foreground ,nord8 :background ,nord3
-                         :box (:color ,nord2 :line-width 6)))))
+   `(mode-line ((,class (:foreground ,nord8 :background ,nord3))))
    `(mode-line-buffer-id ((,class (:foreground ,nord13 :weight bold))))
    `(mode-line-highlight ((,class (:inherit highlight))))
    `(mode-line-inactive ((,class (:foreground ,nord3 :background ,nord-uniform-mode-lines-background))))
