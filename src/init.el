@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-06 17:15:21 gongzhitaao>
+;; Time-stamp: <2020-03-08 18:06:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -464,8 +464,6 @@ all '.<space>' with '.<space><space>'."
 
 (add-hook 'prog-mode-hook #'me//init-prog-mode)
 
-(set-face-foreground 'line-number-current-line "Lime")
-
 (scroll-bar-mode 0)
 (setq scroll-margin 0
       scroll-preserve-screen-position 1)
@@ -661,8 +659,11 @@ all '.<space>' with '.<space><space>'."
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
 (use-package highlight-indent-guides
-  :config (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-  :delight)
+  :delight
+  :config
+  (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+  (setq highlight-indent-guides-auto-odd-face-perc 5)
+  (setq highlight-indent-guides-auto-even-face-perc 10))
 
 (use-package whitespace
   :after highlight-indent-guides
@@ -897,7 +898,8 @@ all '.<space>' with '.<space><space>'."
     "Dimmed face."
     :group 'me-dired)
 
-  (defface me-dired-executable '((t (:foreground "green")))
+  (defface me-dired-executable
+    '((((class color) (min-colors 8)) :background "green"))
     "face for executables"
     :group 'me-dired)
 
@@ -2264,6 +2266,9 @@ Propertize STR with foreground FG and background BG color."
 
 (use-package nord-theme)
 (load-theme 'nord t)
+
+;; (use-package nord-light-theme)
+;; (load-theme 'nord-light t)
 
 ;; =============================================================================
 ;; Now start the server

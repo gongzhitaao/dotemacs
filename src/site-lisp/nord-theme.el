@@ -631,6 +631,8 @@
    `(org-agenda-done ((,class (:foreground ,nord14))))
    `(org-verbatim ((,class (:foreground ,nord7))))
 
+   `(line-number-current-line ((,class (:foreground ,nord14))))
+
    ;; my custom face
 
    `(cal-china-x-important-holiday-face ((,class (:background ,nord11))))
@@ -638,7 +640,34 @@
 
    `(sh-heredoc nil ((,class (:foreground ,nord13 :weight normal))))
 
-   ))
+   `(me-dired-executable ((,class (:foreground ,nord14))))
+   `(me-dired-dim-0 ((,class (:foreground "gray50"))))
+   `(me-dired-dim-1 ((,class (:foreground "gray30"))))
+
+   `(calendar-iso-week-face ((,class (:foreground ,nord15))))
+   `(calendar-iso-week-header-face ((,class (:foreground ,nord7))))
+
+   `(org-agenda-current-time ((,class (:foreground ,nord4))))
+   `(org-agenda-diary ((,class (:foreground ,nord4))))
+   `(org-habit-alert-future-face ((,class (:background ,nord13))))
+   `(org-habit-clear-face ((,class (:background ,nord9))))
+   `(org-habit-overdue-face ((,class (:background ,nord11))))
+   `(org-habit-ready-face ((,class (:background ,nord14))))
+   `(org-scheduled-previously ((,class (:foreground ,nord13))))
+   `(org-scheduled-today ((,class (:foreground ,nord8))))
+   `(org-tag ((,class (:foreground "gray60"))))
+   `(org-time-grid ((,class (:foreground "gray50"))))
+
+   )
+
+  (setq org-todo-keyword-faces
+        `(("TODO" :foreground ,nord11 :weight bold)
+          ("NEXT" :foreground ,nord7 :weight bold)
+          ("DONE" :foreground ,nord14 :weight bold)
+          ("WAIT" :foreground ,nord13 :weight bold)
+          ("HOLD" :foreground ,nord15 :weight bold)
+          ("KILL" :foreground ,nord12 :weight bold)))
+  )
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
