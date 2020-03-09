@@ -658,6 +658,9 @@
    `(org-tag ((,class (:foreground "gray60"))))
    `(org-time-grid ((,class (:foreground "gray50"))))
 
+   `(diary ((,class (:foreground ,nord13))))
+   `(holiday ((,class (:background "DarkOliveGreen"))))
+
    )
 
   (setq org-todo-keyword-faces
