@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-08 18:06:04 gongzhitaao>
+;; Time-stamp: <2020-03-15 10:46:57 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2261,14 +2261,17 @@ Propertize STR with foreground FG and background BG color."
 ;; Theme
 ;; =============================================================================
 
-;; (use-package adhoc-theme)
-;; (load-theme 'adhoc t)
+;; (use-package nord-theme)
+;; (load-theme 'nord t)
 
-(use-package nord-theme)
-(load-theme 'nord t)
+;; (use-package base16-theme
+;;   :config
+;;   (load-theme 'base16-solarized-light t))
 
-;; (use-package nord-light-theme)
-;; (load-theme 'nord-light t)
+(use-package solarized-lightme-theme
+  :config
+  (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
+    (load-theme 'solarized-lightme t)))
 
 ;; =============================================================================
 ;; Now start the server
