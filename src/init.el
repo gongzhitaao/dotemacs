@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-15 10:46:57 gongzhitaao>
+;; Time-stamp: <2020-03-17 17:35:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -458,11 +458,11 @@ all '.<space>' with '.<space><space>'."
 (blink-cursor-mode 0)
 (mouse-avoidance-mode 'animate)
 
-(defun me//init-prog-mode ()
+(defun me//enable-line-numbers ()
   "Display line numbers only in `prog-mode'."
   (setq-local display-line-numbers t))
 
-(add-hook 'prog-mode-hook #'me//init-prog-mode)
+(add-hook 'prog-mode-hook #'me//enable-line-numbers)
 
 (scroll-bar-mode 0)
 (setq scroll-margin 0
@@ -1059,7 +1059,9 @@ all '.<space>' with '.<space><space>'."
                 (mode . python-mode)
                 (name . "\\.ya?ml")
                 (name . "\\.R")
-                (name . "\\.lua")))
+                (name . "\\.lua")
+                (mode . google3-build-mode)
+                (mode . go-mode)))
            ("Mail"
             (or (mode . message-mode)
                 (mode . mu4e-compose-mode)))
@@ -2261,12 +2263,10 @@ Propertize STR with foreground FG and background BG color."
 ;; Theme
 ;; =============================================================================
 
-;; (use-package nord-theme)
-;; (load-theme 'nord t)
-
-;; (use-package base16-theme
+;; (use-package nord-theme
 ;;   :config
-;;   (load-theme 'base16-solarized-light t))
+;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
+;;     (load-theme 'nord t)))
 
 (use-package solarized-lightme-theme
   :config

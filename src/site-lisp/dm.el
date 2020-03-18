@@ -75,7 +75,7 @@
 
 (defun me//init-spansdl ()
   (set (make-local-variable 'c-line-comment-starter) "#")
-  (set (make-local-variable 'comment-start) "#"))
+  (set (make-local-variable 'comment-start) "# "))
 
 (use-package spansdl-mode
   :config
@@ -85,8 +85,9 @@
   (whitespace-mode -1)
   (set (make-local-variable 'fill-column) 130)
   (set (make-local-variable 'writeroom-width) 150))
-
 (add-hook 'go-mode-hook #'me//init-go)
+
+(add-hook 'protobuf-mode-hook #'me//enable-line-numbers)
 
 ;; (use-package google3-eglot
 ;;   :config

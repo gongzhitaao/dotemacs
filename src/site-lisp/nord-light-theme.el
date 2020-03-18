@@ -73,46 +73,56 @@
  "0.4.0")
 
 ;;;; Color Constants
-(let ((class '((class color) (min-colors 89)))
-      (nord0 (if (display-graphic-p) "#2E3440" nil))
-      (nord1 (if (display-graphic-p) "#3B4252" "black"))
-      (nord2 (if (display-graphic-p) "#434C5E" "#434C5E"))
-      (nord3 (if (display-graphic-p) "#4C566A" "brightblack"))
-      (nord4 (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
-      (nord5 (if (display-graphic-p) "#E5E9F0" "white"))
-      (nord6 (if (display-graphic-p) "#ECEFF4" "brightwhite"))
-      (nord7 (if (display-graphic-p) "#8FBCBB" "cyan"))
-      (nord8 (if (display-graphic-p) "#88C0D0" "brightcyan"))
-      (nord9 (if (display-graphic-p) "#81A1C1" "blue"))
-      (nord10 (if (display-graphic-p) "#5E81AC" "brightblue"))
-      (nord11 (if (display-graphic-p) "#BF616A" "red"))
-      (nord12 (if (display-graphic-p) "#D08770" "brightyellow"))
-      (nord13 (if (display-graphic-p) "#EBCB8B" "yellow"))
-      (nord14 (if (display-graphic-p) "#A3BE8C" "green"))
-      (nord15 (if (display-graphic-p) "#B48EAD" "magenta"))
-      (nord16 (if (display-graphic-p) "#FBFBFC" "white"))
-      (nord-annotation (if (display-graphic-p) "#D08770" "brightyellow"))
-      (nord-attribute (if (display-graphic-p) "#8FBCBB" "cyan"))
-      (nord-class (if (display-graphic-p) "#8FBCBB" "cyan"))
-      (nord-comment (if (display-graphic-p) (nord-theme--brightened-comment-color nord-comment-brightness) "brightblack"))
-      (nord-escape (if (display-graphic-p) "#D08770" "brightyellow"))
-      (nord-method (if (display-graphic-p) "#88C0D0" "brightcyan"))
-      (nord-keyword (if (display-graphic-p) "#81A1C1" "blue"))
-      (nord-numeric (if (display-graphic-p) "#B48EAD" "magenta"))
-      (nord-operator (if (display-graphic-p) "#81A1C1" "blue"))
-      (nord-preprocessor (if (display-graphic-p) "#5E81AC" "brightblue"))
-      (nord-punctuation (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
-      (nord-regexp (if (display-graphic-p) "#EBCB8B" "yellow"))
-      (nord-string (if (display-graphic-p) "#A3BE8C" "green"))
-      (nord-tag (if (display-graphic-p) "#81A1C1" "blue"))
-      (nord-variable (if (display-graphic-p) "#a3a3a3" "#D8DEE9"))
-      (nord-region-highlight-foreground (if (or
-                                             (string= nord-region-highlight "frost")
-                                             (string= nord-region-highlight "snowstorm")) "#2E3440" nil))
-      (nord-region-highlight-background (if
-                                            (string= nord-region-highlight "frost") "#88C0D0"
-                                          (if (string= nord-region-highlight "snowstorm") "#D8DEE9" "#434C5E")))
-      (nord-uniform-mode-lines-background (if nord-uniform-mode-lines "#4C566A" "#3B4252")))
+(let* ((class '((class color) (min-colors 89)))
+       ;; polar night
+       (nord0 (if (display-graphic-p) "#2E3440" nil))
+       (nord1 (if (display-graphic-p) "#3B4252" "black"))
+       (nord2 (if (display-graphic-p) "#434C5E" "#434C5E"))
+       (nord3 (if (display-graphic-p) "#4C566A" "brightblack"))
+
+       ;; snow storm
+       (nord4 (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
+       (nord5 (if (display-graphic-p) "#E5E9F0" "white"))
+       (nord6 (if (display-graphic-p) "#ECEFF4" "brightwhite"))
+
+       ;; frost
+       (nord7 (if (display-graphic-p) (me//colir-blend "#8FBCBB" nord0 0.9) "cyan"))
+       (nord8 (if (display-graphic-p) (me//colir-blend "#88C0D0" nord0 0.9) "brightcyan"))
+       (nord9 (if (display-graphic-p) (me//colir-blend "#81A1C1" nord0 0.9) "blue"))
+       (nord10 (if (display-graphic-p) (me//colir-blend "#5E81AC" nord0 0.9) "brightblue"))
+
+       ;; aurora
+       (nord11 (if (display-graphic-p) (me//colir-blend "#BF616A" nord0 0.8) "red"))
+       (nord12 (if (display-graphic-p) (me//colir-blend "#D08770" nord0 0.8) "brightyellow"))
+       (nord13 (if (display-graphic-p) (me//colir-blend "#EBCB8B" nord0 0.8) "yellow"))
+       (nord14 (if (display-graphic-p) (me//colir-blend "#A3BE8C" nord0 0.8) "green"))
+       (nord15 (if (display-graphic-p) (me//colir-blend "#B48EAD" nord0 0.8) "magenta"))
+
+       ;; personal
+       (nord16 (if (display-graphic-p) "#FBFBFC" "white"))
+
+       (nord-annotation (if (display-graphic-p) nord12 "brightyellow"))
+       (nord-attribute (if (display-graphic-p) nord7 "cyan"))
+       (nord-class (if (display-graphic-p) nord7 "cyan"))
+       (nord-comment (if (display-graphic-p) (nord-theme--brightened-comment-color nord-comment-brightness) "brightblack"))
+       (nord-escape (if (display-graphic-p) nord12 "brightyellow"))
+       (nord-method (if (display-graphic-p) nord8 "brightcyan"))
+       (nord-keyword (if (display-graphic-p) nord9 "blue"))
+       (nord-numeric (if (display-graphic-p) nord9 "magenta"))
+       (nord-operator (if (display-graphic-p) nord9 "blue"))
+       (nord-preprocessor (if (display-graphic-p) nord9 "brightblue"))
+       (nord-punctuation (if (display-graphic-p) nord4 nord4))
+       (nord-regexp (if (display-graphic-p) nord13 "yellow"))
+       (nord-string (if (display-graphic-p) nord14 "green"))
+       (nord-tag (if (display-graphic-p) nord9 "blue"))
+       (nord-variable (if (display-graphic-p) "#a3a3a3" nord4))
+       (nord-region-highlight-foreground (if (or
+                                              (string= nord-region-highlight "frost")
+                                              (string= nord-region-highlight "snowstorm")) "#2E3440" nil))
+       (nord-region-highlight-background (if
+                                             (string= nord-region-highlight "frost") nord8
+                                           (if (string= nord-region-highlight "snowstorm") nord4 "#434C5E")))
+       (nord-uniform-mode-lines-background (if nord-uniform-mode-lines "#4C566A" "#3B4252")))
 
 ;;;; +------------+
 ;;;; + Core Faces +
