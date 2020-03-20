@@ -56,18 +56,36 @@
      `(window-divider-first-pixel ((,class (:foreground ,s-mode-line-bg))))
      `(window-divider-last-pixel ((,class (:foreground ,s-mode-line-bg))))
 
+     `(org-level-1 ((,class (:inherit ,s-variable-pitch :foreground ,orange
+                                      ,@(when solarized-scale-org-headlines
+                                          (list :height solarized-height-plus-4))
+                                      :weight extra-bold))))
+     `(org-level-2 ((,class (:inherit ,s-variable-pitch ::foreground ,green
+                                      ,@(when solarized-scale-org-headlines
+                                          (list :height solarized-height-plus-3))
+                                      :weight bold))))
+     `(org-level-3 ((,class (:inherit ,s-variable-pitch :foreground ,blue
+                                      ,@(when solarized-scale-org-headlines
+                                          (list :height solarized-height-plus-2))
+                                      :weight semi-bold))))
+     `(org-level-4 ((,class (:inherit ,s-variable-pitch :foreground ,yellow
+                                      ,@(when solarized-scale-org-headlines
+                                          (list :height solarized-height-plus-1))))))
+
      `(me-dired-dim-0 ((,class (:foreground "gray60"))))
      `(me-dired-dim-1 ((,class (:foreground "gray80"))))
      `(me-dired-executable ((,class (:foreground ,green))))
+
      )
 
     (setq org-todo-keyword-faces
-        `(("TODO" :foreground ,red-l :weight bold)
-          ("NEXT" :foreground ,blue-l :weight bold)
-          ("DONE" :foreground ,green-l :weight bold)
-          ("WAIT" :foreground ,yellow-l :weight bold)
-          ("HOLD" :foreground ,magenta-l :weight bold)
-          ("KILL" :foreground ,green :weight bold)))
+        `(("TODO" :foreground ,red :weight bold)
+          ("NEXT" :foreground ,blue :weight bold)
+          ("DONE" :foreground ,green :weight bold)
+          ("WAIT" :foreground ,yellow :weight bold)
+          ("HOLD" :foreground ,yellow-l :weight bold)
+          ("KILL" :foreground ,green-l :weight bold)))
+
     ))
 
 (setq solarized-use-variable-pitch nil

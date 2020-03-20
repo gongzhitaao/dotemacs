@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-17 17:35:24 gongzhitaao>
+;; Time-stamp: <2020-03-19 07:49:21 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2198,7 +2198,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (mapc (lambda (x) (evil-set-initial-state x 'emacs))
         '(dired-mode image-dired-thumbnail-mode image-mode
                      diary-mode org-src-mode mu4e-compose-mode calendar-mode
-                     org-capture-mode))
+                     org-capture-mode imenu-list-minor-mode))
 
   (bind-keys :map evil-normal-state-map
              ("<escape>" . evil-emacs-state)
