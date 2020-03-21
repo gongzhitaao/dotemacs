@@ -72,6 +72,8 @@
                                       ,@(when solarized-scale-org-headlines
                                           (list :height solarized-height-plus-1))))))
 
+     `(helm-ff-dotted-directory ((,class (:background ,violet-1bg))))
+
      `(me-dired-dim-0 ((,class (:foreground "gray60"))))
      `(me-dired-dim-1 ((,class (:foreground "gray80"))))
      `(me-dired-executable ((,class (:foreground ,green))))
