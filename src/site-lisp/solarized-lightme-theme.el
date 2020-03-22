@@ -41,14 +41,6 @@
      `(italic ((,class (:slant italic :underline nil))))
      `(underline ((,class (:underline t))))
 
-     `(mode-line
-       ((,class (:inverse-video unspecified
-                 :overline ,s-mode-line-bg
-                 :underline unspecified
-                 :foreground ,s-mode-line-fg
-                 :background ,s-mode-line-bg
-                 :box (:line-width 1 :color ,s-mode-line-bg
-                       :style unspecified)))))
      `(line-number-current-line ((,class (:foreground ,base3
                                           :background ,green-l))))
 

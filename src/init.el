@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-19 07:49:21 gongzhitaao>
+;; Time-stamp: <2020-03-22 09:46:57 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -457,6 +457,8 @@ all '.<space>' with '.<space><space>'."
 
 (blink-cursor-mode 0)
 (mouse-avoidance-mode 'animate)
+
+(setq x-underline-at-descent-line t)
 
 (defun me//enable-line-numbers ()
   "Display line numbers only in `prog-mode'."
