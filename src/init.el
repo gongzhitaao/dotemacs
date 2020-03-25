@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-22 09:46:57 gongzhitaao>
+;; Time-stamp: <2020-03-24 16:52:11 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1221,6 +1221,8 @@ Lisp function does not specify a special indentation."
 (use-package js2-mode
   :mode "\\.js\\'"
   :delight (js2-mode "JS2")
+  :bind (:map js2-mode-map
+         ("C-!" . clang-format-region))
   :config
   (setq js2-basic-offset 2
         js-indent-level 2
