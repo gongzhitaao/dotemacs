@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-24 16:52:11 gongzhitaao>
+;; Time-stamp: <2020-03-26 10:37:06 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -841,6 +841,7 @@ all '.<space>' with '.<space><space>'."
   (setq flycheck-emacs-lisp-load-path 'inherit
         flycheck-global-modes '(not org-mode)
         flycheck-keymap-prefix flycheck-command-map
+        flycheck-python-pycompile-executable "python3"
         flycheck-python-flake8-executable "flake8")
   (global-flycheck-mode))
 
