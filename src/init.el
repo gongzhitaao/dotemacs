@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-26 10:37:06 gongzhitaao>
+;; Time-stamp: <2020-03-29 10:51:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1202,9 +1202,10 @@ Lisp function does not specify a special indentation."
   "Init python model."
   (python-docstring-mode)
   (sphinx-doc-mode)
-  (set (make-local-variable 'comment-inline-offset) 2)
-  (set (make-local-variable 'yas-indent-line) 'fixed)
-  (setq fill-column 78))
+  (setq-local comment-inline-offset 2)
+  (setq-local yas-indent-line 'fixed)
+  (setq-local comment-column 0)
+  (setq-local fill-column 79))
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
