@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-03-29 10:51:29 gongzhitaao>
+;; Time-stamp: <2020-04-09 15:29:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1692,7 +1692,8 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-buffers
   :config
   (setq helm-buffer-max-length 40
-        helm-buffers-fuzzy-matching t)
+        helm-buffers-fuzzy-matching t
+        helm-buffer-skip-remote-checking t)
   (set-face-attribute 'helm-buffer-directory nil :inherit 'dired-directory))
 
 (use-package helm-files
@@ -1806,7 +1807,7 @@ argument FORCE, force the creation of a new ID."
 
 ;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
 ;; fine, but replying mail is not working.
-;(use-package mail-conf)
+;; (use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
