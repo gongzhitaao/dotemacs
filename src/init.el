@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-04-09 15:29:18 gongzhitaao>
+;; Time-stamp: <2020-06-11 11:54:59 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -583,20 +583,20 @@ all '.<space>' with '.<space><space>'."
 (when (display-graphic-p)
   (set-face-attribute 'default nil
               :family "Iosevka SS09"
-              :height 135)
+              :height 120)
 
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
                           (decode-char 'ucs #xF940))
-                    (font-spec :family "Font Awesome 5 Free" :size 14))
+                    (font-spec :family "Font Awesome 5 Free" :size 13))
 
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          :size 18))))
+                                          :size 16))))
 
-(set-face-attribute 'fixed-pitch nil :height 120)
+(set-face-attribute 'fixed-pitch nil :height 110)
 
 ;; modeline
 ;; -----------------------------------------------------------------------------
@@ -1182,6 +1182,7 @@ Lisp function does not specify a special indentation."
 (use-package cc-mode
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
+  (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
 (use-package clang-format
@@ -1214,7 +1215,8 @@ Lisp function does not specify a special indentation."
   :config
   (use-package sphinx-doc)
   (use-package yapfify)
-  (add-hook 'python-mode-hook #'me//init-python))
+  (add-hook 'python-mode-hook #'me//init-python)
+  (add-hook 'python-mode-hook #'flyspell-prog-mode))
 
 (use-package json-mode
   :config
@@ -1229,7 +1231,16 @@ Lisp function does not specify a special indentation."
   (setq js2-basic-offset 2
         js-indent-level 2
         js2-include-node-externs t
-        js2-include-browser-externs t))
+        js2-include-browser-externs t)
+
+  (setq-default js2-additional-externs
+              '("$"
+                "KeyEvent"
+                "google"
+                "sessionStorage"
+                "URLSearchParams"
+                "URL"
+                "ResizeObserver")))
 
 (use-package image-mode
   :bind (:map image-mode-map
@@ -2205,7 +2216,8 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (mapc (lambda (x) (evil-set-initial-state x 'emacs))
         '(dired-mode image-dired-thumbnail-mode image-mode
                      diary-mode org-src-mode mu4e-compose-mode calendar-mode
-                     org-capture-mode imenu-list-minor-mode))
+                     org-capture-mode imenu-list-major-mode
+                     imenu-list-minor-mode))
 
   (bind-keys :map evil-normal-state-map
              ("<escape>" . evil-emacs-state)

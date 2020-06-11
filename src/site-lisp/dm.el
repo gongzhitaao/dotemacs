@@ -73,9 +73,10 @@
     (add-hook 'before-save-hook hook)))
 
 
-(defun me//init-spansdl ()
-  (set (make-local-variable 'c-line-comment-starter) "#")
-  (set (make-local-variable 'comment-start) "# "))
+;; (defun me//init-spansdl ()
+;;   (set (make-local-variable 'comment-use-syntax) t)
+;;   (set (make-local-variable 'comment-start-skip) "\\(//+\\|/\\*+\\|\\-\\-+\\)\\s *")
+;;   (set (make-local-variable 'comment-start) "-- "))
 
 (use-package spansdl-mode
   :config
