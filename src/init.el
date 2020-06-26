@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-06-11 11:54:59 gongzhitaao>
+;; Time-stamp: <2020-06-25 09:28:37 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -512,7 +512,7 @@ all '.<space>' with '.<space><space>'."
         writeroom-use-derived-modes t
         writeroom-width 100)
   (setq writeroom-major-modes
-        '(prog-mode dired-mode Info-mode calendar-mode text-mode))
+        '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -1376,6 +1376,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :bind (:map org-agenda-mode-map
          ("F" . org-gcal-fetch))
   :config
+
+  (defun me//init-org-agenda ()
+    ;; (set (make-local-variable 'fill-column) 130)
+    (set (make-local-variable 'writeroom-width) 150))
+  (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
+
   (setq org-agenda-compact-blocks nil
         org-agenda-dim-blocked-tasks t
         org-agenda-files (expand-file-name "orgfile" org-directory)
