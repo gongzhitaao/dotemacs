@@ -48,6 +48,9 @@
      `(window-divider-first-pixel ((,class (:foreground ,s-mode-line-bg))))
      `(window-divider-last-pixel ((,class (:foreground ,s-mode-line-bg))))
 
+     `(org-document-title ((,class (:foreground ,base1  :weight bold
+                                    ,@(when solarized-scale-org-headlines
+                                        (list :height solarized-height-plus-4))))))
      `(org-level-1 ((,class (:inherit ,s-variable-pitch :foreground ,orange
                                       ,@(when solarized-scale-org-headlines
                                           (list :height solarized-height-plus-4))
@@ -65,6 +68,8 @@
                                           (list :height solarized-height-plus-1))))))
 
      `(helm-ff-dotted-directory ((,class (:background ,violet-1bg))))
+
+     `(org-ref-cite-face ((,class (:foreground "dark sea green"))))
 
      `(me-dired-dim-0 ((,class (:foreground "gray60"))))
      `(me-dired-dim-1 ((,class (:foreground "gray80"))))

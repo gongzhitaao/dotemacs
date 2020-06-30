@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-06-25 09:28:37 gongzhitaao>
+;; Time-stamp: <2020-06-29 20:44:40 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -512,7 +512,8 @@ all '.<space>' with '.<space><space>'."
         writeroom-use-derived-modes t
         writeroom-width 100)
   (setq writeroom-major-modes
-        '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode))
+        '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
+                    bibtex-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -1861,10 +1862,6 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex))
 
-(defun me//init-bibtex ()
-  "Init bibtex mode."
-  (setq fill-column 140))
-
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
   (interactive)
@@ -1879,6 +1876,11 @@ argument FORCE, force the creation of a new ID."
          ("M-<down>"                 . bibtex-end-of-entry)
          ("M-<up>"                   . bibtex-beginning-of-entry))
   :config
+  (defun me//init-bibtex ()
+    "Init bibtex mode."
+    (set (make-local-variable 'fill-column) 140)
+    (set (make-local-variable 'writeroom-width) 150))
+
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
   (add-to-list 'bibtex-entry-format 'unify-case)
@@ -1945,11 +1947,9 @@ argument FORCE, force the creation of a new ID."
   :bind (:map org-mode-map
          ("C-c ]" . org-ref-insert-ref-link))
   :init
-  (setq org-ref-cite-color (me//colir-blend "dark sea green" "grey90" 0.4)
-        org-ref-default-bibliography me-bib-files
+  (setq org-ref-default-bibliography me-bib-files
         org-ref-notes-directory me-bib-notes
         org-ref-pdf-directory me-bib-pdfs
-        org-ref-ref-color (me//colir-blend "goldenrod" "grey90" 0.4)
         org-ref-show-citation-on-enter nil)
   :config
   (setq org-ref-notes-function #'me//org-ref-notes-function)
