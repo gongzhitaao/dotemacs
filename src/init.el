@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-06-29 20:44:40 gongzhitaao>
+;; Time-stamp: <2020-07-01 09:31:49 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1309,15 +1309,17 @@ Lisp function does not specify a special indentation."
         org-hide-emphasis-markers t
         org-hide-macro-markers t
         org-hierarchical-todo-statistics nil
-        ;; org-list-description-max-indent 0
-        org-provide-todo-statistics      t
+        org-image-actual-width nil
+        org-outline-path-complete-in-steps nil
+        org-provide-todo-statistics t
+        org-refile-targets '((nil :maxlevel . 4))
+        org-refile-use-outline-path t
         org-src-fontify-natively t
         org-src-preserve-indentation t
         org-support-shift-select t
         org-treat-S-cursor-todo-selection-as-state-change nil
-        org-use-fast-todo-selection t
         org-use-fast-tag-selection 'auto
-        org-image-actual-width nil)
+        org-use-fast-todo-selection t)
 
   (setq org-todo-keywords
         '((sequence
@@ -1406,27 +1408,29 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                     '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-overriding-header
                     "High-priority unfinished tasks:")))
-            (agenda "" ((org-agenda-ndays 1)))
+            (agenda "" ((org-agenda-span 'day)))
             (alltodo ""
                      ((org-agenda-skip-function
                        '(or (me//org-skip-subtree-if-habit)
                             (me//org-skip-subtree-if-priority ?A)
                             (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header
-                       "ALL normal priority tasks:"))))
+                       "ALL normal priority tasks:")))
+            )
            ((org-agenda-compact-blocks nil))))))
 
 (use-package org-capture
   :config
   (setq org-capture-templates
-        `(("m" "Save mail link" entry
-           (file "todo.org")
-           (file "capture/mail.org")
+        `(
+          ("b" "Books")
+          ("br" "Books Reference" plain
+           (file "books.bib")
+           (file "capture/book.bib")
            :empty-lines 1
            :jump-to-captured t)
-
-          ("t" "TODO" entry
-           (file "todo.org")
+          ("bt" "Books TODO" entry
+           (file+headline "todo.org" "Books")
            (file "capture/todo.org")
            :empty-lines 1
            :jump-to-captured t)
@@ -1438,11 +1442,25 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t
            :tree-type week)
 
+          ;; Not used for now
+          ;; ("m" "Save mail link" entry
+          ;;  (file "todo.org")
+          ;;  (file "capture/mail.org")
+          ;;  :empty-lines 1
+          ;;  :jump-to-captured t)
+
+          ("t" "TODO" entry
+           (file "todo.org")
+           (file "capture/todo.org")
+           :empty-lines 1
+           :jump-to-captured t)
+
           ("w" "Work TODO" entry
            (file "work.org")
            (file "capture/todo.org")
            :empty-lines 1
            :jump-to-captured t))))
+
 
 (use-package ox
   :config
