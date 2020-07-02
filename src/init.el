@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-07-01 09:31:49 gongzhitaao>
+;; Time-stamp: <2020-07-01 20:42:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1385,21 +1385,53 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     (set (make-local-variable 'writeroom-width) 150))
   (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
 
+  (defun me//org-agenda-cmp-user-defined (a b)
+    "Compare the todo states of strings A and B."
+    (let* ((todo-priority '(("NEXT" . 6)
+                            ("TODO" . 5)
+                            ("WAIT" . 4)
+                            ("HOLD" . 3)
+                            ("DONE" . 2)
+                            ("KILL" . 1)))
+           (ma (or (get-text-property 1 'org-marker a)
+                   (get-text-property 1 'org-hd-marker a)))
+           (mb (or (get-text-property 1 'org-marker b)
+                   (get-text-property 1 'org-hd-marker b)))
+           (fa (and ma (marker-buffer ma)))
+           (fb (and mb (marker-buffer mb)))
+           (todo-kwds
+            (or (and fa (with-current-buffer fa org-todo-keywords-1))
+                (and fb (with-current-buffer fb org-todo-keywords-1))))
+           (ta (or (get-text-property 1 'todo-state a) "KILL"))
+           (tb (or (get-text-property 1 'todo-state b) "KILL"))
+           (la (cdr (assoc ta todo-priority)))
+           (lb (cdr (assoc tb todo-priority))))
+      (cond ((< la lb) -1)
+            ((< lb la) +1))))
+
+  (setq org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
+
   (setq org-agenda-compact-blocks nil
         org-agenda-dim-blocked-tasks t
         org-agenda-files (expand-file-name "orgfile" org-directory)
         org-agenda-include-diary t
         org-agenda-show-all-dates t
         org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+        org-agenda-sorting-strategy
+        '((agenda habit-down time-up user-defined-up priority-down
+                  category-keep)
+          (todo priority-down category-keep)
+          (tags priority-down category-keep)
+          (search category-keep))
         org-agenda-start-with-log-mode t
         org-agenda-tags-column -130)
 
   (setq org-agenda-prefix-format
-        '((agenda   . " %i %-20:c%?-20t% s")
+        '((agenda   . " %i %-12:c%?-20t%?-15 s")
           (timeline . "  % s")
-          (todo     . " %i %-20:T")
-          (tags     . " %i %-20:T")
-          (search   . " %i %-20:T")))
+          (todo     . " %i %-12:T")
+          (tags     . " %i %-12:T")
+          (search   . " %i %-12:T")))
 
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
