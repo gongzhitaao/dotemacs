@@ -40,7 +40,7 @@
 (use-package gogolink
   :config
   (defface me-gogolink-link-face
-    '((t :foreground "LightCyan3"
+    '((t :foreground "dark sea green"
          :underline t
          :inherit gogolink-link-face))
     "gogolink link face")

@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-07-01 20:42:54 gongzhitaao>
+;; Time-stamp: <2020-07-02 14:48:46 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1418,7 +1418,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-agenda-show-all-dates t
         org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
         org-agenda-sorting-strategy
-        '((agenda habit-down time-up user-defined-up priority-down
+        '((agenda habit-down time-up user-defined-down priority-down
                   category-keep)
           (todo priority-down category-keep)
           (tags priority-down category-keep)
