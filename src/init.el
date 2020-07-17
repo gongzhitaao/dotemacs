@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-07-02 14:48:46 gongzhitaao>
+;; Time-stamp: <2020-07-15 17:25:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1200,15 +1200,6 @@ Lisp function does not specify a special indentation."
           web-mode-enable-current-element-highlight t))
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
-(defun me//init-python()
-  "Init python model."
-  (python-docstring-mode)
-  (sphinx-doc-mode)
-  (setq-local comment-inline-offset 2)
-  (setq-local yas-indent-line 'fixed)
-  (setq-local comment-column 0)
-  (setq-local fill-column 79))
-
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
@@ -1216,6 +1207,17 @@ Lisp function does not specify a special indentation."
   :config
   (use-package sphinx-doc)
   (use-package yapfify)
+
+  (defun me//init-python()
+    "Init python model."
+    (python-docstring-mode)
+    (sphinx-doc-mode)
+    (setq-local comment-inline-offset 2)
+    (setq-local yas-indent-line 'fixed)
+    (setq-local comment-column 0)
+    (setq-local python-indent-offset 2)
+    (setq-local fill-column 79))
+
   (add-hook 'python-mode-hook #'me//init-python)
   (add-hook 'python-mode-hook #'flyspell-prog-mode))
 
