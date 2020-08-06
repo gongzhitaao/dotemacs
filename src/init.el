@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-07-15 17:25:56 gongzhitaao>
+;; Time-stamp: <2020-08-04 15:25:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -211,10 +211,7 @@
              ("a"   . mc/mark-all-like-this-dwim)
              ("l"   . mc/edit-lines)
              ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters))
-  (setq mc/mode-line
-        `(" mc:" (:eval (format ,(propertize "%d" 'face 'custom-rogue)
-                                (mc/num-cursors))))))
+             ("i l" . mc/insert-letters)))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
