@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-08-04 15:25:27 gongzhitaao>
+;; Time-stamp: <2020-08-07 08:39:36 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -510,16 +510,11 @@ all '.<space>' with '.<space><space>'."
         writeroom-width 100)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
-                    bibtex-mode))
+                    bibtex-mode bookmark-bmenu-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
-
-;; Highlight the cursor when jumping around.
-;; (use-package beacon
-;;   :delight
-;;   :config (beacon-mode))
 
 ;; Select interesting regions
 (use-package expand-region
@@ -857,7 +852,11 @@ all '.<space>' with '.<space><space>'."
 
 (use-package bookmark
   :config
-  (setq bookmark-default-file
+  (defun me//init-bookmark-bmenu ()
+    (set (make-local-variable 'writeroom-width) 150))
+  (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
+
+  (setq -default-file
         (expand-file-name "bookmarks" me-emacs-data-private)))
 
 ;; =============================================================================
