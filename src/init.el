@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-08-07 08:39:36 gongzhitaao>
+;; Time-stamp: <2020-08-09 14:51:42 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -856,7 +856,7 @@ all '.<space>' with '.<space><space>'."
     (set (make-local-variable 'writeroom-width) 150))
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
 
-  (setq -default-file
+  (setq bookmark-default-file
         (expand-file-name "bookmarks" me-emacs-data-private)))
 
 ;; =============================================================================
