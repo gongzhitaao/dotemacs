@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-08-11 07:49:26 gongzhitaao>
+;; Time-stamp: <2020-08-24 19:23:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -73,7 +73,7 @@
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
 ;; by adding a semicolon to the start of the line.  You may delete these
 ;; explanatory comments.
-(package-initialize)
+;(package-initialize)
 
 ;; With Cask, the following package-archives is not necessary
 
@@ -669,7 +669,7 @@ all '.<space>' with '.<space><space>'."
                                  space-after-tab space-before-tab
                                  spaces tabs trailing))
   (setq whitespace-global-modes t)
-  (dolist (hook '(prog-mode-hook))
+  (dolist (hook '(prog-mode-hook org-mode-hook))
     (add-hook hook #'whitespace-mode))
   ;; (global-whitespace-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
@@ -1290,8 +1290,8 @@ Lisp function does not specify a special indentation."
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :init
-  (setq org-modules '(org-bbdb org-bibtex org-clock org-gnus org-tempo
-                               org-habit org-table))
+  (setq org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo
+                              org-habit org-table))
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config

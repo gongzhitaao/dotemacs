@@ -66,10 +66,14 @@
      `(org-level-4 ((,class (:inherit ,s-variable-pitch :foreground ,yellow
                                       ,@(when solarized-scale-org-headlines
                                           (list :height solarized-height-plus-1))))))
+     `(org-checkbox ((,class (:background ,base03 :foreground ,base0))))
 
      `(helm-ff-dotted-directory ((,class (:background ,violet-1bg))))
 
      `(org-ref-cite-face ((,class (:foreground "dark sea green"))))
+
+     `(show-paren-match ((,class (:background ,green-l))))
+     `(sp-show-pair-match-face ((,class (:background ,green-l))))
 
      `(me-dired-dim-0 ((,class (:foreground "gray60"))))
      `(me-dired-dim-1 ((,class (:foreground "gray80"))))
