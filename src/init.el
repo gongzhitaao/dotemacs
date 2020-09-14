@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-08-28 10:37:38 gongzhitaao>
+;; Time-stamp: <2020-09-08 11:50:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -870,7 +870,7 @@ all '.<space>' with '.<space><space>'."
   :delight which-key-mode)
 
 ;; EShell
-(use-package eshell
+(use-package esh-mode
   :config (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer))
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))

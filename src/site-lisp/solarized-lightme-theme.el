@@ -41,6 +41,7 @@
      `(italic ((,class (:slant italic :underline nil))))
      `(underline ((,class (:underline t))))
 
+     `(line-number ((,class (:foreground "grey80"))))
      `(line-number-current-line ((,class (:foreground ,base3
                                           :background ,green-l))))
 
@@ -77,9 +78,7 @@
 
      `(me-dired-dim-0 ((,class (:foreground "gray60"))))
      `(me-dired-dim-1 ((,class (:foreground "gray80"))))
-     `(me-dired-executable ((,class (:foreground ,green))))
-
-     )
+     `(me-dired-executable ((,class (:foreground ,green)))))
 
     (setq org-todo-keyword-faces
         `(("TODO" :foreground ,red :weight bold)
