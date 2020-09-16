@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-09-08 11:50:33 gongzhitaao>
+;; Time-stamp: <2020-09-15 21:46:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -844,7 +844,12 @@ all '.<space>' with '.<space><space>'."
 
 ;; Edit remote files
 (use-package tramp
-  :config (setq tramp-default-method "ssh"))
+  :config
+  (setq tramp-default-method "ssh")
+  (setq vc-ignore-dir-regexp
+        (format "\\(%s\\)\\|\\(%s\\)"
+                vc-ignore-dir-regexp
+                tramp-file-name-regexp)))
 
 (use-package tramp-cache
   :config
