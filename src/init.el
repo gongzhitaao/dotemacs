@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-09-28 09:22:26 gongzhitaao>
+;; Time-stamp: <2020-10-05 17:21:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -587,7 +587,8 @@ all '.<space>' with '.<space><space>'."
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          :size 16))))
+                                          ;; Default 16, 32 for scaling 2x
+                                          :size 32))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 
@@ -1335,13 +1336,13 @@ Lisp function does not specify a special indentation."
            "WAIT(w@/!)" "HOLD(h@/!)" "|"
            "KILL(k@)")))
 
-  (setq org-todo-keyword-faces
-        '(("TODO" :foreground "red"          :weight bold)
-          ("NEXT" :foreground "cyan"         :weight bold)
-          ("DONE" :foreground "green"        :weight bold)
-          ("WAIT" :foreground "yellow"       :weight bold)
-          ("HOLD" :foreground "magenta"      :weight bold)
-          ("KILL" :foreground "forest green" :weight bold)))
+  ;; (setq org-todo-keyword-faces
+  ;;       '(("TODO" :foreground "red"          :weight bold)
+  ;;         ("NEXT" :foreground "cyan"         :weight bold)
+  ;;         ("DONE" :foreground "green"        :weight bold)
+  ;;         ("WAIT" :foreground "yellow"       :weight bold)
+  ;;         ("HOLD" :foreground "magenta"      :weight bold)
+  ;;         ("KILL" :foreground "forest green" :weight bold)))
 
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
@@ -2306,24 +2307,18 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
 Propertize STR with foreground FG and background BG color."
     (propertize str 'face
-                `((
-                   :background ,bg
+                `((:background ,bg
                    :foreground ,fg))))
 
-  (let ((state-color-list '((:state "insert" :color "chartreuse3" :tag " <I> ")
-                            (:state "emacs" :color "SkyBlue2" :tag " <E> ")
-                            (:state "normal" :color "DarkGoldenrod2" :tag " <N> ")
-                            (:state "visual" :color "gray" :tag " <V> ")
-                            (:state "motion" :color "plum3" :tag " <M> ")))
-        (dim 0.5))
+  (defun me//colorize-evil-tag (state-color-list)
+    "Change evil tag color according to STATE-COLOR-LIST."
     (dolist (elm state-color-list)
       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
            (plist-get elm :color))
       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
            (me//propertize-evil-tag (plist-get elm :tag)
-                                    "gray80"
-                                    (me//colir-blend (plist-get elm :color)
-                                                     "#21252B" dim)))))
+                                    "gray"
+                                    (plist-get elm :color)))))
 
   (setq evil-move-beyond-eol t)
 
@@ -2343,15 +2338,20 @@ Propertize STR with foreground FG and background BG color."
 ;; Theme
 ;; =============================================================================
 
-;; (use-package nord-theme
+;; (use-package solarized-lightme-theme
 ;;   :config
 ;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-;;     (load-theme 'nord t)))
+;;     (load-theme 'solarized-lightme t)))
 
-(use-package solarized-lightme-theme
+;; (use-package grayscale-theme
+;;   :config
+;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
+;;     (load-theme 'grayscale t)))
+
+(use-package eink-theme
   :config
   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-    (load-theme 'solarized-lightme t)))
+    (load-theme 'eink t)))
 
 ;; =============================================================================
 ;; Now start the server
