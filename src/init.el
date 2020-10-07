@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-10-05 17:21:04 gongzhitaao>
+;; Time-stamp: <2020-10-07 08:10:06 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -658,8 +658,10 @@ all '.<space>' with '.<space><space>'."
   :delight
   :config
   (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-auto-odd-face-perc 5)
-  (setq highlight-indent-guides-auto-even-face-perc 10))
+  ;; (setq highlight-indent-guides-auto-odd-face-perc 5)
+  ;; (setq highlight-indent-guides-auto-even-face-perc 10)
+  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-responsive 'top))
 
 (use-package whitespace
   :after highlight-indent-guides
@@ -2302,23 +2304,23 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
   (setq cursor-type 'box)
 
-  (defun me//propertize-evil-tag (str fg bg)
-    "Make the evil state notifier pertty.
+;;   (defun me//propertize-evil-tag (str fg bg)
+;;     "Make the evil state notifier pertty.
 
-Propertize STR with foreground FG and background BG color."
-    (propertize str 'face
-                `((:background ,bg
-                   :foreground ,fg))))
+;; Propertize STR with foreground FG and background BG color."
+;;     (propertize str 'face
+;;                 `((:background ,bg
+;;                    :foreground ,fg))))
 
-  (defun me//colorize-evil-tag (state-color-list)
-    "Change evil tag color according to STATE-COLOR-LIST."
-    (dolist (elm state-color-list)
-      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
-           (plist-get elm :color))
-      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
-           (me//propertize-evil-tag (plist-get elm :tag)
-                                    "gray"
-                                    (plist-get elm :color)))))
+;;   (defun me//colorize-evil-tag (state-color-list)
+;;     "Change evil tag color according to STATE-COLOR-LIST."
+;;     (dolist (elm state-color-list)
+;;       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
+;;            (plist-get elm :color))
+;;       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
+;;            (me//propertize-evil-tag (plist-get elm :tag)
+;;                                     "gray"
+;;                                     (plist-get elm :color)))))
 
   (setq evil-move-beyond-eol t)
 

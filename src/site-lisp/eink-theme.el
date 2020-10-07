@@ -13,87 +13,6 @@
 
 ;;; Code:
 
-(defcustom base16-theme-256-color-source 'terminal
-  "Where to get the colors in a 256-color terminal.
-
-In a 256-color terminal, it's not clear where the colors should come from.
-There are 3 possible values: terminal (which was taken from the xresources
-theme), base16-shell (which was taken from a combination of base16-shell and
-the xresources theme) and colors (which will be converted from the actual
-html color codes to the closest color).
-
-Note that this needs to be set before themes are loaded or it will not work."
-  :type '(radio (const :tag "Terminal" terminal)
-                (const :tag "Base16 shell" base16-shell)
-                (const :tag "Colors" colors))
-  :group 'base16)
-
-(defcustom base16-distinct-fringe-background t
-  "Make the fringe background different from the normal background color.
-Also affects `linum-mode' background."
-  :type 'boolean
-  :group 'base16)
-
-(defcustom base16-highlight-mode-line nil
-  "Make the active mode line stand out more.
-
-There are two choices for applying the emphasis:
-  box:      Draws a thin border around the active
-            mode line.
-  contrast: Use the \"default\" face's foreground
-            which should result in more contrast."
-  :type '(radio (const :tag "Off" nil)
-                (const :tag "Draw box around" box)
-                (const :tag "Contrast" contrast))
-  :group 'base16)
-
-(defvar base16-shell-colors
-  '(:base00 "black"
-    :base01 "brightgreen"
-    :base02 "brightyellow"
-    :base03 "brightblack"
-    :base04 "brightblue"
-    :base05 "white"
-    :base06 "brightmagenta"
-    :base07 "brightwhite"
-    :base08 "red"
-    :base09 "brightred"
-    :base0A "yellow"
-    :base0B "green"
-    :base0C "cyan"
-    :base0D "blue"
-    :base0E "magenta"
-    :base0F "brightcyan")
-  "Base16 colors used when in a terminal and not using base16-shell.
-
-These mappings are based on the xresources themes.  If you're
-using a different terminal color scheme, you may want to look for
-an alternate theme for use in the terminal.")
-
-(defvar base16-shell-colors-256
-  '(:base00 "black"
-    :base01 "color-18"
-    :base02 "color-19"
-    :base03 "brightblack"
-    :base04 "color-20"
-    :base05 "white"
-    :base06 "color-21"
-    :base07 "brightwhite"
-    :base08 "red"
-    :base09 "color-16"
-    :base0A "yellow"
-    :base0B "green"
-    :base0C "cyan"
-    :base0D "blue"
-    :base0E "magenta"
-    :base0F "color-17")
-  "Base16 colors used when in a terminal and using base16-shell.
-
-These mappings are based on the xresources themes combined with
-the base16-shell code.  If you're using a different terminal
-color scheme, you may want to look for an alternate theme for use
-in the terminal.")
-
 (defun base16-transform-color-key (key colors)
   "Transform a given color `KEY' into a theme color using `COLORS'.
 
@@ -104,23 +23,24 @@ return the actual color value.  Otherwise return the value unchanged."
   (if (symbolp key)
       (cond
 
-       ((string= (symbol-name key) "base16-settings-fringe-bg")
-        (if base16-distinct-fringe-background
-            (plist-get colors :base01)
-          (plist-get colors :base00)))
+       ;; ((string= (symbol-name key) "base16-settings-fringe-bg")
+       ;;  (if base16-distinct-fringe-background
+       ;;      (plist-get colors :base01)
+       ;;    (plist-get colors :base00)))
 
        ((string= (symbol-name key) "base16-settings-mode-line-box")
         (if (eq base16-highlight-mode-line 'box)
             (list :line-width 1 :color (plist-get colors :base04))
           nil))
 
-       ((string= (symbol-name key) "base16-settings-mode-line-fg")
-        (if (eq base16-highlight-mode-line 'contrast)
-            (plist-get colors :base05)
-          (plist-get colors :base04)))
+       ;; ((string= (symbol-name key) "base16-settings-mode-line-fg")
+       ;;  (if (eq base16-highlight-mode-line 'contrast)
+       ;;      (plist-get colors :base05)
+       ;;    (plist-get colors :base04)))
 
        (t
-        (let ((maybe-color (plist-get colors (intern (concat ":" (symbol-name key))))))
+        (let ((maybe-color
+               (plist-get colors (intern (concat ":" (symbol-name key))))))
           (if maybe-color
               maybe-color
             key))))
@@ -137,7 +57,8 @@ return the actual color value.  Otherwise return the value unchanged."
         ;; Append the transformed element
         (cond
          ((and (memq key '(:box :underline)) (listp value))
-          (setq output (append output (list key (base16-transform-spec value colors)))))
+          (setq output (append output (list key (base16-transform-spec
+                                                 value colors)))))
          (t
           (setq output (append output (list key value))))))
 
@@ -150,24 +71,8 @@ return the actual color value.  Otherwise return the value unchanged."
 (defun base16-transform-face (spec colors)
   "Transform a face `SPEC' into an Emacs theme face definition using `COLORS'."
   (let* ((face             (car spec))
-         (definition       (cdr spec))
-         (shell-colors-256 (pcase base16-theme-256-color-source
-                             ('terminal      base16-shell-colors)
-                             ("terminal"     base16-shell-colors)
-                             ('base16-shell  base16-shell-colors-256)
-                             ("base16-shell" base16-shell-colors-256)
-                             ('colors        colors)
-                             ("colors"       colors)
-                             (_              base16-shell-colors))))
-
-    ;; This is a list of fallbacks to make us select the sanest option possible.
-    ;; If there's a graphical terminal, we use the actual colors. If it's not
-    ;; graphical, the terminal supports 256 colors, and the user enables it, we
-    ;; use the base16-shell colors. Otherwise, we fall back to the basic
-    ;; xresources colors.
-    (list face `((((type graphic))   ,(base16-transform-spec definition colors))
-                 (((min-colors 256)) ,(base16-transform-spec definition shell-colors-256))
-                 (t                  ,(base16-transform-spec definition base16-shell-colors))))))
+         (definition       (cdr spec)))
+    (list face `((t ,(base16-transform-spec definition colors))))))
 
 (defun base16-set-faces (theme-name colors faces)
   "Define the important part of `THEME-NAME' using `COLORS' to map the `FACES' to actual colors."
@@ -176,494 +81,392 @@ return the actual color value.  Otherwise return the value unchanged."
                      (base16-transform-face face colors))
                  faces)))
 
+(defface normal    '((t :foreground "gray0")) "normal"
+  :group 'eink-theme)
+(defface normal+   '((t :inherit normal :weight semi-bold)) "normal+"
+  :group 'eink-theme)
+(defface normal++  '((t :inherit normal :weight bold)) "normal++"
+  :group 'eink-theme)
+(defface normal-   '((t :inherit normal :weight semi-light)) "normal-"
+  :group 'eink-theme)
+(defface normal--  '((t :inherit normal :weight light)) "normal--"
+  :group 'eink-theme)
+(defface normal--- '((t :inherit normal :weight extra-light)) "normal---"
+  :group 'eink-theme)
+
+(setq org-todo-keyword-faces
+          `(("TODO" :inherit normal+)
+            ("NEXT" :inherit normal+)
+            ("DONE" :inherit normal--)
+            ("WAIT" :inherit normal- :slant italic)
+            ("HOLD" :inherit normal- :slant italic)
+            ("KILL" :inherit normal--)))
+
 (defun base16-theme-define (theme-name theme-colors)
-  "Define the faces for a base16 colorscheme given a `THEME-NAME' and a plist of `THEME-COLORS'."
+  "Define the faces for a base16 colorscheme, given a `THEME-NAME'and a plist of `THEME-COLORS'."
   (base16-set-faces
    theme-name
    theme-colors
 
    '(
 ;;; Built-in
+     (bold                                         :weight semi-bold)
+     (bold-italic                                  :weight semi-bold :slant italic)
+     (italic                                       :slant italic :underline nil)
+     (underline                                    :underline t)
+
 ;;;; basic colors
-     (border                                       :background base03)
-     (cursor                                       :background base08)
-     (default                                      :foreground base05 :background base00 :distantForeground :base06)
-     (fringe                                       :background base16-settings-fringe-bg)
-     (gui-element                                  :background base01)
-     (header-line                                  :foreground base0E :background nil :inherit mode-line)
-     (highlight                                    :background base01)
-     (link                                         :foreground base0D :underline t)
-     (link-visited                                 :foreground base0E :underline t)
-     (minibuffer-prompt                            :foreground base0D)
-     (region                                       :background base02 :distantBackground base06)
-     (secondary-selection                          :background base07)
-     (trailing-whitespace                          :foreground base0A :background base0C)
-     (vertical-border                              :foreground base02)
+     (bookmark-menu-bookmark                       :inherit normal--)
+     (border                                       :background gray)
+     (cursor                                       :hollow t :background white)
+     (default                                      :foreground black :background white :distant-foreground white)
+     (dired-symlink                                :underline t)
+     (error                                        :inherit normal+)
+     (header-line                                  :background nil :inherit mode-line)
+     (highlight                                    :background white)
+     (link                                         :inherit normal-- :underline t)
+     (link-visited                                 :inherit normal--- :underline t)
+     (minibuffer-prompt                            :inherit normal-)
+     (region                                       :inverse-video t)
+     (shadow                                       :foreground gray)
+     (success                                      :inherit normal+)
+     (trailing-whitespace                          :foreground black :background black)
+     (vertical-border                              :foreground black)
+     (warning                                      :inherit normal+)
      (widget-button                                :underline t)
-     (widget-field                                 :background base03 :box (:line-width 1 :color base06))
-
-     (error                                        :foreground base08 :weight bold)
-     (warning                                      :foreground base09 :weight bold)
-     (success                                      :foreground base0B :weight bold)
-     (shadow                                       :foreground base03)
-
-;;;; compilation
-     (compilation-column-number                    :foreground base0A)
-     (compilation-line-number                      :foreground base0A)
-     (compilation-message-face                     :foreground base0D)
-     (compilation-mode-line-exit                   :foreground base0B)
-     (compilation-mode-line-fail                   :foreground base08)
-     (compilation-mode-line-run                    :foreground base0D)
-
-;;;; custom
-     (custom-variable-tag                          :foreground base0D)
-     (custom-group-tag                             :foreground base0D)
-     (custom-state                                 :foreground base0B)
+     (widget-field                                 :background gray :box (:line-width 1 :color white))
+     (window-divider                               :foreground white)
 
 ;;;; font-lock
-     (font-lock-builtin-face                       :foreground base0C)
-     (font-lock-comment-delimiter-face             :foreground base03)
-     (font-lock-comment-face                       :foreground base03)
-     (font-lock-constant-face                      :foreground base09)
-     (font-lock-doc-face                           :foreground base04)
-     (font-lock-doc-string-face                    :foreground base03)
-     (font-lock-function-name-face                 :foreground base0D)
-     (font-lock-keyword-face                       :foreground base0E)
-     (font-lock-negation-char-face                 :foreground base0B)
-     (font-lock-preprocessor-face                  :foreground base0D)
-     (font-lock-regexp-grouping-backslash          :foreground base0A)
-     (font-lock-regexp-grouping-construct          :foreground base0E)
-     (font-lock-string-face                        :foreground base0B)
-     (font-lock-type-face                          :foreground base0A)
-     (font-lock-variable-name-face                 :foreground base05)
-     (font-lock-warning-face                       :foreground base08)
+     (font-lock-builtin-face                       :inherit normal+)
+     (font-lock-comment-delimiter-face             :inherit normal-)
+     (font-lock-comment-face                       :inherit normal-)
+     (font-lock-constant-face                      :inherit normal+)
+     (font-lock-doc-face                           :inherit normal-)
+     (font-lock-doc-string-face                    :inherit normal-)
+     (font-lock-function-name-face                 :foreground black :slant italic)
+     (font-lock-keyword-face                       :inherit normal+)
+     (font-lock-negation-char-face                 :inherit normal+)
+     (font-lock-preprocessor-face                  :inherit normal+)
+     (font-lock-regexp-grouping-backslash          :slant italic)
+     (font-lock-regexp-grouping-construct          :slant italic)
+     (font-lock-string-face                        :inherit normal--)
+     (font-lock-type-face                          :inherit normal+)
+     (font-lock-warning-face                       :inherit normal+)
 
 ;;;; isearch
-     (match                                        :foreground base0D :background base01 :inverse-video t)
-     (isearch                                      :foreground base0A :background base01 :inverse-video t)
-     (lazy-highlight                               :foreground base0C :background base01 :inverse-video t)
+     (match                                        :inverse-video t)
+     (isearch                                      :inverse-video t)
+     (lazy-highlight                               :inverse-video t)
      (isearch-lazy-highlight-face                  :inherit lazy-highlight) ;; was replaced with 'lazy-highlight in emacs 22
-     (isearch-fail                                 :background base01 :inverse-video t :inherit font-lock-warning-face)
+     (isearch-fail                                 :inverse-video t :inherit font-lock-warning-face)
 
 ;;;; line-numbers
-     (line-number                                  :foreground base03 :background base16-settings-fringe-bg)
-     (line-number-current-line                     :inverse-video t)
+     (line-number                                  :weight extra-light :foreground gray)
+     (line-number-current-line                     :inherit bold)
 
 ;;;; mode-line
-     (mode-line                                    :foreground base16-settings-mode-line-fg :background base02 :box base16-settings-mode-line-box)
-     (mode-line-buffer-id                          :foreground base0B :background nil)
-     (mode-line-emphasis                           :foreground base06 :slant italic)
-     (mode-line-highlight                          :foreground base0E :box nil :weight bold)
-     (mode-line-inactive                           :foreground base03 :background base01 :box nil)
+     (mode-line                                    :foreground black :background white :box t)
+     (mode-line-buffer-id                          :inherit normal+)
+     (mode-line-emphasis                           :foreground white :slant italic)
+     (mode-line-highlight                          :foreground black :box nil :inherit bold)
+     (mode-line-inactive                           :foreground gray :background white :box nil :weight light)
 
 ;;; Third-party
 
 ;;;; anzu-mode
-     (anzu-mode-line                               :foreground base0E)
+     (anzu-mode-line                               :foreground black)
 
 ;;;; auctex
-     (font-latex-bold-face                         :foreground base0B)
-     (font-latex-doctex-documentation-face         :background base03)
-     (font-latex-italic-face                       :foreground base0B)
-     (font-latex-math-face                         :foreground base09)
-     (font-latex-sectioning-0-face                 :foreground base0A)
-     (font-latex-sectioning-1-face                 :foreground base0A)
-     (font-latex-sectioning-2-face                 :foreground base0A)
-     (font-latex-sectioning-3-face                 :foreground base0A)
-     (font-latex-sectioning-4-face                 :foreground base0A)
-     (font-latex-sectioning-5-face                 :foreground base0A)
-     (font-latex-sedate-face                       :foreground base0C)
-     (font-latex-string-face                       :foreground base0A)
-     (font-latex-verbatim-face                     :foreground base09)
-     (font-latex-warning-face                      :foreground base08)
+     (font-latex-bold-face                         :inherit normal+)
+     (font-latex-doctex-documentation-face         :inherit font-lock-doc-face)
+     (font-latex-italic-face                       :slant italic)
+     (font-latex-math-face                         :inherit normal--)
+     (font-latex-sectioning-0-face                 :inherit outline-0)
+     (font-latex-sectioning-1-face                 :inherit outline-1)
+     (font-latex-sectioning-2-face                 :inherit outline-2)
+     (font-latex-sectioning-3-face                 :inherit outline-3)
+     (font-latex-sectioning-4-face                 :inherit outline-4)
+     (font-latex-sectioning-5-face                 :inherit outline-5)
+     (font-latex-string-face                       :inherit font-lock-string-face)
+     (font-latex-verbatim-face                     :inherit font-lock-string-face)
+     (font-latex-warning-face                      :inherit font-lock-warning-face)
 
      (TeX-error-description-error                  :inherit error)
      (TeX-error-description-tex-said               :inherit font-lock-function-name-face)
      (TeX-error-description-warning                :inherit warning)
 
-;;;; centaur-tabs
-     (centaur-tabs-default                         :background base01 :foreground base01)
-     (centaur-tabs-selected                        :background base00 :foreground base06)
-     (centaur-tabs-unselected                      :background base01 :foreground base05)
-     (centaur-tabs-selected-modified               :background base00 :foreground base0D)
-     (centaur-tabs-unselected-modified             :background base01 :foreground base0D)
-     (centaur-tabs-active-bar-face                 :background base0D)
-     (centaur-tabs-modified-marker-selected        :inherit 'centaur-tabs-selected :foreground base0D)
-     (centaur-tabs-modified-marker-unselected      :inherit 'centaur-tabs-unselected :foreground base0D)
+;;;; highlight-indent-guides
+     (highlight-indent-guides-character-face       :inherit normal-)
+     (highlight-indent-guides-top-character-face   :inherit normal+)
 
-;;;; circe-mode
-     (circe-fool-face                              :foreground base02)
-     (circe-my-message-face                        :foreground base0B)
-     (circe-highlight-nick-face                    :foreground base0A)
-     (circe-originator-face                        :foreground base0E)
-     (circe-prompt-face                            :foreground base0D)
-     (circe-server-face                            :foreground base03)
-
-;;;; avy
-     (avy-lead-face-0                              :foreground base00 :background base0C)
-     (avy-lead-face-1                              :foreground base00 :background base05)
-     (avy-lead-face-2                              :foreground base00 :background base0E)
-     (avy-lead-face                                :foreground base00 :background base09)
-     (avy-background-face                          :foreground base03)
-     (avy-goto-char-timer-face                     :inherit highlight)
+;; ;;;; avy
+;;      (avy-lead-face-0                              :foreground white :background black)
+;;      (avy-lead-face-1                              :foreground white :background black)
+;;      (avy-lead-face-2                              :foreground white :background black)
+;;      (avy-lead-face                                :foreground white :background black)
+;;      (avy-background-face                          :foreground gray)
+;;      (avy-goto-char-timer-face                     :inherit highlight)
 
 ;;;; clojure-mode
-     (clojure-keyword-face                         :foreground base0E)
+     (clojure-keyword-face                         :foreground black)
 
 ;;;; company-mode
      (company-tooltip                              :inherit tooltip)
-     (company-scrollbar-bg                         :background base07)
-     (company-scrollbar-fg                         :background base04)
-     (company-tooltip-annotation                   :foreground base08)
+     (company-scrollbar-bg                         :background white)
+     (company-scrollbar-fg                         :background gray)
+     (company-tooltip-annotation                   :foreground black)
      (company-tooltip-common                       :inherit font-lock-constant-face)
-     (company-tooltip-selection                    :background base02 :inherit font-lock-function-name-face)
+     (company-tooltip-selection                    :background white :inherit font-lock-function-name-face)
      (company-tooltip-search                       :inherit match)
      (company-tooltip-search-selection             :inherit match)
      (company-preview-common                       :inherit secondary-selection)
-     (company-preview                              :foreground base04)
+     (company-preview                              :foreground gray)
      (company-preview-search                       :inherit match)
      (company-echo-common                          :inherit secondary-selection)
 
 ;;;; cperl-mode
-     (cperl-array-face                             :weight bold :inherit font-lock-variable-name-face)
-     (cperl-hash-face                              :weight bold :slant italic :inherit font-lock-variable-name-face)
+     (cperl-array-face                             :inherit bold :inherit font-lock-variable-name-face)
+     (cperl-hash-face                              :inherit bold :slant italic :inherit font-lock-variable-name-face)
      (cperl-nonoverridable-face                    :inherit font-lock-builtin-face)
 
 ;;;; cscope-minor-mode
-     (cscope-file-face                             :foreground base0B)
-     (cscope-function-face                         :foreground base0D)
-     (cscope-line-number-face                      :foreground base0A)
-     (cscope-mouse-face                            :foreground base04 :background base01)
-     (cscope-separator-face                        :foreground base08 :overline t :underline t :weight bold)
+     (cscope-file-face                             :foreground black)
+     (cscope-function-face                         :foreground black)
+     (cscope-line-number-face                      :foreground black)
+     (cscope-mouse-face                            :foreground gray :background white)
+     (cscope-separator-face                        :foreground black :overline t :underline t :inherit bold)
 
 ;;;; csv-mode
-     (csv-separator-face                           :foreground base09)
+     (csv-separator-face                           :foreground black)
 
 ;;;; diff-hl-mode
-     (diff-hl-change                               :foreground base0E)
-     (diff-hl-delete                               :foreground base08)
-     (diff-hl-insert                               :foreground base0B)
+     (diff-hl-change                               :foreground black)
+     (diff-hl-delete                               :foreground black)
+     (diff-hl-insert                               :foreground black)
 
 ;;;; diff-mode
-     (diff-added                                   :foreground base0B)
-     (diff-changed                                 :foreground base0E)
-     (diff-removed                                 :foreground base08)
-     (diff-header                                  :background base01)
-     (diff-file-header                             :background base02)
-     (diff-hunk-header                             :foreground base0E :background base01)
+     (diff-added                                   :foreground black)
+     (diff-changed                                 :foreground black)
+     (diff-removed                                 :foreground black)
+     (diff-header                                  :background white)
+     (diff-file-header                             :background white)
+     (diff-hunk-header                             :foreground black :background white)
 
 ;;;; dired+
-     (diredp-compressed-file-suffix                :foreground base0D)
+     (diredp-compressed-file-suffix                :foreground black)
      (diredp-dir-heading                           :foreground nil :background nil :inherit heading)
-     (diredp-dir-priv                              :foreground base0C :background nil)
-     (diredp-exec-priv                             :foreground base0D :background nil)
-     (diredp-executable-tag                        :foreground base08 :background nil)
-     (diredp-file-name                             :foreground base0A)
-     (diredp-file-suffix                           :foreground base0B)
+     (diredp-dir-priv                              :foreground black :background nil)
+     (diredp-exec-priv                             :foreground black :background nil)
+     (diredp-executable-tag                        :foreground black :background nil)
+     (diredp-file-name                             :foreground black)
+     (diredp-file-suffix                           :foreground black)
      (diredp-flag-mark-line                        :background nil :inherit highlight)
-     (diredp-ignored-file-name                     :foreground base04)
-     (diredp-link-priv                             :foreground base0E :background nil)
-     (diredp-mode-line-flagged                     :foreground base08)
-     (diredp-mode-line-marked                      :foreground base0B)
+     (diredp-ignored-file-name                     :foreground gray)
+     (diredp-link-priv                             :foreground black :background nil)
+     (diredp-mode-line-flagged                     :foreground black)
+     (diredp-mode-line-marked                      :foreground black)
      (diredp-no-priv                               :background nil)
-     (diredp-number                                :foreground base0A)
-     (diredp-other-priv                            :foreground base0E :background nil)
-     (diredp-rare-priv                             :foreground base08 :background nil)
-     (diredp-read-priv                             :foreground base0B :background nil)
-     (diredp-symlink                               :foreground base0E)
-     (diredp-write-priv                            :foreground base0A :background nil)
-
-;;;; doom-modeline
-     (doom-modeline-eldoc-bar                      :background base0B)
-     (doom-modeline-inactive-bar                   :background nil) ; transparent
-     (doom-modeline-bar                            :background base0D)
+     (diredp-number                                :foreground black)
+     (diredp-other-priv                            :foreground black :background nil)
+     (diredp-rare-priv                             :foreground black :background nil)
+     (diredp-read-priv                             :foreground black :background nil)
+     (diredp-symlink                               :foreground black)
+     (diredp-write-priv                            :foreground black :background nil)
 
 ;;;; ediff-mode
      (ediff-even-diff-A                            :foreground nil :background nil :inverse-video t)
      (ediff-even-diff-B                            :foreground nil :background nil :inverse-video t)
-     (ediff-odd-diff-A                             :foreground base04 :background nil :inverse-video t)
-     (ediff-odd-diff-B                             :foreground base04 :background nil :inverse-video t)
+     (ediff-odd-diff-A                             :foreground gray :background nil :inverse-video t)
+     (ediff-odd-diff-B                             :foreground gray :background nil :inverse-video t)
 
 ;;;; eldoc-mode
-     (eldoc-highlight-function-argument            :foreground base0B :weight bold)
-
-;;;; erc
-     (erc-direct-msg-face                          :foreground base09)
-     (erc-error-face                               :foreground base08)
-     (erc-header-face                              :foreground base06 :background base04)
-     (erc-input-face                               :foreground base0B)
-     (erc-keyword-face                             :foreground base0A)
-     (erc-current-nick-face                        :foreground base0B)
-     (erc-my-nick-face                             :foreground base0B)
-     (erc-nick-default-face                        :foreground base0E :weight normal)
-     (erc-nick-msg-face                            :foreground base0A :weight normal)
-     (erc-notice-face                              :foreground base04)
-     (erc-pal-face                                 :foreground base09)
-     (erc-prompt-face                              :foreground base0D)
-     (erc-timestamp-face                           :foreground base0C)
+     (eldoc-highlight-function-argument            :inherit normal+)
 
 ;;;; eshell
-     (eshell-ls-archive                            :foreground base08)
-     (eshell-ls-backup                             :foreground base0F)
-     (eshell-ls-clutter                            :foreground base09)
-     (eshell-ls-directory                          :foreground base0D)
-     (eshell-ls-executable                         :foreground base0B)
-     (eshell-ls-missing                            :foreground base08)
-     (eshell-ls-product                            :foreground base0F)
-     (eshell-ls-readonly                           :foreground base06)
-     (eshell-ls-special                            :foreground base0E)
-     (eshell-ls-symlink                            :foreground base0C)
-     (eshell-ls-unreadable                         :foreground base04)
-     (eshell-prompt                                :foreground base05)
+     (eshell-ls-archive                            :foreground black)
+     (eshell-ls-backup                             :foreground black)
+     (eshell-ls-clutter                            :foreground black)
+     (eshell-ls-directory                          :foreground black)
+     (eshell-ls-executable                         :foreground black)
+     (eshell-ls-missing                            :foreground black)
+     (eshell-ls-product                            :foreground black)
+     (eshell-ls-readonly                           :foreground white)
+     (eshell-ls-special                            :foreground black)
+     (eshell-ls-symlink                            :foreground black)
+     (eshell-ls-unreadable                         :foreground gray)
+     (eshell-prompt                                :foreground black)
 
 ;;;; evil-mode
-     (evil-search-highlight-persist-highlight-face :background base01 :inverse-video t :inherit font-lock-warning-face)
-
-;;;; fic-mode
-     (fic-author-face                              :foreground base09 :underline t)
-     (fic-face                                     :foreground base08 :weight bold)
+     (evil-search-highlight-persist-highlight-face :background white :inverse-video t :inherit font-lock-warning-face)
 
 ;;;; flycheck-mode
-     (flycheck-error                               :underline (:style wave :color base08))
-     (flycheck-info                                :underline (:style wave :color base0B))
-     (flycheck-warning                             :underline (:style wave :color base09))
+     (flycheck-error                               :underline (:style wave :color black))
+     (flycheck-info                                :underline (:style wave :color black))
+     (flycheck-warning                             :underline (:style wave :color black))
 
 ;;;; flymake-mode
-     (flymake-warnline                             :background base01 :underline base09)
-     (flymake-errline                              :background base01 :underline base08)
-     (flymake-warning                              :background base01 :underline base09)
-     (flymake-error                                :background base01 :underline base08)
+     (flymake-warnline                             :background white :underline black)
+     (flymake-errline                              :background white :underline black)
+     (flymake-warning                              :background white :underline black)
+     (flymake-error                                :background white :underline black)
 
 ;;;; flyspell-mode
-     (flyspell-duplicate                           :underline (:style wave :color base09))
-     (flyspell-incorrect                           :underline (:style wave :color base08))
+     (flyspell-duplicate                           :underline (:style wave :color black))
+     (flyspell-incorrect                           :underline (:style wave :color black))
 
 ;;;; git-gutter-mode
-     (git-gutter:added                             :foreground base0B)
-     (git-gutter:deleted                           :foreground base08)
-     (git-gutter:modified                          :foreground base0E)
-     (git-gutter:separator                         :foreground base0C)
-     (git-gutter:unchanged                         :foreground base0A :inverse-video t)
+     (git-gutter                                   :added                             :foreground black)
+     (git-gutter                                   :deleted                           :foreground black)
+     (git-gutter                                   :modified                          :foreground black)
+     (git-gutter                                   :separator                         :foreground black)
+     (git-gutter                                   :unchanged                         :foreground black :inverse-video t)
 
 ;;;; git-gutter+-mode
-     (git-gutter+-added                            :foreground base0B)
-     (git-gutter+-deleted                          :foreground base08)
-     (git-gutter+-modified                         :foreground base0E)
-     (git-gutter+-unchanged                        :foreground base0A :inverse-video t)
+     (git-gutter+-added                            :foreground black)
+     (git-gutter+-deleted                          :foreground black)
+     (git-gutter+-modified                         :foreground black)
+     (git-gutter+-unchanged                        :foreground black :inverse-video t)
 
 ;;;; git-gutter-fringe
-     (git-gutter-fr:added                          :foreground base0B)
-     (git-gutter-fr:deleted                        :foreground base08)
-     (git-gutter-fr:modified                       :foreground base0E)
+     (git-gutter-fr                                :added                          :foreground black)
+     (git-gutter-fr                                :deleted                        :foreground black)
+     (git-gutter-fr                                :modified                       :foreground black)
 
 ;;;; grep
-     (grep-context-face                            :foreground base04)
-     (grep-error-face                              :foreground base08 :weight bold :underline t)
-     (grep-hit-face                                :foreground base0D)
+     (grep-context-face                            :foreground gray)
+     (grep-error-face                              :inherit normal+ :underline t)
+     (grep-hit-face                                :foreground black)
      (grep-match-face                              :foreground nil :background nil :inherit match)
 
 ;;;; helm
-     (helm-M-x-key                                 :foreground base0C)
-     (helm-action                                  :foreground base05)
-     (helm-buffer-directory                        :foreground base04 :background nil :weight bold)
-     (helm-buffer-file                             :foreground base0C)
-     (helm-buffer-not-saved                        :foreground base08)
-     (helm-buffer-process                          :foreground base03)
-     (helm-buffer-saved-out                        :foreground base0F)
-     (helm-buffer-size                             :foreground base09)
-     (helm-candidate-number                        :foreground base00 :background base09)
+     (helm-action                                  :inherit normal-)
+     (helm-buffer-directory                        :inherit normal-)
+     (helm-buffer-file                             :inherit normal--)
+     (helm-buffer-not-saved                        :inherit normal+)
+     (helm-buffer-process                          :inherit normal--)
+     (helm-buffer-saved-out                        :unerline t)
+     (helm-candidate-number                        :inverse-video t)
+     (helm-ff-backup-file                          :inherit dired-ignored)
+     (helm-ff-denied                               :foreground black :background gray)
      (helm-ff-directory                            :inherit dired-directory)
      (helm-ff-dotted-directory                     :inherit dired-ignored)
-     (helm-ff-executable                           :foreground base0B)
-     (helm-ff-file                                 :inherit default)
+     (helm-ff-dotted-symlink-directory             :underline t)
+     (helm-ff-executable                           :slant italic)
+     (helm-ff-file                                 :inherit normal-)
+     (helm-ff-file-extension                       :inherit normal--)
      (helm-ff-invalid-symlink                      :inherit dired-warning)
-     (helm-ff-prefix                               :foreground nil :background nil)
      (helm-ff-symlink                              :inherit dired-symlink)
-     (helm-ff-suid                                 :foreground base08)
-     (helm-ff-dotted-symlink-directory             :foreground base09 :background base03)
-     (helm-ff-denied                               :foreground base08 :background base03)
-;     (helm-ff-truename) ;; already inherited
-;     (helm-ff-dirs) ;; already inherited
-     (helm-ff-socket                               :foreground base0E)
-     (helm-ff-pipe                                 :foreground base0A :background base03)
-     (helm-ff-file-extension                       :foreground base03)
-     (helm-ff-backup-file                          :inherit dired-ignored)
-
-     (helm-grep-cmd-line                           :foreground base0B)
-     (helm-grep-file                               :foreground base0C)
-     (helm-grep-finish                             :foreground base00 :background base09)
-     (helm-grep-lineno                             :foreground base03)
-     (helm-grep-match                              :foreground base0A)
-     (helm-grep-running                            :foreground base09)
-     (helm-header                                  :foreground base0A :background base00 :underline nil)
-     (helm-match                                   :foreground base0A)
-     (helm-moccur-buffer                           :foreground base0C)
-     (helm-selection                               :foreground nil :background base02 :underline nil)
-     (helm-selection-line                          :foreground nil :background base02)
-     (helm-separator                               :foreground base02)
-     (helm-source-header                           :foreground base05 :background base01 :weight bold)
-     (helm-visible-mark                            :foreground base00 :background base0B)
-
-;;;; highlight-indentation minor mode
-     (highlight-indentation-face                   :background base01)
-
-;;;; highlight-thing mode
-     (highlight-thing                              :inherit highlight)
+     (helm-M-x-key                                 :foreground black)
+     (helm-match                                   :inverse-video t)
+     (helm-moccur-buffer                           :foreground black)
+     (helm-selection                               :inherit normal+)
+     (helm-selection-line                          :inherit normal+)
+     (helm-source-header                           :inherit normal+)
+     (helm-visible-mark                            :inverse-video t)
 
 ;;;; hl-line-mode
-     (hl-line                                      :background base01)
-     (col-highlight                                :background base01)
+     (hl-line                                      :underline t)
+     (col-highlight                                :background white)
 
 ;;;; hl-sexp-mode
-     (hl-sexp-face                                 :background base03)
+     (hl-sexp-face                                 :background gray)
 
 ;;;; hydra
-     (hydra-face-red                               :foreground base09)
-     (hydra-face-blue                              :foreground base0D)
+     (hydra-face-red                               :foreground black)
+     (hydra-face-blue                              :foreground black)
 
 ;;;; ido-mode
-     (ido-subdir                                   :foreground base04)
-     (ido-first-match                              :foreground base09 :weight bold)
-     (ido-only-match                               :foreground base08 :weight bold)
-     (ido-indicator                                :foreground base08 :background base01)
-     (ido-virtual                                  :foreground base04)
-
-;;;; idris-mode
-     (idris-semantic-bound-face                    :inherit font-lock-variable-name-face)
-     (idris-semantic-data-face                     :inherit font-lock-string-face)
-     (idris-semantic-function-face                 :inherit font-lock-function-name-face)
-     (idris-semantic-namespace-face                nil)
-     (idris-semantic-postulate-face                :inherit font-lock-builtin-face)
-     (idris-semantic-type-face                     :inherit font-lock-type-face)
-     (idris-active-term-face                       :inherit highlight)
-     (idris-colon-face                             :inherit font-lock-keyword-face)
-     (idris-equals-face                            :inherit font-lock-keyword-face)
-     (idris-operator-face                          :inherit font-lock-keyword-face)
+     (ido-subdir                                   :foreground gray)
+     (ido-first-match                              :inherit normal+)
+     (ido-only-match                               :inherit normal+)
+     (ido-indicator                                :foreground black :background white)
+     (ido-virtual                                  :foreground gray)
 
 ;;;; imenu-list
-     (imenu-list-entry-face-0                      :foreground base0A)
-     (imenu-list-entry-face-1                      :foreground base0B)
-     (imenu-list-entry-face-2                      :foreground base0D)
-     (imenu-list-entry-face-3                      :foreground base0F)
-
-;;;; ivy-mode
-     (ivy-current-match                            :foreground base09 :background base01)
-     (ivy-minibuffer-match-face-1                  :foreground base0E)
-     (ivy-minibuffer-match-face-2                  :foreground base0D)
-     (ivy-minibuffer-match-face-3                  :foreground base0C)
-     (ivy-minibuffer-match-face-4                  :foreground base0B)
-     (ivy-confirm-face                             :foreground base0B)
-     (ivy-match-required-face                      :foreground base08)
-     (ivy-virtual                                  :foreground base04)
-     (ivy-action                                   :foreground base0D)
-
-;;;; jabber
-     (jabber-chat-prompt-local                     :foreground base0A)
-     (jabber-chat-prompt-foreign                   :foreground base09)
-     (jabber-chat-prompt-system                    :foreground base0A :weight bold)
-     (jabber-chat-text-local                       :foreground base0A)
-     (jabber-chat-text-foreign                     :foreground base09)
-     (jabber-chat-text-error                       :foreground base08)
-
-     (jabber-roster-user-online                    :foreground base0B)
-     (jabber-roster-user-xa                        :foreground base04)
-     (jabber-roster-user-dnd                       :foreground base0A)
-     (jabber-roster-user-away                      :foreground base09)
-     (jabber-roster-user-chatty                    :foreground base0E)
-     (jabber-roster-user-error                     :foreground base08)
-     (jabber-roster-user-offline                   :foreground base04)
-
-     (jabber-rare-time-face                        :foreground base04)
-     (jabber-activity-face                         :foreground base0E)
-     (jabber-activity-personal-face                :foreground base0C)
+     (imenu-list-entry-face-0                      :foreground black)
+     (imenu-list-entry-face-1                      :foreground black)
+     (imenu-list-entry-face-2                      :foreground black)
+     (imenu-list-entry-face-3                      :foreground black)
 
 ;;;; js2-mode
-     (js2-warning-face                             :underline base09)
-     (js2-error-face                               :foreground nil :underline base08)
-     (js2-external-variable-face                   :foreground base0E)
-     (js2-function-param-face                      :foreground base0D)
-     (js2-instance-member-face                     :foreground base0D)
-     (js2-private-function-call-face               :foreground base08)
+     (js2-warning-face                             :underline black)
+     (js2-error-face                               :foreground nil :underline black)
+     (js2-external-variable-face                   :foreground black)
+     (js2-function-param-face                      :foreground black)
+     (js2-instance-member-face                     :foreground black)
+     (js2-private-function-call-face               :foreground black)
 
 ;;;; js3-mode
-     (js3-warning-face                             :underline base09)
-     (js3-error-face                               :foreground nil :underline base08)
-     (js3-external-variable-face                   :foreground base0E)
-     (js3-function-param-face                      :foreground base0D)
-     (js3-jsdoc-tag-face                           :foreground base09)
-     (js3-jsdoc-type-face                          :foreground base0C)
-     (js3-jsdoc-value-face                         :foreground base0A)
-     (js3-jsdoc-html-tag-name-face                 :foreground base0D)
-     (js3-jsdoc-html-tag-delimiter-face            :foreground base0B)
-     (js3-instance-member-face                     :foreground base0D)
-     (js3-private-function-call-face               :foreground base08)
+     (js3-warning-face                             :underline black)
+     (js3-error-face                               :foreground nil :underline black)
+     (js3-external-variable-face                   :foreground black)
+     (js3-function-param-face                      :foreground black)
+     (js3-jsdoc-tag-face                           :foreground black)
+     (js3-jsdoc-type-face                          :foreground black)
+     (js3-jsdoc-value-face                         :foreground black)
+     (js3-jsdoc-html-tag-name-face                 :foreground black)
+     (js3-jsdoc-html-tag-delimiter-face            :foreground black)
+     (js3-instance-member-face                     :foreground black)
+     (js3-private-function-call-face               :foreground black)
 
 ;;;; linum-mode
-     (linum                                        :foreground base03 :background base16-settings-fringe-bg)
+     (linum                                        :foreground gray :background white)
 
 ;;;; lsp-ui-doc
      (lsp-ui-doc-header                            :inherit org-document-title)
-     (lsp-ui-doc-background                        :background base01)
-
-;;;; lui-mode
-     (lui-button-face                              :foreground base0D)
-     (lui-highlight-face                           :background base01)
-     (lui-time-stamp-face                          :foreground base0C)
+     (lsp-ui-doc-background                        :background white)
 
 ;;;; magit
-     (magit-blame-culprit                          :background base01)
-     (magit-blame-heading                          :background base01 :foreground base05)
-     (magit-branch                                 :foreground base04 :weight bold)
-     (magit-branch-current                         :foreground base0C :weight bold :box t)
-     (magit-branch-local                           :foreground base0C :weight bold)
-     (magit-branch-remote                          :foreground base0B :weight bold)
-     (magit-cherry-equivalent                      :foreground base0E)
-     (magit-cherry-unmatched                       :foreground base0C)
-     (magit-diff-context-highlight                 :background base01 :foreground base05)
-     (magit-diff-file-header                       :background base01 :foreground base05)
-     (magit-hash                                   :foreground base0D)
-     (magit-header-line                            :background base02 :foreground base05 :weight bold)
-     (magit-hunk-heading                           :background base03)
-     (magit-hunk-heading-highlight                 :background base03)
-     (magit-diff-hunk-heading                      :background base01)
-     (magit-diff-hunk-heading-highlight            :background base01)
-     (magit-item-highlight                         :background base01)
-     (magit-log-author                             :foreground base0D)
-     (magit-process-ng                             :foreground base08 :inherit magit-section-heading)
-     (magit-process-ok                             :foreground base0B :inherit magit-section-heading)
-     (magit-reflog-amend                           :foreground base0E)
-     (magit-reflog-checkout                        :foreground base0D)
-     (magit-reflog-cherry-pick                     :foreground base0B)
-     (magit-reflog-commit                          :foreground base0B)
-     (magit-reflog-merge                           :foreground base0B)
-     (magit-reflog-other                           :foreground base0C)
-     (magit-reflog-rebase                          :foreground base0E)
-     (magit-reflog-remote                          :foreground base0C)
-     (magit-reflog-reset                           :foreground base08)
-     (magit-section-highlight                      :background base01)
-     (magit-signature-bad                          :foreground base08 :weight bold)
-     (magit-signature-error                        :foreground base08)
-     (magit-signature-expired                      :foreground base09)
-     (magit-signature-good                         :foreground base0B)
-     (magit-signature-revoked                      :foreground base0E)
-     (magit-signature-untrusted                    :foreground base0C)
-     (magit-tag                                    :foreground base05)
+     (magit-blame-culprit                          :background white)
+     (magit-blame-heading                          :background white :foreground black)
+     (magit-branch                                 :foreground gray :inherit bold)
+     (magit-branch-current                         :inherit normal+ :box t)
+     (magit-branch-local                           :inherit normal+)
+     (magit-branch-remote                          :inherit normal+)
+     (magit-cherry-equivalent                      :foreground black)
+     (magit-cherry-unmatched                       :foreground black)
+     (magit-diff-context-highlight                 :background white :foreground black)
+     (magit-diff-file-header                       :background white :foreground black)
+     (magit-hash                                   :foreground black)
+     (magit-header-line                            :background white :inherit normal+)
+     (magit-hunk-heading                           :background gray)
+     (magit-hunk-heading-highlight                 :background gray)
+     (magit-diff-hunk-heading                      :background white)
+     (magit-diff-hunk-heading-highlight            :background white)
+     (magit-item-highlight                         :background white)
+     (magit-log-author                             :foreground black)
+     (magit-process-ng                             :foreground black :inherit magit-section-heading)
+     (magit-process-ok                             :foreground black :inherit magit-section-heading)
+     (magit-reflog-amend                           :foreground black)
+     (magit-reflog-checkout                        :foreground black)
+     (magit-reflog-cherry-pick                     :foreground black)
+     (magit-reflog-commit                          :foreground black)
+     (magit-reflog-merge                           :foreground black)
+     (magit-reflog-other                           :foreground black)
+     (magit-reflog-rebase                          :foreground black)
+     (magit-reflog-remote                          :foreground black)
+     (magit-reflog-reset                           :foreground black)
+     (magit-section-highlight                      :background white)
+     (magit-signature-bad                          :inherit normal+)
+     (magit-signature-error                        :foreground black)
+     (magit-signature-expired                      :foreground black)
+     (magit-signature-good                         :foreground black)
+     (magit-signature-revoked                      :foreground black)
+     (magit-signature-untrusted                    :foreground black)
+     (magit-tag                                    :foreground black)
 ;;;; mark-multiple
      (mm/master-face                               :foreground nil :background nil :inherit region)
      (mm/mirror-face                               :foreground nil :background nil :inherit region)
 
 ;;;; markdown-mode
      (markdown-url-face                            :inherit link)
-     (markdown-link-face                           :foreground base0D :underline t)
+     (markdown-link-face                           :foreground black :underline t)
 
 ;;;; message-mode
-     (message-header-other                         :foreground nil :background nil :weight normal)
-     (message-header-subject                       :foreground base0A :weight bold :inherit message-header-other)
-     (message-header-to                            :foreground base09 :weight bold :inherit message-header-other)
+     (message-header-subject                       :inherit normal+ :inherit message-header-other)
+     (message-header-to                            :inherit normal+ :inherit message-header-other)
      (message-header-cc                            :foreground nil :inherit message-header-to)
-     (message-header-name                          :foreground base0D :background nil)
-     (message-header-newsgroups                    :foreground base0C :background nil :slant normal)
-     (message-separator                            :foreground base0E)
 
 ;;;; mic-paren
      (paren-face-match                             :foreground nil :background nil :inherit show-paren-match)
@@ -671,9 +474,9 @@ return the actual color value.  Otherwise return the value unchanged."
      (paren-face-no-match                          :foreground nil :background nil :inherit show-paren-mismatch)
 
 ;;;; mmm-mode
-     (mmm-code-submode-face                        :background base03)
+     (mmm-code-submode-face                        :background gray)
      (mmm-comment-submode-face                     :inherit font-lock-comment-face)
-     (mmm-output-submode-face                      :background base03)
+     (mmm-output-submode-face                      :background gray)
 
 ;;;; nxml-mode
      (nxml-name-face                               :foreground unspecified :inherit font-lock-constant-face)
@@ -681,192 +484,132 @@ return the actual color value.  Otherwise return the value unchanged."
      (nxml-ref-face                                :foreground unspecified :inherit font-lock-preprocessor-face)
      (nxml-delimiter-face                          :foreground unspecified :inherit font-lock-keyword-face)
      (nxml-delimited-data-face                     :foreground unspecified :inherit font-lock-string-face)
-     (rng-error-face                               :underline base08)
+     (rng-error-face                               :underline black)
+
+;;; outline-mode
+     (outline-1                                    :inherit normal+)
+     (outline-2                                    :inherit normal+)
+     (outline-3                                    :inherit normal+)
+     (outline-4                                    :inherit normal)
+     (outline-5                                    :inherit normal-)
+     (outline-6                                    :inherit normal-)
+     (outline-7                                    :inherit normal-)
 
 ;;;; org-mode
-     (org-agenda-structure                         :foreground base0E)
-     (org-agenda-date                              :foreground base0D :underline nil)
-     (org-agenda-done                              :foreground base0B)
-     (org-agenda-dimmed-todo-face                  :foreground base04)
-     (org-block                                    :foreground base09)
-     (org-code                                     :foreground base0A)
-     (org-column                                   :background base01)
-     (org-column-title                             :weight bold :underline t :inherit org-column)
-     (org-date                                     :foreground base0E :underline t)
-     (org-document-info                            :foreground base0C)
-     (org-document-info-keyword                    :foreground base0B)
-     (org-document-title                           :foreground base09 :weight bold)
-     (org-done                                     :foreground base0B :background base01)
-     (org-ellipsis                                 :foreground base04)
-     (org-footnote                                 :foreground base0C)
-     (org-formula                                  :foreground base08)
-     (org-habit-clear-face                         :background base07)
-     (org-habit-clear-future-face                  :background base07)
-     (org-habit-overdue-face                       :background base07)
-     (org-hide                                     :foreground base03)
-     (org-link                                     :foreground base0D :inherit link)
-     (org-scheduled                                :foreground base0B)
-     (org-scheduled-previously                     :foreground base09)
-     (org-scheduled-today                          :foreground base0B)
-     (org-special-keyword                          :foreground base09)
-     (org-table                                    :foreground base0E)
-     (org-todo                                     :foreground base08 :background base01)
-     (org-upcoming-deadline                        :foreground base09)
-     (org-warning                                  :foreground base08 :weight bold)
+     (org-agenda-structure                         :inherit normal-)
+     (org-agenda-date                              :underline nil)
+     (org-agenda-done                              :inherit normal--)
+     (org-agenda-dimmed-todo-face                  :inherit normal--)
+     (org-agenda-clocking                          :slant italic)
+     (org-block                                    :inherit normal-)
+     (org-checkbox                                 :inherit normal-)
+     (org-code                                     :inherit normal-)
+     (org-column-title                             :inherit normal+ :underline t)
+     (org-date                                     :inherit normal- :underline t)
+     (org-document-info                            :inherit normal-)
+     (org-document-info-keyword                    :inherit normal-)
+     (org-document-title                           :inherit normal+)
+     (org-done                                     :inherit normal--)
+     (org-ellipsis                                 :inherit normal--)
+     (org-footnote                                 :inherit normal--)
+     (org-formula                                  :inherit normal-)
+     (org-habit-clear-face                         :background white)
+     (org-habit-clear-future-face                  :background white)
+     (org-habit-overdue-face                       :background white)
+     (org-headline-done                            :inherit normal--)
+     (org-hide                                     :inherit normal--)
+     (org-link                                     :inherit link)
+     (org-priority                                 :inherit normal--)
+     (org-scheduled-previously                     :inherit normal-)
+     (org-scheduled-today                          :inherit normal-)
+     (org-special-keyword                          :inherit normal-- :inherit bold)
+     (org-tag                                      :inherit normal+)
+     (org-upcoming-deadline                        :slant italic)
+     (org-warning                                  :inherit normal+)
 
 ;;;; paren-face-mode
-     (paren-face                                   :foreground base04 :background nil)
-
-;;;; popup
-     (popup-face                                   :foreground base05 :background base02)
-     (popup-isearch-match                          :foreground base00 :background base0B)
-     (popup-scroll-bar-background-face             :background base03)
-     (popup-scroll-bar-foreground-face             :background base05)
-     (popup-summary-face                           :foreground base04)
-     (popup-tip-face                               :foreground base00 :background base0A)
-     (popup-menu-mouse-face                        :foreground base00 :background base0D)
-     (popup-menu-selection-face                    :foreground base00 :background base0C)
+     (paren-face                                   :inherit normal--)
 
 ;;;; python-mode
-     (py-builtins-face                             :foreground base09 :weight normal)
+     (py-builtins-face                             :inherit normal+)
 
 ;;;; rainbow-delimiters
-     (rainbow-delimiters-depth-1-face              :foreground base0E)
-     (rainbow-delimiters-depth-2-face              :foreground base0D)
-     (rainbow-delimiters-depth-3-face              :foreground base0C)
-     (rainbow-delimiters-depth-4-face              :foreground base0B)
-     (rainbow-delimiters-depth-5-face              :foreground base0A)
-     (rainbow-delimiters-depth-6-face              :foreground base09)
-     (rainbow-delimiters-depth-7-face              :foreground base08)
-     (rainbow-delimiters-depth-8-face              :foreground base03)
-     (rainbow-delimiters-depth-9-face              :foreground base05)
+     (rainbow-delimiters-depth-1-face              :inherit normal-)
+     (rainbow-delimiters-depth-2-face              :inherit normal-)
+     (rainbow-delimiters-depth-3-face              :inherit normal-)
+     (rainbow-delimiters-depth-4-face              :inherit normal-)
+     (rainbow-delimiters-depth-5-face              :inherit normal-)
+     (rainbow-delimiters-depth-6-face              :inherit normal-)
+     (rainbow-delimiters-depth-7-face              :inherit normal-)
+     (rainbow-delimiters-depth-8-face              :inherit normal-)
+     (rainbow-delimiters-depth-9-face              :inherit normal-)
 
 ;;;; regex-tool
-     (regex-tool-matched-face                      :foreground nil :background nil :inherit match)
-
-;;;; rhtml-mode
-     (erb-delim-face                               :background base03)
-     (erb-exec-face                                :background base03 :weight bold)
-     (erb-exec-delim-face                          :background base03)
-     (erb-out-face                                 :background base03 :weight bold)
-     (erb-out-delim-face                           :background base03)
-     (erb-comment-face                             :background base03 :weight bold :slant italic)
-     (erb-comment-delim-face                       :background base03)
+     (regex-tool-matched-face                      :inherit match)
 
 ;;;; sh-mode
-     (sh-heredoc                                   :foreground nil :weight normal :inherit font-lock-string-face)
-     (sh-quoted-exec                               :foreground nil :inherit font-lock-preprocessor-face)
+     (sh-heredoc                                   :inherit font-lock-string-face)
+     (sh-quoted-exec                               :inherit font-lock-preprocessor-face)
 
 ;;;; show-paren-mode
-     (show-paren-match                             :foreground base01 :background base0D)
-     (show-paren-mismatch                          :foreground base01 :background base09)
-
-;;;; slime-mode
-     (slime-highlight-edits-face                   :weight bold)
-     (slime-repl-input-face                        :weight normal :underline nil)
-     (slime-repl-prompt-face                       :foreground base0E :underline nil :weight bold)
-     (slime-repl-result-face                       :foreground base0B)
-     (slime-repl-output-face                       :foreground base0D :background base01)
-
-;;;; smart-mode-line
-     (sml/charging                                 :inherit sml/global :foreground base0B)
-     (sml/discharging                              :inherit sml/global :foreground base08)
-     (sml/filename                                 :inherit sml/global :foreground base0A :weight bold)
-     (sml/global                                   :foreground base16-settings-mode-line-fg)
-     (sml/modes                                    :inherit sml/global :foreground base07)
-     (sml/modified                                 :inherit sml/not-modified :foreground base08 :weight bold)
-     (sml/outside-modified                         :inherit sml/not-modified :background base08)
-     (sml/prefix                                   :inherit sml/global :foreground base09)
-     (sml/read-only                                :inherit sml/not-modified :foreground base0C)
-
-;;;; term and ansi-term
-     (term                                         :foreground base05 :background base00)
-     (term-color-black                             :foreground base02 :background base00)
-     (term-color-white                             :foreground base05 :background base07)
-     (term-color-red                               :foreground base08 :background base08)
-     (term-color-yellow                            :foreground base0A :background base0A)
-     (term-color-green                             :foreground base0B :background base0B)
-     (term-color-cyan                              :foreground base0C :background base0C)
-     (term-color-blue                              :foreground base0D :background base0D)
-     (term-color-magenta                           :foreground base0E :background base0E)
-
-;;;; tooltip
-     (tooltip                                      :background base01 :inherit default)
+     (show-paren-match                             :inherit normal++)
+     (show-paren-mismatch                          :strike-through t)
 
 ;;;; undo-tree-mode
-     (undo-tree-visualizer-default-face            :foreground base06)
-     (undo-tree-visualizer-current-face            :foreground base0B :weight bold)
-     (undo-tree-visualizer-active-branch-face      :foreground base08)
-     (undo-tree-visualizer-register-face           :foreground base0A)
+     (undo-tree-visualizer-default-face            :inherit normal-)
+     (undo-tree-visualizer-current-face            :inherit normal+)
 
 ;;;; which-func-mode
-     (which-func                                   :foreground base0D :background nil :weight bold)
+     (which-func                                   :inherit normal+)
 
 ;;;; whitespace-mode
-     (whitespace-empty                             :foreground base08 :background base0A)
-     (whitespace-hspace                            :foreground base04 :background base04)
-     (whitespace-indentation                       :foreground base08 :background base0A)
-     (whitespace-line                              :foreground base0F :background base01)
-     (whitespace-newline                           :foreground base04)
-     (whitespace-space                             :foreground base03 :background base01)
-     (whitespace-space-after-tab                   :foreground base08 :background base0A)
-     (whitespace-space-before-tab                  :foreground base08 :background base09)
-     (whitespace-tab                               :foreground base03 :background base01)
-     (whitespace-trailing                          :foreground base0A :background base08)
+     (whitespace-hspace                            :background black)
+     (whitespace-line                              :background black)
+     (whitespace-newline                           :background black)
+     (whitespace-space-after-tab                   :background black)
+     (whitespace-space-before-tab                  :background black)
+     (whitespace-tab                               :background black)
+     (whitespace-trailing                          :background black)
+     ;; (whitespace-empty                          :inverse-video t)
+     ;; (whitespace-indentation                    :inverse-video t)
+     ;; (whitespace-space                          :inverse-video t)
 
-     (me-dired-dim-0  :foreground base04)
-     (me-dired-dim-1  :foreground base03)
-     (me-dired-executable  :slant italic)
+     (me-dired-dim-0                               :inherit normal--)
+     (me-dired-dim-1                               :inherit normal---)
+     (me-dired-executable                          :slant italic)
 
      ))
 
   ;; Anything leftover that doesn't fall neatly into a face goes here.
-  (let ((base00 (plist-get theme-colors :base00))
-        (base01 (plist-get theme-colors :base01))
-        (base02 (plist-get theme-colors :base02))
-        (base03 (plist-get theme-colors :base03))
-        (base04 (plist-get theme-colors :base04))
-        (base05 (plist-get theme-colors :base05))
-        (base06 (plist-get theme-colors :base06))
-        (base07 (plist-get theme-colors :base07))
-        (base08 (plist-get theme-colors :base08))
-        (base09 (plist-get theme-colors :base09))
-        (base0A (plist-get theme-colors :base0A))
-        (base0B (plist-get theme-colors :base0B))
-        (base0C (plist-get theme-colors :base0C))
-        (base0D (plist-get theme-colors :base0D))
-        (base0E (plist-get theme-colors :base0E))
-        (base0F (plist-get theme-colors :base0F)))
-    (custom-theme-set-variables
-     theme-name
-     `(ansi-color-names-vector
-       ;; black, base08, base0B, base0A, base0D, magenta, cyan, white
-       [,base00 ,base08 ,base0B ,base0A ,base0D ,base0E ,base0D ,base05]))
+  (let ((white (plist-get theme-colors :white))
+        (gray (plist-get theme-colors :gray))
+        (black (plist-get theme-colors :black)))
 
     ;; Emacs 24.3 changed ’ansi-term-color-vector’ from a vector of colors
     ;; to a vector of faces.
-    (when (version< emacs-version "24.3")
-      (custom-theme-set-variables
-       theme-name
-       `(ansi-term-color-vector
-         ;; black, base08, base0B, base0A, base0D, magenta, cyan, white
-         [unspecified ,base00 ,base08 ,base0B ,base0A ,base0D ,base0E ,base0D ,base05])))
 
-    (setq org-todo-keyword-faces
-          `(("TODO" :foreground ,base03 :weight bold)
-            ("NEXT" :foreground ,base03 :weight bold)
-            ("DONE" :foreground ,base03 :weight bold)
-            ("WAIT" :foreground "gray80" :weight bold)
-            ("HOLD" :foreground "gray80" :weight bold)
-            ("KILL" :foreground "gray80" :weight bold)))
+    (defun me//propertize-evil-tag (str inverse-video)
+      "Make the evil state notifier pertty.
+      Propertize STR with foreground FG and background BG color."
+      (propertize str 'face
+                  `((:inverse-video ,inverse-video))))
+
+  (defun me//colorize-evil-tag (state-color-list)
+    "Change evil tag color according to STATE-COLOR-LIST."
+    (dolist (elm state-color-list)
+      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
+           (if (plist-get elm :edit) 'hollow 'box))
+      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
+           (me//propertize-evil-tag (plist-get elm :tag) (not (plist-get elm :edit))))))
 
     (let ((state-color-list
-           `((:state "insert" :color "gray100" :tag " <I> ")
-             (:state "emacs" :color "gray100" :tag " <E> ")
-             (:state "normal" :color ,base05 :tag " <N> ")
-             (:state "visual" :color "gray" :tag " <V> ")
-             (:state "motion" :color "gray" :tag " <M> "))))
+           `((:state "insert" :edit t   :tag " <I> ")
+             (:state "emacs"  :edit t   :tag " <E> ")
+             (:state "normal" :edit nil :tag " <N> ")
+             (:state "visual" :edit nil :tag " <V> ")
+             (:state "motion" :edit nil :tag " <M> "))))
       (me//colorize-evil-tag state-color-list))
+
     ))
 
 ;;;###autoload
@@ -876,29 +619,19 @@ return the actual color value.  Otherwise return the value unchanged."
                   (file-name-as-directory
                    (file-name-directory load-file-name))))
 
-(defvar base16-eink-colors
-  '(:base00 "gray100"                   ;default background
-    :base01 "gray100"                   ;lighter background (status bar)
-    :base02 "#dcdcdc"                   ;selection
-    :base03 "gray70"                    ;comment
-    :base04 "gray60"                    ;doc
-    :base05 "gray50"                    ;default, variable
-    :base06 "gray60"                    ;light foreground
-    :base07 "#dcdcdc"                   ;light background
-    :base08 "gray10"                    ;warning
-    :base09 "gray30"                    ;constant
-    :base0A "#a0a0a0"                   ;regexp-grouping-backslash
-    :base0B "gray60"                    ;string
-    :base0C "gray40"                    ;builtin
-    :base0D "gray20"                    ;function
-    :base0E "gray20"                    ;keyword
-    :base0F "#5e5e5e")
-  "All colors for Base16 Grayscale Light are defined here.")
+(defvar eink-colors
+  '(:white "gray100"
+    :gray  "gray50"
+    :black "gray0")
+  "E-ink recognizable colors.
+
+Actually, only black and white are recognized, `gray' is rendered
+as light weight.")
 
 (deftheme eink)
 
 ;; Add all the faces to the theme
-(base16-theme-define 'eink base16-eink-colors)
+(base16-theme-define 'eink eink-colors)
 
 ;; Mark the theme as provided
 (provide-theme 'eink)
