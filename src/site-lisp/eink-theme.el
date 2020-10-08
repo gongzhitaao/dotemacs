@@ -118,7 +118,7 @@ return the actual color value.  Otherwise return the value unchanged."
 ;;;; basic colors
      (bookmark-menu-bookmark                       :inherit normal--)
      (border                                       :background gray)
-     (cursor                                       :hollow t :background white)
+     (cursor                                       :hollow t :foreground white :background white)
      (default                                      :foreground black :background white :distant-foreground white)
      (dired-symlink                                :underline t)
      (error                                        :inherit normal+)
@@ -130,7 +130,7 @@ return the actual color value.  Otherwise return the value unchanged."
      (region                                       :inverse-video t)
      (shadow                                       :foreground gray)
      (success                                      :inherit normal+)
-     (trailing-whitespace                          :foreground black :background black)
+     (trailing-whitespace                          :underline (:style wave))
      (vertical-border                              :foreground black)
      (warning                                      :inherit normal+)
      (widget-button                                :underline t)
@@ -366,7 +366,7 @@ return the actual color value.  Otherwise return the value unchanged."
      (helm-visible-mark                            :inverse-video t)
 
 ;;;; hl-line-mode
-     (hl-line                                      :underline t)
+     (hl-line                                      :inherit normal+)
      (col-highlight                                :background white)
 
 ;;;; hl-sexp-mode
@@ -563,16 +563,16 @@ return the actual color value.  Otherwise return the value unchanged."
      (which-func                                   :inherit normal+)
 
 ;;;; whitespace-mode
-     (whitespace-hspace                            :background black)
-     (whitespace-line                              :background black)
+     (whitespace-hspace                            :overline t)
+     (whitespace-line                              :background white :strike-through t)
      (whitespace-newline                           :background black)
      (whitespace-space-after-tab                   :background black)
      (whitespace-space-before-tab                  :background black)
-     (whitespace-tab                               :background black)
-     (whitespace-trailing                          :background black)
-     ;; (whitespace-empty                          :inverse-video t)
-     ;; (whitespace-indentation                    :inverse-video t)
-     ;; (whitespace-space                          :inverse-video t)
+     (whitespace-tab                               :strike-through t)
+     (whitespace-trailing                          :underline (:style wave))
+     (whitespace-empty                             :underline (:style wave))
+     ;; (whitespace-indentation                       :inherit normal)
+     (whitespace-space                             :background white)
 
      (me-dired-dim-0                               :inherit normal--)
      (me-dired-dim-1                               :inherit normal---)

@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-10-07 08:10:06 gongzhitaao>
+;; Time-stamp: <2020-10-07 13:56:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -658,8 +658,8 @@ all '.<space>' with '.<space><space>'."
   :delight
   :config
   (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-  ;; (setq highlight-indent-guides-auto-odd-face-perc 5)
-  ;; (setq highlight-indent-guides-auto-even-face-perc 10)
+  (setq highlight-indent-guides-auto-character-face-perc 50)
+  (setq highlight-indent-guides-auto-top-character-face-perc 100)
   (setq highlight-indent-guides-method 'character)
   (setq highlight-indent-guides-responsive 'top))
 
@@ -1391,7 +1391,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   (defun me//init-org-agenda ()
     ;; (set (make-local-variable 'fill-column) 130)
-    (set (make-local-variable 'writeroom-width) 150))
+    (set (make-local-variable 'writeroom-width) 150)
+    (hl-line-mode))
   (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
 
   (defun me//org-agenda-cmp-user-defined (a b)
