@@ -152,6 +152,7 @@ return the actual color value.  Otherwise return the value unchanged."
      (font-lock-regexp-grouping-construct          :slant italic)
      (font-lock-string-face                        :inherit normal--)
      (font-lock-type-face                          :inherit normal+)
+     (font-lock-variable-name-face                 :inherit normal-)
      (font-lock-warning-face                       :inherit normal+)
 
 ;;;; isearch
@@ -603,11 +604,11 @@ return the actual color value.  Otherwise return the value unchanged."
            (me//propertize-evil-tag (plist-get elm :tag) (not (plist-get elm :edit))))))
 
     (let ((state-color-list
-           `((:state "insert" :edit t   :tag " <I> ")
-             (:state "emacs"  :edit t   :tag " <E> ")
-             (:state "normal" :edit nil :tag " <N> ")
-             (:state "visual" :edit nil :tag " <V> ")
-             (:state "motion" :edit nil :tag " <M> "))))
+           `((:state "insert" :edit nil   :tag " <I> ")
+             (:state "emacs"  :edit nil   :tag " <E> ")
+             (:state "normal" :edit t :tag " <N> ")
+             (:state "visual" :edit t :tag " <V> ")
+             (:state "motion" :edit t :tag " <M> "))))
       (me//colorize-evil-tag state-color-list))
 
     ))

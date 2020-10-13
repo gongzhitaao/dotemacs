@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-10-07 13:56:00 gongzhitaao>
+;; Time-stamp: <2020-10-09 08:09:41 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -895,6 +895,9 @@ all '.<space>' with '.<space><space>'."
          ("b" . helm-mini)
          ("f" . find-file-literally-at-point))
   :config
+  (defun me//init-dired ()
+    (hl-line-mode))
+  (add-hook 'dired-mode-hook #'me//init-dired)
   (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
