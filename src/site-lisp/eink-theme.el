@@ -118,7 +118,7 @@ return the actual color value.  Otherwise return the value unchanged."
 ;;;; basic colors
      (bookmark-menu-bookmark                       :inherit normal--)
      (border                                       :background gray)
-     (cursor                                       :hollow t :foreground white :background white)
+     (cursor                                       :background black)
      (default                                      :foreground black :background white :distant-foreground white)
      (dired-symlink                                :underline t)
      (error                                        :inherit normal+)
@@ -139,8 +139,8 @@ return the actual color value.  Otherwise return the value unchanged."
 
 ;;;; font-lock
      (font-lock-builtin-face                       :inherit normal+)
-     (font-lock-comment-delimiter-face             :inherit normal-)
-     (font-lock-comment-face                       :inherit normal-)
+     (font-lock-comment-delimiter-face             :inherit normal--)
+     (font-lock-comment-face                       :inherit normal--)
      (font-lock-constant-face                      :inherit normal+)
      (font-lock-doc-face                           :inherit normal-)
      (font-lock-doc-string-face                    :inherit normal-)
@@ -599,16 +599,16 @@ return the actual color value.  Otherwise return the value unchanged."
     "Change evil tag color according to STATE-COLOR-LIST."
     (dolist (elm state-color-list)
       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
-           (if (plist-get elm :edit) 'hollow 'box))
+           (if (plist-get elm :edit) 'box 'hollow))
       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
            (me//propertize-evil-tag (plist-get elm :tag) (not (plist-get elm :edit))))))
 
     (let ((state-color-list
-           `((:state "insert" :edit nil   :tag " <I> ")
-             (:state "emacs"  :edit nil   :tag " <E> ")
-             (:state "normal" :edit t :tag " <N> ")
-             (:state "visual" :edit t :tag " <V> ")
-             (:state "motion" :edit t :tag " <M> "))))
+           `((:state "insert" :edit t   :tag " <I> ")
+             (:state "emacs"  :edit t   :tag " <E> ")
+             (:state "normal" :edit nil :tag " <N> ")
+             (:state "visual" :edit nil :tag " <V> ")
+             (:state "motion" :edit nil :tag " <M> "))))
       (me//colorize-evil-tag state-color-list))
 
     ))
