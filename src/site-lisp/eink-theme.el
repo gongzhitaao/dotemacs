@@ -81,17 +81,23 @@ return the actual color value.  Otherwise return the value unchanged."
                      (base16-transform-face face colors))
                  faces)))
 
-(defface normal    '((t :foreground "gray0")) "normal"
+(defface normal
+  '((t :foreground "gray0" :distant-foreground "gray100")) "normal"
   :group 'eink-theme)
-(defface normal+   '((t :inherit normal :weight semi-bold)) "normal+"
+(defface normal+
+  '((t :inherit normal :weight semi-bold)) "normal+"
   :group 'eink-theme)
-(defface normal++  '((t :inherit normal :weight bold)) "normal++"
+(defface normal++
+  '((t :inherit normal :weight bold)) "normal++"
   :group 'eink-theme)
-(defface normal-   '((t :inherit normal :weight semi-light)) "normal-"
+(defface normal-
+  '((t :inherit normal :weight semi-light)) "normal-"
   :group 'eink-theme)
-(defface normal--  '((t :inherit normal :weight light)) "normal--"
+(defface normal--
+  '((t :inherit normal :weight light)) "normal--"
   :group 'eink-theme)
-(defface normal--- '((t :inherit normal :weight extra-light)) "normal---"
+(defface normal---
+  '((t :inherit normal :weight extra-light)) "normal---"
   :group 'eink-theme)
 
 (setq org-todo-keyword-faces
@@ -118,7 +124,7 @@ return the actual color value.  Otherwise return the value unchanged."
 ;;;; basic colors
      (bookmark-menu-bookmark                       :inherit normal--)
      (border                                       :background gray)
-     (cursor                                       :background black)
+     (cursor                                       :background white)
      (default                                      :foreground black :background white :distant-foreground white)
      (dired-symlink                                :underline t)
      (error                                        :inherit normal+)
@@ -575,6 +581,8 @@ return the actual color value.  Otherwise return the value unchanged."
      ;; (whitespace-indentation                       :inherit normal)
      (whitespace-space                             :background white)
 
+     (web-mode-current-element-highlight-face      :inherit normal++)
+
      (me-dired-dim-0                               :inherit normal--)
      (me-dired-dim-1                               :inherit normal---)
      (me-dired-executable                          :slant italic)
@@ -595,13 +603,13 @@ return the actual color value.  Otherwise return the value unchanged."
       (propertize str 'face
                   `((:inverse-video ,inverse-video))))
 
-  (defun me//colorize-evil-tag (state-color-list)
-    "Change evil tag color according to STATE-COLOR-LIST."
-    (dolist (elm state-color-list)
-      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
-           (if (plist-get elm :edit) 'box 'hollow))
-      (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
-           (me//propertize-evil-tag (plist-get elm :tag) (not (plist-get elm :edit))))))
+    (defun me//colorize-evil-tag (state-color-list)
+      "Change evil tag color according to STATE-COLOR-LIST."
+      (dolist (elm state-color-list)
+        (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
+             (if (plist-get elm :edit) 'box 'hollow))
+        (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
+             (me//propertize-evil-tag (plist-get elm :tag) (not (plist-get elm :edit))))))
 
     (let ((state-color-list
            `((:state "insert" :edit t   :tag " <I> ")
@@ -610,6 +618,9 @@ return the actual color value.  Otherwise return the value unchanged."
              (:state "visual" :edit nil :tag " <V> ")
              (:state "motion" :edit nil :tag " <M> "))))
       (me//colorize-evil-tag state-color-list))
+
+    (add-hook 'activate-mark-hook #'(lambda () (setq cursor-type 'hollow)))
+    (add-hook 'deactivate-mark-hook #'(lambda () (setq cursor-type 'box)))
 
     ))
 

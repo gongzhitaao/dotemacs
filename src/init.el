@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-10-09 08:09:41 gongzhitaao>
+;; Time-stamp: <2020-11-04 13:37:23 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -581,7 +581,9 @@ all '.<space>' with '.<space><space>'."
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
                           (decode-char 'ucs #xF940))
-                    (font-spec :family "Font Awesome 5 Free" :size 13))
+                    (font-spec :family "Font Awesome 5 Free"
+                               ;; Default 13, 24 for scaling 2x
+                               :size 24))
 
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font
