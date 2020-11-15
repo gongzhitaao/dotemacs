@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-11-04 13:37:23 gongzhitaao>
+;; Time-stamp: <2020-11-15 09:18:45 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -473,9 +473,11 @@ all '.<space>' with '.<space><space>'."
 
 (defun me//set-title-bar()
   "Update title bar."
-  (let* ((name (or buffer-file-name dired-directory (buffer-name)))
-         (hostname (or (file-remote-p name 'host) "localhost")))
-    (concat "@" hostname "     " name)))
+  (let* ((date (format-time-string "%Y-%m-%d %a"))
+         (filepath (or buffer-file-name dired-directory (buffer-name)))
+         (hostname (concat "@" (or (file-remote-p filepath 'host) "localhost")))
+         (separator (make-string 8 ? )))
+    (string-join `(,date ,hostname ,filepath) separator)))
 (setq frame-title-format '((:eval (me//set-title-bar))))
 
 ;; Show the search result count.
@@ -570,6 +572,9 @@ all '.<space>' with '.<space><space>'."
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
                  nil :actions nil))
 
+(use-package editorconfig
+  :delight)
+
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
@@ -599,7 +604,7 @@ all '.<space>' with '.<space><space>'."
 
 (defvar display-time-24hr-format)
 (setq display-time-24hr-format t
-      display-time-day-and-date t)
+      display-time-day-and-date nil)
 (display-time)
 
 (column-number-mode 1)
@@ -1780,6 +1785,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-files
   :config
+  :delight helm-ff-cache-mode
   (setq helm-ff-file-name-history-use-recentf t
         helm-ff-search-library-in-sexp t))
 
