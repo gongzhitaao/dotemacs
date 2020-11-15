@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-11-15 09:18:45 gongzhitaao>
+;; Time-stamp: <2020-11-15 10:11:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -604,7 +604,8 @@ all '.<space>' with '.<space><space>'."
 
 (defvar display-time-24hr-format)
 (setq display-time-24hr-format t
-      display-time-day-and-date nil)
+      display-time-day-and-date nil
+      display-time-default-load-average nil)
 (display-time)
 
 (column-number-mode 1)
