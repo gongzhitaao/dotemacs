@@ -51,6 +51,10 @@
   :bind (:map c++-mode-map
          ("C-!" . google-clang-format)))
 
+(use-package markdown-mode
+  :bind (:map markdown-mode-map
+         ("C-!" . google-mdformat)))
+
 (use-package typescript-mode
   :bind (:map typescript-mode-map
          ("C-!" . google-clang-format))

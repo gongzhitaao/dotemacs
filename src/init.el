@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-11-15 10:11:18 gongzhitaao>
+;; Time-stamp: <2020-11-15 11:51:39 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1824,16 +1824,17 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 
 (delight
- '((auto-fill-function " " t)
+ '((abbrev-mode nil t)
+   (auto-fill-function " " t)
    (auto-revert-mode " " autorevert)
+   (eldoc-mode nil t)
    (flyspell-mode nil flyspell)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
    (python-docstring-mode nil python-docstring)
    (subword-mode nil subword)
    (view-mode " " view)
-   (whitespace-mode nil whitespace)
-   (eldoc-mode nil t)))
+   (whitespace-mode nil whitespace)))
 
 (use-package re-builder
   :config

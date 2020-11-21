@@ -469,6 +469,7 @@ return the actual color value.  Otherwise return the value unchanged."
 ;;;; markdown-mode
      (markdown-url-face                            :inherit link)
      (markdown-link-face                           :foreground black :underline t)
+     (markdown-pre-face                            :inherit normal)
 
 ;;;; message-mode
      (message-header-subject                       :inherit normal+ :inherit message-header-other)
