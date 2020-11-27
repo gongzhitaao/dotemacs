@@ -39,12 +39,12 @@
 
 (use-package gogolink
   :config
-  (defface me-gogolink-link-face
-    '((t :foreground "dark sea green"
-         :underline t
-         :inherit gogolink-link-face))
-    "gogolink link face")
-  (setq gogolink-link-face 'me-gogolink-link-face)
+  ;; (defface me-gogolink-link-face
+  ;;   '((t :foreground "dark sea green"
+  ;;        :underline t
+  ;;        :inherit gogolink-link-face))
+  ;;   "gogolink link face")
+  ;; (setq gogolink-link-face 'me-gogolink-link-face)
   (add-hook 'find-file-hook #'me//turn-on-gogolink))
 
 (use-package google-cc-extras
