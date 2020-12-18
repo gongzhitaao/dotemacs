@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-11-15 11:51:39 gongzhitaao>
+;; Time-stamp: <2020-12-16 15:51:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2163,11 +2163,15 @@ Using `window-line-height' accounts for variable-height fonts."
          ("<PageDown>" . pdf-view-scroll-up-or-next-page)
          ("b"          . helm-mini)
          ("c"          . me/org-ref-open-entry)
-         ("d"          . pdf-view-scroll-up-or-next-page)
-         ("e"          . pdf-view-scroll-down-or-previous-page)
+         ;; ("d"          . pdf-view-scroll-up-or-next-page)
+         ;; ("e"          . pdf-view-scroll-down-or-previous-page)
+         ("d"          . me/pdf-view-next-few-lines)
+         ("e"          . me/pdf-view-prev-few-lines)
          ("g"          . pdf-view-goto-page)
-         ("j"          . pdf-view-scroll-up-or-next-page)
-         ("k"          . pdf-view-scroll-down-or-previous-page)
+         ;; ("j"          . pdf-view-scroll-up-or-next-page)
+         ;; ("k"          . pdf-view-scroll-down-or-previous-page)
+         ("j"          . me/pdf-view-next-few-lines)
+         ("k"          . me/pdf-view-prev-few-lines)
          ("n"          . me/org-ref-open-note)
          ("z"          . delete-other-windows))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
