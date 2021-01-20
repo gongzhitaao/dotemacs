@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2020-12-16 15:51:33 gongzhitaao>
+;; Time-stamp: <2021-01-19 20:47:47 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -107,7 +107,7 @@
 ;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
-;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+;; ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 
@@ -588,14 +588,17 @@ all '.<space>' with '.<space><space>'."
                           (decode-char 'ucs #xF940))
                     (font-spec :family "Font Awesome 5 Free"
                                ;; Default 13, 24 for scaling 2x
+                               ;; :size 13))
                                :size 24))
 
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          ;; Default 16, 32 for scaling 2x
-                                          :size 32))))
+                                          ;; Default 16,
+                                          ;; :size 16))))
+                                          ;; :size 32)))) ;2x
+                                          :size 46)))) ;1.25x
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 
@@ -1330,6 +1333,7 @@ Lisp function does not specify a special indentation."
         org-hide-macro-markers t
         org-hierarchical-todo-statistics nil
         org-image-actual-width nil
+        org-log-done 'time
         org-outline-path-complete-in-steps nil
         org-provide-todo-statistics t
         org-refile-targets '((nil :maxlevel . 4))

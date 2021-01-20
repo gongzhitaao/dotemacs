@@ -1,5 +1,4 @@
 (source gnu)
-(source marmalade)
 (source melpa)
 (source org)
 
@@ -31,6 +30,7 @@
 (depends-on "drag-stuff")
 (depends-on "ebib")
 (depends-on "edit-indirect")
+(depends-on "editorconfig")
 (depends-on "ein")
 (depends-on "elisp-slime-nav")
 (depends-on "epl")
@@ -103,6 +103,7 @@
 (depends-on "pandoc-mode")
 (depends-on "paren-face")
 (depends-on "parsebib")
+(depends-on "pdf-tools")
 (depends-on "persistent-scratch")
 (depends-on "polymode")
 (depends-on "popup")
