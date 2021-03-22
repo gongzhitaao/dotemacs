@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-01-28 09:48:45 gongzhitaao>
+;; Time-stamp: <2021-03-21 20:19:16 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -902,7 +902,6 @@ all '.<space>' with '.<space><space>'."
 
 (use-package dired
   :bind (:map dired-mode-map
-         ("b" . helm-mini)
          ("f" . find-file-literally-at-point))
   :config
   (defun me//init-dired ()
@@ -955,7 +954,9 @@ all '.<space>' with '.<space><space>'."
                               (,executable
                                (1 'me-dired-executable))))))
 
-(use-package dired-x)
+(use-package dired-x
+  :config
+  (setq dired-guess-shell-alist-user '(("\\.mp4\\'" "totem"))))
 
 (use-package async
   :delight dired-async-mode
@@ -1328,6 +1329,7 @@ Lisp function does not specify a special indentation."
 
   (setq org-adapt-indentation nil
         org-catch-invisible-edits 'smart
+        org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
         org-hide-emphasis-markers t
         org-hide-macro-markers t
         org-hierarchical-todo-statistics nil
