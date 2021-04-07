@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-03-21 20:19:16 gongzhitaao>
+;; Time-stamp: <2021-04-06 14:49:14 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2062,6 +2062,7 @@ argument FORCE, force the creation of a new ID."
   (setq-local display-line-numbers nil))
 
 (use-package pdf-tools
+  :load-path "lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install)
