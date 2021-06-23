@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-04-06 14:49:14 gongzhitaao>
+;; Time-stamp: <2021-06-22 09:23:41 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -273,8 +273,7 @@
 
 ;;; M-s search
 
-;; M-s a helm-do-ag
-;; (global-set-key (kbd "M-s g") #'helm-do-grep-ag)
+;; (global-set-key (kbd "M-s g") #'helm-ag)
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
 ;; M-s s helm-swoop
@@ -512,7 +511,7 @@ all '.<space>' with '.<space><space>'."
         writeroom-width 100)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
-                    bibtex-mode bookmark-bmenu-mode))
+                    bibtex-mode bookmark-bmenu-mode LilyPond-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -581,7 +580,7 @@ all '.<space>' with '.<space><space>'."
 (when (display-graphic-p)
   (set-face-attribute 'default nil
               :family "Iosevka SS09"
-              :height 130)
+              :height 150)
 
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
@@ -595,25 +594,33 @@ all '.<space>' with '.<space><space>'."
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          :size 24)))) ;1x
+                                          ;; :size 24)))) ;1x
+                                          :size 26)))) ;1.5x
                                           ;; :size 32)))) ;2x
                                           ;; :size 46)))) ;1.25x
 
 (set-face-attribute 'fixed-pitch nil :height 110)
+(setq-default line-spacing 0.2)
 
 ;; modeline
 ;; -----------------------------------------------------------------------------
 
-(defvar display-time-24hr-format)
-(setq display-time-24hr-format t
+(use-package time
+  :config
+  (setq display-time-24hr-format t
       display-time-day-and-date nil
       display-time-default-load-average nil)
-(display-time)
+  (display-time))
 
-(column-number-mode 1)
-(setq size-indication-mode t)
+(use-package simple
+  :config
+  (column-number-mode 1)
+  (setq size-indication-mode t))
 
-(file-name-shadow-mode t)
+(use-package rfn-eshadow
+  :config
+  (file-name-shadow-mode t))
+
 (use-package uniquify
   :config
   (setq uniquify-separator "/"
@@ -1160,7 +1167,8 @@ it specifies how to indent.  The property value can be:
 This function returns either the indentation to use, or nil if the
 Lisp function does not specify a special indentation."
     (let ((normal-indent (current-column))
-          (orig-point (point)))
+          ;; (orig-point (point))ly
+          )
       (goto-char (1+ (elt state 1)))
       (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
       (cond
@@ -1209,7 +1217,18 @@ Lisp function does not specify a special indentation."
 
 (use-package clang-format
   :bind (:map c++-mode-map
-         ("C-!" . clang-format-region)))
+         ("C-!" . me/clang-format-region))
+  :config
+  (defun me/clang-format-region ()
+    (interactive)
+    (let ((start (if (use-region-p) (region-beginning) (point)))
+          (end (if (use-region-p) (region-end) (point)))
+          (assumed-filename
+           (if (file-remote-p buffer-file-name)
+               (concat (getenv "HOME") "/"
+                       (file-name-nondirectory buffer-file-name))
+             buffer-file-name)))
+    (clang-format-region start end clang-format-style assumed-filename))))
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
@@ -1286,6 +1305,7 @@ Lisp function does not specify a special indentation."
 (use-package octave-mode
   :mode "\\.m\\'"
   :init
+  (defvar octave-comment-char)
   (setq octave-comment-char ?%))
 
 (use-package markdown-mode
@@ -1294,7 +1314,8 @@ Lisp function does not specify a special indentation."
 
   (make-local-variable 'ispell-skip-region-alist)
   (add-to-list 'ispell-skip-region-alist '("`" "`"))
-  (add-to-list 'ispell-skip-region-alist '("^```" . "^```")))
+  (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
+  (setq-default markdown-hide-urls t))
 
 (defun me//init-org ()
   "Init orgmode."
@@ -1335,10 +1356,7 @@ Lisp function does not specify a special indentation."
         org-hierarchical-todo-statistics nil
         org-image-actual-width nil
         org-log-done 'time
-        org-outline-path-complete-in-steps nil
         org-provide-todo-statistics t
-        org-refile-targets '((nil :maxlevel . 4))
-        org-refile-use-outline-path t
         org-src-fontify-natively t
         org-src-preserve-indentation t
         org-support-shift-select t
@@ -1365,6 +1383,12 @@ Lisp function does not specify a special indentation."
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
+
+(use-package org-refile
+  :config
+  (setq org-refile-targets '((nil :maxlevel . 4))
+        org-refile-use-outline-path t
+        org-outline-path-complete-in-steps nil))
 
 (defun me//org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
@@ -1754,8 +1778,7 @@ argument FORCE, force the creation of a new ID."
   :config
   (bind-keys ("M-x"     . helm-M-x)
              ("C-x C-f" . helm-find-files)
-             ("M-s a"   . helm-do-ag)
-             ("M-s g"   . helm-do-grep-ag)
+             ("M-s g"   . helm-ag)
              ("C-b"     . helm-mini)
              ("M-/"     . helm-dabbrev)
              :map helm-map
@@ -2062,7 +2085,7 @@ argument FORCE, force the creation of a new ID."
   (setq-local display-line-numbers nil))
 
 (use-package pdf-tools
-  :load-path "lisp/pdf-tools/lisp"
+  ;; :load-path "lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install)
@@ -2082,7 +2105,7 @@ argument FORCE, force the creation of a new ID."
     (assoc bmk bookmark-alist))
 
   (defun me//pdf-get-bookmark-name ()
-    (concat "PDF-last-viewed: " (buffer-file-name)))
+    (concat " " (buffer-file-name)))
 
   (defun me//pdf-set-all-last-viewed-bookmarks ()
     (dolist (buf (buffer-list))
@@ -2246,9 +2269,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
                (t nil)))
          (pdf-file (funcall org-ref-get-pdf-filename-function key)))
     (if (file-exists-p pdf-file)
-        (if arg
-            (start-process "xdg-open" nil "setsid" "xdg-open" pdf-file)
-          (org-open-file pdf-file))
+        (org-open-file pdf-file (not arg))
       (if (derived-mode-p 'pdf-view-mode)
           (message "Already opened")
         (message "No PDF found with name %s" pdf-file)))))
@@ -2359,6 +2380,11 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; =============================================================================
 
 (use-package dm)
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
+(use-package lilypond-init
+  :load-path "site-lisp/lilypond"
+  :mode ("\\.ly\\'" . LilyPond-mode))
 
 ;; =============================================================================
 ;; Theme

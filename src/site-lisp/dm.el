@@ -47,10 +47,6 @@
   ;; (setq gogolink-link-face 'me-gogolink-link-face)
   (add-hook 'find-file-hook #'me//turn-on-gogolink))
 
-(use-package google-cc-extras
-  :bind (:map c++-mode-map
-         ("C-!" . google-clang-format)))
-
 (use-package markdown-mode
   :bind (:map markdown-mode-map
          ("C-!" . google-mdformat)))
