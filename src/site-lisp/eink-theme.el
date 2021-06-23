@@ -348,9 +348,9 @@ return the actual color value.  Otherwise return the value unchanged."
 
 ;;;; helm
      (helm-action                                  :inherit normal-)
-     (helm-buffer-directory                        :inherit normal-)
-     (helm-buffer-file                             :inherit normal--)
-     (helm-buffer-not-saved                        :inherit normal+)
+     (helm-buffer-directory                        :inherit normal- :underline t)
+     (helm-buffer-file                             :inherit normal-)
+     (helm-buffer-not-saved                        :inherit normal)
      (helm-buffer-process                          :inherit normal--)
      (helm-buffer-saved-out                        :unerline t)
      (helm-candidate-number                        :inverse-video t)
@@ -360,11 +360,11 @@ return the actual color value.  Otherwise return the value unchanged."
      (helm-ff-dotted-directory                     :inherit dired-ignored)
      (helm-ff-dotted-symlink-directory             :underline t)
      (helm-ff-executable                           :slant italic)
-     (helm-ff-file                                 :inherit normal-)
+     (helm-ff-file                                 :inherit normal--)
      (helm-ff-file-extension                       :inherit normal--)
      (helm-ff-invalid-symlink                      :inherit dired-warning)
      (helm-ff-symlink                              :inherit dired-symlink)
-     (helm-M-x-key                                 :foreground black)
+     (helm-M-x-key                                 :inherit normal+)
      (helm-match                                   :inverse-video t)
      (helm-moccur-buffer                           :foreground black)
      (helm-selection                               :inherit normal+)
@@ -622,6 +622,11 @@ return the actual color value.  Otherwise return the value unchanged."
 
     (add-hook 'activate-mark-hook #'(lambda () (setq cursor-type 'hollow)))
     (add-hook 'deactivate-mark-hook #'(lambda () (setq cursor-type 'box)))
+
+    (defun me//helm-fonts ()
+      (set (make-local-variable 'face-remapping-alist)
+          '((default normal--))))
+    (add-hook 'helm-major-mode-hook #'me//helm-fonts)
 
     ))
 
