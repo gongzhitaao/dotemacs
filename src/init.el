@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-06-29 11:25:34 gongzhitaao>
+;; Time-stamp: <2021-08-27 13:48:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1523,6 +1523,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :empty-lines 1
            :jump-to-captured t
            :tree-type week)
+
+          ("s" "Save for later" item
+           (file+headline "work.org" "Scratch"))
 
           ;; Not used for now
           ;; ("m" "Save mail link" entry
