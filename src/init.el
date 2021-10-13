@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-08-27 13:48:34 gongzhitaao>
+;; Time-stamp: <2021-10-11 18:32:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2050,9 +2050,7 @@ argument FORCE, force the creation of a new ID."
   :bind (:map org-mode-map
          ("C-c ]" . org-ref-insert-ref-link))
   :init
-  (setq org-ref-default-bibliography me-bib-files
-        org-ref-notes-directory me-bib-notes
-        org-ref-pdf-directory me-bib-pdfs
+  (setq org-ref-notes-directory me-bib-notes
         org-ref-show-citation-on-enter nil)
   :config
   (setq org-ref-notes-function #'me//org-ref-notes-function)
