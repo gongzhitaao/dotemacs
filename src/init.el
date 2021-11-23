@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-10-11 18:32:28 gongzhitaao>
+;; Time-stamp: <2021-11-22 14:32:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -580,7 +580,7 @@ all '.<space>' with '.<space><space>'."
 (when (display-graphic-p)
   (set-face-attribute 'default nil
               :family "Iosevka SS09"
-              :height 150)
+              :height 160)
 
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
@@ -600,7 +600,7 @@ all '.<space>' with '.<space><space>'."
                                           ;; :size 46)))) ;1.25x
 
 (set-face-attribute 'fixed-pitch nil :height 110)
-(setq-default line-spacing 0.2)
+(setq-default line-spacing 0.1)
 
 ;; modeline
 ;; -----------------------------------------------------------------------------
@@ -1240,14 +1240,17 @@ Lisp function does not specify a special indentation."
           web-mode-enable-current-element-highlight t))
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
+(use-package yapfify)
+(use-package sphinx-doc)
+(use-package python-isort)
+
 (use-package python
   :mode ("\\.py\\'" . python-mode)
+  :after (yapfify python-isort)
   :bind (:map python-mode-map
-         ("C-!" . yapfify-region))
+         ("C-!" . yapfify-region)
+         ("C-c C-s" . python-isort))
   :config
-  (use-package sphinx-doc)
-  (use-package yapfify)
-
   (defun me//init-python()
     "Init python model."
     (python-docstring-mode)
@@ -1462,6 +1465,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (setq org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
 
   (setq org-agenda-compact-blocks nil
+        org-agenda-columns-add-appointments-to-effort-sum t
         org-agenda-dim-blocked-tasks t
         org-agenda-files (expand-file-name "orgfile" org-directory)
         org-agenda-include-diary t
@@ -1922,13 +1926,17 @@ argument FORCE, force the creation of a new ID."
 (appt-activate 1)
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
+;; Epub
+;; -----------------------------------------------------------------------------
+(use-package nov :mode ("\\.epub\\'"))
+
 ;; =============================================================================
 ;; mail
 ;; =============================================================================
 
 ;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
 ;; fine, but replying mail is not working.
-;; (use-package mail-conf)
+(use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
@@ -1963,7 +1971,11 @@ argument FORCE, force the creation of a new ID."
   "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
-  :bind ("C-c b" . helm-bibtex))
+  :bind ("C-c b" . helm-bibtex)
+  :config
+  (helm-add-action-to-source
+   "Edit entry keywords" #'org-ref-set-bibtex-keywords
+   helm-source-bibtex))
 
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
@@ -1999,15 +2011,18 @@ argument FORCE, force the creation of a new ID."
         bibtex-autokey-titlewords-stretch 0
         bibtex-autokey-year-length 4
         bibtex-autokey-year-title-separator "-"
-        bibtex-completion-bibliography me-bib-files
+        bibtex-dialect 'biblatex
+        bibtex-maintain-sorted-entries t
+        bibtex-text-indentation 20))
+
+(use-package bibtex-completion
+  :config
+  (setq bibtex-completion-bibliography me-bib-files
         bibtex-completion-library-path me-bib-pdfs
         bibtex-completion-notes-extension ".org"
         bibtex-completion-notes-path me-bib-notes
         bibtex-completion-notes-symbol "✔"
-        bibtex-completion-pdf-symbol "⚐"
-        bibtex-dialect 'biblatex
-        bibtex-maintain-sorted-entries t
-        bibtex-text-indentation 20))
+        bibtex-completion-pdf-symbol "⚐"))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
@@ -2034,6 +2049,8 @@ argument FORCE, force the creation of a new ID."
 ;; org-ref
 ;; -----------------------------------------------------------------------------
 
+(setq org-ref-get-pdf-filename-function #'me//org-ref-notes-function)
+
 (defun me//org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
   (bibtex-completion-edit-notes
@@ -2049,12 +2066,7 @@ argument FORCE, force the creation of a new ID."
   :demand
   :bind (:map org-mode-map
          ("C-c ]" . org-ref-insert-ref-link))
-  :init
-  (setq org-ref-notes-directory me-bib-notes
-        org-ref-show-citation-on-enter nil)
   :config
-  (setq org-ref-notes-function #'me//org-ref-notes-function)
-
   (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
     (add-hook 'org-ref-clean-bibtex-entry-hook func))
 
@@ -2318,37 +2330,37 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; Evil
 ;; -----------------------------------------------------------------------------
 
-(use-package view)
-(use-package evil
-  :config
-  (evil-mode 1)
+;; (use-package view)
+;; (use-package evil
+;;   :config
+;;   (evil-mode 1)
 
-  (mapc (lambda (x) (evil-set-initial-state x 'emacs))
-        '(dired-mode image-dired-thumbnail-mode image-mode
-                     diary-mode org-src-mode mu4e-compose-mode calendar-mode
-                     org-capture-mode imenu-list-major-mode
-                     imenu-list-minor-mode))
+;;   (mapc (lambda (x) (evil-set-initial-state x 'emacs))
+;;         '(dired-mode image-dired-thumbnail-mode image-mode
+;;                      diary-mode org-src-mode mu4e-compose-mode calendar-mode
+;;                      org-capture-mode imenu-list-major-mode
+;;                      imenu-list-minor-mode))
 
-  (bind-keys :map evil-normal-state-map
-             ("<escape>" . evil-emacs-state)
-             ("C-z"      . delete-other-windows)
-             ("Q"        . kill-this-buffer)
-             ("q"        . bury-buffer)
-             ("s"        . helm-swoop)
-             :map evil-emacs-state-map
-             ("<escape>" . evil-force-normal-state)
-             ("C-z"      . delete-other-windows)
-             :map evil-motion-state-map
-             ("<backspace>" . View-scroll-half-page-backward)
-             ("<delete>"    . View-scroll-half-page-forward)
-             ("<down>"      . evil-next-visual-line)
-             ("<up>"        . evil-previous-visual-line)
-             ("C-b"         . helm-mini)
-             ("C-e"         . move-end-of-line)
-             ("C-z"         . delete-other-windows)
-             ("C-v"         . golden-ratio-scroll-screen-up))
+;;   (bind-keys :map evil-normal-state-map
+;;              ("<escape>" . evil-emacs-state)
+;;              ("C-z"      . delete-other-windows)
+;;              ("Q"        . kill-this-buffer)
+;;              ("q"        . bury-buffer)
+;;              ("s"        . helm-swoop)
+;;              :map evil-emacs-state-map
+;;              ("<escape>" . evil-force-normal-state)
+;;              ("C-z"      . delete-other-windows)
+;;              :map evil-motion-state-map
+;;              ("<backspace>" . View-scroll-half-page-backward)
+;;              ("<delete>"    . View-scroll-half-page-forward)
+;;              ("<down>"      . evil-next-visual-line)
+;;              ("<up>"        . evil-previous-visual-line)
+;;              ("C-b"         . helm-mini)
+;;              ("C-e"         . move-end-of-line)
+;;              ("C-z"         . delete-other-windows)
+;;              ("C-v"         . golden-ratio-scroll-screen-up))
 
-  (setq cursor-type 'box)
+;;   (setq cursor-type 'box)
 
 ;;   (defun me//propertize-evil-tag (str fg bg)
 ;;     "Make the evil state notifier pertty.
@@ -2368,13 +2380,13 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;;                                     "gray"
 ;;                                     (plist-get elm :color)))))
 
-  (setq evil-move-beyond-eol t)
+  ;; (setq evil-move-beyond-eol t)
 
-  (evil-make-overriding-map help-mode-map 'motion)
+  ;; (evil-make-overriding-map help-mode-map 'motion)
 
-  ;; Use emacs state instead of insert mode
-  (defalias 'evil-insert-state 'evil-emacs-state)
-  (setq-default evil-shift-width 2))
+  ;; ;; Use emacs state instead of insert mode
+  ;; (defalias 'evil-insert-state 'evil-emacs-state)
+  ;; (setq-default evil-shift-width 2))
 
 ;; =============================================================================
 ;; Other stuff
@@ -2401,10 +2413,19 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
 ;;     (load-theme 'grayscale t)))
 
-(use-package eink-theme
+(use-package modus-themes
+  :init
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
+        modus-themes-region '(bg-only no-extend))
+  (modus-themes-load-themes)
   :config
-  (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-    (load-theme 'eink t)))
+  (modus-themes-load-operandi))
+
+;; (use-package eink-theme
+;;   :config
+;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
+;;     (load-theme 'eink t)))
 
 ;; =============================================================================
 ;; Now start the server

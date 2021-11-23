@@ -527,6 +527,7 @@ return the actual color value.  Otherwise return the value unchanged."
      (org-headline-done                            :inherit normal--)
      (org-hide                                     :inherit normal--)
      (org-link                                     :inherit link)
+     (org-mode-line-clock-overrun                  :inverse-video t)
      (org-priority                                 :inherit normal--)
      (org-scheduled-previously                     :inherit normal-)
      (org-scheduled-today                          :inherit normal-)
