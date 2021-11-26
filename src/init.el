@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-11-22 14:32:33 gongzhitaao>
+;; Time-stamp: <2021-11-23 15:40:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1936,7 +1936,7 @@ argument FORCE, force the creation of a new ID."
 
 ;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
 ;; fine, but replying mail is not working.
-(use-package mail-conf)
+;; (use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
