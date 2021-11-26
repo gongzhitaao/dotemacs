@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-11-23 15:40:24 gongzhitaao>
+;; Time-stamp: <2021-11-26 11:01:31 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -486,21 +486,6 @@ all '.<space>' with '.<space><space>'."
   (global-anzu-mode +1)
   (setq anzu-search-threshold 1000))
 
-;; Show a dimmed delimiter at fill-column.
-(use-package fill-column-indicator
-  :bind ("C-c |" . fci-mode)
-  :config
-  (setq fci-rule-color "gray50")
-  ;; (let ((hooks '(prog-mode-hook org-mode-hook markdown-mode-hook
-  ;;                               tex-mode-hook message-mode-hook)))
-  ;;   (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks))
-  )
-;; (use-package fill-column-indicator
-;;   :config
-;;   (setq fci-rule-color "gray50")
-;;   (let ((hooks '(c++-mode-hook)))
-;;     (mapc (lambda (x) (add-hook x #'turn-on-fci-mode)) hooks)))
-
 ;; Center the editing content.
 (use-package writeroom-mode
   :config
@@ -646,13 +631,6 @@ all '.<space>' with '.<space><space>'."
               tab-width 4
               truncate-lines t)
 
-;; (use-package aggressive-indent
-;;   :delight
-;;   :config
-;;   (global-aggressive-indent-mode)
-;;   (dolist (m '(html-mode sh-mode))
-;;     (add-to-list 'aggressive-indent-excluded-modes m)))
-
 (delete-selection-mode)
 (add-hook 'before-save-hook 'time-stamp)
 
@@ -716,14 +694,6 @@ all '.<space>' with '.<space><space>'."
 
 (use-package wgrep
   :config (setq wgrep-auto-save-buffer t))
-
-;; jump around
-(use-package avy
-  :bind (("M-j" . avy-goto-word-1)
-         ("s-j" . avy-goto-line))
-  :config
-  (setq avy-background t)
-  (setq avy-case-fold-search nil))
 
 (use-package golden-ratio-scroll-screen
   :config
@@ -2408,10 +2378,10 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
 ;;     (load-theme 'solarized-lightme t)))
 
-;; (use-package grayscale-theme
+;; (use-package eink-theme
 ;;   :config
 ;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-;;     (load-theme 'grayscale t)))
+;;     (load-theme 'eink t)))
 
 (use-package modus-themes
   :init
@@ -2421,11 +2391,6 @@ If ARG, open with external program.  Otherwise open in Emacs."
   (modus-themes-load-themes)
   :config
   (modus-themes-load-operandi))
-
-;; (use-package eink-theme
-;;   :config
-;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-;;     (load-theme 'eink t)))
 
 ;; =============================================================================
 ;; Now start the server
