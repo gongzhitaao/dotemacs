@@ -13,6 +13,7 @@
 (depends-on "async")
 (depends-on "auctex")
 (depends-on "avy" "0")
+(depends-on "avy")
 (depends-on "base16-theme")
 (depends-on "bbdb")
 (depends-on "biblio" "0.2")
