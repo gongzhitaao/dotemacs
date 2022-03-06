@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2021-12-15 14:31:14 gongzhitaao>
+;; Time-stamp: <2022-03-06 16:34:16 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -717,6 +717,8 @@ all '.<space>' with '.<space><space>'."
          ("M-i" . helm-swoop-from-isearch))
   :config
   (setq helm-multi-swoop-edit-save t))
+
+(setq imenu-sort-function #'imenu--sort-by-name)
 
 ;; Completion
 ;; -----------------------------------------------------------------------------
@@ -1497,9 +1499,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t
            :tree-type week)
 
-          ("s" "Save for later" item
-           (file+headline "work.org" "Scratch"))
-
           ;; Not used for now
           ;; ("m" "Save mail link" entry
           ;;  (file "todo.org")
@@ -1835,6 +1834,7 @@ argument FORCE, force the creation of a new ID."
    (flyspell-mode nil flyspell)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
+   (eproject-mode nil t)
    (python-docstring-mode nil python-docstring)
    (subword-mode nil subword)
    (view-mode " " view)
@@ -2114,6 +2114,16 @@ argument FORCE, force the creation of a new ID."
   (interactive)
   (pdf-view-previous-line-or-previous-page 10))
 
+(defun me/image-forward-hscroll-few-lines ()
+  "Scroll to left a few lines."
+  (interactive)
+  (image-forward-hscroll 7))
+
+(defun me/image-backward-hscroll-few-lines ()
+  "Scroll to left a few lines."
+  (interactive)
+  (image-backward-hscroll 7))
+
 ;; copied directly from view-window-size
 (defun me//window-size ()
   "Return the height of the current window, excluding the mode line.
@@ -2184,7 +2194,9 @@ Using `window-line-height' accounts for variable-height fonts."
          ("j"          . me/pdf-view-next-few-lines)
          ("k"          . me/pdf-view-prev-few-lines)
          ("n"          . me/org-ref-open-note)
-         ("z"          . delete-other-windows))
+         ("z"          . delete-other-windows)
+         ("C-<left>"   . me/image-forward-hscroll-few-lines)
+         ("C-<right>"  . me/image-backward-hscroll-few-lines))
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
