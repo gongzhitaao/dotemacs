@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-03-06 16:34:16 gongzhitaao>
+;; Time-stamp: <2022-03-08 08:46:55 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -185,7 +185,6 @@
            ("2"   . me/double-space-after-dot)
            ("c"   . set-buffer-file-coding-system)
            ("d"   . delete-duplicate-lines)
-           ;; g - me/grab-google3-python-imports
            ("l"   . magit-log-buffer-file)
            ("M-w" . me/copy-region-escaped)
            ("s l" . sort-lines)
@@ -733,6 +732,11 @@ all '.<space>' with '.<space><space>'."
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
 
+(use-package company
+  :delight
+  :config
+  (add-hook 'prog-mode-hook #'company-mode))
+
 ;; Encoding
 ;; -----------------------------------------------------------------------------
 
@@ -1212,7 +1216,8 @@ Lisp function does not specify a special indentation."
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
 (use-package yapfify)
-(use-package sphinx-doc)
+(use-package sphinx-doc
+  :delight)
 (use-package python-isort)
 
 (use-package python
@@ -1755,7 +1760,7 @@ argument FORCE, force the creation of a new ID."
              ("C-x C-f" . helm-find-files)
              ("M-s g"   . helm-ag)
              ("C-b"     . helm-mini)
-             ("M-/"     . helm-dabbrev)
+             ("M-/"     . helm-company)
              :map helm-map
              ("<tab>"   . helm-execute-persistent-action)
              ("C-i"     . helm-execute-persistent-action)
@@ -2177,26 +2182,26 @@ Using `window-line-height' accounts for variable-height fonts."
   :bind (:map pdf-view-mode-map
          ("<delete>"   . pdf-view-scroll-up-or-next-page)
          ("<down>"     . me/pdf-view-next-few-lines)
-         ("<left>"     . pdf-view-previous-page-command)
-         ("<right>"    . pdf-view-next-page-command)
          ("<up>"       . me/pdf-view-prev-few-lines)
+         ("<left>"     . me/image-forward-hscroll-few-lines)
+         ("<right>"    . me/image-backward-hscroll-few-lines))
          ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
          ("<PageDown>" . pdf-view-scroll-up-or-next-page)
          ("b"          . helm-mini)
          ("c"          . me/org-ref-open-entry)
-         ;; ("d"          . pdf-view-scroll-up-or-next-page)
-         ;; ("e"          . pdf-view-scroll-down-or-previous-page)
+         ;; ("d"       . pdf-view-scroll-up-or-next-page)
+         ;; ("e"       . pdf-view-scroll-down-or-previous-page)
          ("d"          . me/pdf-view-next-few-lines)
          ("e"          . me/pdf-view-prev-few-lines)
          ("g"          . pdf-view-goto-page)
-         ;; ("j"          . pdf-view-scroll-up-or-next-page)
-         ;; ("k"          . pdf-view-scroll-down-or-previous-page)
+         ;; ("j"       . pdf-view-scroll-up-or-next-page)
+         ;; ("k"       . pdf-view-scroll-down-or-previous-page)
          ("j"          . me/pdf-view-next-few-lines)
          ("k"          . me/pdf-view-prev-few-lines)
          ("n"          . me/org-ref-open-note)
          ("z"          . delete-other-windows)
-         ("C-<left>"   . me/image-forward-hscroll-few-lines)
-         ("C-<right>"  . me/image-backward-hscroll-few-lines))
+         ("C-<left>"   . pdf-view-previous-page-command)
+         ("C-<right>"  . pdf-view-next-page-command)
   :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
