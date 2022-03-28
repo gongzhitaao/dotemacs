@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-03-08 08:46:55 gongzhitaao>
+;; Time-stamp: <2022-03-28 16:30:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -311,16 +311,16 @@
 ;; General helpers
 ;; =============================================================================
 
-(defun me--ad-with-region-or-line (args)
-  "Operate on line or region.
-Argument ARGS region if provided."
+(defun me--ad-with-region-or-line (orig-fun &rest args)
+  "Advice added around ORIG-FUN with ARGS to operate on line or region."
   (if (region-active-p)
-      args
+      (apply orig-fun args)
     (let ((bol (+ (line-beginning-position) (current-indentation)))
           (eol (line-end-position)))
-      (push-mark bol)
-      (goto-char eol)
-      (list bol eol (nth 2 args)))))
+      (save-excursion
+        (push-mark bol)
+        (goto-char eol)
+        (apply orig-fun (list bol eol (nth 2 args)))))))
 
 (defun me-with-region-or-line (func &optional remove)
   "Call FUNC on region if region is active, otherwise line.
@@ -329,7 +329,7 @@ active region, call FUNC on current line.  Otherwise remove
 advice."
   (if remove
       (advice-remove func #'me--ad-with-region-or-line)
-    (advice-add func :filter-args #'me--ad-with-region-or-line)))
+    (advice-add func :around #'me--ad-with-region-or-line)))
 
 (me-with-region-or-line #'comment-or-uncomment-region)
 (me-with-region-or-line #'kill-ring-save)
@@ -1225,7 +1225,7 @@ Lisp function does not specify a special indentation."
   :after (yapfify python-isort)
   :bind (:map python-mode-map
          ("C-!" . yapfify-region)
-         ("C-c C-s" . python-isort))
+         ("C-c C-s" . python-isort-region))
   :config
   (defun me//init-python()
     "Init python model."
@@ -2083,7 +2083,7 @@ argument FORCE, force the creation of a new ID."
       (bookmark-set (me//pdf-get-bookmark-name))))
 
   (defun me//pdf-jump-last-viewed-bookmark ()
-    (bookmark-set "fake")
+    (bookmark-set "last-viewed")
     (let ((bmk (me//pdf-get-bookmark-name)))
       (when (me//pdf-has-last-viewed-bookmark bmk)
         (bookmark-jump bmk))))
