@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-03-28 16:30:29 gongzhitaao>
+;; Time-stamp: <2022-03-28 16:39:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1220,12 +1220,19 @@ Lisp function does not specify a special indentation."
   :delight)
 (use-package python-isort)
 
+(defun me//isort-region-or-buffer (&optional beg end)
+  "Sort region in BEG and END if active, whole buffer otherwise."
+  (interactive "r")
+  (if (region-active-p)
+      (python-isort-region beg end)
+    (python-isort-buffer)))
+
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :after (yapfify python-isort)
   :bind (:map python-mode-map
          ("C-!" . yapfify-region)
-         ("C-c C-s" . python-isort-region))
+         ("C-c C-s" . me//isort-region-or-buffer))
   :config
   (defun me//init-python()
     "Init python model."
