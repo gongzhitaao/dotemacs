@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-03-28 16:39:56 gongzhitaao>
+;; Time-stamp: <2022-03-29 09:51:21 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -314,13 +314,16 @@
 (defun me--ad-with-region-or-line (orig-fun &rest args)
   "Advice added around ORIG-FUN with ARGS to operate on line or region."
   (if (region-active-p)
-      (apply orig-fun args)
+      (progn
+        (apply orig-fun args)
+        (message "Region copied."))
     (let ((bol (+ (line-beginning-position) (current-indentation)))
           (eol (line-end-position)))
       (save-excursion
         (push-mark bol)
         (goto-char eol)
-        (apply orig-fun (list bol eol (nth 2 args)))))))
+        (apply orig-fun (list bol eol (nth 2 args))))
+      (message "Line copied."))))
 
 (defun me-with-region-or-line (func &optional remove)
   "Call FUNC on region if region is active, otherwise line.
@@ -1224,8 +1227,12 @@ Lisp function does not specify a special indentation."
   "Sort region in BEG and END if active, whole buffer otherwise."
   (interactive "r")
   (if (region-active-p)
-      (python-isort-region beg end)
-    (python-isort-buffer)))
+      (progn
+        (python-isort-region beg end)
+        (deactivate-mark)
+        (message "Region sorted."))
+    (python-isort-buffer)
+    (message "All imports sorted.")))
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
