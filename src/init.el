@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-03-29 09:51:21 gongzhitaao>
+;; Time-stamp: <2022-04-19 09:49:15 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1376,6 +1376,10 @@ Lisp function does not specify a special indentation."
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (load-file (expand-file-name "my-org-misc.el" org-directory)))
+
+(use-package org-appear
+  :config
+  (add-hook 'org-mode-hook #'org-appear-mode))
 
 (use-package org-refile
   :config
