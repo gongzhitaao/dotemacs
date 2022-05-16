@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-04-19 09:49:15 gongzhitaao>
+;; Time-stamp: <2022-05-15 09:20:32 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -109,7 +109,7 @@
 
 ;; ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'cask "~/.cask/cask.el")
-(cask-initialize)
+(cask--initialize)
 
 (require 'pallet)
 (pallet-mode)
@@ -121,10 +121,12 @@
 
 (setq load-prefer-newer t)
 
+(defconst me-emacs-directory (expand-file-name "~/.emacs.d") "My emacs directory.")
+
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
-(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp" me-emacs-directory))
 
 ;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
 ;; I could not start my Emacs.  I guess a better way is to backup the packages
@@ -232,8 +234,6 @@
 (global-set-key (kbd "C-c =") #'align-regexp)
 (global-set-key (kbd "C-c C-q") #'bury-buffer)
 
-;; C-c | -- fci-mode
-
 ;; M- meta keys
 ;; -----------------------------------------------------------------------------
 
@@ -283,13 +283,13 @@
 (defconst me-home "~" "My home directory.")
 
 (defconst me-emacs-data-private
-  (expand-file-name "data/private" user-emacs-directory)
+  (expand-file-name "data/private" me-emacs-directory)
   "Private EMACS data synced to a private repo.")
 (defconst me-emacs-data-public
-  (expand-file-name "data/public" user-emacs-directory)
+  (expand-file-name "data/public" me-emacs-directory)
   "Public EMACS data synced to a public repo.")
 
-(defconst me-emacs-tmp (expand-file-name "tmp" user-emacs-directory)
+(defconst me-emacs-tmp (expand-file-name "tmp" me-emacs-directory)
   "Directory for temporary files.")
 (unless (file-exists-p me-emacs-tmp)
   (mkdir me-emacs-tmp))
@@ -299,10 +299,10 @@
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
 
-(defconst me-local-conf (expand-file-name "local.el" user-emacs-directory)
+(defconst me-local-conf (expand-file-name "local.el" me-emacs-directory)
   "Local configuration not shared around machines.")
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" me-emacs-directory))
 
 ;; (if (file-exists-p custom-file)
 ;;     (load custom-file))
@@ -581,9 +581,9 @@ all '.<space>' with '.<space><space>'."
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
                                           ;; :size 24)))) ;1x
-                                          :size 26)))) ;1.5x
+                                          ;; :size 26)))) ;1.5x
                                           ;; :size 32)))) ;2x
-                                          ;; :size 46)))) ;1.25x
+                                          :size 44)))) ;1.25x
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 (setq-default line-spacing 0.1)
@@ -666,7 +666,7 @@ all '.<space>' with '.<space><space>'."
   (setq whitespace-line-column fill-column)
   (setq whitespace-style '(empty face indentation lines-tail
                                  space-after-tab space-before-tab
-                                 spaces tabs trailing))
+                                 tabs trailing))
   (setq whitespace-global-modes t)
   (dolist (hook '(prog-mode-hook org-mode-hook))
     (add-hook hook #'whitespace-mode))
@@ -794,7 +794,7 @@ all '.<space>' with '.<space><space>'."
   (setq recentf-max-saved-items 50)
   (let ((ignores `(,(expand-file-name ".*" me-emacs-tmp)
                    ,(expand-file-name ".mail/.*" me-home)
-                   ,(expand-file-name ".cask/.*" user-emacs-directory))))
+                   ,(expand-file-name ".cask/.*" me-emacs-directory))))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
   (recentf-mode 1))
 
@@ -815,7 +815,9 @@ all '.<space>' with '.<space><space>'."
 (use-package persistent-scratch
   :config
   (setq persistent-scratch-backup-directory
-        (expand-file-name "scratch" user-emacs-directory))
+        (expand-file-name "scratch" me-emacs-directory))
+  (setq persistent-scratch-save-file
+        (expand-file-name ".persistent-scratch" me-emacs-directory))
   ;; keep backups not older than a month
   (setq persistent-scratch-backup-filter
         (persistent-scratch-keep-backups-not-older-than
@@ -896,6 +898,7 @@ all '.<space>' with '.<space><space>'."
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
         dired-recursive-copies 'always
+        dired-isearch-filenames 'dwim
         dired-listing-switches "-alh")
 
   (defface me-dired-dim-0 '((t (:foreground "gray70")))
