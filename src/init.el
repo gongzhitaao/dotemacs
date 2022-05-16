@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-05-15 09:20:32 gongzhitaao>
+;; Time-stamp: <2022-05-16 19:43:06 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -580,10 +580,10 @@ all '.<space>' with '.<space><space>'."
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          ;; :size 24)))) ;1x
-                                          ;; :size 26)))) ;1.5x
-                                          ;; :size 32)))) ;2x
-                                          :size 44)))) ;1.25x
+                                          ;; :size 22))))
+                                          ;; :size 26))))
+                                          ;; :size 32))))
+                                          :size 44))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 (setq-default line-spacing 0.1)
@@ -1786,6 +1786,8 @@ argument FORCE, force the creation of a new ID."
              ("<tab>"   . helm-execute-persistent-action)
              ("C-i"     . helm-execute-persistent-action)
              ("C-z"     . helm-select-action)
+             :map helm-command-map
+             ("d"       . helm-bookmarks)
              ;; :map helm-moccur-map
              ;; ("C-s"     . me//isearch-from-helm-occur)
              )
@@ -1796,6 +1798,10 @@ argument FORCE, force the creation of a new ID."
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   (setq helm-split-window-inside-p t))
+
+(use-package helm-bookmark
+  :config
+  (setq helm-bookmark-show-location t))
 
 (defun me//isearch-from-helm-occur ()
   "Continue isearch from helm-occur."
