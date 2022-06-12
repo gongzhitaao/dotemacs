@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-05-16 19:43:06 gongzhitaao>
+;; Time-stamp: <2022-06-12 07:21:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -121,7 +121,8 @@
 
 (setq load-prefer-newer t)
 
-(defconst me-emacs-directory (expand-file-name "~/.emacs.d") "My emacs directory.")
+(defconst me-emacs-directory (expand-file-name "~/.emacs.d")
+  "My emacs directory.")
 
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
@@ -570,7 +571,7 @@ all '.<space>' with '.<space><space>'."
 
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
-                          (decode-char 'ucs #xF940))
+                          (decode-char 'ucs #xF890))
                     (font-spec :family "Font Awesome 5 Free"
                                ;; :size 13)) ;1x
                                :size 20)) ;1.25x
@@ -580,10 +581,10 @@ all '.<space>' with '.<space><space>'."
     (set-fontset-font
      (frame-parameter nil 'font) charset (font-spec
                                           :family "Sarasa Mono TC"
-                                          ;; :size 22))))
+                                          :size 22))))
                                           ;; :size 26))))
                                           ;; :size 32))))
-                                          :size 44))))
+                                          ;; :size 44))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 (setq-default line-spacing 0.1)
@@ -1931,13 +1932,17 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 (use-package nov :mode ("\\.epub\\'"))
 
+(use-package graphviz-dot-mode
+  :config
+  (setq graphviz-dot-indent-width 2))
+
 ;; =============================================================================
 ;; mail
 ;; =============================================================================
 
 ;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
 ;; fine, but replying mail is not working.
-;; (use-package mail-conf)
+(use-package mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
