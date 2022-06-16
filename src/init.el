@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-06-12 07:21:28 gongzhitaao>
+;; Time-stamp: <2022-06-15 13:32:25 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -498,7 +498,8 @@ all '.<space>' with '.<space><space>'."
         writeroom-width 100)
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
-                    bibtex-mode bookmark-bmenu-mode LilyPond-mode))
+                    bibtex-mode bookmark-bmenu-mode LilyPond-mode
+                    notmuch-show-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)

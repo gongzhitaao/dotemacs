@@ -75,7 +75,7 @@
            "DeepMind."
            nil
            nil
-           ,(expand-file-name "signature/personal"
+           ,(expand-file-name "signature/work"
                               me-emacs-data-private))))
 
   ;; Use "home" identity by default
@@ -83,7 +83,7 @@
 
   ;; Define rules to match work identity
   (setq gnus-alias-identity-rules
-        '(("work" ("any" "gongzhitaao@\\(google\\.com\\|deepmind\\.com\\)" both)
+        '(("work" ("any" "gongzhitaao@\\(google\\|deepmind\\)\\.com" both)
            "work")))
 
   ;; Determine identity when message-mode loads
@@ -115,8 +115,25 @@
   (add-hook 'message-send-hook #'me//auto-choose-email-account))
 
 (use-package notmuch
-  :bind (:map notmuch-search-mode-map)
   :config
+  (defvar me-notmuch-tag-map-prefix "f"
+    "Prefix to active the tags keymap.")
+
+  (dolist (key-tags
+           '(("d" . "-inbox:-unread:+trash") ("D" . "+inbox:-trash")
+             ("f" . "-flagged")              ("F" . "+flagged")
+             ("i" . "-important")            ("I" . "+important")
+             ("r" . "-unread")               ("R" . "+unread")))
+    (let* ((key (string-join `(,me-notmuch-tag-map-prefix ,(car key-tags))))
+           (tags (cdr key-tags))
+           (fname (concat "me//notmuch-tag:" tags)))
+      (defalias (intern fname)
+        `(lambda ()
+           ,(format "Apply %s to highlighted mails." tags)
+           (interactive)
+           (notmuch-search-tag (split-string ,tags ":"))))
+      (define-key notmuch-search-mode-map key (intern fname))))
+
   (setq-default notmuch-search-oldest-first nil)
 
   (setq notmuch-saved-searches
