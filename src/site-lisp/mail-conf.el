@@ -119,19 +119,24 @@
   (defvar me-notmuch-tag-map-prefix "f"
     "Prefix to active the tags keymap.")
 
-  (dolist (key-tags
-           '(("d" . "-inbox:-unread:+trash") ("D" . "+inbox:-trash")
-             ("f" . "-flagged")              ("F" . "+flagged")
-             ("i" . "-important")            ("I" . "+important")
-             ("r" . "-unread")               ("R" . "+unread")))
-    (let* ((key (string-join `(,me-notmuch-tag-map-prefix ,(car key-tags))))
-           (tags (cdr key-tags))
-           (fname (concat "me//notmuch-tag:" tags)))
+  (dolist (key-fname-tags
+           '(("d" "trash" '("-inbox" "-unread" "+trash"))
+             ("D" "untrash" '("+inbox" "-trash"))
+             ("f" "unstar" '("-flagged"))
+             ("F" "star" '("+flagged"))
+             ("i" "mark-unimportant" '("-important"))
+             ("I" "mark-important" '("+important"))
+             ("r" "mark-read" '("-unread"))
+             ("R" "mark-unread" '("+unread"))))
+    (let* ((key
+            (string-join `(,me-notmuch-tag-map-prefix ,(car key-fname-tags))))
+           (fname (cadr key-fname-tags))
+           (tags (caddr key-fname-tags)))
       (defalias (intern fname)
         `(lambda ()
            ,(format "Apply %s to highlighted mails." tags)
            (interactive)
-           (notmuch-search-tag (split-string ,tags ":"))))
+           (notmuch-search-tag ,tags)))
       (define-key notmuch-search-mode-map key (intern fname))))
 
   (setq-default notmuch-search-oldest-first nil)
