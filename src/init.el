@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-06-15 13:32:25 gongzhitaao>
+;; Time-stamp: <2022-06-22 11:43:37 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -122,7 +122,7 @@
 (setq load-prefer-newer t)
 
 (defconst me-emacs-directory (expand-file-name "~/.emacs.d")
-  "My emacs directory.")
+  "My Emacs directory.")
 
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
@@ -161,7 +161,6 @@
 ;; f8 -- deft
 ;; f10 -- menu
 (global-set-key (kbd "<f11>") #'ispell)
-(global-set-key (kbd "<f12>") #'mu4e)
 
 ;; Remaping
 ;; -----------------------------------------------------------------------------
@@ -188,7 +187,6 @@
            ("2"   . me/double-space-after-dot)
            ("c"   . set-buffer-file-coding-system)
            ("d"   . delete-duplicate-lines)
-           ("l"   . magit-log-buffer-file)
            ("M-w" . me/copy-region-escaped)
            ("s l" . sort-lines)
            ("s L" . sort-fields)
@@ -198,10 +196,6 @@
            ("t"   . me/gnome-terminal)
            ("v"   . add-file-local-variable)
            ("V"   . add-file-local-variable-prop-line))
-
-(use-package magit
-  :bind ("C-c g" . magit-status)
-  :config (setq git-commit-major-mode 'org-mode))
 
 (use-package multiple-cursors
   :config
@@ -266,9 +260,14 @@
 ;; M-z zap-to-char
 
 (global-set-key (kbd "M-<right>") #'sp-forward-sexp)
-(global-set-key (kbd "M-<down>") #'sp-down-sexp)
-(global-set-key (kbd "M-<left>") #'sp-backward-sexp)
-(global-set-key (kbd "M-<up>") #'sp-up-sexp)
+(global-set-key (kbd "M-<down>")  #'sp-down-sexp)
+(global-set-key (kbd "M-<left>")  #'sp-backward-sexp)
+(global-set-key (kbd "M-<up>")    #'sp-up-sexp)
+
+;; "M-→" 'sp-forward-sexp
+;; "M-↓" 'sp-down-sexp
+;; "M-←" 'sp-backward-sexp
+;; "M-↑" 'sp-up-sexp
 
 ;;; M-s search
 
@@ -317,14 +316,14 @@
   (if (region-active-p)
       (progn
         (apply orig-fun args)
-        (message "Region copied."))
+        (message "Region action"))
     (let ((bol (+ (line-beginning-position) (current-indentation)))
           (eol (line-end-position)))
       (save-excursion
         (push-mark bol)
         (goto-char eol)
         (apply orig-fun (list bol eol (nth 2 args))))
-      (message "Line copied."))))
+      (message "Line action"))))
 
 (defun me-with-region-or-line (func &optional remove)
   "Call FUNC on region if region is active, otherwise line.
@@ -517,27 +516,27 @@ all '.<space>' with '.<space><space>'."
              ("M-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
              :prefix "C-c s"
-             ("<backspace>" . sp-splice-sexp-killing-backward)
-             ("<delete>"    . sp-splice-sexp-killing-forward)
-             ("<left>"      . sp-backward-slurp-sexp)
-             ("<right>"     . sp-forward-slurp-sexp)
-             ("a"           . sp-beginning-of-sexp)
-             ("b"           . sp-backward-sexp)
-             ("C-<delete>"  . sp-splice-sexp-killing-around)
-             ("C-<left>"    . sp-forward-barf-sexp)
-             ("C-<right>"   . sp-backward-barf-sexp)
-             ("D"           . sp-backward-down-sexp)
-             ("d"           . sp-down-sexp)
-             ("e"           . sp-end-of-sexp)
-             ("E"           . sp-up-sexp)
-             ("f"           . sp-forward-sexp)
-             ("k"           . sp-kill-sexp)
-             ("n"           . sp-next-sexp)
-             ("p"           . sp-previous-sexp)
-             ("r"           . sp-rewrap-sexp)
-             ("s"           . sp-split-sexp)
-             ("t"           . sp-transpose-sexp)
-             ("w"           . sp-copy-sexp))
+             ("<backspace>"   . sp-splice-sexp-killing-backward)
+             ("<delete>"      . sp-splice-sexp-killing-forward)
+             ("<left>"        . sp-backward-slurp-sexp)
+             ("<right>"       . sp-forward-slurp-sexp)
+             ("a"             . sp-beginning-of-sexp)
+             ("b"             . sp-backward-sexp)
+             ("C-<delete>"    . sp-splice-sexp-killing-around)
+             ("C-<left>"      . sp-forward-barf-sexp)
+             ("C-<right>"     . sp-backward-barf-sexp)
+             ("D"             . sp-backward-down-sexp)
+             ("d"             . sp-down-sexp)
+             ("e"             . sp-end-of-sexp)
+             ("E"             . sp-up-sexp)
+             ("f"             . sp-forward-sexp)
+             ("k"             . sp-kill-sexp)
+             ("n"             . sp-next-sexp)
+             ("p"             . sp-previous-sexp)
+             ("r"             . sp-rewrap-sexp)
+             ("s"             . sp-split-sexp)
+             ("t"             . sp-transpose-sexp)
+             ("w"             . sp-copy-sexp))
 
   (smartparens-global-mode)
   (show-smartparens-global-mode)
@@ -889,18 +888,19 @@ all '.<space>' with '.<space><space>'."
 
 (use-package ffap)
 
+(defun me//init-dired ()
+  "Initialize dired mode."
+  (hl-line-mode))
+
 (use-package dired
   :bind (:map dired-mode-map
          ("f" . find-file-literally-at-point))
   :config
-  (defun me//init-dired ()
-    (hl-line-mode))
   (add-hook 'dired-mode-hook #'me//init-dired)
   (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
         dired-recursive-copies 'always
-        dired-isearch-filenames 'dwim
         dired-listing-switches "-alh")
 
   (defface me-dired-dim-0 '((t (:foreground "gray70")))
@@ -943,6 +943,10 @@ all '.<space>' with '.<space><space>'."
                                (,date-1 nil nil (0 'me-dired-dim-1)))
                               (,executable
                                (1 'me-dired-executable))))))
+
+(use-package dired-aux
+  :config
+  (setq dired-isearch-filenames 'dwim))
 
 (use-package dired-x
   :config
@@ -1078,8 +1082,7 @@ all '.<space>' with '.<space><space>'."
                 (mode . google3-build-mode)
                 (mode . go-mode)))
            ("Mail"
-            (or (mode . message-mode)
-                (mode . mu4e-compose-mode)))
+            (or (mode . message-mode)))
            ("Console"
             (or (mode . inferior-ess-mode)
                 (mode . inferior-python-mode)
@@ -1097,8 +1100,6 @@ all '.<space>' with '.<space><space>'."
                 (name . "^\\*scratch\\*$")))
            ("Image"
             (or (mode . image-mode)))
-           ("Magit"
-            (or (derived-mode . magit-mode)))
            ("Helm"
             (or (predicate string-match "Hmm" mode-name))))))
 
@@ -1950,7 +1951,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package bbdb
   :config
-  (bbdb-initialize 'message 'anniv 'mu4e)
+  (bbdb-initialize 'message 'anniv)
   (setq bbdb-allow-duplicates t
         bbdb-complete-mail-allow-cycling t
         bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data-private)
@@ -2421,11 +2422,6 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; =============================================================================
 ;; Theme
 ;; =============================================================================
-
-;; (use-package solarized-lightme-theme
-;;   :config
-;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-;;     (load-theme 'solarized-lightme t)))
 
 ;; (use-package eink-theme
 ;;   :config
