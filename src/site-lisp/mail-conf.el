@@ -150,7 +150,12 @@
           (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
            :key "hi")
           (:name "haha/unread" :query "tag:haha and tag:unread" :key "hu")
-          (:name "haha/starred" :query "tag:haha and tag:flagged" :key "hs"))))
+          (:name "haha/starred" :query "tag:haha and tag:flagged" :key "hs")))
+
+  (setq notmuch-fcc-dirs
+        '(("gongzhitaao@\\(google\\|deepmind\\)\\.com"
+           . "corp/mail +corp +sent -unread")
+          ("zhitaao.gong@gmail.com" . "personal/mail +haha +sent -unread"))))
 
 ;; message notification, only in the modeline
 ;; -----------------------------------------------------------------------------
