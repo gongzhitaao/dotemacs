@@ -6,13 +6,9 @@
 
 (use-package google)
 
-(use-package writeroom-mode
-  :config
-  (add-to-list 'writeroom-major-modes 'protobuf-mode))
-
 (use-package google3-build-mode
   :config
-  (setq google3-build-cleanup-on-save 'reformat-file))
+  (setq google3-build-cleanup-on-save 'bazel-buildifier))
 
 (let ((google-unorthodox-hooks '(google-maybe-untabify-buffer
                                  google-maybe-delete-trailing-whitespace

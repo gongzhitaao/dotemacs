@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-06-22 11:43:37 gongzhitaao>
+;; Time-stamp: <2022-07-13 11:26:49 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -107,7 +107,6 @@
 ;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
-;; ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'cask "~/.cask/cask.el")
 (cask--initialize)
 
@@ -498,7 +497,7 @@ all '.<space>' with '.<space><space>'."
   (setq writeroom-major-modes
         '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
                     bibtex-mode bookmark-bmenu-mode LilyPond-mode
-                    notmuch-show-mode))
+                    notmuch-show-mode protobuf-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -572,7 +571,7 @@ all '.<space>' with '.<space><space>'."
   (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
                           (decode-char 'ucs #xF890))
-                    (font-spec :family "Font Awesome 5 Free"
+                    (font-spec :family "Font Awesome 6 Free"
                                ;; :size 13)) ;1x
                                :size 20)) ;1.25x
                                ;; :size 24)) ;2x
