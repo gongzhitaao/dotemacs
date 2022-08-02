@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-07-13 11:26:49 gongzhitaao>
+;; Time-stamp: <2022-08-02 18:01:55 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -107,16 +107,42 @@
 ;;             (if auto (autoload (car auto))))))))
 ;; (me//init-package)
 
-(require 'cask "~/.cask/cask.el")
-(cask--initialize)
+;; (setq package-enable-at-startup nil)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(require 'pallet)
-(pallet-mode)
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
-(eval-when-compile
-  (require 'use-package))
-(require 'delight)
-(require 'bind-key)
+(setq straight-built-in-pseudo-packages
+      '(dired emacs files helm-bookmark helm-buffers helm-config helm-elisp
+              helm-files helm-for-files helm-locate helm-mode ibuf-ext
+              image-mode lisp-mode ls-lisp mail-conf message nadvice octave-mode
+              org-agenda org-capture org-clock org-habit org-id org-refile
+              org-src ox ox-beamer ox-bibtex ox-extra ox-html ox-latex pdf-view
+              python rfn-eshadow simple solar tramp-cache uniquify))
+
+;; (require 'cask "~/.cask/cask.el")
+;; (cask--initialize)
+
+;; (require 'pallet)
+;; (pallet-mode)
+
+;; (eval-when-compile
+;;   (require 'use-package))
+(use-package delight)
+(use-package bind-key)
 
 (setq load-prefer-newer t)
 
@@ -507,8 +533,8 @@ all '.<space>' with '.<space><space>'."
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; Working with parenthesis
-(use-package smartparens-config
+;; (use-package smartparens-config
+(use-package smartparens
   :delight smartparens-mode
   :config
   (bind-keys ("M-<backspace>" . sp-backward-unwrap-sexp)
@@ -702,7 +728,7 @@ all '.<space>' with '.<space><space>'."
   (global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
   (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up))
 
-(use-package visual-regex
+(use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
 ;; Searching
@@ -877,8 +903,8 @@ all '.<space>' with '.<space><space>'."
   :delight which-key-mode)
 
 ;; EShell
-(use-package esh-mode
-  :config (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer))
+;; (use-package esh-mode
+;;   :config (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer))
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
@@ -902,11 +928,11 @@ all '.<space>' with '.<space><space>'."
         dired-recursive-copies 'always
         dired-listing-switches "-alh")
 
-  (defface me-dired-dim-0 '((t (:foreground "gray70")))
+  (defface me-dired-dim-0 '((t (:foreground "gray50")))
     "Dimmed face."
     :group 'me-dired)
 
-  (defface me-dired-dim-1 '((t (:foreground "gray50")))
+  (defface me-dired-dim-1 '((t (:foreground "gray70")))
     "Dimmed face."
     :group 'me-dired)
 
@@ -943,13 +969,13 @@ all '.<space>' with '.<space><space>'."
                               (,executable
                                (1 'me-dired-executable))))))
 
-(use-package dired-aux
-  :config
-  (setq dired-isearch-filenames 'dwim))
+;; (use-package dired-aux
+;;   :config
+;;   (setq dired-isearch-filenames 'dwim))
 
-(use-package dired-x
-  :config
-  (setq dired-guess-shell-alist-user '(("\\.mp4\\'" "totem"))))
+;; (use-package dired-x
+;;   :config
+;;   (setq dired-guess-shell-alist-user '(("\\.mp4\\'" "totem"))))
 
 (use-package async
   :delight dired-async-mode
@@ -1315,6 +1341,10 @@ Lisp function does not specify a special indentation."
   (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
   (setq-default markdown-hide-urls t))
 
+(use-package typescript-mode
+  :config
+  (setq typescript-indent-level 2))
+
 (defun me//init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
@@ -1551,6 +1581,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (setq org-export-global-macros
         '(("tex" . "@@latex:$1@@")
           ("html" . "@@html:$1@@"))))
+
+(use-package org-contrib)
 
 (use-package ox-extra
   :config
@@ -1943,7 +1975,7 @@ argument FORCE, force the creation of a new ID."
 
 ;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
 ;; fine, but replying mail is not working.
-(use-package mail-conf)
+(require 'mail-conf)
 
 ;; Contacts
 ;; -----------------------------------------------------------------------------
@@ -2411,12 +2443,12 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; Other stuff
 ;; =============================================================================
 
-(use-package dm)
+;; (use-package dm)
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
-(use-package lilypond-init
-  :load-path "site-lisp/lilypond"
-  :mode ("\\.ly\\'" . LilyPond-mode))
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
+;; (use-package lilypond-init
+;;   :load-path "site-lisp/lilypond"
+;;   :mode ("\\.ly\\'" . LilyPond-mode))
 
 ;; =============================================================================
 ;; Theme
