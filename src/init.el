@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-02 18:01:55 gongzhitaao>
+;; Time-stamp: <2022-08-03 13:54:40 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -75,39 +75,8 @@
 ;; explanatory comments.
 ;(package-initialize)
 
-;; With Cask, the following package-archives is not necessary
+(setq package-enable-at-startup nil)
 
-;; (setq
-;;  package-archives
-;;  '(("melpa-stable" . "https://stable.melpa.org/packages/")
-;;    ("melpa"        . "https://melpa.org/packages/")
-;;    ("marmalade"    . "https://marmalade-repo.org/packages/")
-;;    ("org"          . "http://orgmode.org/elpa/")
-;;    ("gnu"          . "https://elpa.gnu.org/packages/")
-;;    ("sc"           . "http://joseito.republika.pl/sunrise-commander/")))
-
-;; (defun me//init-package ()
-;;   "Load packages manually in just in case cask fails.
-
-;; If cask fails mysteriously, use the following code to get things
-;; going, at least for now.  Basically add every package path to
-;; `load-path', and autoload the functions."
-;;   (dolist (elem
-;;            (directory-files-and-attributes
-;;             "~/.emacs.d/.cask/24.5/elpa/" t))
-;;     (let ((path (car elem))
-;;           (dir (cadr elem))
-;;           (auto nil))
-;;       (if (and dir
-;;                (not (string= path "."))
-;;                (not (string= path "..")))
-;;           (progn
-;;             (add-to-list 'load-path path)
-;;             (setq auto (directory-files path nil "-autoloads\.el$"))
-;;             (if auto (autoload (car auto))))))))
-;; (me//init-package)
-
-;; (setq package-enable-at-startup nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -131,16 +100,8 @@
               image-mode lisp-mode ls-lisp mail-conf message nadvice octave-mode
               org-agenda org-capture org-clock org-habit org-id org-refile
               org-src ox ox-beamer ox-bibtex ox-extra ox-html ox-latex pdf-view
-              python rfn-eshadow simple solar tramp-cache uniquify))
+              python rfn-eshadow simple solar tramp-cache uniquify google3-build-mode))
 
-;; (require 'cask "~/.cask/cask.el")
-;; (cask--initialize)
-
-;; (require 'pallet)
-;; (pallet-mode)
-
-;; (eval-when-compile
-;;   (require 'use-package))
 (use-package delight)
 (use-package bind-key)
 
@@ -156,8 +117,8 @@
 
 ;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
 ;; I could not start my Emacs.  I guess a better way is to backup the packages
-;; every day just in case.  However, use-package, bind-keys and cask are so much
-;; more convenient, I surrender.
+;; every day just in case.  However, use-package, bind-keys are so much more
+;; convenient, I surrender.
 
 ;; =============================================================================
 ;; Key binding
@@ -482,12 +443,6 @@ all '.<space>' with '.<space><space>'."
 
 (setq x-underline-at-descent-line t)
 
-;; (defun me//enable-line-numbers ()
-;;   "Display line numbers only in `prog-mode'."
-;;   (setq-local display-line-numbers t))
-
-;; (add-hook 'prog-mode-hook #'me//enable-line-numbers)
-
 (scroll-bar-mode 0)
 (setq scroll-margin 0
       scroll-preserve-screen-position 1)
@@ -700,8 +655,8 @@ all '.<space>' with '.<space><space>'."
   (add-hook 'before-save-hook 'whitespace-cleanup))
 
 (use-package volatile-highlights
-  :config (volatile-highlights-mode t)
-  :delight)
+  :delight
+  :config (volatile-highlights-mode t))
 
 ;; two-color scheme for blanket.
 (use-package rainbow-delimiters
@@ -914,7 +869,7 @@ all '.<space>' with '.<space><space>'."
 (use-package ffap)
 
 (defun me//init-dired ()
-  "Initialize dired mode."
+  "Initialize Dired mode."
   (hl-line-mode))
 
 (use-package dired
@@ -968,14 +923,6 @@ all '.<space>' with '.<space><space>'."
                                (,date-1 nil nil (0 'me-dired-dim-1)))
                               (,executable
                                (1 'me-dired-executable))))))
-
-;; (use-package dired-aux
-;;   :config
-;;   (setq dired-isearch-filenames 'dwim))
-
-;; (use-package dired-x
-;;   :config
-;;   (setq dired-guess-shell-alist-user '(("\\.mp4\\'" "totem"))))
 
 (use-package async
   :delight dired-async-mode
@@ -1274,7 +1221,6 @@ Lisp function does not specify a special indentation."
   :config
   (defun me//init-python()
     "Init python model."
-    (python-docstring-mode)
     (sphinx-doc-mode)
     (setq-local comment-inline-offset 2)
     (setq-local yas-indent-line 'fixed)
@@ -1323,8 +1269,6 @@ Lisp function does not specify a special indentation."
          ("/sshd?_config\\'"      . ssh-config-mode)
          ("/known_hosts\\'"       . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
-
-;; (use-package sh-script)
 
 (use-package octave-mode
   :mode "\\.m\\'"
@@ -1886,6 +1830,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-projectile
   :config
+  :after projectile
   (setq projectile-completion-system 'helm)
   (helm-projectile-on))
 
@@ -1900,8 +1845,6 @@ argument FORCE, force the creation of a new ID."
    (flyspell-mode nil flyspell)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
-   (eproject-mode nil t)
-   (python-docstring-mode nil python-docstring)
    (subword-mode nil subword)
    (view-mode " " view)
    (whitespace-mode nil whitespace)))
@@ -2360,7 +2303,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
  (expand-file-name
   (format-time-string "key-%FT%H%M%S.log") me-keylog))
 
-;; The undo and Evil.  It is weird that I have to load undo-tree at the end,
+;; undo.  It is weird that I have to load undo-tree at the end,
 ;; otherwise some pakcages, e.g., helm-elisp fails loading.
 ;; -----------------------------------------------------------------------------
 
@@ -2378,72 +2321,11 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
   (global-undo-tree-mode))
 
-;; Evil
-;; -----------------------------------------------------------------------------
-
-;; (use-package view)
-;; (use-package evil
-;;   :config
-;;   (evil-mode 1)
-
-;;   (mapc (lambda (x) (evil-set-initial-state x 'emacs))
-;;         '(dired-mode image-dired-thumbnail-mode image-mode
-;;                      diary-mode org-src-mode mu4e-compose-mode calendar-mode
-;;                      org-capture-mode imenu-list-major-mode
-;;                      imenu-list-minor-mode))
-
-;;   (bind-keys :map evil-normal-state-map
-;;              ("<escape>" . evil-emacs-state)
-;;              ("C-z"      . delete-other-windows)
-;;              ("Q"        . kill-this-buffer)
-;;              ("q"        . bury-buffer)
-;;              ("s"        . helm-swoop)
-;;              :map evil-emacs-state-map
-;;              ("<escape>" . evil-force-normal-state)
-;;              ("C-z"      . delete-other-windows)
-;;              :map evil-motion-state-map
-;;              ("<backspace>" . View-scroll-half-page-backward)
-;;              ("<delete>"    . View-scroll-half-page-forward)
-;;              ("<down>"      . evil-next-visual-line)
-;;              ("<up>"        . evil-previous-visual-line)
-;;              ("C-b"         . helm-mini)
-;;              ("C-e"         . move-end-of-line)
-;;              ("C-z"         . delete-other-windows)
-;;              ("C-v"         . golden-ratio-scroll-screen-up))
-
-;;   (setq cursor-type 'box)
-
-;;   (defun me//propertize-evil-tag (str fg bg)
-;;     "Make the evil state notifier pertty.
-
-;; Propertize STR with foreground FG and background BG color."
-;;     (propertize str 'face
-;;                 `((:background ,bg
-;;                    :foreground ,fg))))
-
-;;   (defun me//colorize-evil-tag (state-color-list)
-;;     "Change evil tag color according to STATE-COLOR-LIST."
-;;     (dolist (elm state-color-list)
-;;       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-cursor"))
-;;            (plist-get elm :color))
-;;       (set (intern-soft (concat "evil-" (plist-get elm :state) "-state-tag"))
-;;            (me//propertize-evil-tag (plist-get elm :tag)
-;;                                     "gray"
-;;                                     (plist-get elm :color)))))
-
-  ;; (setq evil-move-beyond-eol t)
-
-  ;; (evil-make-overriding-map help-mode-map 'motion)
-
-  ;; ;; Use emacs state instead of insert mode
-  ;; (defalias 'evil-insert-state 'evil-emacs-state)
-  ;; (setq-default evil-shift-width 2))
-
 ;; =============================================================================
 ;; Other stuff
 ;; =============================================================================
 
-;; (use-package dm)
+(require 'dm)
 
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
 ;; (use-package lilypond-init
@@ -2453,11 +2335,6 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; =============================================================================
 ;; Theme
 ;; =============================================================================
-
-;; (use-package eink-theme
-;;   :config
-;;   (let ((custom-theme-load-path `(,(expand-file-name "~/.emacs.d/site-lisp"))))
-;;     (load-theme 'eink t)))
 
 (use-package modus-themes
   :init

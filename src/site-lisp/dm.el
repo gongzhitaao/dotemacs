@@ -4,9 +4,14 @@
 
 ;;; Code:
 
-(use-package google)
+(require 'google)
+
+(use-package bazel)
+(use-package aio)
+(use-package with-editor)
 
 (use-package google3-build-mode
+  :after (bazel aio with-editor)
   :config
   (setq google3-build-cleanup-on-save 'bazel-buildifier))
 
