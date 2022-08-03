@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-03 15:23:29 gongzhitaao>
+;; Time-stamp: <2022-08-03 15:32:04 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2090,7 +2090,6 @@ argument FORCE, force the creation of a new ID."
         (message "Bookmark %s set" bmk))))
 
   (defun me//pdf-jump-last-viewed-bookmark ()
-    (bookmark-set "last-viewed")
     (let ((bmk (me//pdf-get-bookmark-name)))
       (when (me//pdf-has-last-viewed-bookmark bmk)
         (bookmark-jump bmk))))
@@ -2102,15 +2101,7 @@ argument FORCE, force the creation of a new ID."
     (concat " " (file-name-sans-extension
                   (file-name-nondirectory (buffer-file-name)))))
 
-  (defun me//pdf-set-all-last-viewed-bookmarks ()
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf (me/pdf-set-last-viewed-bookmark))))
-
   (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
-
-  ;; As `save-place-mode' does
-  (unless noninteractive
-    (add-hook 'kill-emacs-hook #'me//pdf-set-all-last-viewed-bookmarks)))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
