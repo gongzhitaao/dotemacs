@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-03 13:54:40 gongzhitaao>
+;; Time-stamp: <2022-08-03 15:23:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -841,10 +841,10 @@ all '.<space>' with '.<space><space>'."
   :config
   (defun me//init-bookmark-bmenu ()
     (set (make-local-variable 'writeroom-width) 150)
+    (set-face-bold 'bookmark-menu-bookmark nil)
     (hl-line-mode 1))
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
-
   (setq bookmark-default-file
         (expand-file-name "bookmarks" me-emacs-data-private)))
 
@@ -2075,10 +2075,6 @@ argument FORCE, force the creation of a new ID."
 ;; Working with PDF
 ;; =============================================================================
 
-(defun me//init-pdf-view-mode ()
-  "Initailize pdf view mode."
-  (setq-local display-line-numbers nil))
-
 (use-package pdf-tools
   ;; :load-path "lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
@@ -2088,7 +2084,10 @@ argument FORCE, force the creation of a new ID."
   (defun me/pdf-set-last-viewed-bookmark ()
     (interactive)
     (when (eq major-mode 'pdf-view-mode)
-      (bookmark-set (me//pdf-get-bookmark-name))))
+      (let ((bmk (me//pdf-get-bookmark-name)))
+        (bookmark-set (me//pdf-get-bookmark-name))
+        (bookmark-bmenu-save)
+        (message "Bookmark %s set" bmk))))
 
   (defun me//pdf-jump-last-viewed-bookmark ()
     (bookmark-set "last-viewed")
@@ -2100,15 +2099,14 @@ argument FORCE, force the creation of a new ID."
     (assoc bmk bookmark-alist))
 
   (defun me//pdf-get-bookmark-name ()
-    (concat " " (buffer-file-name)))
+    (concat " " (file-name-sans-extension
+                  (file-name-nondirectory (buffer-file-name)))))
 
   (defun me//pdf-set-all-last-viewed-bookmarks ()
     (dolist (buf (buffer-list))
       (with-current-buffer buf (me/pdf-set-last-viewed-bookmark))))
 
-  (add-hook 'kill-buffer-hook 'me/pdf-set-last-viewed-bookmark)
   (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
-  (add-hook 'pdf-view-mode-hook 'me//init-pdf-view-mode)
 
   ;; As `save-place-mode' does
   (unless noninteractive
@@ -2195,7 +2193,7 @@ Using `window-line-height' accounts for variable-height fonts."
          ("<right>"    . me/image-backward-hscroll-few-lines))
          ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
          ("<PageDown>" . pdf-view-scroll-up-or-next-page)
-         ("b"          . helm-mini)
+         ("b"          . me/pdf-set-last-viewed-bookmark)
          ("c"          . me/org-ref-open-entry)
          ;; ("d"       . pdf-view-scroll-up-or-next-page)
          ;; ("e"       . pdf-view-scroll-down-or-previous-page)
