@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-03 15:32:04 gongzhitaao>
+;; Time-stamp: <2022-08-09 11:22:30 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -486,7 +486,7 @@ all '.<space>' with '.<space><space>'."
 
 ;; Select interesting regions
 (use-package expand-region
-  :bind ("C-=" . er/expand-region))
+  :bind ("C-=" . #'er/expand-region))
 
 ;; (use-package smartparens-config
 (use-package smartparens
@@ -635,9 +635,10 @@ all '.<space>' with '.<space><space>'."
   :delight
   :config
   (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+  (add-hook 'text-mode-hook #'highlight-indent-guides-mode)
   (setq highlight-indent-guides-auto-character-face-perc 50)
   (setq highlight-indent-guides-auto-top-character-face-perc 100)
-  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-method 'bitmap)
   (setq highlight-indent-guides-responsive 'top))
 
 (use-package whitespace
@@ -701,7 +702,10 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq helm-multi-swoop-edit-save t))
 
-(setq imenu-sort-function #'imenu--sort-by-name)
+(use-package imenu-list)
+(use-package imenu
+  :config
+  (setq imenu-sort-function #'imenu--sort-by-name))
 
 ;; Completion
 ;; -----------------------------------------------------------------------------
@@ -1173,18 +1177,19 @@ Lisp function does not specify a special indentation."
 
 (use-package clang-format
   :bind (:map c++-mode-map
-         ("C-!" . me/clang-format-region))
+         ("C-!" . clang-format))
   :config
-  (defun me/clang-format-region ()
-    (interactive)
-    (let ((start (if (use-region-p) (region-beginning) (point)))
-          (end (if (use-region-p) (region-end) (point)))
-          (assumed-filename
-           (if (file-remote-p buffer-file-name)
-               (concat (getenv "HOME") "/"
-                       (file-name-nondirectory buffer-file-name))
-             buffer-file-name)))
-    (clang-format-region start end clang-format-style assumed-filename))))
+  ;; (defun me/clang-format-region ()
+  ;;   (interactive)
+  ;;   (let ((start (if (use-region-p) (region-beginning) (point)))
+  ;;         (end (if (use-region-p) (region-end) (point)))
+  ;;         (assumed-filename
+  ;;          (if (file-remote-p buffer-file-name)
+  ;;              (concat (getenv "HOME") "/"
+  ;;                      (file-name-nondirectory buffer-file-name))
+  ;;            buffer-file-name)))
+  ;;   (clang-format-region start end clang-format-style assumed-filename)))
+  )
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
@@ -1399,6 +1404,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-clock-persist t
         org-log-into-drawer t)
   (org-clock-persistence-insinuate))
+
+(use-package org-gcal)
 
 (use-package org-agenda
   :bind (:map org-agenda-mode-map
@@ -2101,7 +2108,7 @@ argument FORCE, force the creation of a new ID."
     (concat " " (file-name-sans-extension
                   (file-name-nondirectory (buffer-file-name)))))
 
-  (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark)
+  (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
