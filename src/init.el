@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-09 11:22:30 gongzhitaao>
+;; Time-stamp: <2022-08-24 10:09:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -245,15 +245,11 @@
 ;; M-y helm-show-kill-ring
 ;; M-z zap-to-char
 
-(global-set-key (kbd "M-<right>") #'sp-forward-sexp)
+(global-set-key (kbd "M-/") #'helm-dabbrev)
 (global-set-key (kbd "M-<down>")  #'sp-down-sexp)
 (global-set-key (kbd "M-<left>")  #'sp-backward-sexp)
+(global-set-key (kbd "M-<right>") #'sp-forward-sexp)
 (global-set-key (kbd "M-<up>")    #'sp-up-sexp)
-
-;; "M-→" 'sp-forward-sexp
-;; "M-↓" 'sp-down-sexp
-;; "M-←" 'sp-backward-sexp
-;; "M-↑" 'sp-up-sexp
 
 ;;; M-s search
 
@@ -488,10 +484,10 @@ all '.<space>' with '.<space><space>'."
 (use-package expand-region
   :bind ("C-=" . #'er/expand-region))
 
-;; (use-package smartparens-config
 (use-package smartparens
   :delight smartparens-mode
   :config
+  (require 'smartparens-config)
   (bind-keys ("M-<backspace>" . sp-backward-unwrap-sexp)
              ("M-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
@@ -1766,7 +1762,6 @@ argument FORCE, force the creation of a new ID."
              ("C-x C-f" . helm-find-files)
              ("M-s g"   . helm-ag)
              ("C-b"     . helm-mini)
-             ("M-/"     . helm-company)
              :map helm-map
              ("<tab>"   . helm-execute-persistent-action)
              ("C-i"     . helm-execute-persistent-action)
@@ -1947,13 +1942,9 @@ argument FORCE, force the creation of a new ID."
 
 (defvar me-bib (expand-file-name "bibliography" me-emacs-data-public)
   "My bibliography collection path.")
-(defvar me-bib-files
-  `(,(expand-file-name "refdb.bib" me-bib)
-    ,(expand-file-name "orphan.bib" me-bib))
+(defvar me-bib-files `(,(expand-file-name "refdb.bib" me-bib))
   "My bibliography files.")
-(defvar me-bib-pdfs
-  `(,(expand-file-name "pdf" me-bib)
-    ,(expand-file-name "orphan" me-bib))
+(defvar me-bib-pdfs `(,(expand-file-name "pdf" me-bib))
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes
   (expand-file-name "notes" me-bib)
