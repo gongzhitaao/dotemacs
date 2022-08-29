@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-24 10:09:29 gongzhitaao>
+;; Time-stamp: <2022-08-29 09:40:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -540,6 +540,11 @@ all '.<space>' with '.<space><space>'."
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
+(defun me--resolution-2k-p ()
+  "Return TRUE if 2K resolution."
+  (let ((width (display-pixel-width)))
+    (not (not (memq width '(1920 1998 2048 2560))))))
+
 (when (display-graphic-p)
   (set-face-attribute 'default nil
               :family "Iosevka SS09"
@@ -553,14 +558,12 @@ all '.<space>' with '.<space><space>'."
                                :size 20)) ;1.25x
                                ;; :size 24)) ;2x
 
-  (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font
-     (frame-parameter nil 'font) charset (font-spec
-                                          :family "Sarasa Mono TC"
-                                          :size 22))))
-                                          ;; :size 26))))
-                                          ;; :size 32))))
-                                          ;; :size 44))))
+  (let ((size (if (me--resolution-2k-p) 22 44)))
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font
+       (frame-parameter nil 'font) charset (font-spec
+                                            :family "Sarasa Mono TC"
+                                            :size size)))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 (setq-default line-spacing 0.1)
