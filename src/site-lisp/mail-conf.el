@@ -115,6 +115,8 @@
   (add-hook 'message-send-hook #'me//auto-choose-email-account))
 
 (use-package notmuch
+  :bind (:map notmuch-show-mode-map
+         ("C-c C-o" . #'org-open-at-point))
   :config
   (defvar me-notmuch-tag-map-prefix "f"
     "Prefix to active the tags keymap.")

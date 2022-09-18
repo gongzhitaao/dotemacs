@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-08-29 09:40:33 gongzhitaao>
+;; Time-stamp: <2022-09-12 16:36:38 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -151,11 +151,12 @@
 ;; Remaping
 ;; -----------------------------------------------------------------------------
 
-(global-set-key [remap isearch-backward] #'isearch-backward-regexp)
-(global-set-key [remap isearch-forward]  #'isearch-forward-regexp)
-(global-set-key [remap list-buffers]     #'ibuffer)
-(global-set-key [remap switch-to-buffer] #'helm-mini)
-(global-set-key [remap yank-pop]         #'helm-show-kill-ring)
+(global-set-key [remap copy-rectangle-as-kill] #'me/copy-rectangle-as-kill)
+(global-set-key [remap isearch-backward]       #'isearch-backward-regexp)
+(global-set-key [remap isearch-forward]        #'isearch-forward-regexp)
+(global-set-key [remap list-buffers]           #'ibuffer)
+(global-set-key [remap switch-to-buffer]       #'helm-mini)
+(global-set-key [remap yank-pop]               #'helm-show-kill-ring)
 
 ;; C-c user key
 ;; -----------------------------------------------------------------------------
@@ -430,6 +431,15 @@ all '.<space>' with '.<space><space>'."
   (interactive)
   (start-process "gnome-terminal" nil "gnome-terminal"))
 
+(defun me/copy-rectangle-as-kill (start end)
+  "Do `copy-rectangle-as-kill' in START and END, also save to system clipboard."
+  (interactive "r")
+  (call-interactively #'copy-rectangle-as-kill)
+  (with-temp-buffer
+    (yank-rectangle)
+    (delete-trailing-whitespace)
+    (kill-new (buffer-string))))
+
 ;; =============================================================================
 ;; Appearance
 ;; =============================================================================
@@ -472,9 +482,9 @@ all '.<space>' with '.<space><space>'."
         writeroom-use-derived-modes t
         writeroom-width 100)
   (setq writeroom-major-modes
-        '(prog-mode dired-mode Info-mode calendar-mode text-mode org-agenda-mode
-                    bibtex-mode bookmark-bmenu-mode LilyPond-mode
-                    notmuch-show-mode protobuf-mode))
+        '(prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
+                    org-agenda-mode bibtex-mode bookmark-bmenu-mode
+                    LilyPond-mode notmuch-show-mode protobuf-mode))
   (setq writeroom-major-modes-exceptions
         '(web-mode))
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
@@ -540,7 +550,7 @@ all '.<space>' with '.<space><space>'."
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
-(defun me--resolution-2k-p ()
+(defun me//resolution-2k-p ()
   "Return TRUE if 2K resolution."
   (let ((width (display-pixel-width)))
     (not (not (memq width '(1920 1998 2048 2560))))))
@@ -558,7 +568,7 @@ all '.<space>' with '.<space><space>'."
                                :size 20)) ;1.25x
                                ;; :size 24)) ;2x
 
-  (let ((size (if (me--resolution-2k-p) 22 44)))
+  (let ((size (if (me//resolution-2k-p) 22 44)))
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
@@ -600,6 +610,7 @@ all '.<space>' with '.<space><space>'."
 
 (setq confirm-kill-emacs 'yes-or-no-p
       delete-by-moving-to-trash t
+      history-delete-duplicates t
       select-enable-clipboard t
       tab-always-indent 'complete
       view-read-only t)
@@ -1292,6 +1303,8 @@ Lisp function does not specify a special indentation."
 (use-package typescript-mode
   :config
   (setq typescript-indent-level 2))
+
+(use-package jsonnet-mode)
 
 (defun me//init-org ()
   "Init orgmode."
