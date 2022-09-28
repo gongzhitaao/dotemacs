@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-09-12 16:36:38 gongzhitaao>
+;; Time-stamp: <2022-09-28 09:40:13 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -134,10 +134,10 @@
 
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
-(global-set-key (kbd "C-s-<up>") #'windmove-up)
-(global-set-key (kbd "C-s-<right>") #'windmove-right)
-(global-set-key (kbd "C-s-<down>") #'windmove-down)
-(global-set-key (kbd "C-s-<left>") #'windmove-left)
+(global-set-key (kbd "S-<up>") #'windmove-up)
+(global-set-key (kbd "S-<right>") #'windmove-right)
+(global-set-key (kbd "S-<down>") #'windmove-down)
+(global-set-key (kbd "S-<left>") #'windmove-left)
 
 ;; FN keys
 ;; -----------------------------------------------------------------------------
@@ -451,7 +451,7 @@ all '.<space>' with '.<space><space>'."
 
 (scroll-bar-mode 0)
 (setq scroll-margin 0
-      scroll-preserve-screen-position 1)
+      scroll-preserve-screen-position nil)
 
 (setq visible-bell t)
 (setq inhibit-startup-message t
