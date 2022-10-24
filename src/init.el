@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-09-28 09:40:13 gongzhitaao>
+;; Time-stamp: <2022-10-24 13:57:10 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2040,7 +2040,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package tex-mode
   :config
-  (add-hook 'TeX-mode-hook #'me//init-tex))
+  (add-hook 'tex-mode-hook #'me//init-tex))
 
 ;; org-ref
 ;; -----------------------------------------------------------------------------
@@ -2328,7 +2328,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; Other stuff
 ;; =============================================================================
 
-(require 'dm)
+;(require 'dm)
 
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
 ;; (use-package lilypond-init
