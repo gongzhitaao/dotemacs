@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-10-24 13:57:10 gongzhitaao>
+;; Time-stamp: <2022-11-05 15:31:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -92,15 +92,20 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+
+(defvar straight-use-package-by-default)
 (setq straight-use-package-by-default t)
 
+(defvar straight-built-in-pseudo-packages)
 (setq straight-built-in-pseudo-packages
-      '(dired emacs files helm-bookmark helm-buffers helm-config helm-elisp
-              helm-files helm-for-files helm-locate helm-mode ibuf-ext
-              image-mode lisp-mode ls-lisp mail-conf message nadvice octave-mode
-              org-agenda org-capture org-clock org-habit org-id org-refile
-              org-src ox ox-beamer ox-bibtex ox-extra ox-html ox-latex pdf-view
-              python rfn-eshadow simple solar tramp-cache uniquify google3-build-mode))
+      '(abbrev dired emacs files helm-adaptive helm-bookmark
+      helm-buffers helm-config helm-elisp helm-files
+      helm-for-files helm-locate helm-mode ibuf-ext image-mode
+      lisp-mode ls-lisp mail-conf message nadvice octave-mode
+      org-agenda org-capture org-clock org-habit org-id
+      org-refile org-src ox ox-beamer ox-bibtex ox-extra ox-html
+      ox-latex pdf-view python rfn-eshadow simple solar
+      tramp-cache uniquify google3-build-mode))
 
 (use-package delight)
 (use-package bind-key)
@@ -547,6 +552,11 @@ all '.<space>' with '.<space><space>'."
 (use-package editorconfig
   :delight)
 
+(use-package all-the-icons
+  :if (display-graphic-p)
+  :config
+  (setq all-the-icons-fonts-subdirectory "all-the-icons"))
+
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
@@ -560,13 +570,12 @@ all '.<space>' with '.<space><space>'."
               :family "Iosevka SS09"
               :height 160)
 
-  (set-fontset-font "fontset-default"
+  (let ((size (if (me//resolution-2k-p) 20 28)))
+    (set-fontset-font "fontset-default"
                     (cons (decode-char 'ucs #xF000)
                           (decode-char 'ucs #xF890))
                     (font-spec :family "Font Awesome 6 Free"
-                               ;; :size 13)) ;1x
-                               :size 20)) ;1.25x
-                               ;; :size 24)) ;2x
+                               :size size)))
 
   (let ((size (if (me//resolution-2k-p) 22 44)))
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -590,12 +599,13 @@ all '.<space>' with '.<space><space>'."
 
 (use-package simple
   :config
-  (column-number-mode 1)
-  (setq size-indication-mode t))
+  (column-number-mode)
+  (size-indication-mode)
+  (setq blink-matching-paren nil))
 
 (use-package rfn-eshadow
   :config
-  (file-name-shadow-mode t))
+  (file-name-shadow-mode))
 
 (use-package uniquify
   :config
@@ -623,7 +633,10 @@ all '.<space>' with '.<space><space>'."
               tab-width 4
               truncate-lines t)
 
-(delete-selection-mode)
+(use-package delsel
+  :config
+  (delete-selection-mode))
+
 (add-hook 'before-save-hook 'time-stamp)
 
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -634,10 +647,9 @@ all '.<space>' with '.<space><space>'."
 (put 'upcase-region    'disabled nil)
 (put 'downcase-region  'disabled nil)
 
-(global-subword-mode 1)
-
-;; This is slow if enabled.
-(setq blink-matching-paren nil)
+(use-package subword
+  :config
+  (global-subword-mode 1))
 
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
@@ -655,7 +667,7 @@ all '.<space>' with '.<space><space>'."
   :after highlight-indent-guides
   :delight global-whitespace-mode
   :config
-  (setq whitespace-line-column fill-column)
+  (setq whitespace-line-column nil)
   (setq whitespace-style '(empty face indentation lines-tail
                                  space-after-tab space-before-tab
                                  tabs trailing))
@@ -667,11 +679,10 @@ all '.<space>' with '.<space><space>'."
 
 (use-package volatile-highlights
   :delight
-  :config (volatile-highlights-mode t))
+  :config
+  (volatile-highlights-mode))
 
-;; two-color scheme for blanket.
 (use-package rainbow-delimiters
-  :requires cl-lib
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
@@ -702,7 +713,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package helm-ag
   :after helm
-  :bind ("M-s a" . helm-do-ag))
+  :bind ("M-s a" . helm-ag))
 
 (use-package helm-swoop
   :after helm
@@ -720,7 +731,9 @@ all '.<space>' with '.<space><space>'."
 ;; Completion
 ;; -----------------------------------------------------------------------------
 
-(setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data-private))
+(use-package abbrev
+  :config
+  (setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data-private)))
 
 (use-package yasnippet
   :delight yas-minor-mode
@@ -788,16 +801,15 @@ all '.<space>' with '.<space><space>'."
   (setq recentf-save-file (expand-file-name "recentf" me-emacs-tmp))
   (setq recentf-max-saved-items 50)
   (let ((ignores `(,(expand-file-name ".*" me-emacs-tmp)
-                   ,(expand-file-name ".mail/.*" me-home)
-                   ,(expand-file-name ".cask/.*" me-emacs-directory))))
+                   ,(expand-file-name ".mail/.*" me-home))))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
-  (recentf-mode 1))
+  (recentf-mode))
 
 ;; Save minibuffer history
 (use-package savehist
   :config
-  (setq savehist-additional-variables '(search ring regexp-search-ring))
-  (setq savehist-file (expand-file-name "savehist" me-emacs-tmp))
+  (setq savehist-additional-variables '(search ring regexp-search-ring)
+        savehist-file (expand-file-name "savehist" me-emacs-tmp))
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
@@ -809,14 +821,12 @@ all '.<space>' with '.<space><space>'."
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
-  (setq persistent-scratch-backup-directory
-        (expand-file-name "scratch" me-emacs-directory))
-  (setq persistent-scratch-save-file
-        (expand-file-name ".persistent-scratch" me-emacs-directory))
-  ;; keep backups not older than a month
-  (setq persistent-scratch-backup-filter
-        (persistent-scratch-keep-backups-not-older-than
-         (days-to-time 30)))
+  (setq persistent-scratch-backup-directory me-emacs-tmp
+        persistent-scratch-save-file (expand-file-name "scratch" me-emacs-tmp)
+        ;; keep backups not older than a month
+        persistent-scratch-backup-filter
+        (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
+
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode))
 
@@ -840,11 +850,17 @@ all '.<space>' with '.<space><space>'."
 ;; Edit remote files
 (use-package tramp
   :config
-  (setq tramp-default-method "ssh")
-  (setq vc-ignore-dir-regexp
-        (format "\\(%s\\)\\|\\(%s\\)"
-                vc-ignore-dir-regexp
-                tramp-file-name-regexp)))
+  (setq tramp-default-method "ssh"
+        vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
+                                     vc-ignore-dir-regexp
+                                     tramp-file-name-regexp)
+        tramp-verbose 3))
+
+(defun me//make-file-precious-when-remote ()
+    "Set FILE-PRECIOUS-FLAG for remote files."
+    (when (file-remote-p default-directory)
+      (set (make-local-variable 'file-precious-flag) t)))
+(add-hook 'find-file-hook #'me//make-file-precious-when-remote)
 
 (use-package tramp-cache
   :config
@@ -856,7 +872,7 @@ all '.<space>' with '.<space><space>'."
   (defun me//init-bookmark-bmenu ()
     (set (make-local-variable 'writeroom-width) 150)
     (set-face-bold 'bookmark-menu-bookmark nil)
-    (hl-line-mode 1))
+    (hl-line-mode))
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
   (setq bookmark-default-file
@@ -1183,23 +1199,18 @@ Lisp function does not specify a special indentation."
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
+
+  (defun me//disable-company-for-remote ()
+    (when (and (fboundp 'company-mode)
+               (file-remote-p default-directory))
+      (company-mode -1)))
+  (add-hook 'c-mode-common-hook #'me//disable-company-for-remote)
+
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
 (use-package clang-format
   :bind (:map c++-mode-map
-         ("C-!" . clang-format))
-  :config
-  ;; (defun me/clang-format-region ()
-  ;;   (interactive)
-  ;;   (let ((start (if (use-region-p) (region-beginning) (point)))
-  ;;         (end (if (use-region-p) (region-end) (point)))
-  ;;         (assumed-filename
-  ;;          (if (file-remote-p buffer-file-name)
-  ;;              (concat (getenv "HOME") "/"
-  ;;                      (file-name-nondirectory buffer-file-name))
-  ;;            buffer-file-name)))
-  ;;   (clang-format-region start end clang-format-style assumed-filename)))
-  )
+         ("C-!" . clang-format)))
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
@@ -1229,10 +1240,9 @@ Lisp function does not specify a special indentation."
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
-  :after (yapfify python-isort)
   :bind (:map python-mode-map
-         ("C-!" . yapfify-region)
-         ("C-c C-s" . me//isort-region-or-buffer))
+         ("C-!" . #'yapfify-region)
+         ("C-c C-s" . #'me//isort-region-or-buffer))
   :config
   (defun me//init-python()
     "Init python model."
@@ -1241,7 +1251,7 @@ Lisp function does not specify a special indentation."
     (setq-local yas-indent-line 'fixed)
     (setq-local comment-column 0)
     (setq-local python-indent-offset 2)
-    (setq-local fill-column 79))
+    (setq-local fill-column 80))
 
   (add-hook 'python-mode-hook #'me//init-python)
   (add-hook 'python-mode-hook #'flyspell-prog-mode))
@@ -1346,6 +1356,7 @@ Lisp function does not specify a special indentation."
         org-image-actual-width nil
         org-log-done 'time
         org-provide-todo-statistics t
+        org-display-remote-inline-images 'cache
         org-src-fontify-natively t
         org-src-preserve-indentation t
         org-support-shift-select t
@@ -1375,7 +1386,8 @@ Lisp function does not specify a special indentation."
 
 (use-package org-appear
   :config
-  (add-hook 'org-mode-hook #'org-appear-mode))
+  (add-hook 'org-mode-hook #'org-appear-mode)
+  (setq org-appear-autolinks t))
 
 (use-package org-refile
   :config
@@ -1578,6 +1590,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    " --shell-escape --pdf --tidy --verbose --batch %f")))
 
   (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("dvipsnames,svgnames,x11names,hyperref" "xcolor"))
   ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
   ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
   ;; (add-to-list 'org-latex-packages-alist '("" "geometry"))
@@ -1655,6 +1668,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
      "\n#+HTML_HEAD_EXTRA: <div style=\"display: none\"> \\(\n"
      (me//prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
      "\n#+HTML_HEAD_EXTRA: \\)</div>\n")))
+
+(use-package org-roam
+  :config
+  (setq org-roam-directory
+        (file-truename (expand-file-name "notes" me-emacs-data-private)))
+  (org-roam-db-autosync-mode))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
@@ -1788,12 +1807,16 @@ argument FORCE, force the creation of a new ID."
              ;; ("C-s"     . me//isearch-from-helm-occur)
              )
 
-  (helm-autoresize-mode t)
-  (helm-adaptive-mode 1)
+  (helm-autoresize-mode)
+
 
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   (setq helm-split-window-inside-p t))
+
+(use-package helm-adaptive
+  :config
+  (helm-adaptive-mode))
 
 (use-package helm-bookmark
   :config
@@ -1812,12 +1835,11 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq helm-buffer-max-length 40
         helm-buffers-fuzzy-matching t
-        helm-buffer-skip-remote-checking t)
+        helm-buffer-skip-remote-checking nil)
   (set-face-attribute 'helm-buffer-directory nil :inherit 'dired-directory))
 
 (use-package helm-files
   :config
-  :delight helm-ff-cache-mode
   (setq helm-ff-file-name-history-use-recentf t
         helm-ff-search-library-in-sexp t))
 
@@ -1934,8 +1956,6 @@ argument FORCE, force the creation of a new ID."
 ;; mail
 ;; =============================================================================
 
-;; Temporarily disable since msmtp does not support XOAUTH2.  Reading mail is
-;; fine, but replying mail is not working.
 (require 'mail-conf)
 
 ;; Contacts
@@ -1967,11 +1987,50 @@ argument FORCE, force the creation of a new ID."
   "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
-  :bind ("C-c b" . helm-bibtex)
+  :bind ("C-c b" . helm-bibtex))
+
+;; org-ref
+;; -----------------------------------------------------------------------------
+
+(defun me//org-ref-notes-function (thekey)
+  "Return the name of the note file by THEKEY."
+  (bibtex-completion-edit-notes
+   (list (car (org-ref-get-bibtex-key-and-file thekey)))))
+
+(defun me//org-ref-add-timestamp ()
+  "Add a timestamp field to a bibtex entry."
+  (interactive)
+  (bibtex-beginning-of-entry)
+  (bibtex-set-field "timestamp" (format-time-string "%Y%m%dT%H%M")))
+
+(use-package org-ref
+  :demand
+  :bind (:map org-mode-map
+         ("C-c ]" . org-ref-insert-ref-link))
   :config
-  (helm-add-action-to-source
-   "Edit entry keywords" #'org-ref-set-bibtex-keywords
-   helm-source-bibtex))
+  (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
+    (add-hook 'org-ref-clean-bibtex-entry-hook func))
+
+  (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
+  (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
+  (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
+  (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
+
+  (setq bibtex-completion-display-formats
+        `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
+          (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
+          (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
+          (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
+          (t             . ,(format "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  %s  ${keywords:40}" (make-string 20 ? )))))
+  (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
+
+(require 'org-ref-helm)
+
+(defun me/cleanup-bibtex-file (beg end)
+  "Cleanup entries in region BEG, END."
+  (interactive "r")
+  (bibtex-map-entries (lambda (_key _beg _end)
+                        (org-ref-clean-bibtex-entry))))
 
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
@@ -2017,8 +2076,8 @@ argument FORCE, force the creation of a new ID."
         bibtex-completion-library-path me-bib-pdfs
         bibtex-completion-notes-extension ".org"
         bibtex-completion-notes-path me-bib-notes
-        bibtex-completion-notes-symbol "✔"
-        bibtex-completion-pdf-symbol "⚐"))
+        bibtex-completion-notes-symbol (all-the-icons-material "attach_file")
+        bibtex-completion-pdf-symbol (all-the-icons-icon-for-file "pdf")))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
@@ -2041,49 +2100,6 @@ argument FORCE, force the creation of a new ID."
 (use-package tex-mode
   :config
   (add-hook 'tex-mode-hook #'me//init-tex))
-
-;; org-ref
-;; -----------------------------------------------------------------------------
-
-(setq org-ref-get-pdf-filename-function #'me//org-ref-notes-function)
-
-(defun me//org-ref-notes-function (thekey)
-  "Return the name of the note file by THEKEY."
-  (bibtex-completion-edit-notes
-   (list (car (org-ref-get-bibtex-key-and-file thekey)))))
-
-(defun me//org-ref-add-timestamp ()
-  "Add a timestamp field to a bibtex entry."
-  (interactive)
-  (bibtex-beginning-of-entry)
-  (bibtex-set-field "timestamp" (format-time-string "%Y%m%dT%H%M")))
-
-(use-package org-ref
-  :demand
-  :bind (:map org-mode-map
-         ("C-c ]" . org-ref-insert-ref-link))
-  :config
-  (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
-    (add-hook 'org-ref-clean-bibtex-entry-hook func))
-
-  (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
-  (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
-  (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
-  (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
-
-  (setq bibtex-completion-display-formats
-        `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
-          (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
-          (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
-          (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
-          (t             . ,(format "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  %s  ${keywords:40}" (make-string 20 ? )))))
-  (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
-
-(defun me/cleanup-bibtex-file (beg end)
-  "Cleanup entries in region BEG, END."
-  (interactive "r")
-  (bibtex-map-entries (lambda (_key _beg _end)
-                        (org-ref-clean-bibtex-entry))))
 
 ;; =============================================================================
 ;; Working with PDF
@@ -2151,43 +2167,51 @@ Using `window-line-height' accounts for variable-height fonts."
       ;; nil, fall back on `window-height'.
       (1- (window-height)))))
 
+(defun me//get-cite-key ()
+  "Get citation key if possible."
+  (cond
+   ((derived-mode-p 'org-mode)
+    ;; If there is key under curor return it.  Otherwise, use the filename as
+    ;; the key.  If the current file is a note associated with a PDF, the
+    ;; filename it a key by default.
+    (or (ignore-errors (org-ref-get-bibtex-key-under-cursor))
+        (file-name-base (buffer-file-name))))
+   ((derived-mode-p 'bibtex-mode)
+    (bibtex-completion-key-at-point))
+   ((derived-mode-p 'pdf-view-mode)
+    (file-name-base (buffer-file-name)))
+   (t nil)))
+
 (defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
-  (let* ((key (cond
-               ((derived-mode-p 'org-mode)
-                (condition-case nil
-                    (save-excursion
-                      (org-ref-get-bibtex-key-under-cursor))
-                  (error (file-name-base (buffer-file-name)))))
-               ((derived-mode-p 'pdf-view-mode)
-                (file-name-base (buffer-file-name)))
-               (t nil)))
-         (bibfile ""))
+  (let ((key (me//get-cite-key)))
     (if key
         (progn
-          (setq bibfile (cdr (org-ref-get-bibtex-key-and-file key)))
-          (find-file bibfile)
+          (find-file (cdr (org-ref-get-bibtex-key-and-file key)))
           (bibtex-search-entry key))
       (message "Non existing key %s" key))))
 
 (defun me/org-ref-open-note ()
   "Open the associated note file."
   (interactive)
-  (let* ((key (cond
-               ((derived-mode-p 'org-mode)
-                (ignore-errors (org-ref-get-bibtex-key-under-cursor)))
-               ((derived-mode-p 'bibtex-mode)
-                (save-excursion
-                  (bibtex-beginning-of-entry)
-                  (reftex-get-bib-field "=key=" (bibtex-parse-entry t))))
-               ((derived-mode-p 'pdf-view-mode)
-                (file-name-base (buffer-file-name)))
-               (t nil)))
-         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-    (if (file-exists-p pdf-file)
+  (let* ((key (me//get-cite-key))
+         (pdf-file (org-ref-get-pdf-filename key)))
+    (if (and pdf-file (file-exists-p pdf-file))
         (org-ref-open-notes-at-point key)
       (message "Not open note for non-existing PDF %s" key))))
+
+(defun me/org-ref-open-pdf (&optional arg)
+  "Open the associated PDF.
+If ARG, open with external program.  Otherwise open in Emacs."
+  (interactive "P")
+  (let* ((key (me//get-cite-key))
+         (pdf-file (org-ref-get-pdf-filename key)))
+    (if (and pdf-file (file-exists-p pdf-file))
+        (org-open-file pdf-file (not arg))
+      (if (derived-mode-p 'pdf-view-mode)
+          (message "Already opened")
+        (message "No PDF found with name %s" pdf-file)))))
 
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
@@ -2259,31 +2283,6 @@ alphabetically (in ascending or descending order)."
 ;; instance, me/org-ref-open-pdf opens the PDF file when your cursor is at the
 ;; bibtex entry or the note that is associated with this bibtex entry.
 
-(defun me/org-ref-open-pdf (&optional arg)
-  "Open the associated PDF.
-
-If ARG, open with external program.  Otherwise open in Emacs."
-  (interactive "P")
-  (let* ((key (cond
-               ((derived-mode-p 'org-mode)
-                (condition-case nil
-                    (save-excursion
-                      (org-ref-get-bibtex-key-under-cursor))
-                  (error (file-name-base (buffer-file-name)))))
-               ((derived-mode-p 'bibtex-mode)
-                (save-excursion
-                  (bibtex-beginning-of-entry)
-                  (reftex-get-bib-field "=key=" (bibtex-parse-entry t))))
-               (arg
-                (file-name-base (buffer-name)))
-               (t nil)))
-         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-    (if (file-exists-p pdf-file)
-        (org-open-file pdf-file (not arg))
-      (if (derived-mode-p 'pdf-view-mode)
-          (message "Already opened")
-        (message "No PDF found with name %s" pdf-file)))))
-
 ;; (define-pdf-cache-function pagelabels)
 (defun me//pdf-view-page-number ()
   "For telephone-mode line."
@@ -2328,7 +2327,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; Other stuff
 ;; =============================================================================
 
-;(require 'dm)
+(require 'dm)
 
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
 ;; (use-package lilypond-init

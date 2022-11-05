@@ -22,5 +22,9 @@
     (remove-hook 'write-file-hooks hook)
     (add-hook 'before-save-hook hook)))
 
+(use-package ffap
+  :config
+  (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
+
 (provide 'dm)
 ;;; dm.el ends here
