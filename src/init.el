@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-11-05 15:31:08 gongzhitaao>
+;; Time-stamp: <2022-11-09 12:08:48 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -99,13 +99,13 @@
 (defvar straight-built-in-pseudo-packages)
 (setq straight-built-in-pseudo-packages
       '(abbrev dired emacs files helm-adaptive helm-bookmark
-      helm-buffers helm-config helm-elisp helm-files
-      helm-for-files helm-locate helm-mode ibuf-ext image-mode
-      lisp-mode ls-lisp mail-conf message nadvice octave-mode
-      org-agenda org-capture org-clock org-habit org-id
-      org-refile org-src ox ox-beamer ox-bibtex ox-extra ox-html
-      ox-latex pdf-view python rfn-eshadow simple solar
-      tramp-cache uniquify google3-build-mode))
+               helm-buffers helm-config helm-elisp helm-files
+               helm-for-files helm-locate helm-mode ibuf-ext image-mode
+               lisp-mode ls-lisp mail-conf message nadvice oc octave-mode
+               org-agenda org-capture org-clock org-habit org-id
+               org-refile org-src ox ox-beamer ox-bibtex ox-extra ox-html
+               ox-latex pdf-view python rfn-eshadow simple solar
+               tramp-cache uniquify google3-build-mode))
 
 (use-package delight)
 (use-package bind-key)
@@ -171,7 +171,7 @@
 
 (use-package drag-stuff
   :bind ("C-c d" . drag-stuff-mode)
-  :delight (drag-stuff-mode " ")
+  :delight (drag-stuff-mode " ")
   :config (drag-stuff-define-keys))
 
 (bind-keys :prefix-map me-editing-command-map
@@ -570,22 +570,20 @@ all '.<space>' with '.<space><space>'."
               :family "Iosevka SS09"
               :height 160)
 
-  (let ((size (if (me//resolution-2k-p) 20 28)))
-    (set-fontset-font "fontset-default"
-                    (cons (decode-char 'ucs #xF000)
-                          (decode-char 'ucs #xF890))
-                    (font-spec :family "Font Awesome 6 Free"
-                               :size size)))
-
   (let ((size (if (me//resolution-2k-p) 22 44)))
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
                                             :family "Sarasa Mono TC"
-                                            :size size)))))
+                                            :size size)))
+
+    (set-fontset-font "fontset-default"
+                    (cons (decode-char 'ucs #xF000)
+                          (decode-char 'ucs #xF890))
+                    (font-spec :family "Font Awesome 6 Free"
+                               :size size))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
-(setq-default line-spacing 0.1)
 
 ;; modeline
 ;; -----------------------------------------------------------------------------
@@ -1989,6 +1987,10 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-bibtex
   :bind ("C-c b" . helm-bibtex))
 
+(use-package oc                         ;org-cite
+  :config
+  (setq org-cite-global-bibliography me-bib-files))
+
 ;; org-ref
 ;; -----------------------------------------------------------------------------
 
@@ -1998,10 +2000,14 @@ argument FORCE, force the creation of a new ID."
    (list (car (org-ref-get-bibtex-key-and-file thekey)))))
 
 (defun me//org-ref-add-timestamp ()
-  "Add a timestamp field to a bibtex entry."
+  "Add a timestamp field to a bibtex entry, ISO 8601 format."
   (interactive)
-  (bibtex-beginning-of-entry)
-  (bibtex-set-field "timestamp" (format-time-string "%Y%m%dT%H%M")))
+  (let ((ts (bibtex-autokey-get-field "timestamp")))
+    (bibtex-set-field "timestamp"
+                      (format-time-string "%FT%T%z"
+                                          (if (string-empty-p ts)
+                                              (me//random-time)
+                                            (date-to-time ts))))))
 
 (use-package org-ref
   :demand
@@ -2016,26 +2022,65 @@ argument FORCE, force the creation of a new ID."
   (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
+  (setq doi-utils-download-pdf nil)
+
   (setq bibtex-completion-display-formats
-        `((article       . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${journal:20}  ${keywords:40}")
-          (inbook        . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${chapter:20}  ${keywords:40}")
-          (incollection  . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
-          (inproceedings . "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  ${booktitle:20}  ${keywords:40}")
-          (t             . ,(format "${author:36}  ${title:*}  ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:3}  %s  ${keywords:40}" (make-string 20 ? )))))
+        `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
+          (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
+          (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+          (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+          (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 20 ? )))))
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
 
 (require 'org-ref-helm)
 
-(defun me/cleanup-bibtex-file (beg end)
-  "Cleanup entries in region BEG, END."
-  (interactive "r")
-  (bibtex-map-entries (lambda (_key _beg _end)
-                        (org-ref-clean-bibtex-entry))))
+(defun me/cleanup-bibtex-file (arg)
+  "Cleanup entries, start from the begnning if ARG."
+  (interactive "P")
+  (bibtex-progress-message "Cleanup bibtex buffer...")
+  (save-excursion
+    (if arg
+        (bibtex-beginning-first-field)
+      (bibtex-beginning-of-entry))
+    (save-restriction
+      (narrow-to-region (point) (point-max))
+      (bibtex-map-entries (lambda (_key _start _end)
+                            (bibtex-progress-message)
+                            (org-ref-clean-bibtex-entry)))))
+  (bibtex-progress-message 'done))
 
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
   (interactive)
   (bibtex-find-text t))
+
+(defun me//random-time ()
+  "Generate random timestamp from epoch and now."
+  (random (time-convert (current-time) 'integer)))
+
+(defun me//bibtex-entry-index ()
+  "Return index of BibTeX entry head at or past position of point.
+
+The index is a list (KEY TIMESTAMP) that is used for sorting the
+entries of the BibTeX buffer.  Return nil if no entry found.
+Move point to the end of the head of the entry found."
+  (list (bibtex-key-in-head)
+        (let ((ts (bibtex-autokey-get-field "timestamp")))
+          (if (string-empty-p ts)
+              (me//random-time)
+            (time-convert (date-to-time ts) 'integer)))))
+
+(defun me//bibtex-lessp (index1 index2)
+  "Predicate for sorting BibTeX entries with indices INDEX1 and INDEX2.
+
+Each index is a list (KEY TIMESTAMP)."
+  (let ((t1 (nth 1 index1))
+        (t2 (nth 1 index2)))
+    (or (and (= t1 t2)
+             (string< (car index1) (car index2)))
+        (< t1 t2))))
+
+(setq bibtex-maintain-sorted-entries '(me//bibtex-entry-index me//bibtex-lessp))
 
 (use-package bibtex
   :bind (:map bibtex-mode-map
@@ -2053,10 +2098,7 @@ argument FORCE, force the creation of a new ID."
 
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
-  (add-to-list 'bibtex-entry-format 'unify-case)
-  (add-to-list 'bibtex-entry-format 'sort-fields)
-  (add-to-list 'bibtex-entry-format 'whitespace)
-  (add-to-list 'bibtex-entry-format 'last-comma)
+  (setq bibtex-entry-format t)
 
   (setq bibtex-align-at-equal-sign t
         bibtex-autokey-name-year-separator ""
@@ -2076,8 +2118,8 @@ argument FORCE, force the creation of a new ID."
         bibtex-completion-library-path me-bib-pdfs
         bibtex-completion-notes-extension ".org"
         bibtex-completion-notes-path me-bib-notes
-        bibtex-completion-notes-symbol (all-the-icons-material "attach_file")
-        bibtex-completion-pdf-symbol (all-the-icons-icon-for-file "pdf")))
+        bibtex-completion-notes-symbol ""
+        bibtex-completion-pdf-symbol ""))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
