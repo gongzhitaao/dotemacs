@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-11-09 12:08:48 gongzhitaao>
+;; Time-stamp: <2022-11-09 12:29:12 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2003,11 +2003,7 @@ argument FORCE, force the creation of a new ID."
   "Add a timestamp field to a bibtex entry, ISO 8601 format."
   (interactive)
   (let ((ts (bibtex-autokey-get-field "timestamp")))
-    (bibtex-set-field "timestamp"
-                      (format-time-string "%FT%T%z"
-                                          (if (string-empty-p ts)
-                                              (me//random-time)
-                                            (date-to-time ts))))))
+    (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
 
 (use-package org-ref
   :demand
@@ -2023,6 +2019,9 @@ argument FORCE, force the creation of a new ID."
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
   (setq doi-utils-download-pdf nil)
+  (remove-hook 'org-ref-clean-bibtex-entry-hook #'org-ref-replace-nonascii)
+  (add-to-list 'org-ref-bibtex-journal-abbreviations
+               '("ArXiv" "Archive e-print" "CoRR"))
 
   (setq bibtex-completion-display-formats
         `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
@@ -2080,8 +2079,6 @@ Each index is a list (KEY TIMESTAMP)."
              (string< (car index1) (car index2)))
         (< t1 t2))))
 
-(setq bibtex-maintain-sorted-entries '(me//bibtex-entry-index me//bibtex-lessp))
-
 (use-package bibtex
   :bind (:map bibtex-mode-map
          ([remap fill-paragraph]     . bibtex-fill-entry)
@@ -2094,7 +2091,8 @@ Each index is a list (KEY TIMESTAMP)."
   (defun me//init-bibtex ()
     "Init bibtex mode."
     (set (make-local-variable 'fill-column) 140)
-    (set (make-local-variable 'writeroom-width) 150))
+    (set (make-local-variable 'writeroom-width) 150)
+    (setq bibtex-maintain-sorted-entries '(me//bibtex-entry-index me//bibtex-lessp)))
 
   (add-hook 'bibtex-mode-hook #'me//init-bibtex)
 
