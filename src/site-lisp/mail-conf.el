@@ -51,7 +51,7 @@
   (setq message-citation-line-format "On %a, %b %d %Y at %R, %N wrote:\n"
         message-citation-line-function #'message-insert-formatted-citation-line
         message-forward-as-mime nil
-        message-forward-before-signature nil
+        message-forward-before-signature t
         message-forward-ignored-headers ""
         message-make-forward-subject-function #'message-forward-subject-fwd)
   (add-hook 'message-mode-hook #'me//init-message)
@@ -92,31 +92,32 @@
 ;; sending mails
 ;; -----------------------------------------------------------------------------
 
-(use-package sendmail
-  :config
-  (setq send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "gmi")
+(defun me//get-email-address (from)
+  "Get email address from FROM field."
+  (if (null (string-match "<\\([^@<]+@[^>]+\\)>" from))
+      nil
+    (substring (match-string 0 from) 1 -1)))
 
-  (defun me//get-email-address (from)
-    (if (null (string-match "<\\([^@<]+@[^>]+\\)>" from))
-        nil
-      (substring (match-string 0 from) 1 -1)))
-
-  (defun me//auto-choose-email-account ()
+(defun me//auto-choose-email-account ()
+  "Choose email account automatically."
     (let* ((accounts '(("gongzhitaao@google.com" . "~/.mail/corp")
                       ("gongzhitaao@deepmind.com" . "~/.mail/corp")
                       ("zhitaao.gong@gmail.com" . "~/.mail/personal")))
            (from (me//get-email-address (message-fetch-field "from")))
            (mail-dir (alist-get from accounts nil nil #'string=)))
       (if mail-dir
-          (setq message-sendmail-extra-arguments
+          (set (make-local-variable 'message-sendmail-extra-arguments)
                 `("send" "--quiet" "-t" "-C" ,mail-dir))
         (warn "Account: %s not found" mail-dir))))
+
+(use-package sendmail
+  :config
+  (setq send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "gmi")
+
   (add-hook 'message-send-hook #'me//auto-choose-email-account))
 
 (use-package notmuch
-  :bind (:map notmuch-show-mode-map
-         ("C-c C-o" . #'org-open-at-point))
   :config
   (defvar me-notmuch-tag-map-prefix "f"
     "Prefix to active the tags keymap.")

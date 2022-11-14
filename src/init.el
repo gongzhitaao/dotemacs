@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-11-09 12:29:12 gongzhitaao>
+;; Time-stamp: <2022-11-14 17:50:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1370,13 +1370,13 @@ Lisp function does not specify a special indentation."
            "WAIT(w@/!)" "HOLD(h@/!)" "|"
            "KILL(k@)")))
 
-  ;; (setq org-todo-keyword-faces
-  ;;       '(("TODO" :foreground "red"          :weight bold)
-  ;;         ("NEXT" :foreground "cyan"         :weight bold)
-  ;;         ("DONE" :foreground "green"        :weight bold)
-  ;;         ("WAIT" :foreground "yellow"       :weight bold)
-  ;;         ("HOLD" :foreground "magenta"      :weight bold)
-  ;;         ("KILL" :foreground "forest green" :weight bold)))
+  (setq org-todo-keyword-faces
+        `(("TODO" :inherit modus-themes-refine-red)
+          ("NEXT" :inherit modus-themes-refine-yellow)
+          ("DONE" :inherit modus-themes-refine-green)
+          ("WAIT" :inherit modus-themes-refine-blue)
+          ("HOLD" :inherit modus-themes-refine-magenta)
+          ("KILL" :inherit modus-themes-subtle-green)))
 
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
