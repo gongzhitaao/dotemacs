@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-11-14 17:50:17 gongzhitaao>
+;; Time-stamp: <2022-11-15 12:24:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -136,6 +136,7 @@
 (global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+(global-set-key (kbd "M-<delete>") #'kill-word)
 
 (global-set-key (kbd "s-;") #'comment-or-uncomment-region)
 
@@ -503,8 +504,8 @@ all '.<space>' with '.<space><space>'."
   :delight smartparens-mode
   :config
   (require 'smartparens-config)
-  (bind-keys ("M-<backspace>" . sp-backward-unwrap-sexp)
-             ("M-<delete>"    . sp-unwrap-sexp)
+  (bind-keys ("M-S-<backspace>" . sp-backward-unwrap-sexp)
+             ("M-S-<delete>"    . sp-unwrap-sexp)
              :prefix-map smartparens-mode-map
              :prefix "C-c s"
              ("<backspace>"   . sp-splice-sexp-killing-backward)
@@ -513,7 +514,6 @@ all '.<space>' with '.<space><space>'."
              ("<right>"       . sp-forward-slurp-sexp)
              ("a"             . sp-beginning-of-sexp)
              ("b"             . sp-backward-sexp)
-             ("C-<delete>"    . sp-splice-sexp-killing-around)
              ("C-<left>"      . sp-forward-barf-sexp)
              ("C-<right>"     . sp-backward-barf-sexp)
              ("D"             . sp-backward-down-sexp)
