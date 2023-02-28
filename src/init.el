@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-02-28 16:09:58 gongzhitaao>
+;; Time-stamp: <2023-02-28 16:21:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -776,7 +776,6 @@ all '.<space>' with '.<space><space>'."
                     age))
         (message "delete: %s" file)
         (delete-file file)))))
-(me//cleanup-old-files me-emacs-tmp 7)
 
 ;; backup!!!
 (use-package files
@@ -784,11 +783,17 @@ all '.<space>' with '.<space><space>'."
   (setq auto-save-list-file-prefix
         (expand-file-name ".saves-" me-emacs-tmp))
 
-  (setq backup-directory-alist `(("." . ,me-emacs-tmp)))
+  (let ((backup-dir (expand-file-name "backup" me-emacs-tmp)))
+    (setq backup-directory-alist `(("." . ,backup-dir)))
+    (me//cleanup-old-files backup-dir 7))
+
+  (setq backup-directory-alist
+        `(("." . ,(expand-file-name "backup" me-emacs-tmp))))
   (setq backup-by-copying    t
         delete-old-versions  t
         kept-new-versions    30
         kept-old-versions    30
+        vc-make-backup-files t
         version-control      t)
 
   ;; Backup buffer before each save.
@@ -883,9 +888,6 @@ all '.<space>' with '.<space><space>'."
   :config (which-key-mode)
   :delight which-key-mode)
 
-;; EShell
-;; (use-package esh-mode
-;;   :config (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer))
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
@@ -1900,18 +1902,6 @@ argument FORCE, force the creation of a new ID."
 ;; n - select the previous window
 ;; i - maximize window (select which window)
 ;; o - maximize current window
-
-;; helm-gtags
-;; -----------------------------------------------------------------------------
-
-;; (use-package helm-gtags
-;;   :delight (helm-gtags-mode " ")
-;;   :config
-;;   (setq helm-gtags-suggested-key-mapping t)
-;;   (setq helm-gtags-ignore-case t
-;;         helm-gtags-auto-update t
-;;         helm-gtags-display-style 'detail
-;;         helm-gtags-direct-helm-completing t))
 
 ;; deft
 ;; -----------------------------------------------------------------------------
