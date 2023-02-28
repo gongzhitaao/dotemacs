@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2022-11-15 12:24:00 gongzhitaao>
+;; Time-stamp: <2023-02-28 16:09:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -7,6 +7,45 @@
 ;; me-xxx: custom variables
 
 ;;; Code:
+
+;; =============================================================================
+;; Variables
+;; =============================================================================
+
+(defconst me-home "~" "My home directory.")
+
+(defconst me-emacs-directory (expand-file-name "~/.emacs.d")
+  "My Emacs directory.")
+
+(defconst me-emacs-data-private
+  (expand-file-name "data/private" me-emacs-directory)
+  "Private EMACS data synced to a private repo.")
+(defconst me-emacs-data-public
+  (expand-file-name "data/public" me-emacs-directory)
+  "Public EMACS data synced to a public repo.")
+
+(defconst me-emacs-tmp (expand-file-name "tmp" me-emacs-directory)
+  "Directory for temporary files.")
+(unless (file-exists-p me-emacs-tmp)
+  (mkdir me-emacs-tmp))
+
+(defconst me-keylog (expand-file-name "keylog" me-emacs-data-private)
+  "The file path that Logs every key stroke in my EMACS.")
+(unless (file-exists-p me-keylog)
+  (mkdir me-keylog))
+
+(defconst me-local-conf (expand-file-name "local.el" me-emacs-directory)
+  "Local configuration not shared around machines.")
+
+(setq custom-file (expand-file-name "custom.el" me-emacs-directory))
+
+;; (if (file-exists-p custom-file)
+;;     (load custom-file))
+
+;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
+;; because it is site-specific or it contains sensitive information.  These
+;; configs will not go into the public git repo.
+(add-to-list 'load-path (expand-file-name "site-lisp" me-emacs-directory))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()
@@ -112,14 +151,6 @@
 
 (setq load-prefer-newer t)
 
-(defconst me-emacs-directory (expand-file-name "~/.emacs.d")
-  "My Emacs directory.")
-
-;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
-;; because it is site-specific or it contains sensitive information.  These
-;; configs will not go into the public git repo.
-(add-to-list 'load-path (expand-file-name "site-lisp" me-emacs-directory))
-
 ;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
 ;; I could not start my Emacs.  I guess a better way is to backup the packages
 ;; every day just in case.  However, use-package, bind-keys are so much more
@@ -138,7 +169,7 @@
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 (global-set-key (kbd "M-<delete>") #'kill-word)
 
-(global-set-key (kbd "s-;") #'comment-or-uncomment-region)
+(global-set-key (kbd "C-;") #'comment-or-uncomment-region)
 
 (global-set-key (kbd "S-<up>") #'windmove-up)
 (global-set-key (kbd "S-<right>") #'windmove-right)
@@ -199,7 +230,9 @@
              ("a"   . mc/mark-all-like-this-dwim)
              ("l"   . mc/edit-lines)
              ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters)))
+             ("i l" . mc/insert-letters))
+
+  (setq mc/list-file (expand-file-name "mc-lists.el" me-emacs-tmp)))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -264,37 +297,6 @@
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
 ;; M-s s helm-swoop
-
-;; =============================================================================
-;; Variables
-;; =============================================================================
-
-(defconst me-home "~" "My home directory.")
-
-(defconst me-emacs-data-private
-  (expand-file-name "data/private" me-emacs-directory)
-  "Private EMACS data synced to a private repo.")
-(defconst me-emacs-data-public
-  (expand-file-name "data/public" me-emacs-directory)
-  "Public EMACS data synced to a public repo.")
-
-(defconst me-emacs-tmp (expand-file-name "tmp" me-emacs-directory)
-  "Directory for temporary files.")
-(unless (file-exists-p me-emacs-tmp)
-  (mkdir me-emacs-tmp))
-
-(defconst me-keylog (expand-file-name "keylog" me-emacs-data-private)
-  "The file path that Logs every key stroke in my EMACS.")
-(unless (file-exists-p me-keylog)
-  (mkdir me-keylog))
-
-(defconst me-local-conf (expand-file-name "local.el" me-emacs-directory)
-  "Local configuration not shared around machines.")
-
-(setq custom-file (expand-file-name "custom.el" me-emacs-directory))
-
-;; (if (file-exists-p custom-file)
-;;     (load custom-file))
 
 ;; =============================================================================
 ;; General helpers
@@ -522,6 +524,7 @@ all '.<space>' with '.<space><space>'."
              ("E"             . sp-up-sexp)
              ("f"             . sp-forward-sexp)
              ("k"             . sp-kill-sexp)
+             ("K"             . sp-backward-kill-sexp)
              ("n"             . sp-next-sexp)
              ("p"             . sp-previous-sexp)
              ("r"             . sp-rewrap-sexp)
@@ -780,8 +783,6 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq auto-save-list-file-prefix
         (expand-file-name ".saves-" me-emacs-tmp))
-  (setq auto-save-file-name-transforms
-        `((".*" ,temporary-file-directory t)))
 
   (setq backup-directory-alist `(("." . ,me-emacs-tmp)))
   (setq backup-by-copying    t
@@ -792,6 +793,22 @@ all '.<space>' with '.<space><space>'."
 
   ;; Backup buffer before each save.
   (add-hook 'before-save-hook #'me//force-backup-of-buffer))
+
+;; Edit remote files
+(use-package tramp
+  :config
+  (setq tramp-backup-directory-alist backup-directory-alist))
+
+(defun me//make-file-precious-when-remote ()
+    "Set FILE-PRECIOUS-FLAG for remote files."
+    (when (file-remote-p default-directory)
+      (set (make-local-variable 'file-precious-flag) t)))
+(add-hook 'find-file-hook #'me//make-file-precious-when-remote)
+
+(use-package tramp-cache
+  :config
+  (setq tramp-persistency-file-name
+        (expand-file-name "tramp" me-emacs-tmp)))
 
 ;; Save recent visited file list.
 (use-package recentf
@@ -819,7 +836,8 @@ all '.<space>' with '.<space><space>'."
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
-  (setq persistent-scratch-backup-directory me-emacs-tmp
+  (setq persistent-scratch-backup-directory
+        (expand-file-name "scratch.d" me-emacs-tmp)
         persistent-scratch-save-file (expand-file-name "scratch" me-emacs-tmp)
         ;; keep backups not older than a month
         persistent-scratch-backup-filter
@@ -844,26 +862,6 @@ all '.<space>' with '.<space><space>'."
 
 (use-package helm-flycheck
   :bind ("C-c c" . helm-flycheck))
-
-;; Edit remote files
-(use-package tramp
-  :config
-  (setq tramp-default-method "ssh"
-        vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
-                                     vc-ignore-dir-regexp
-                                     tramp-file-name-regexp)
-        tramp-verbose 3))
-
-(defun me//make-file-precious-when-remote ()
-    "Set FILE-PRECIOUS-FLAG for remote files."
-    (when (file-remote-p default-directory)
-      (set (make-local-variable 'file-precious-flag) t)))
-(add-hook 'find-file-hook #'me//make-file-precious-when-remote)
-
-(use-package tramp-cache
-  :config
-  (setq tramp-persistency-file-name
-        (expand-file-name "tramp" me-emacs-tmp)))
 
 (use-package bookmark
   :config
@@ -1194,6 +1192,8 @@ Lisp function does not specify a special indentation."
   (add-hook 'emacs-lisp-mode-hook 'me//init-emacs-lisp))
 
 (use-package cc-mode
+  :bind (:map c++-mode-map
+         ("C-!" . clang-format))
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
@@ -1206,9 +1206,7 @@ Lisp function does not specify a special indentation."
 
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
-(use-package clang-format
-  :bind (:map c++-mode-map
-         ("C-!" . clang-format)))
+(use-package clang-format)
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
@@ -1309,6 +1307,8 @@ Lisp function does not specify a special indentation."
   (setq-default markdown-hide-urls t))
 
 (use-package typescript-mode
+  :bind (:map typescript-mode-map
+         ("C-!" . clang-format))
   :config
   (setq typescript-indent-level 2))
 
@@ -1424,14 +1424,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-clock-in-resume t
         org-clock-into-drawer t
         org-clock-persist t
+        org-clock-persist-file (expand-file-name "org-clock-save.el" me-emacs-tmp)
         org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
-(use-package org-gcal)
-
 (use-package org-agenda
-  :bind (:map org-agenda-mode-map
-         ("F" . org-gcal-fetch))
   :config
 
   (defun me//init-org-agenda ()
@@ -1667,12 +1664,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
      (me//prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
      "\n#+HTML_HEAD_EXTRA: \\)</div>\n")))
 
-(use-package org-roam
-  :config
-  (setq org-roam-directory
-        (file-truename (expand-file-name "notes" me-emacs-data-private)))
-  (org-roam-db-autosync-mode))
-
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
 
@@ -1806,14 +1797,13 @@ argument FORCE, force the creation of a new ID."
              )
 
   (helm-autoresize-mode)
-
-
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
-
   (setq helm-split-window-inside-p t))
 
 (use-package helm-adaptive
   :config
+  (setq helm-adaptive-history-file
+        (expand-file-name "helm-adaptive-history" me-emacs-tmp))
   (helm-adaptive-mode))
 
 (use-package helm-bookmark
@@ -1857,20 +1847,23 @@ argument FORCE, force the creation of a new ID."
 (use-package flyspell
   :after helm-flyspell
   :bind (:map flyspell-mode-map
-         ("C-;" . helm-flyspell-correct)))
+         ("C-;" . comment-or-uncomment-region)
+         ("s-;" . helm-flyspell-correct)))
 
 ;; helm projectile
 ;; -----------------------------------------------------------------------------
 
-(use-package projectile
-  :config (projectile-mode 1)
-  :delight)
+;; (use-package projectile
+;;   :delight
+;;   :config
+;;   (projectile-mode)
+;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
-(use-package helm-projectile
-  :config
-  :after projectile
-  (setq projectile-completion-system 'helm)
-  (helm-projectile-on))
+;; (use-package helm-projectile
+;;   :config
+;;   :after projectile
+;;   (setq projectile-completion-system 'helm)
+;;   (helm-projectile-on))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
@@ -2378,14 +2371,13 @@ alphabetically (in ascending or descending order)."
 ;; Theme
 ;; =============================================================================
 
-(use-package modus-themes
-  :init
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
-        modus-themes-region '(bg-only no-extend))
-  (modus-themes-load-themes)
-  :config
-  (modus-themes-load-operandi))
+(require-theme 'modus-themes)
+
+(setq modus-themes-italic-constructs t
+      modus-themes-bold-constructs nil
+      modus-themes-region '(bg-only no-extend))
+
+(load-theme 'modus-operandi)
 
 ;; =============================================================================
 ;; Now start the server
