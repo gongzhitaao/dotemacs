@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-02-28 16:21:24 gongzhitaao>
+;; Time-stamp: <2023-03-07 10:30:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -14,30 +14,29 @@
 
 (defconst me-home "~" "My home directory.")
 
-(defconst me-emacs-directory (expand-file-name "~/.emacs.d")
-  "My Emacs directory.")
+(defconst me-emacs-directory "~/.emacs.d" "My Emacs directory.")
 
 (defconst me-emacs-data-private
-  (expand-file-name "data/private" me-emacs-directory)
+  (file-name-concat me-emacs-directory "data/private")
   "Private EMACS data synced to a private repo.")
 (defconst me-emacs-data-public
-  (expand-file-name "data/public" me-emacs-directory)
+  (file-name-concat  me-emacs-directory "data/public")
   "Public EMACS data synced to a public repo.")
 
-(defconst me-emacs-tmp (expand-file-name "tmp" me-emacs-directory)
+(defconst me-emacs-tmp (file-name-concat me-emacs-directory "tmp")
   "Directory for temporary files.")
 (unless (file-exists-p me-emacs-tmp)
   (mkdir me-emacs-tmp))
 
-(defconst me-keylog (expand-file-name "keylog" me-emacs-data-private)
+(defconst me-keylog (file-name-concat me-emacs-data-private "keylog")
   "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
 
-(defconst me-local-conf (expand-file-name "local.el" me-emacs-directory)
+(defconst me-local-conf (file-name-concat me-emacs-directory "local.el" )
   "Local configuration not shared around machines.")
 
-(setq custom-file (expand-file-name "custom.el" me-emacs-directory))
+(setq custom-file (file-name-concat me-emacs-directory "custom.el"))
 
 ;; (if (file-exists-p custom-file)
 ;;     (load custom-file))
@@ -45,7 +44,7 @@
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
-(add-to-list 'load-path (expand-file-name "site-lisp" me-emacs-directory))
+(add-to-list 'load-path (file-name-concat me-emacs-directory "site-lisp"))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()
@@ -781,14 +780,12 @@ all '.<space>' with '.<space><space>'."
 (use-package files
   :config
   (setq auto-save-list-file-prefix
-        (expand-file-name ".saves-" me-emacs-tmp))
+        (file-name-concat me-emacs-tmp ".saves-"))
 
-  (let ((backup-dir (expand-file-name "backup" me-emacs-tmp)))
+  (let ((backup-dir (file-name-concat me-emacs-tmp "backup")))
     (setq backup-directory-alist `(("." . ,backup-dir)))
     (me//cleanup-old-files backup-dir 7))
 
-  (setq backup-directory-alist
-        `(("." . ,(expand-file-name "backup" me-emacs-tmp))))
   (setq backup-by-copying    t
         delete-old-versions  t
         kept-new-versions    30
@@ -799,16 +796,15 @@ all '.<space>' with '.<space><space>'."
   ;; Backup buffer before each save.
   (add-hook 'before-save-hook #'me//force-backup-of-buffer))
 
-;; Edit remote files
-(use-package tramp
-  :config
-  (setq tramp-backup-directory-alist backup-directory-alist))
-
 (defun me//make-file-precious-when-remote ()
     "Set FILE-PRECIOUS-FLAG for remote files."
     (when (file-remote-p default-directory)
       (set (make-local-variable 'file-precious-flag) t)))
 (add-hook 'find-file-hook #'me//make-file-precious-when-remote)
+
+(use-package tramp
+  :config
+  (setq tramp-backup-directory-alist backup-directory-alist))
 
 (use-package tramp-cache
   :config
