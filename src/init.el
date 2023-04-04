@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-03-07 10:30:18 gongzhitaao>
+;; Time-stamp: <2023-04-04 15:57:46 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -117,8 +117,8 @@
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (file-name-concat user-emacs-directory
+                         "straight/repos/straight.el/bootstrap.el"))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -136,7 +136,7 @@
 
 (defvar straight-built-in-pseudo-packages)
 (setq straight-built-in-pseudo-packages
-      '(abbrev dired emacs files helm-adaptive helm-bookmark
+      '(abbrev comp dired emacs files helm-adaptive helm-bookmark
                helm-buffers helm-config helm-elisp helm-files
                helm-for-files helm-locate helm-mode ibuf-ext image-mode
                lisp-mode ls-lisp mail-conf message nadvice oc octave-mode
@@ -231,7 +231,7 @@
              ("i n" . mc/insert-numbers)
              ("i l" . mc/insert-letters))
 
-  (setq mc/list-file (expand-file-name "mc-lists.el" me-emacs-tmp)))
+  (setq mc/list-file (file-name-concat me-emacs-tmp "mc-lists.el")))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -565,7 +565,7 @@ all '.<space>' with '.<space><space>'."
 (defun me//resolution-2k-p ()
   "Return TRUE if 2K resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560))))))
+    (not (not (memq width '(1920 1998 2048 2560 6400))))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
@@ -632,6 +632,10 @@ all '.<space>' with '.<space><space>'."
               tab-stop-list (number-sequence 2 120 2)
               tab-width 4
               truncate-lines t)
+
+(use-package comp
+  :config
+  (setq native-comp-async-report-warnings-errors nil))
 
 (use-package delsel
   :config
@@ -733,12 +737,12 @@ all '.<space>' with '.<space><space>'."
 
 (use-package abbrev
   :config
-  (setq abbrev-file-name (expand-file-name "abbrev_defs" me-emacs-data-private)))
+  (setq abbrev-file-name (file-name-concat me-emacs-data-private "abbrev_defs")))
 
 (use-package yasnippet
   :delight yas-minor-mode
   :config
-  (setq yas-snippet-dirs `(,(expand-file-name "snippets" me-emacs-data-public)))
+  (setq yas-snippet-dirs `(,(file-name-concat me-emacs-data-public "snippets")))
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
@@ -780,7 +784,7 @@ all '.<space>' with '.<space><space>'."
 (use-package files
   :config
   (setq auto-save-list-file-prefix
-        (file-name-concat me-emacs-tmp ".saves-"))
+        (file-name-concat me-emacs-tmp "auto-save-list/saves-"))
 
   (let ((backup-dir (file-name-concat me-emacs-tmp "backup")))
     (setq backup-directory-alist `(("." . ,backup-dir)))
@@ -809,15 +813,14 @@ all '.<space>' with '.<space><space>'."
 (use-package tramp-cache
   :config
   (setq tramp-persistency-file-name
-        (expand-file-name "tramp" me-emacs-tmp)))
+        (file-name-concat me-emacs-tmp "tramp")))
 
 ;; Save recent visited file list.
 (use-package recentf
   :config
-  (setq recentf-save-file (expand-file-name "recentf" me-emacs-tmp))
+  (setq recentf-save-file (file-name-concat me-emacs-tmp "recentf"))
   (setq recentf-max-saved-items 50)
-  (let ((ignores `(,(expand-file-name ".*" me-emacs-tmp)
-                   ,(expand-file-name ".mail/.*" me-home))))
+  (let ((ignores `(,(file-name-concat me-emacs-tmp ".*") "~/.mail/.*")))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
   (recentf-mode))
 
@@ -825,21 +828,22 @@ all '.<space>' with '.<space><space>'."
 (use-package savehist
   :config
   (setq savehist-additional-variables '(search ring regexp-search-ring)
-        savehist-file (expand-file-name "savehist" me-emacs-tmp))
+        savehist-file (file-name-concat me-emacs-tmp "savehist"))
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
 (use-package saveplace
   :config
-  (setq save-place-file (expand-file-name "saveplace" me-emacs-tmp))
+  (setq save-place-file (file-name-concat me-emacs-tmp "saveplace"))
   (save-place-mode))
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
   (setq persistent-scratch-backup-directory
-        (expand-file-name "scratch.d" me-emacs-tmp)
-        persistent-scratch-save-file (expand-file-name "scratch" me-emacs-tmp)
+        (file-name-concat me-emacs-tmp "scratch.d")
+        persistent-scratch-save-file
+        (file-name-concat me-emacs-tmp "scratch.d/scratch")
         ;; keep backups not older than a month
         persistent-scratch-backup-filter
         (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
@@ -873,7 +877,7 @@ all '.<space>' with '.<space><space>'."
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
   (setq bookmark-default-file
-        (expand-file-name "bookmarks" me-emacs-data-private)))
+        (file-name-concat me-emacs-data-private "bookmarks")))
 
 ;; =============================================================================
 ;; General utilities
@@ -969,8 +973,8 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq calendar-week-start-day 1
         calendar-chinese-all-holidays-flag t
-        diary-file (expand-file-name "org/time-machine/diary"
-                                     me-emacs-data-private))
+        diary-file (file-name-concat me-emacs-data-private
+                                     "org/time-machine/diary"))
   (calendar-set-date-style 'iso)
 
   (defface calendar-iso-week-face
@@ -1336,7 +1340,7 @@ Lisp function does not specify a special indentation."
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config
-  (setq org-directory (expand-file-name "org" me-emacs-data-private))
+  (setq org-directory (file-name-concat me-emacs-data-private "org"))
 
   (add-hook 'org-mode-hook #'me//init-org)
 
@@ -1378,7 +1382,7 @@ Lisp function does not specify a special indentation."
 
   (setq org-time-stamp-custom-formats
         '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-  (load-file (expand-file-name "my-org-misc.el" org-directory)))
+  (load-file (file-name-concat org-directory "my-org-misc.el")))
 
 (use-package org-appear
   :config
@@ -1422,7 +1426,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-clock-in-resume t
         org-clock-into-drawer t
         org-clock-persist t
-        org-clock-persist-file (expand-file-name "org-clock-save.el" me-emacs-tmp)
+        org-clock-persist-file (file-name-concat me-emacs-tmp "org-clock-save.el")
         org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
@@ -1464,7 +1468,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (setq org-agenda-compact-blocks nil
         org-agenda-columns-add-appointments-to-effort-sum t
         org-agenda-dim-blocked-tasks t
-        org-agenda-files (expand-file-name "orgfile" org-directory)
+        org-agenda-files (file-name-concat org-directory "orgfile")
         org-agenda-include-diary t
         org-agenda-show-all-dates t
         org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
@@ -1776,10 +1780,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-mode
   :delight
   :config
-  (helm-mode 1))
-
-(use-package helm-config
-  :config
+  (helm-mode 1)
   (bind-keys ("M-x"     . helm-M-x)
              ("C-x C-f" . helm-find-files)
              ("M-s g"   . helm-ag)
@@ -1793,7 +1794,6 @@ argument FORCE, force the creation of a new ID."
              ;; :map helm-moccur-map
              ;; ("C-s"     . me//isearch-from-helm-occur)
              )
-
   (helm-autoresize-mode)
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
   (setq helm-split-window-inside-p t))
@@ -1801,7 +1801,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-adaptive
   :config
   (setq helm-adaptive-history-file
-        (expand-file-name "helm-adaptive-history" me-emacs-tmp))
+        (file-name-concat me-emacs-tmp "helm-adaptive-history"))
   (helm-adaptive-mode))
 
 (use-package helm-bookmark
@@ -1907,7 +1907,7 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq deft-auto-save-interval 0
         deft-default-extension "org"
-        deft-directory (expand-file-name "notes" me-emacs-data-private)
+        deft-directory (file-name-concat me-emacs-data-private "notes")
         deft-recursive t
         deft-use-filename-as-title nil
         deft-use-filter-string-for-filename t)
@@ -1943,7 +1943,7 @@ argument FORCE, force the creation of a new ID."
   (bbdb-initialize 'message 'anniv)
   (setq bbdb-allow-duplicates t
         bbdb-complete-mail-allow-cycling t
-        bbdb-file (expand-file-name "contacts.bbdb.gz" me-emacs-data-private)
+        bbdb-file (file-name-concat me-emacs-data-private "contacts.bbdb.gz")
         bbdb-mail-user-agent 'message-user-agent
         bbdb-mua-pop-up nil
         bbdb-message-all-addresses t)
@@ -1953,14 +1953,13 @@ argument FORCE, force the creation of a new ID."
 ;; Bibliography manager
 ;; =============================================================================
 
-(defvar me-bib (expand-file-name "bibliography" me-emacs-data-public)
+(defvar me-bib (file-name-concat me-emacs-data-public "bibliography")
   "My bibliography collection path.")
-(defvar me-bib-files `(,(expand-file-name "refdb.bib" me-bib))
+(defvar me-bib-files `(,(file-name-concat me-bib "refdb.bib"))
   "My bibliography files.")
-(defvar me-bib-pdfs `(,(expand-file-name "pdf" me-bib))
+(defvar me-bib-pdfs `(,(file-name-concat me-bib "pdf"))
   "Paths containing my PDFs of the bibliography.")
-(defvar me-bib-notes
-  (expand-file-name "notes" me-bib)
+(defvar me-bib-notes (file-name-concat me-bib "notes")
   "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
@@ -2321,8 +2320,7 @@ alphabetically (in ascending or descending order)."
 ;; =============================================================================
 
 (open-dribble-file
- (expand-file-name
-  (format-time-string "key-%FT%H%M%S.log") me-keylog))
+ (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
 ;; undo.  It is weird that I have to load undo-tree at the end,
 ;; otherwise some pakcages, e.g., helm-elisp fails loading.
@@ -2334,7 +2332,8 @@ alphabetically (in ascending or descending order)."
   :config
   (setq undo-tree-visualizer-timestamps t
         undo-tree-auto-save-history t
-        undo-tree-history-directory-alist `(("." . ,me-emacs-tmp)))
+        undo-tree-history-directory-alist
+        `(("." . ,(file-name-concat me-emacs-tmp "undo"))))
 
   (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
