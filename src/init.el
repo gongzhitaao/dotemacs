@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-04-04 15:57:46 gongzhitaao>
+;; Time-stamp: <2023-04-13 16:26:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2006,7 +2006,7 @@ argument FORCE, force the creation of a new ID."
           (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
           (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
           (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-          (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 20 ? )))))
+          (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
 
 (require 'org-ref-helm)
@@ -2094,8 +2094,8 @@ Each index is a list (KEY TIMESTAMP)."
         bibtex-completion-library-path me-bib-pdfs
         bibtex-completion-notes-extension ".org"
         bibtex-completion-notes-path me-bib-notes
-        bibtex-completion-notes-symbol ""
-        bibtex-completion-pdf-symbol ""))
+        bibtex-completion-notes-symbol "N"
+        bibtex-completion-pdf-symbol "P"))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
