@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-04-13 16:26:24 gongzhitaao>
+;; Time-stamp: <2023-04-14 14:16:40 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -163,8 +163,8 @@
 (global-set-key (kbd "<backtab>") #'decrease-left-margin)
 
 (global-set-key (kbd "C-+") #'me/join-next-line)
-(global-set-key (kbd "C->") #'mc/mark-next-like-this-word)
-(global-set-key (kbd "C-<") #'mc/mark-previous-like-this-word)
+(global-set-key (kbd "C-.") #'mc/mark-next-like-this-word)
+(global-set-key (kbd "C->") #'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 (global-set-key (kbd "M-<delete>") #'kill-word)
 
@@ -178,11 +178,9 @@
 ;; FN keys
 ;; -----------------------------------------------------------------------------
 
-(global-set-key (kbd "<f5>") #'bookmark-bmenu-list)
 (global-set-key (kbd "<f6>") #'calendar)
 ;; f8 -- deft
 ;; f10 -- menu
-(global-set-key (kbd "<f11>") #'ispell)
 
 ;; Remaping
 ;; -----------------------------------------------------------------------------
@@ -292,7 +290,7 @@
 
 ;;; M-s search
 
-;; (global-set-key (kbd "M-s g") #'helm-ag)
+;; M-s g helm-ag
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
 ;; M-s s helm-swoop

@@ -22,6 +22,15 @@
     (remove-hook 'write-file-hooks hook)
     (add-hook 'before-save-hook hook)))
 
+(defun me/g3-google3-filepath (filepath)
+  "Return google3/ path if FILEPATH is a google3 file."
+  (string-match "/google/src/cloud/\\w+/\\w+/google3/" filepath)
+  (let ((start (match-end 0)))
+    (if (< start (length filepath))
+        (message (kill-new (substring filepath start))))))
+
+(advice-add 'dired-copy-filename-as-kill :filter-return #'me/g3-google3-filepath)
+
 (use-package ffap
   :config
   (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
