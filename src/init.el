@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-04-14 14:16:40 gongzhitaao>
+;; Time-stamp: <2023-04-28 09:16:12 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1218,7 +1218,10 @@ Lisp function does not specify a special indentation."
           web-mode-enable-current-element-highlight t))
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
-(use-package yapfify)
+(use-package blacken
+  :config
+  (setq blacken-executable "pyink"))
+
 (use-package sphinx-doc
   :delight)
 (use-package python-isort)
@@ -1237,7 +1240,7 @@ Lisp function does not specify a special indentation."
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
-         ("C-!" . #'yapfify-region)
+         ("C-!" . #'blacken-buffer)
          ("C-c C-s" . #'me//isort-region-or-buffer))
   :config
   (defun me//init-python()
