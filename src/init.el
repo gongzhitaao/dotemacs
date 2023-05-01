@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-04-28 09:16:12 gongzhitaao>
+;; Time-stamp: <2023-05-01 13:05:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -957,6 +957,7 @@ all '.<space>' with '.<space><space>'."
 (use-package ls-lisp
   :config
   (setq ls-lisp-dirs-first t
+        ls-lisp-use-string-collate nil
         ls-lisp-use-insert-directory-program nil))
 
 ;; Calendar
