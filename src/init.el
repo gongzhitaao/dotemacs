@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-05-01 13:05:17 gongzhitaao>
+;; Time-stamp: <2023-06-05 10:49:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -136,14 +136,55 @@
 
 (defvar straight-built-in-pseudo-packages)
 (setq straight-built-in-pseudo-packages
-      '(abbrev comp dired emacs files helm-adaptive helm-bookmark
-               helm-buffers helm-config helm-elisp helm-files
-               helm-for-files helm-locate helm-mode ibuf-ext image-mode
-               lisp-mode ls-lisp mail-conf message nadvice oc octave-mode
-               org-agenda org-capture org-clock org-habit org-id
-               org-refile org-src ox ox-beamer ox-bibtex ox-extra ox-html
-               ox-latex pdf-view python rfn-eshadow simple solar
-               tramp-cache uniquify google3-build-mode))
+      '(
+        ;; keep-sorted begin
+        abbrev
+        comp
+        dired
+        emacs
+        files
+        google-pyformat
+        google3-build-mode
+        helm-adaptive
+        helm-bookmark
+        helm-buffers
+        helm-config
+        helm-elisp
+        helm-files
+        helm-for-files
+        helm-locate
+        helm-mode
+        ibuf-ext
+        image-mode
+        lisp-mode
+        ls-lisp
+        mail-conf
+        message
+        nadvice
+        oc
+        octave-mode
+        org-agenda
+        org-capture
+        org-clock
+        org-habit
+        org-id
+        org-refile
+        org-src
+        ox
+        ox-beamer
+        ox-bibtex
+        ox-extra
+        ox-html
+        ox-latex
+        pdf-view
+        python
+        rfn-eshadow
+        simple
+        solar
+        tramp-cache
+        uniquify
+        ;; keep-sorted end
+      ))
 
 (use-package delight)
 (use-package bind-key)
@@ -725,7 +766,10 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq helm-multi-swoop-edit-save t))
 
-(use-package imenu-list)
+(use-package imenu-list
+  :config
+  (setq imenu-list-position 'left))
+
 (use-package imenu
   :config
   (setq imenu-sort-function #'imenu--sort-by-name))
@@ -1219,9 +1263,9 @@ Lisp function does not specify a special indentation."
           web-mode-enable-current-element-highlight t))
   (add-hook 'web-mode-hook #'me//init-web-mode))
 
-(use-package blacken
-  :config
-  (setq blacken-executable "pyink"))
+;; (use-package blacken
+;;   :config
+;;   (setq blacken-executable "pyink"))
 
 (use-package sphinx-doc
   :delight)
@@ -1241,7 +1285,7 @@ Lisp function does not specify a special indentation."
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
-         ("C-!" . #'blacken-buffer)
+         ("C-!" . #'google-pyformat)
          ("C-c C-s" . #'me//isort-region-or-buffer))
   :config
   (defun me//init-python()
@@ -1317,6 +1361,7 @@ Lisp function does not specify a special indentation."
   (setq typescript-indent-level 2))
 
 (use-package jsonnet-mode)
+(use-package yaml-mode)
 
 (defun me//init-org ()
   "Init orgmode."

@@ -29,8 +29,11 @@
     (if (< start (length filepath))
         (message (kill-new (substring filepath start))))))
 
-(advice-add 'dired-copy-filename-as-kill :filter-return #'me/g3-google3-filepath)
+(advice-add 'dired-copy-filename-as-kill
+            :filter-return #'me/g3-google3-filepath)
+(add-to-list 'auto-mode-alist '("\\.st_schemas\\'" . spansdl-mode))
 
+(use-package google-pyformat)
 (use-package ffap
   :config
   (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))

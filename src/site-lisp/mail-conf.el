@@ -71,8 +71,8 @@
                               me-emacs-data-private))
           ("work"
            nil
-           "Zhitao <gongzhitaao@deepmind.com>"
-           "DeepMind."
+           "Zhitao <gongzhitaao@google.com>"
+           "Google DeepMind"
            nil
            nil
            ,(expand-file-name "signature/work"
