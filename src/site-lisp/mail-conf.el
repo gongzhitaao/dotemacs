@@ -101,8 +101,8 @@
 (defun me//auto-choose-email-account ()
   "Choose email account automatically."
     (let* ((accounts '(("gongzhitaao@google.com" . "~/.mail/corp")
-                      ("gongzhitaao@deepmind.com" . "~/.mail/corp")
-                      ("zhitaao.gong@gmail.com" . "~/.mail/personal")))
+                       ("gongzhitaao@deepmind.com" . "~/.mail/corp")
+                       ("zhitaao.gong@gmail.com" . "~/.mail/personal")))
            (from (me//get-email-address (message-fetch-field "from")))
            (mail-dir (alist-get from accounts nil nil #'string=)))
       (if mail-dir
@@ -145,10 +145,12 @@
   (setq-default notmuch-search-oldest-first nil)
 
   (setq notmuch-saved-searches
-        '((:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
-           :key "ci")
-          (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
-          (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
+        '(
+          ;; No access to corp emails because Google corp policy tightens.
+          ;; (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
+          ;;  :key "ci")
+          ;; (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
+          ;; (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
 
           (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
            :key "hi")
