@@ -146,11 +146,10 @@
 
   (setq notmuch-saved-searches
         '(
-          ;; No access to corp emails because Google corp policy tightens.
-          ;; (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
-          ;;  :key "ci")
-          ;; (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
-          ;; (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
+          (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
+           :key "ci")
+          (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
+          (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
 
           (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
            :key "hi")
