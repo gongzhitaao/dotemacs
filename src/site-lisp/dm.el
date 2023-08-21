@@ -33,6 +33,16 @@
             :filter-return #'me/g3-google3-filepath)
 (add-to-list 'auto-mode-alist '("\\.st_schemas\\'" . spansdl-mode))
 
+(defun me//make-temp-file-in-tmp (args)
+  "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
+  `(,(replace-regexp-in-string
+      "/google/src/cloud/\\([[:alnum:]]+?/\\)+"
+      temporary-file-directory
+      (car args))
+
+    . ,(cdr args)))
+(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
+
 (use-package google-pyformat)
 (use-package ffap
   :config

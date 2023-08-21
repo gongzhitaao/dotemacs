@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-08-11 10:26:18 gongzhitaao>
+;; Time-stamp: <2023-08-21 13:11:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -829,8 +829,12 @@ all '.<space>' with '.<space><space>'."
         (file-name-concat me-emacs-tmp "auto-save-list/saves-"))
 
   (let ((backup-dir (file-name-concat me-emacs-tmp "backup")))
+    (unless (file-exists-p backup-dir)
+      (mkdir backup-dir))
+
     (setq backup-directory-alist `(("." . ,backup-dir)))
     (me//cleanup-old-files backup-dir 7))
+  (setq small-temporary-file-directory "/tmp/")
 
   (setq backup-by-copying    t
         delete-old-versions  t
@@ -850,6 +854,8 @@ all '.<space>' with '.<space><space>'."
 
 (use-package tramp
   :config
+  (customize-set-variable 'tramp-default-method "ssh")
+  ;; (tramp-change-syntax 'simplified)
   (setq tramp-backup-directory-alist backup-directory-alist))
 
 (use-package tramp-cache
