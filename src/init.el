@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-08-21 13:11:56 gongzhitaao>
+;; Time-stamp: <2023-08-30 13:52:43 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -851,17 +851,6 @@ all '.<space>' with '.<space><space>'."
     (when (file-remote-p default-directory)
       (set (make-local-variable 'file-precious-flag) t)))
 (add-hook 'find-file-hook #'me//make-file-precious-when-remote)
-
-(use-package tramp
-  :config
-  (customize-set-variable 'tramp-default-method "ssh")
-  ;; (tramp-change-syntax 'simplified)
-  (setq tramp-backup-directory-alist backup-directory-alist))
-
-(use-package tramp-cache
-  :config
-  (setq tramp-persistency-file-name
-        (file-name-concat me-emacs-tmp "tramp")))
 
 ;; Save recent visited file list.
 (use-package recentf
@@ -1830,7 +1819,6 @@ argument FORCE, force the creation of a new ID."
 ;; Helm
 ;; =============================================================================
 
-
 (use-package helm-mode
   :delight
   :config
@@ -1916,6 +1904,17 @@ argument FORCE, force the creation of a new ID."
 ;;   :after projectile
 ;;   (setq projectile-completion-system 'helm)
 ;;   (helm-projectile-on))
+
+
+(use-package tramp
+ :config
+  (customize-set-variable 'tramp-default-method "ssh")
+  (setq tramp-backup-directory-alist backup-directory-alist))
+
+(use-package tramp-cache
+  :config
+  (setq tramp-persistency-file-name
+        (file-name-concat me-emacs-tmp "tramp")))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
