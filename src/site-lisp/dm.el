@@ -6,15 +6,6 @@
 
 (require 'google)
 
-;; (use-package bazel)
-;; (use-package aio)
-;; (use-package with-editor)
-
-;; (use-package google3-build-mode
-;;   :after (bazel aio with-editor)
-;;   :config
-;;   (setq google3-build-cleanup-on-save nil))
-
 (let ((google-unorthodox-hooks '(google-maybe-untabify-buffer
                                  google-maybe-delete-trailing-whitespace
                                  google-maybe-trim-newlines)))
@@ -37,7 +28,7 @@
   "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
   (cons
    (replace-regexp-in-string
-    "/google/src/cloud/\\([[:alnum:]]+?/\\)+"
+    "/google/src/cloud/\\([[:alnum:]-_]+?/\\)+"
     temporary-file-directory (car args))
    (cdr args)))
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
