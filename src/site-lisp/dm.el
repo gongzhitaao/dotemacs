@@ -34,9 +34,9 @@
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
 (use-package google-pyformat)
-(use-package ffap
-  :config
-  (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
+;; (use-package ffap
+;;   :config
+;;   (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
 
 (provide 'dm)
 ;;; dm.el ends here

@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-08-30 13:52:43 gongzhitaao>
+;; Time-stamp: <2023-09-01 11:32:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1086,7 +1086,6 @@ all '.<space>' with '.<space><space>'."
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")
                 (name . "todo.org")
-                (name . "gcal.org")
                 (name . "work.org")
                 (name . "time-machine.txt")
                 (filename . "Dropbox/plan.*")))
@@ -1890,22 +1889,6 @@ argument FORCE, force the creation of a new ID."
          ("C-;" . comment-or-uncomment-region)
          ("s-;" . helm-flyspell-correct)))
 
-;; helm projectile
-;; -----------------------------------------------------------------------------
-
-;; (use-package projectile
-;;   :delight
-;;   :config
-;;   (projectile-mode)
-;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-;; (use-package helm-projectile
-;;   :config
-;;   :after projectile
-;;   (setq projectile-completion-system 'helm)
-;;   (helm-projectile-on))
-
-
 (use-package tramp
  :config
   (customize-set-variable 'tramp-default-method "ssh")
@@ -1938,10 +1921,10 @@ argument FORCE, force the creation of a new ID."
 ;; ace-window
 ;; -----------------------------------------------------------------------------
 
-(use-package ace-window
-  :bind ("M-p" . ace-window)
-  :config
-  (setq aw-dispatch-always t))
+;; (use-package ace-window
+;;   :bind ("M-p" . ace-window)
+;;   :config
+;;   (setq aw-dispatch-always t))
 
 ;; x - delete window
 ;; m - swap (move) window
@@ -1976,11 +1959,11 @@ argument FORCE, force the creation of a new ID."
 
 ;; Epub
 ;; -----------------------------------------------------------------------------
-(use-package nov :mode ("\\.epub\\'"))
+; (use-package nov :mode ("\\.epub\\'"))
 
-(use-package graphviz-dot-mode
-  :config
-  (setq graphviz-dot-indent-width 2))
+;(use-package graphviz-dot-mode
+;  :config
+;  (setq graphviz-dot-indent-width 2))
 
 ;; =============================================================================
 ;; mail
