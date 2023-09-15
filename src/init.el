@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-09-12 14:36:12 gongzhitaao>
+;; Time-stamp: <2023-09-15 13:21:17 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -701,9 +701,11 @@ all '.<space>' with '.<space><space>'."
   :config
   (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
   (add-hook 'text-mode-hook #'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-auto-character-face-perc 50)
-  (setq highlight-indent-guides-auto-top-character-face-perc 100)
-  (setq highlight-indent-guides-method 'bitmap)
+  (setq highlight-indent-guides-auto-character-face-perc 10)
+  (setq highlight-indent-guides-auto-top-character-face-perc 30)
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-character ?⎜)
+
   (setq highlight-indent-guides-responsive 'top))
 
 (use-package whitespace
@@ -2370,20 +2372,20 @@ alphabetically (in ascending or descending order)."
 ;; otherwise some pakcages, e.g., helm-elisp fails loading.
 ;; -----------------------------------------------------------------------------
 
-(use-package undo-tree
-  :delight
-  :bind ("C-c u" . undo-tree-visualize)
-  :config
-  (setq undo-tree-visualizer-timestamps t
-        undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(file-name-concat me-emacs-tmp "undo"))))
+;; (use-package undo-tree
+;;   :delight
+;;   :bind ("C-c u" . undo-tree-visualize)
+;;   :config
+;;   (setq undo-tree-visualizer-timestamps t
+;;         undo-tree-auto-save-history t
+;;         undo-tree-history-directory-alist
+;;         `(("." . ,(file-name-concat me-emacs-tmp "undo"))))
 
-  (defadvice undo-tree-make-history-save-file-name
-      (after undo-tree activate)
-    (setq ad-return-value (concat ad-return-value ".gz")))
+;;   (defadvice undo-tree-make-history-save-file-name
+;;       (after undo-tree activate)
+;;     (setq ad-return-value (concat ad-return-value ".gz")))
 
-  (global-undo-tree-mode))
+;;   (global-undo-tree-mode))
 
 ;; =============================================================================
 ;; Other stuff
