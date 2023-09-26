@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-09-15 13:21:17 gongzhitaao>
+;; Time-stamp: <2023-09-25 10:08:47 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1481,6 +1481,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     (set (make-local-variable 'writeroom-width) 150)
     (hl-line-mode))
   (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
+
+  (advice-add 'org-agenda-goto :after
+              (lambda (&rest args)
+                (org-narrow-to-subtree)))
 
   (defun me//org-agenda-cmp-user-defined (a b)
     "Compare the todo states of strings A and B."
