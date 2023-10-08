@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-09-25 10:08:47 gongzhitaao>
+;; Time-stamp: <2023-09-28 14:28:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -661,7 +661,7 @@ all '.<space>' with '.<space><space>'."
       delete-by-moving-to-trash t
       history-delete-duplicates t
       select-enable-clipboard t
-      tab-always-indent 'complete
+      tab-always-indent t
       view-read-only t)
 
 (setq-default fill-column 80
@@ -791,10 +791,10 @@ all '.<space>' with '.<space><space>'."
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
 
-(use-package company
-  :delight
-  :config
-  (add-hook 'prog-mode-hook #'company-mode))
+;; (use-package company
+;;   :delight
+;;   :config
+;;   (add-hook 'prog-mode-hook #'company-mode))
 
 ;; Encoding
 ;; -----------------------------------------------------------------------------
@@ -923,9 +923,9 @@ all '.<space>' with '.<space><space>'."
 ;; =============================================================================
 
 ;; Hint on keybindings.
-(use-package which-key
-  :config (which-key-mode)
-  :delight which-key-mode)
+;; (use-package which-key
+;;   :config (which-key-mode)
+;;   :delight which-key-mode)
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
@@ -1358,6 +1358,7 @@ Lisp function does not specify a special indentation."
 
 (use-package jsonnet-mode)
 (use-package yaml-mode)
+(use-package protobuf-mode)
 
 (defun me//init-org ()
   "Init orgmode."
