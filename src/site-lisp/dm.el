@@ -4,7 +4,16 @@
 
 ;;; Code:
 
+(setq google-update-load-path nil)
+(use-package aio)
+(use-package with-editor)
 (require 'google)
+
+(use-package vc-fig
+             :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/vc"
+             :straight nil)
+(use-package p4)
+(use-package company)
 
 (let ((google-unorthodox-hooks '(google-maybe-untabify-buffer
                                  google-maybe-delete-trailing-whitespace

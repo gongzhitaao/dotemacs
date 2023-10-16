@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-09-28 14:28:54 gongzhitaao>
+;; Time-stamp: <2023-10-16 12:41:14 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1378,6 +1378,7 @@ Lisp function does not specify a special indentation."
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
+  :load-path "~/.emacs.d/straight/repos/org/lisp/"
   :init
   (setq org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo
                               org-habit org-table))
