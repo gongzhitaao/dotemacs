@@ -10,8 +10,12 @@
 (require 'google)
 
 (use-package vc-fig
-             :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/vc"
-             :straight nil)
+  :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/vc"
+  :straight nil)
+(use-package google3-formatters
+  :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/google3_formatters"
+  :straight nil)
+(use-package bazel)
 (use-package p4)
 (use-package company)
 
@@ -40,7 +44,7 @@
   "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
   (cons
    (replace-regexp-in-string
-    "/google/src/cloud/\\([[:alnum:]-_]+?/\\)+"
+    "/google/src/cloud/\\([[:alnum:]-_.]+?/\\)+"
     temporary-file-directory (car args))
    (cdr args)))
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
