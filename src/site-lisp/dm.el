@@ -18,6 +18,9 @@
 (use-package bazel)
 (use-package p4)
 (use-package company)
+(use-package google-borg-helpers
+  :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/third_party/elisp/google_borg_helpers"
+  :straight nil)
 
 (let ((google-unorthodox-hooks '(google-maybe-untabify-buffer
                                  google-maybe-delete-trailing-whitespace
