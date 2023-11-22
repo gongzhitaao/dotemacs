@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-10-16 12:41:14 gongzhitaao>
+;; Time-stamp: <2023-11-22 10:30:49 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2167,9 +2167,11 @@ Each index is a list (KEY TIMESTAMP)."
 ;; -----------------------------------------------------------------------------
 
 (use-package separedit
-    :bind ("C-c ," . separedit)
+  :bind ("C-c ," . separedit)
   :config
-  (setq separedit-default-mode 'markdown-mode))
+  (setq
+   separedit-continue-fill-column t
+   separedit-default-mode 'markdown-mode))
 
 ;; =============================================================================
 ;; Working with PDF
