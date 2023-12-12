@@ -53,6 +53,7 @@
         message-forward-as-mime nil
         message-forward-before-signature t
         message-forward-ignored-headers ""
+        message-auto-save-directory (file-name-concat me-emacs-tmp "message")
         message-make-forward-subject-function #'message-forward-subject-fwd)
   (add-hook 'message-mode-hook #'me//init-message)
   (add-hook 'message-send-hook 'ispell-message))

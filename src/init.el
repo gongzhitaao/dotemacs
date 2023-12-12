@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-11-22 10:30:49 gongzhitaao>
+;; Time-stamp: <2023-12-05 10:45:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1900,7 +1900,7 @@ argument FORCE, force the creation of a new ID."
 (use-package tramp
  :config
   (customize-set-variable 'tramp-default-method "ssh")
-  (setq tramp-backup-directory-alist backup-directory-alist))
+  (setq tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
   :config
