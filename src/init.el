@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-18 14:14:06 gongzhitaao>
+;; Time-stamp: <2023-12-18 15:56:23 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -23,8 +23,7 @@
   (file-name-concat  me-emacs-directory "data/public")
   "Public EMACS data synced to a public repo.")
 
-(defconst me-emacs-cache (file-name-concat me-emacs-directory "tmp")
-  "Directory for temporary files.")
+(defconst me-emacs-cache "~/.cache/emacs" "Directory for temporary files.")
 (unless (file-exists-p me-emacs-cache)
   (mkdir me-emacs-cache))
 
@@ -113,13 +112,17 @@
 ;; explanatory comments.
 ;(package-initialize)
 
-(setq package-enable-at-startup nil)
+(when (boundp 'native-comp-eln-load-path)
+  (startup-redirect-eln-cache (file-name-concat me-emacs-cache "eln-cache")))
 
+(setq straight-base-dir me-emacs-cache)
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (file-name-concat user-emacs-directory
-                         "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 5))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -131,11 +134,10 @@
 
 (straight-use-package 'use-package)
 
-(defvar straight-use-package-by-default)
-(setq straight-use-package-by-default t)
-
-(defvar straight-built-in-pseudo-packages)
-(setq straight-built-in-pseudo-packages
+(use-package straight
+  :config
+  (setq straight-use-package-by-default t)
+  (setq straight-built-in-pseudo-packages
       '(
         ;; keep-sorted begin
         abbrev
@@ -160,9 +162,7 @@
         ls-lisp
         mail-conf
         message
-        nadvice
         oc
-        octave-mode
         org-agenda
         org-capture
         org-clock
@@ -184,7 +184,7 @@
         tramp-cache
         uniquify
         ;; keep-sorted end
-      ))
+      )))
 
 (use-package delight)
 (use-package bind-key)
@@ -1339,7 +1339,7 @@ Lisp function does not specify a special indentation."
          ("/known_hosts\\'"       . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
-(use-package octave-mode
+(use-package octave
   :mode "\\.m\\'"
   :init
   (defvar octave-comment-char)
@@ -1382,7 +1382,7 @@ Lisp function does not specify a special indentation."
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :load-path "~/.config/emacs/straight/repos/org/lisp/"
+  :load-path "~/.cache/emacs/straight/repos/org/lisp/"
   :init
   (setq org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo
                               org-habit org-table))
@@ -1820,7 +1820,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-mode
   :delight
-  :load-path "~/.config/emacs/straight/repos/helm"
+  :load-path "~/.cache/emacs/straight/repos/helm"
   :config
   (helm-mode 1)
   (bind-keys ("M-x"     . helm-M-x)
@@ -1891,14 +1891,13 @@ argument FORCE, force the creation of a new ID."
          ("s-;" . helm-flyspell-correct)))
 
 (use-package tramp
- :config
-  (customize-set-variable 'tramp-default-method "ssh")
-  (setq tramp-backup-directory-alist nil))
+ :custom
+  (tramp-default-method "ssh")
+  (tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
-  :config
-  (setq tramp-persistency-file-name
-        (file-name-concat me-emacs-cache "tramp")))
+  :custom
+  (tramp-persistency-file-name (file-name-concat me-emacs-cache "tramp")))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
@@ -2002,7 +2001,7 @@ argument FORCE, force the creation of a new ID."
   "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
-  :load-path "~/.config/emacs/straight/repos/helm-bibtex"
+  :load-path "~/.cache/emacs/straight/repos/helm-bibtex"
   :bind ("C-c b" . helm-bibtex))
 
 (use-package oc                         ;org-cite
@@ -2014,7 +2013,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package f
 
-  :load-path "~/.config/emacs/straight/repos/f.el"
+  :load-path "~/.cache/emacs/straight/repos/f.el"
 )
 
 (defun me//org-ref-notes-function (thekey)
@@ -2029,7 +2028,7 @@ argument FORCE, force the creation of a new ID."
     (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
 
 (use-package org-ref
-  :load-path "~/.config/emacs/straight/repos/org-ref"
+  :load-path "~/.cache/emacs/straight/repos/org-ref"
   :bind (:map org-mode-map
          ("C-c ]" . org-ref-insert-ref-link))
   :config
@@ -2179,7 +2178,6 @@ Each index is a list (KEY TIMESTAMP)."
 ;; =============================================================================
 
 (use-package pdf-tools
-  ;; :load-path "lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install)
