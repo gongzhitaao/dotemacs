@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-05 10:45:33 gongzhitaao>
+;; Time-stamp: <2023-12-18 13:57:42 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -14,7 +14,7 @@
 
 (defconst me-home "~" "My home directory.")
 
-(defconst me-emacs-directory "~/.emacs.d" "My Emacs directory.")
+(defconst me-emacs-directory "~/.config/emacs" "My Emacs directory.")
 
 (defconst me-emacs-data-private
   (file-name-concat me-emacs-directory "data/private")
@@ -930,6 +930,10 @@ all '.<space>' with '.<space><space>'."
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
+(use-package eshell
+  :config
+  (setq eshell-directory-name (file-name-concat me-emacs-tmp "eshell")))
+
 ;; Dired
 ;; -----------------------------------------------------------------------------
 
@@ -1378,7 +1382,7 @@ Lisp function does not specify a special indentation."
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :load-path "~/.emacs.d/straight/repos/org/lisp/"
+  :load-path "~/.config/emacs/straight/repos/org/lisp/"
   :init
   (setq org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo
                               org-habit org-table))
@@ -1578,24 +1582,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :jump-to-captured t
            :tree-type week)
 
-          ;; Not used for now
-          ;; ("m" "Save mail link" entry
-          ;;  (file "todo.org")
-          ;;  (file "capture/mail.org")
-          ;;  :empty-lines 1
-          ;;  :jump-to-captured t)
-
           ("t" "TODO" entry
-           (file "todo.org")
+           (file+headline "todo.org" "Scratch")
            (file "capture/todo.org")
            :empty-lines 1
            :jump-to-captured t)
-
-          ("w" "Work TODO" entry
-           (file+headline "work.org" "Scratch")
-           (file "capture/todo.org")
-           :empty-lines 1
-           :jump-to-captured t))))
+          )))
 
 (use-package ox
   :config
@@ -1828,6 +1820,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-mode
   :delight
+  :load-path "~/.config/emacs/straight/repos/helm"
   :config
   (helm-mode 1)
   (bind-keys ("M-x"     . helm-M-x)
@@ -1926,6 +1919,8 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq reb-re-syntax 'string))
 
+(use-package dockerfile-mode)
+
 ;; ace-window
 ;; -----------------------------------------------------------------------------
 
@@ -2007,6 +2002,7 @@ argument FORCE, force the creation of a new ID."
   "Path to store my notes on each papers.")
 
 (use-package helm-bibtex
+  :load-path "~/.config/emacs/straight/repos/helm-bibtex"
   :bind ("C-c b" . helm-bibtex))
 
 (use-package oc                         ;org-cite
@@ -2015,6 +2011,11 @@ argument FORCE, force the creation of a new ID."
 
 ;; org-ref
 ;; -----------------------------------------------------------------------------
+
+(use-package f
+
+  :load-path "~/.config/emacs/straight/repos/f.el"
+)
 
 (defun me//org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
@@ -2028,7 +2029,7 @@ argument FORCE, force the creation of a new ID."
     (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
 
 (use-package org-ref
-  :demand
+  :load-path "~/.config/emacs/straight/repos/org-ref"
   :bind (:map org-mode-map
          ("C-c ]" . org-ref-insert-ref-link))
   :config
