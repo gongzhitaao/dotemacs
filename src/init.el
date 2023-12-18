@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-18 13:57:42 gongzhitaao>
+;; Time-stamp: <2023-12-18 14:14:06 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -23,10 +23,10 @@
   (file-name-concat  me-emacs-directory "data/public")
   "Public EMACS data synced to a public repo.")
 
-(defconst me-emacs-tmp (file-name-concat me-emacs-directory "tmp")
+(defconst me-emacs-cache (file-name-concat me-emacs-directory "tmp")
   "Directory for temporary files.")
-(unless (file-exists-p me-emacs-tmp)
-  (mkdir me-emacs-tmp))
+(unless (file-exists-p me-emacs-cache)
+  (mkdir me-emacs-cache))
 
 (defconst me-keylog (file-name-concat me-emacs-data-private "keylog")
   "The file path that Logs every key stroke in my EMACS.")
@@ -270,7 +270,7 @@
              ("i n" . mc/insert-numbers)
              ("i l" . mc/insert-letters))
 
-  (setq mc/list-file (file-name-concat me-emacs-tmp "mc-lists.el")))
+  (setq mc/list-file (file-name-concat me-emacs-cache "mc-lists.el")))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -828,9 +828,9 @@ all '.<space>' with '.<space><space>'."
 (use-package files
   :config
   (setq auto-save-list-file-prefix
-        (file-name-concat me-emacs-tmp "auto-save-list/saves-"))
+        (file-name-concat me-emacs-cache "auto-save-list/saves-"))
 
-  (let ((backup-dir (file-name-concat me-emacs-tmp "backup")))
+  (let ((backup-dir (file-name-concat me-emacs-cache "backup")))
     (unless (file-exists-p backup-dir)
       (mkdir backup-dir))
 
@@ -857,9 +857,9 @@ all '.<space>' with '.<space><space>'."
 ;; Save recent visited file list.
 (use-package recentf
   :config
-  (setq recentf-save-file (file-name-concat me-emacs-tmp "recentf"))
+  (setq recentf-save-file (file-name-concat me-emacs-cache "recentf"))
   (setq recentf-max-saved-items 50)
-  (let ((ignores `(,(file-name-concat me-emacs-tmp ".*") "~/.mail/.*")))
+  (let ((ignores `(,(file-name-concat me-emacs-cache ".*") "~/.mail/.*")))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
   (recentf-mode))
 
@@ -867,22 +867,22 @@ all '.<space>' with '.<space><space>'."
 (use-package savehist
   :config
   (setq savehist-additional-variables '(search ring regexp-search-ring)
-        savehist-file (file-name-concat me-emacs-tmp "savehist"))
+        savehist-file (file-name-concat me-emacs-cache "savehist"))
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
 (use-package saveplace
   :config
-  (setq save-place-file (file-name-concat me-emacs-tmp "saveplace"))
+  (setq save-place-file (file-name-concat me-emacs-cache "saveplace"))
   (save-place-mode))
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
   (setq persistent-scratch-backup-directory
-        (file-name-concat me-emacs-tmp "scratch.d")
+        (file-name-concat me-emacs-cache "scratch.d")
         persistent-scratch-save-file
-        (file-name-concat me-emacs-tmp "scratch.d/scratch")
+        (file-name-concat me-emacs-cache "scratch.d/scratch")
         ;; keep backups not older than a month
         persistent-scratch-backup-filter
         (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
@@ -932,7 +932,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package eshell
   :config
-  (setq eshell-directory-name (file-name-concat me-emacs-tmp "eshell")))
+  (setq eshell-directory-name (file-name-concat me-emacs-cache "eshell")))
 
 ;; Dired
 ;; -----------------------------------------------------------------------------
@@ -1475,7 +1475,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-clock-in-resume t
         org-clock-into-drawer t
         org-clock-persist t
-        org-clock-persist-file (file-name-concat me-emacs-tmp "org-clock-save.el")
+        org-clock-persist-file (file-name-concat me-emacs-cache "org-clock-save.el")
         org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
@@ -1843,7 +1843,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-adaptive
   :config
   (setq helm-adaptive-history-file
-        (file-name-concat me-emacs-tmp "helm-adaptive-history"))
+        (file-name-concat me-emacs-cache "helm-adaptive-history"))
   (helm-adaptive-mode))
 
 (use-package helm-bookmark
@@ -1898,7 +1898,7 @@ argument FORCE, force the creation of a new ID."
 (use-package tramp-cache
   :config
   (setq tramp-persistency-file-name
-        (file-name-concat me-emacs-tmp "tramp")))
+        (file-name-concat me-emacs-cache "tramp")))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
@@ -2388,7 +2388,7 @@ alphabetically (in ascending or descending order)."
 ;;   (setq undo-tree-visualizer-timestamps t
 ;;         undo-tree-auto-save-history t
 ;;         undo-tree-history-directory-alist
-;;         `(("." . ,(file-name-concat me-emacs-tmp "undo"))))
+;;         `(("." . ,(file-name-concat me-emacs-cache "undo"))))
 
 ;;   (defadvice undo-tree-make-history-save-file-name
 ;;       (after undo-tree activate)
