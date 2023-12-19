@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-19 10:49:22 gongzhitaao>
+;; Time-stamp: <2023-12-19 13:11:09 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -41,10 +41,9 @@
 ;; configs will not go into the public git repo.
 (add-to-list 'load-path (file-name-concat me-emacs-config-dir "site-lisp"))
 
-(let ((user-emacs-directory "~/.cache/emacs"))
-  (when (boundp 'native-comp-eln-load-path)
-    (startup-redirect-eln-cache
-     (file-name-concat me-emacs-cache-dir "eln-cache"))))
+(when (boundp 'native-comp-eln-load-path)
+  (startup-redirect-eln-cache
+   (file-name-concat me-emacs-cache-dir "eln-cache")))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()
@@ -751,6 +750,41 @@ all '.<space>' with '.<space><space>'."
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
+;; -----------------------------------------------------------------------------
+;; UNDO
+;;
+;; Vundo supports navigating undo as a tree structure, and works well with
+;; undo/redo history loaded by undo-fu-session, although there are no
+;; inter-dependencies as both packages operate on Emacs built-in undo.
+;; -----------------------------------------------------------------------------
+
+;; Saves the undo history across sessions.
+(use-package undo-fu-session
+  :config
+  (setq undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
+  (undo-fu-session-global-mode))
+
+;; Navigates undo history in a tree style.
+(use-package vundo
+  :bind ("C-/" . vundo)
+  :config
+
+  (custom-set-faces '(vundo-highlight ((t (:inverse-video t)))))
+
+  (define-key vundo-mode-map (kbd "l") #'vundo-forward)
+  (define-key vundo-mode-map (kbd "<right>") #'vundo-forward)
+  (define-key vundo-mode-map (kbd "h") #'vundo-backward)
+  (define-key vundo-mode-map (kbd "<left>") #'vundo-backward)
+  (define-key vundo-mode-map (kbd "j") #'vundo-next)
+  (define-key vundo-mode-map (kbd "<down>") #'vundo-next)
+  (define-key vundo-mode-map (kbd "k") #'vundo-previous)
+  (define-key vundo-mode-map (kbd "<up>") #'vundo-previous)
+  (define-key vundo-mode-map (kbd "<home>") #'vundo-stem-root)
+  (define-key vundo-mode-map (kbd "<end>") #'vundo-stem-end)
+  (define-key vundo-mode-map (kbd "q") #'vundo-quit)
+  (define-key vundo-mode-map (kbd "C-g") #'vundo-quit)
+  (define-key vundo-mode-map (kbd "RET") #'vundo-confirm))
+
 ;; Searching
 ;; -----------------------------------------------------------------------------
 
@@ -1395,7 +1429,7 @@ Lisp function does not specify a special indentation."
   (define-key org-mode-map (kbd "C-c [") nil)
 
   (setq org-adapt-indentation nil
-        org-catch-invisible-edits 'smart
+        org-fold-catch-invisible-edits 'smart
         org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
         org-hide-emphasis-markers t
         org-hide-macro-markers t
