@@ -3,13 +3,6 @@
 
 ;;; Code:
 
-(defvar me-home)
-(defvar me-emacs-data-private)
-
-;; =============================================================================
-;; mail
-;; =============================================================================
-
 (setq user-mail-address "zhitaao.gong@gmail.com"
       user-full-name "Zhitao Gong")
 
@@ -31,9 +24,6 @@
 (setq display-time-mail-string " "
       display-time-use-mail-icon nil)
 
-(eval-when-compile
-  (require 'use-package))
-
 ;; Message buffer
 ;; -----------------------------------------------------------------------------
 
@@ -53,7 +43,7 @@
         message-forward-as-mime nil
         message-forward-before-signature t
         message-forward-ignored-headers ""
-        message-auto-save-directory (file-name-concat me-emacs-cache "message")
+        message-auto-save-directory (file-name-concat me-emacs-cache-dir "message")
         message-make-forward-subject-function #'message-forward-subject-fwd)
   (add-hook 'message-mode-hook #'me//init-message)
   (add-hook 'message-send-hook 'ispell-message))
@@ -69,7 +59,7 @@
            nil ;; No extra headers
            nil ;; No extra body text
            ,(expand-file-name "signature/personal"
-                              me-emacs-data-private))
+                              me-emacs-data-dir))
           ("work"
            nil
            "Zhitao <gongzhitaao@google.com>"
@@ -77,7 +67,7 @@
            nil
            nil
            ,(expand-file-name "signature/work"
-                              me-emacs-data-private))))
+                              me-emacs-data-dir))))
 
   ;; Use "home" identity by default
   (setq gnus-alias-default-identity "personal")

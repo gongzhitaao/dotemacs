@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-18 15:56:23 gongzhitaao>
+;; Time-stamp: <2023-12-19 10:49:22 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -14,28 +14,24 @@
 
 (defconst me-home "~" "My home directory.")
 
-(defconst me-emacs-directory "~/.config/emacs" "My Emacs directory.")
+(defconst me-emacs-config-dir "~/.config/emacs" "My Emacs directory.")
 
-(defconst me-emacs-data-private
-  (file-name-concat me-emacs-directory "data/private")
-  "Private EMACS data synced to a private repo.")
-(defconst me-emacs-data-public
-  (file-name-concat  me-emacs-directory "data/public")
-  "Public EMACS data synced to a public repo.")
+(defconst me-emacs-data-dir "~/.local/share/emacs"
+  "Emacs data directory.")
 
-(defconst me-emacs-cache "~/.cache/emacs" "Directory for temporary files.")
-(unless (file-exists-p me-emacs-cache)
-  (mkdir me-emacs-cache))
+(defconst me-emacs-cache-dir "~/.cache/emacs" "Directory for temporary files.")
+(unless (file-exists-p me-emacs-cache-dir)
+  (mkdir me-emacs-cache-dir))
 
-(defconst me-keylog (file-name-concat me-emacs-data-private "keylog")
+(defconst me-keylog (file-name-concat me-emacs-data-dir "keylog")
   "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
 
-(defconst me-local-conf (file-name-concat me-emacs-directory "local.el" )
+(defconst me-local-conf (file-name-concat me-emacs-config-dir "local.el" )
   "Local configuration not shared around machines.")
 
-(setq custom-file (file-name-concat me-emacs-directory "custom.el"))
+(setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
 ;; (if (file-exists-p custom-file)
 ;;     (load custom-file))
@@ -43,7 +39,12 @@
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
-(add-to-list 'load-path (file-name-concat me-emacs-directory "site-lisp"))
+(add-to-list 'load-path (file-name-concat me-emacs-config-dir "site-lisp"))
+
+(let ((user-emacs-directory "~/.cache/emacs"))
+  (when (boundp 'native-comp-eln-load-path)
+    (startup-redirect-eln-cache
+     (file-name-concat me-emacs-cache-dir "eln-cache"))))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()
@@ -112,10 +113,7 @@
 ;; explanatory comments.
 ;(package-initialize)
 
-(when (boundp 'native-comp-eln-load-path)
-  (startup-redirect-eln-cache (file-name-concat me-emacs-cache "eln-cache")))
-
-(setq straight-base-dir me-emacs-cache)
+(setq straight-base-dir me-emacs-cache-dir)
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -270,7 +268,7 @@
              ("i n" . mc/insert-numbers)
              ("i l" . mc/insert-letters))
 
-  (setq mc/list-file (file-name-concat me-emacs-cache "mc-lists.el")))
+  (setq mc/list-file (file-name-concat me-emacs-cache-dir "mc-lists.el")))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -781,12 +779,12 @@ all '.<space>' with '.<space><space>'."
 
 (use-package abbrev
   :config
-  (setq abbrev-file-name (file-name-concat me-emacs-data-private "abbrev_defs")))
+  (setq abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
 
 (use-package yasnippet
   :delight yas-minor-mode
   :config
-  (setq yas-snippet-dirs `(,(file-name-concat me-emacs-data-public "snippets")))
+  (setq yas-snippet-dirs `(,(file-name-concat me-emacs-data-dir "snippets")))
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
@@ -828,9 +826,9 @@ all '.<space>' with '.<space><space>'."
 (use-package files
   :config
   (setq auto-save-list-file-prefix
-        (file-name-concat me-emacs-cache "auto-save-list/saves-"))
+        (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
 
-  (let ((backup-dir (file-name-concat me-emacs-cache "backup")))
+  (let ((backup-dir (file-name-concat me-emacs-cache-dir "backup")))
     (unless (file-exists-p backup-dir)
       (mkdir backup-dir))
 
@@ -857,9 +855,9 @@ all '.<space>' with '.<space><space>'."
 ;; Save recent visited file list.
 (use-package recentf
   :config
-  (setq recentf-save-file (file-name-concat me-emacs-cache "recentf"))
+  (setq recentf-save-file (file-name-concat me-emacs-cache-dir "recentf"))
   (setq recentf-max-saved-items 50)
-  (let ((ignores `(,(file-name-concat me-emacs-cache ".*") "~/.mail/.*")))
+  (let ((ignores `(,(file-name-concat me-emacs-cache-dir ".*") "~/.mail/.*")))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
   (recentf-mode))
 
@@ -867,22 +865,22 @@ all '.<space>' with '.<space><space>'."
 (use-package savehist
   :config
   (setq savehist-additional-variables '(search ring regexp-search-ring)
-        savehist-file (file-name-concat me-emacs-cache "savehist"))
+        savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
 (use-package saveplace
   :config
-  (setq save-place-file (file-name-concat me-emacs-cache "saveplace"))
+  (setq save-place-file (file-name-concat me-emacs-cache-dir "saveplace"))
   (save-place-mode))
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
   (setq persistent-scratch-backup-directory
-        (file-name-concat me-emacs-cache "scratch.d")
+        (file-name-concat me-emacs-cache-dir "scratch.d")
         persistent-scratch-save-file
-        (file-name-concat me-emacs-cache "scratch.d/scratch")
+        (file-name-concat me-emacs-cache-dir "scratch.d/scratch")
         ;; keep backups not older than a month
         persistent-scratch-backup-filter
         (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
@@ -916,7 +914,7 @@ all '.<space>' with '.<space><space>'."
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
   (setq bookmark-default-file
-        (file-name-concat me-emacs-data-private "bookmarks")))
+        (file-name-concat me-emacs-data-dir "bookmarks")))
 
 ;; =============================================================================
 ;; General utilities
@@ -932,7 +930,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package eshell
   :config
-  (setq eshell-directory-name (file-name-concat me-emacs-cache "eshell")))
+  (setq eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
 ;; Dired
 ;; -----------------------------------------------------------------------------
@@ -1017,7 +1015,7 @@ all '.<space>' with '.<space><space>'."
   :config
   (setq calendar-week-start-day 1
         calendar-chinese-all-holidays-flag t
-        diary-file (file-name-concat me-emacs-data-private
+        diary-file (file-name-concat me-emacs-data-dir
                                      "org/time-machine/diary"))
   (calendar-set-date-style 'iso)
 
@@ -1389,7 +1387,7 @@ Lisp function does not specify a special indentation."
   (setq org-export-backends '(ascii beamer html latex md))
 
   :config
-  (setq org-directory (file-name-concat me-emacs-data-private "org"))
+  (setq org-directory (file-name-concat me-emacs-data-dir "org"))
 
   (add-hook 'org-mode-hook #'me//init-org)
 
@@ -1475,7 +1473,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-clock-in-resume t
         org-clock-into-drawer t
         org-clock-persist t
-        org-clock-persist-file (file-name-concat me-emacs-cache "org-clock-save.el")
+        org-clock-persist-file (file-name-concat me-emacs-cache-dir "org-clock-save.el")
         org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
@@ -1843,7 +1841,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-adaptive
   :config
   (setq helm-adaptive-history-file
-        (file-name-concat me-emacs-cache "helm-adaptive-history"))
+        (file-name-concat me-emacs-cache-dir "helm-adaptive-history"))
   (helm-adaptive-mode))
 
 (use-package helm-bookmark
@@ -1897,7 +1895,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package tramp-cache
   :custom
-  (tramp-persistency-file-name (file-name-concat me-emacs-cache "tramp")))
+  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
@@ -1945,7 +1943,7 @@ argument FORCE, force the creation of a new ID."
   :config
   (setq deft-auto-save-interval 0
         deft-default-extension "org"
-        deft-directory (file-name-concat me-emacs-data-private "notes")
+        deft-directory (file-name-concat me-emacs-data-dir "notes")
         deft-recursive t
         deft-use-filename-as-title nil
         deft-use-filter-string-for-filename t)
@@ -1981,7 +1979,7 @@ argument FORCE, force the creation of a new ID."
   (bbdb-initialize 'message 'anniv)
   (setq bbdb-allow-duplicates t
         bbdb-complete-mail-allow-cycling t
-        bbdb-file (file-name-concat me-emacs-data-private "contacts.bbdb.gz")
+        bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz")
         bbdb-mail-user-agent 'message-user-agent
         bbdb-mua-pop-up nil
         bbdb-message-all-addresses t)
@@ -1991,7 +1989,7 @@ argument FORCE, force the creation of a new ID."
 ;; Bibliography manager
 ;; =============================================================================
 
-(defvar me-bib (file-name-concat me-emacs-data-public "bibliography")
+(defvar me-bib (file-name-concat me-emacs-data-dir "bibliography")
   "My bibliography collection path.")
 (defvar me-bib-files `(,(file-name-concat me-bib "refdb.bib"))
   "My bibliography files.")
@@ -2386,7 +2384,7 @@ alphabetically (in ascending or descending order)."
 ;;   (setq undo-tree-visualizer-timestamps t
 ;;         undo-tree-auto-save-history t
 ;;         undo-tree-history-directory-alist
-;;         `(("." . ,(file-name-concat me-emacs-cache "undo"))))
+;;         `(("." . ,(file-name-concat me-emacs-cache-dir "undo"))))
 
 ;;   (defadvice undo-tree-make-history-save-file-name
 ;;       (after undo-tree activate)
