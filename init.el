@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-19 13:11:09 gongzhitaao>
+;; Time-stamp: <2023-12-19 16:19:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -12,13 +12,8 @@
 ;; Variables
 ;; =============================================================================
 
-(defconst me-home "~" "My home directory.")
-
 (defconst me-emacs-config-dir "~/.config/emacs" "My Emacs directory.")
-
-(defconst me-emacs-data-dir "~/.local/share/emacs"
-  "Emacs data directory.")
-
+(defconst me-emacs-data-dir "~/.local/share/emacs" "Emacs data directory.")
 (defconst me-emacs-cache-dir "~/.cache/emacs" "Directory for temporary files.")
 (unless (file-exists-p me-emacs-cache-dir)
   (mkdir me-emacs-cache-dir))
@@ -27,9 +22,6 @@
   "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog))
-
-(defconst me-local-conf (file-name-concat me-emacs-config-dir "local.el" )
-  "Local configuration not shared around machines.")
 
 (setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
@@ -132,15 +124,16 @@
 (straight-use-package 'use-package)
 
 (use-package straight
-  :config
-  (setq straight-use-package-by-default t)
-  (setq straight-built-in-pseudo-packages
+  :custom
+  (straight-use-package-by-default t)
+  (straight-built-in-pseudo-packages
       '(
         ;; keep-sorted begin
         abbrev
         comp
         dired
         emacs
+        esh-mode
         files
         google-pyformat
         google3-build-mode
@@ -257,17 +250,16 @@
            ("V"   . add-file-local-variable-prop-line))
 
 (use-package multiple-cursors
-  :config
-  (bind-keys :prefix-map me-multiple-cursors-command-map
-             :prefix "C-c m"
-             ("C-a" . mc/edit-beginnings-of-lines)
-             ("C-e" . mc/edit-ends-of-lines)
-             ("a"   . mc/mark-all-like-this-dwim)
-             ("l"   . mc/edit-lines)
-             ("i n" . mc/insert-numbers)
-             ("i l" . mc/insert-letters))
-
-  (setq mc/list-file (file-name-concat me-emacs-cache-dir "mc-lists.el")))
+  :bind (:prefix-map me-multiple-cursors-command-map
+         :prefix "C-c m"
+         ("C-a" . mc/edit-beginnings-of-lines)
+         ("C-e" . mc/edit-ends-of-lines)
+         ("a"   . mc/mark-all-like-this-dwim)
+         ("l"   . mc/edit-lines)
+         ("i n" . mc/insert-numbers)
+         ("i l" . mc/insert-letters))
+  :custom
+  (mc/list-file (file-name-concat me-emacs-cache-dir "mc-lists.el")))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -512,24 +504,24 @@ all '.<space>' with '.<space><space>'."
 ;; Show the search result count.
 (use-package anzu
   :delight
-  :config
-  (global-anzu-mode +1)
-  (setq anzu-search-threshold 1000))
+  :custom (anzu-search-threshold 1000)
+  :config (global-anzu-mode +1))
 
 ;; Center the editing content.
 (use-package writeroom-mode
-  :config
-  (setq writeroom-fullscreen-effect nil
-        writeroom-maximize-window nil
-        writeroom-mode-line t
-        writeroom-use-derived-modes t
-        writeroom-width 100)
-  (setq writeroom-major-modes
+  :custom
+  (writeroom-fullscreen-effect nil)
+  (writeroom-major-modes
         '(prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
                     org-agenda-mode bibtex-mode bookmark-bmenu-mode
                     LilyPond-mode notmuch-show-mode protobuf-mode))
-  (setq writeroom-major-modes-exceptions
-        '(web-mode))
+  (writeroom-major-modes-exceptions '(web-mode))
+  (writeroom-maximize-window nil)
+  (writeroom-mode-line t)
+  (writeroom-use-derived-modes t)
+  (writeroom-width 100)
+
+  :config
   (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
 
@@ -592,8 +584,8 @@ all '.<space>' with '.<space><space>'."
 
 (use-package all-the-icons
   :if (display-graphic-p)
-  :config
-  (setq all-the-icons-fonts-subdirectory "all-the-icons"))
+  :custom
+  (all-the-icons-fonts-subdirectory "all-the-icons"))
 
 ;; fonts
 ;; -----------------------------------------------------------------------------
@@ -962,7 +954,7 @@ all '.<space>' with '.<space><space>'."
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
-(use-package eshell
+(use-package esh-mode
   :config
   (setq eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
@@ -1199,74 +1191,8 @@ all '.<space>' with '.<space><space>'."
 ;; Major modes
 ;; =============================================================================
 
+;; Fix the silly property list indentation problem:
 ;; https://github.com/Fuco1/.emacs.d/blob/af82072196564fa57726bdbabf97f1d35c43b7f7/site-lisp/redef.el#L12-L94
-;; Fix the silly property list indentation problem.
-(use-package lisp-mode
-  :defer
-  :config
-  (defun me//lisp-indent-function (indent-point state)
-    "This function is the normal value of the variable `lisp-indent-function'.
-The function `calculate-lisp-indent' calls this to determine
-if the arguments of a Lisp function call should be indented specially.
-INDENT-POINT is the position at which the line being indented begins.
-Point is located at the point to indent under (for default indentation);
-STATE is the `parse-partial-sexp' state for that position.
-If the current line is in a call to a Lisp function that has a non-nil
-property `lisp-indent-function' (or the deprecated `lisp-indent-hook'),
-it specifies how to indent.  The property value can be:
-* `defun', meaning indent `defun'-style
-  \(this is also the case if there is no property and the function
-  has a name that begins with \"def\", and three or more arguments);
-* an integer N, meaning indent the first N arguments specially
-  (like ordinary function arguments), and then indent any further
-  arguments like a body;
-* a function to call that returns the indentation (or nil).
-  `lisp-indent-function' calls this function with the same two arguments
-  that it itself received.
-This function returns either the indentation to use, or nil if the
-Lisp function does not specify a special indentation."
-    (let ((normal-indent (current-column))
-          ;; (orig-point (point))ly
-          )
-      (goto-char (1+ (elt state 1)))
-      (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
-      (cond
-       ;; car of form doesn't seem to be a symbol, or is a keyword
-       ((and (elt state 2)
-             (or (not (looking-at "\\sw\\|\\s_"))
-                 (looking-at ":")))
-        (unless (> (save-excursion (forward-line 1) (point))
-                   calculate-lisp-indent-last-sexp)
-          (goto-char calculate-lisp-indent-last-sexp)
-          (beginning-of-line)
-          (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t))
-        ;; Indent under the list or under the first sexp on the same
-        ;; line as calculate-lisp-indent-last-sexp.  Note that first
-        ;; thing on that line has to be complete sexp since we are
-        ;; inside the innermost containing sexp.
-        (backward-prefix-chars)
-        (current-column))
-       (t
-        (let ((function (buffer-substring (point)
-                                          (progn (forward-sexp 1) (point))))
-              method)
-          (setq method (or (function-get (intern-soft function)
-                                         'lisp-indent-function)
-                           (get (intern-soft function) 'lisp-indent-hook)))
-          (cond ((or (eq method 'defun)
-                     (and (null method)
-                          (> (length function) 3)
-                          (string-match "\\`def" function)))
-                 (lisp-indent-defform state indent-point))
-                ((integerp method)
-                 (lisp-indent-specform method state
-                                       indent-point normal-indent))
-                (method
-                 (funcall method indent-point state))))))))
-
-  (defun me//init-emacs-lisp()
-    (setq-local lisp-indent-function #'me//lisp-indent-function))
-  (add-hook 'emacs-lisp-mode-hook 'me//init-emacs-lisp))
 
 (use-package cc-mode
   :bind (:map c++-mode-map
@@ -1334,7 +1260,7 @@ Lisp function does not specify a special indentation."
 
 (use-package json-mode
   :config
-  (setq json-reformat:indent-width 2))
+  (setq json-reformat:indent-width 4))
 
 (use-package js2-mode
   :mode "\\.js\\'"
@@ -1358,12 +1284,12 @@ Lisp function does not specify a special indentation."
 
 (use-package image-mode
   :bind (:map image-mode-map
-         ("H"   . image-transform-fit-to-height)
+         ("H"   . image-transform-fit-to-window)
          ("q"   . quit-window)
          ("Q"   . kill-this-buffer)
          ("r"   . image-transform-set-rotation)
-         ("W"   . image-transform-fit-to-width)
-         ("SPC" . image-transform-reset)))
+         ("W"   . image-transform-fit-to-window)
+         ("SPC" . image-transform-reset-to-initial)))
 
 (use-package ssh-config-mode
   :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
@@ -1415,35 +1341,32 @@ Lisp function does not specify a special indentation."
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :load-path "~/.cache/emacs/straight/repos/org/lisp/"
-  :init
-  (setq org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo
-                              org-habit org-table))
-  (setq org-export-backends '(ascii beamer html latex md))
+  :custom
+  (org-adapt-indentation nil)
+  (org-directory (file-name-concat me-emacs-data-dir "org"))
+  (org-display-remote-inline-images 'cache)
+  (org-export-backends '(ascii beamer html latex md))
+  (org-fold-catch-invisible-edits 'smart)
+  (org-hide-emphasis-markers t)
+  (org-hide-macro-markers t)
+  (org-hierarchical-todo-statistics nil)
+  (org-image-actual-width nil)
+  (org-log-done 'time)
+  (org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
+  (org-provide-todo-statistics t)
+  (org-src-fontify-natively t)
+  (org-src-preserve-indentation t)
+  (org-support-shift-select t)
+  (org-treat-S-cursor-todo-selection-as-state-change nil)
+  (org-use-fast-tag-selection 'auto)
+  (org-use-fast-todo-selection t)
 
   :config
-  (setq org-directory (file-name-concat me-emacs-data-dir "org"))
-
   (add-hook 'org-mode-hook #'me//init-org)
 
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (define-key org-mode-map (kbd "C-c [") nil)
-
-  (setq org-adapt-indentation nil
-        org-fold-catch-invisible-edits 'smart
-        org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
-        org-hide-emphasis-markers t
-        org-hide-macro-markers t
-        org-hierarchical-todo-statistics nil
-        org-image-actual-width nil
-        org-log-done 'time
-        org-provide-todo-statistics t
-        org-display-remote-inline-images 'cache
-        org-src-fontify-natively t
-        org-src-preserve-indentation t
-        org-support-shift-select t
-        org-treat-S-cursor-todo-selection-as-state-change nil
-        org-use-fast-tag-selection 'auto
-        org-use-fast-todo-selection t)
 
   (setq org-todo-keywords
         '((sequence
@@ -1454,11 +1377,11 @@ Lisp function does not specify a special indentation."
            "KILL(k@)")))
 
   (setq org-todo-keyword-faces
-        `(("TODO" :inherit modus-themes-refine-red)
-          ("NEXT" :inherit modus-themes-refine-yellow)
-          ("DONE" :inherit modus-themes-refine-green)
-          ("WAIT" :inherit modus-themes-refine-blue)
-          ("HOLD" :inherit modus-themes-refine-magenta)
+        `(("TODO" :inherit modus-themes-nuanced-red)
+          ("NEXT" :inherit modus-themes-nuanced-yellow)
+          ("DONE" :inherit modus-themes-nuanced-green)
+          ("WAIT" :inherit modus-themes-nuanced-blue)
+          ("HOLD" :inherit modus-themes-nuanced-magenta)
           ("KILL" :inherit modus-themes-subtle-green)))
 
   (setq org-time-stamp-custom-formats
@@ -1538,9 +1461,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (get-text-property 1 'org-hd-marker b)))
            (fa (and ma (marker-buffer ma)))
            (fb (and mb (marker-buffer mb)))
-           (todo-kwds
-            (or (and fa (with-current-buffer fa org-todo-keywords-1))
-                (and fb (with-current-buffer fb org-todo-keywords-1))))
            (ta (or (get-text-property 1 'todo-state a) "KILL"))
            (tb (or (get-text-property 1 'todo-state b) "KILL"))
            (la (cdr (assoc ta todo-priority)))
@@ -1659,7 +1579,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         `(,(concat "PDFLATEX=%latex texi2dvi"
                    " --shell-escape --pdf --tidy --verbose --batch %f")))
 
-  (setq org-latex-listings 'minted)
+  (setq org-latex-src-block-backend 'minted)
   (add-to-list 'org-latex-packages-alist '("dvipsnames,svgnames,x11names,hyperref" "xcolor"))
   ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
   ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
@@ -1892,28 +1812,29 @@ argument FORCE, force the creation of a new ID."
    helm-pattern))
 
 (use-package helm-buffers
-  :config
-  (setq helm-buffer-max-length 40
-        helm-buffers-fuzzy-matching t
-        helm-buffer-skip-remote-checking nil)
-  (set-face-attribute 'helm-buffer-directory nil :inherit 'dired-directory))
+  :custom
+  (setopt helm-buffer-max-length 40
+          helm-buffers-fuzzy-matching t
+          helm-buffer-skip-remote-checking nil)
+  :custom-face
+  (helm-buffer-directory ((t :inherit 'dired-directory))))
 
 (use-package helm-files
-  :config
-  (setq helm-ff-file-name-history-use-recentf t
-        helm-ff-search-library-in-sexp t))
+  :custom
+  (helm-ff-file-name-history-use-recentf t)
+  (helm-ff-search-library-in-sexp t))
 
 (use-package helm-for-files
-  :config
-  (setq helm-recentf-fuzzy-match t))
+  :custom
+  (helm-recentf-fuzzy-match t))
 
 (use-package helm-elisp
-  :config
-  (setq helm-lisp-fuzzy-completion t))
+  :custom
+  (helm-lisp-fuzzy-completion t))
 
 (use-package helm-locate
-  :config
-  (setq helm-locate-fuzzy-match t))
+  :custom
+  (setopt helm-locate-fuzzy-match t))
 
 (use-package helm-flyspell)
 (use-package flyspell
@@ -1947,8 +1868,8 @@ argument FORCE, force the creation of a new ID."
    (whitespace-mode nil whitespace)))
 
 (use-package re-builder
-  :config
-  (setq reb-re-syntax 'string))
+  :custom
+  (reb-re-syntax 'string))
 
 (use-package dockerfile-mode)
 
@@ -1974,16 +1895,16 @@ argument FORCE, force the creation of a new ID."
 
 (use-package deft
   :bind ("<f8>" . deft)
-  :config
-  (setq deft-auto-save-interval 0
-        deft-default-extension "org"
-        deft-directory (file-name-concat me-emacs-data-dir "notes")
-        deft-recursive t
-        deft-use-filename-as-title nil
-        deft-use-filter-string-for-filename t)
-  (setq deft-file-naming-rules '((noslash . "-")
-                                 (nospace . "-")
-                                 (case-fn . downcase))))
+  :custom
+  (deft-auto-save-interval 0)
+  (deft-default-extension "org")
+  (deft-directory (file-name-concat me-emacs-data-dir "notes"))
+  (deft-file-naming-rules '((noslash . "-")
+                            (nospace . "-")
+                            (case-fn . downcase)))
+  (deft-recursive t)
+  (deft-use-filename-as-title nil)
+  (deft-use-filter-string-for-filename t))
 
 ;; Appt
 ;; -----------------------------------------------------------------------------
@@ -2009,14 +1930,16 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 
 (use-package bbdb
+  :custom
+  (bbdb-allow-duplicates t)
+  (bbdb-complete-mail-allow-cycling t)
+  (bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz"))
+  (bbdb-mail-user-agent 'message-user-agent)
+  (bbdb-message-all-addresses t)
+  (bbdb-mua-pop-up nil)
+
   :config
   (bbdb-initialize 'message 'anniv)
-  (setq bbdb-allow-duplicates t
-        bbdb-complete-mail-allow-cycling t
-        bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz")
-        bbdb-mail-user-agent 'message-user-agent
-        bbdb-mua-pop-up nil
-        bbdb-message-all-addresses t)
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; =============================================================================
@@ -2037,16 +1960,14 @@ argument FORCE, force the creation of a new ID."
   :bind ("C-c b" . helm-bibtex))
 
 (use-package oc                         ;org-cite
-  :config
-  (setq org-cite-global-bibliography me-bib-files))
+  :custom
+  (org-cite-global-bibliography me-bib-files))
 
 ;; org-ref
 ;; -----------------------------------------------------------------------------
 
 (use-package f
-
-  :load-path "~/.cache/emacs/straight/repos/f.el"
-)
+  :load-path "~/.cache/emacs/straight/repos/f.el")
 
 (defun me//org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
@@ -2062,7 +1983,17 @@ argument FORCE, force the creation of a new ID."
 (use-package org-ref
   :load-path "~/.cache/emacs/straight/repos/org-ref"
   :bind (:map org-mode-map
-         ("C-c ]" . org-ref-insert-ref-link))
+              ("C-c ]" . org-ref-insert-ref-link))
+  :custom
+  (doi-utils-download-pdf nil)
+  (bibtex-completion-display-formats
+   `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
+     (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
+     (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+     (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+     (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
+  (bibtex-completion-additional-search-fields '(keywords journal booktitle))
+
   :config
   (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
     (add-hook 'org-ref-clean-bibtex-entry-hook func))
@@ -2072,22 +2003,14 @@ argument FORCE, force the creation of a new ID."
   (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
   (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
 
-  (setq doi-utils-download-pdf nil)
   (remove-hook 'org-ref-clean-bibtex-entry-hook #'org-ref-replace-nonascii)
   (add-to-list 'org-ref-bibtex-journal-abbreviations
-               '("ArXiv" "Archive e-print" "CoRR"))
-
-  (setq bibtex-completion-display-formats
-        `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
-          (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
-          (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-          (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-          (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
-  (setq bibtex-completion-additional-search-fields '(keywords journal booktitle)))
+               '("ArXiv" "Archive e-print" "CoRR")))
 
 (require 'org-ref-helm)
 
-(defun me/cleanup-bibtex-file (arg)
+(eval-when-compile
+  (defun me/cleanup-bibtex-file (arg)
   "Cleanup entries, start from the begnning if ARG."
   (interactive "P")
   (bibtex-progress-message "Cleanup bibtex buffer...")
@@ -2100,7 +2023,7 @@ argument FORCE, force the creation of a new ID."
       (bibtex-map-entries (lambda (_key _start _end)
                             (bibtex-progress-message)
                             (org-ref-clean-bibtex-entry)))))
-  (bibtex-progress-message 'done))
+  (bibtex-progress-message 'done)))
 
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
@@ -2141,48 +2064,52 @@ Each index is a list (KEY TIMESTAMP)."
          ("<backtab>"                . me/bibtex-find-text-begin)
          ("M-<down>"                 . bibtex-end-of-entry)
          ("M-<up>"                   . bibtex-beginning-of-entry))
+
+  :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-titleword-length nil)
+  (bibtex-autokey-titleword-separator "_")
+  (bibtex-autokey-titlewords 1)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-year-title-separator "-")
+  (bibtex-dialect 'biblatex)
+  (bibtex-entry-format t)
+  (bibtex-maintain-sorted-entries t)
+  (bibtex-text-indentation 20)
+
   :config
   (defun me//init-bibtex ()
     "Init bibtex mode."
     (set (make-local-variable 'fill-column) 140)
     (set (make-local-variable 'writeroom-width) 150)
-    (setq bibtex-maintain-sorted-entries '(me//bibtex-entry-index me//bibtex-lessp)))
-
-  (add-hook 'bibtex-mode-hook #'me//init-bibtex)
-
-  (setq bibtex-entry-format t)
-
-  (setq bibtex-align-at-equal-sign t
-        bibtex-autokey-name-year-separator ""
-        bibtex-autokey-titleword-length nil
-        bibtex-autokey-titleword-separator "_"
-        bibtex-autokey-titlewords 1
-        bibtex-autokey-titlewords-stretch 0
-        bibtex-autokey-year-length 4
-        bibtex-autokey-year-title-separator "-"
-        bibtex-dialect 'biblatex
-        bibtex-maintain-sorted-entries t
-        bibtex-text-indentation 20))
+    (setq bibtex-maintain-sorted-entries
+          '(me//bibtex-entry-index me//bibtex-lessp)))
+  (add-hook 'bibtex-mode-hook #'me//init-bibtex))
 
 (use-package bibtex-completion
-  :config
-  (setq bibtex-completion-bibliography me-bib-files
-        bibtex-completion-library-path me-bib-pdfs
-        bibtex-completion-notes-extension ".org"
-        bibtex-completion-notes-path me-bib-notes
-        bibtex-completion-notes-symbol "N"
-        bibtex-completion-pdf-symbol "P"))
+  :custom
+  (bibtex-completion-bibliography me-bib-files)
+  (bibtex-completion-library-path me-bib-pdfs)
+  (bibtex-completion-notes-extension ".org")
+  (bibtex-completion-notes-path me-bib-notes)
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-pdf-symbol "P"))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
 
 (use-package reftex
   :delight
+
+  :custom
+  (reftex-plug-into-AUCTeX t)
+  (reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref"))
+  (reftex-default-bibliography me-bib-files)
+
   :config
-  (add-hook 'TeX-mode-hook #'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t
-        reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref")
-        reftex-default-bibliography me-bib-files))
+  (add-hook 'TeX-mode-hook #'turn-on-reftex))
 
 ;; turn on flyspell on latex
 ;; -----------------------------------------------------------------------------
@@ -2195,15 +2122,14 @@ Each index is a list (KEY TIMESTAMP)."
   :config
   (add-hook 'tex-mode-hook #'me//init-tex))
 
-;;
 ;; -----------------------------------------------------------------------------
 
 (use-package separedit
   :bind ("C-c ," . separedit)
-  :config
-  (setq
-   separedit-continue-fill-column t
-   separedit-default-mode 'markdown-mode))
+
+  :custom
+  (separedit-continue-fill-column t)
+  (separedit-default-mode 'markdown-mode))
 
 ;; =============================================================================
 ;; Working with PDF
@@ -2322,7 +2248,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
          ("<down>"     . me/pdf-view-next-few-lines)
          ("<up>"       . me/pdf-view-prev-few-lines)
          ("<left>"     . me/image-forward-hscroll-few-lines)
-         ("<right>"    . me/image-backward-hscroll-few-lines))
+         ("<right>"    . me/image-backward-hscroll-few-lines)
          ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
          ("<PageDown>" . pdf-view-scroll-up-or-next-page)
          ("b"          . me/pdf-set-last-viewed-bookmark)
@@ -2339,8 +2265,9 @@ If ARG, open with external program.  Otherwise open in Emacs."
          ("n"          . me/org-ref-open-note)
          ("z"          . delete-other-windows)
          ("C-<left>"   . pdf-view-previous-page-command)
-         ("C-<right>"  . pdf-view-next-page-command)
-  :config (setq pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
+         ("C-<right>"  . pdf-view-next-page-command))
+  :custom
+  (pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
 ;; helper functions
 ;; -----------------------------------------------------------------------------
@@ -2441,13 +2368,22 @@ alphabetically (in ascending or descending order)."
 ;; Theme
 ;; =============================================================================
 
-(require-theme 'modus-themes)
+(use-package modus-themes
+  :load-path "~/.cache/emacs/straight/repos/modus-themes"
 
-(setq modus-themes-italic-constructs t
-      modus-themes-bold-constructs nil
-      modus-themes-region '(bg-only no-extend))
+  :custom
+  (modus-themes-bold-constructs nil)
+  (modus-themes-italic-constructs t)
+  (modus-themes-region '(bg-only no-extend))
+  (modus-themes-common-palette-overrides '((bg-region bg-ochre)
+                                           (fg-region unspecified)))
 
-(load-theme 'modus-operandi)
+  :custom-face
+  (region ((t :extend nil)))
+
+  :config
+  (require-theme 'modus-themes)
+  (load-theme 'modus-operandi :no-confirm))
 
 ;; =============================================================================
 ;; Now start the server
