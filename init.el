@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-19 16:19:54 gongzhitaao>
+;; Time-stamp: <2023-12-21 16:33:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -17,6 +17,8 @@
 (defconst me-emacs-cache-dir "~/.cache/emacs" "Directory for temporary files.")
 (unless (file-exists-p me-emacs-cache-dir)
   (mkdir me-emacs-cache-dir))
+
+(setq user-emacs-directory (file-name-as-directory me-emacs-cache-dir))
 
 (defconst me-keylog (file-name-concat me-emacs-data-dir "keylog")
   "The file path that Logs every key stroke in my EMACS.")
@@ -102,7 +104,7 @@
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
 ;; by adding a semicolon to the start of the line.  You may delete these
 ;; explanatory comments.
-;(package-initialize)
+                                        ;(package-initialize)
 
 (setq straight-base-dir me-emacs-cache-dir)
 (defvar bootstrap-version)
@@ -127,54 +129,56 @@
   :custom
   (straight-use-package-by-default t)
   (straight-built-in-pseudo-packages
-      '(
-        ;; keep-sorted begin
-        abbrev
-        comp
-        dired
-        emacs
-        esh-mode
-        files
-        google-pyformat
-        google3-build-mode
-        helm-adaptive
-        helm-bookmark
-        helm-buffers
-        helm-config
-        helm-elisp
-        helm-files
-        helm-for-files
-        helm-locate
-        helm-mode
-        ibuf-ext
-        image-mode
-        lisp-mode
-        ls-lisp
-        mail-conf
-        message
-        oc
-        org-agenda
-        org-capture
-        org-clock
-        org-habit
-        org-id
-        org-refile
-        org-src
-        ox
-        ox-beamer
-        ox-bibtex
-        ox-extra
-        ox-html
-        ox-latex
-        pdf-view
-        python
-        rfn-eshadow
-        simple
-        solar
-        tramp-cache
-        uniquify
-        ;; keep-sorted end
-      )))
+   '(
+     ;; keep-sorted begin
+     abbrev
+     comp
+     dired
+     emacs
+     esh-mode
+     files
+     google-pyformat
+     google3-build-mode
+     helm-adaptive
+     helm-bookmark
+     helm-buffers
+     helm-config
+     helm-elisp
+     helm-files
+     helm-for-files
+     helm-locate
+     helm-mode
+     ibuf-ext
+     image-mode
+     indent
+     lisp-mode
+     ls-lisp
+     mail-conf
+     message
+     oc
+     org-agenda
+     org-capture
+     org-clock
+     org-habit
+     org-id
+     org-refile
+     org-src
+     ox
+     ox-beamer
+     ox-bibtex
+     ox-extra
+     ox-html
+     ox-latex
+     pdf-view
+     python
+     rfn-eshadow
+     simple
+     solar
+     tramp-cache
+     uniquify
+     vc-hooks
+     ;; keep-sorted end
+     )))
 
 (use-package delight)
 (use-package bind-key)
@@ -512,9 +516,9 @@ all '.<space>' with '.<space><space>'."
   :custom
   (writeroom-fullscreen-effect nil)
   (writeroom-major-modes
-        '(prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
-                    org-agenda-mode bibtex-mode bookmark-bmenu-mode
-                    LilyPond-mode notmuch-show-mode protobuf-mode))
+   '(prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
+               org-agenda-mode bibtex-mode bookmark-bmenu-mode
+               LilyPond-mode notmuch-show-mode protobuf-mode))
   (writeroom-major-modes-exceptions '(web-mode))
   (writeroom-maximize-window nil)
   (writeroom-mode-line t)
@@ -533,31 +537,33 @@ all '.<space>' with '.<space><space>'."
   :delight smartparens-mode
   :config
   (require 'smartparens-config)
-  (bind-keys ("M-S-<backspace>" . sp-backward-unwrap-sexp)
-             ("M-S-<delete>"    . sp-unwrap-sexp)
-             :prefix-map smartparens-mode-map
-             :prefix "C-c s"
-             ("<backspace>"   . sp-splice-sexp-killing-backward)
-             ("<delete>"      . sp-splice-sexp-killing-forward)
-             ("<left>"        . sp-backward-slurp-sexp)
-             ("<right>"       . sp-forward-slurp-sexp)
-             ("a"             . sp-beginning-of-sexp)
-             ("b"             . sp-backward-sexp)
-             ("C-<left>"      . sp-forward-barf-sexp)
-             ("C-<right>"     . sp-backward-barf-sexp)
-             ("D"             . sp-backward-down-sexp)
-             ("d"             . sp-down-sexp)
-             ("e"             . sp-end-of-sexp)
-             ("E"             . sp-up-sexp)
-             ("f"             . sp-forward-sexp)
-             ("k"             . sp-kill-sexp)
-             ("K"             . sp-backward-kill-sexp)
-             ("n"             . sp-next-sexp)
-             ("p"             . sp-previous-sexp)
-             ("r"             . sp-rewrap-sexp)
-             ("s"             . sp-split-sexp)
-             ("t"             . sp-transpose-sexp)
-             ("w"             . sp-copy-sexp))
+
+  (bind-keys
+   ("M-S-<backspace>" . sp-backward-unwrap-sexp)
+   ("M-S-<delete>"    . sp-unwrap-sexp)
+   :prefix-map smartparens-mode-map
+   :prefix "C-c s"
+   ("<backspace>"   . sp-splice-sexp-killing-backward)
+   ("<delete>"      . sp-splice-sexp-killing-forward)
+   ("<left>"        . sp-backward-slurp-sexp)
+   ("<right>"       . sp-forward-slurp-sexp)
+   ("a"             . sp-beginning-of-sexp)
+   ("b"             . sp-backward-sexp)
+   ("C-<left>"      . sp-forward-barf-sexp)
+   ("C-<right>"     . sp-backward-barf-sexp)
+   ("D"             . sp-backward-down-sexp)
+   ("d"             . sp-down-sexp)
+   ("e"             . sp-end-of-sexp)
+   ("E"             . sp-up-sexp)
+   ("f"             . sp-forward-sexp)
+   ("k"             . sp-kill-sexp)
+   ("K"             . sp-backward-kill-sexp)
+   ("n"             . sp-next-sexp)
+   ("p"             . sp-previous-sexp)
+   ("r"             . sp-rewrap-sexp)
+   ("s"             . sp-split-sexp)
+   ("t"             . sp-transpose-sexp)
+   ("w"             . sp-copy-sexp))
 
   (smartparens-global-mode)
   (show-smartparens-global-mode)
@@ -567,10 +573,10 @@ all '.<space>' with '.<space><space>'."
         sp-cancel-autoskip-on-backward-movement nil)
 
   (sp-with-modes
-      '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
-    (sp-local-tag "i" "\"<" "\">")
-    (sp-local-tag "i" "\\|" "\\|")
-    (sp-local-tag "i" "\\[" "\\]"))
+   '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
+   (sp-local-tag "i" "\"<" "\">")
+   (sp-local-tag "i" "\\|" "\\|")
+   (sp-local-tag "i" "\\[" "\\]"))
 
   (sp-local-pair '(org-mode) "\\[" "\\]")
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "`" "'")
@@ -597,8 +603,8 @@ all '.<space>' with '.<space><space>'."
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-              :family "Iosevka SS09"
-              :height 160)
+                      :family "Iosevka SS09"
+                      :height 160)
 
   (let ((size (if (me//resolution-2k-p) 22 44)))
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -608,10 +614,10 @@ all '.<space>' with '.<space><space>'."
                                             :size size)))
 
     (set-fontset-font "fontset-default"
-                    (cons (decode-char 'ucs #xF000)
-                          (decode-char 'ucs #xF890))
-                    (font-spec :family "Font Awesome 6 Free"
-                               :size size))))
+                      (cons (decode-char 'ucs #xF000)
+                            (decode-char 'ucs #xF890))
+                      (font-spec :family "Font Awesome 6 Free"
+                                 :size size))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 
@@ -619,51 +625,106 @@ all '.<space>' with '.<space><space>'."
 ;; -----------------------------------------------------------------------------
 
 (use-package time
+  :custom
+  (display-time-24hr-format t)
+  (display-time-day-and-date nil)
+  (display-time-default-load-average nil)
+
   :config
-  (setq display-time-24hr-format t
-      display-time-day-and-date nil
-      display-time-default-load-average nil)
   (display-time))
 
 (use-package simple
+  :custom
+  (indent-tabs-mode nil)
+  (blink-matching-paren nil)
+
   :config
   (column-number-mode)
-  (size-indication-mode)
-  (setq blink-matching-paren nil))
+  (size-indication-mode))
 
 (use-package rfn-eshadow
   :config
   (file-name-shadow-mode))
 
 (use-package uniquify
-  :config
-  (setq uniquify-separator "/"
-        uniquify-after-kill-buffer-p t
-        uniquify-buffer-name-style 'post-forward-angle-brackets
-        uniquify-ignore-buffers-re "^\\*"))
+  :custom
+  (uniquify-after-kill-buffer-p t)
+  (uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (uniquify-ignore-buffers-re "^\\*")
+  (uniquify-separator "/"))
 
 ;; =============================================================================
 ;; General editing
 ;; =============================================================================
 
-(setq confirm-kill-emacs 'yes-or-no-p
-      delete-by-moving-to-trash t
-      history-delete-duplicates t
-      select-enable-clipboard t
-      tab-always-indent t
-      view-read-only t)
+(defun me//force-backup-of-buffer ()
+  "Force to backup buffer."
+  (setq-local buffer-backed-up nil))
 
-(setq-default fill-column 80
-              indent-tabs-mode nil
-              sort-fold-case t
-              standard-indent 2
-              tab-stop-list (number-sequence 2 120 2)
-              tab-width 4
-              truncate-lines t)
+(defun me//cleanup-old-files (directory nday)
+  "Cleanup DIRECTORY files older than NDAY."
+  (let ((age (* 60 60 24 (or nday 7)))
+        (current (float-time (current-time))))
+    (message "Deleting old backup files...")
+    (dolist (file (directory-files directory t))
+      (when (and (backup-file-name-p file)
+                 (> (- current (float-time (nth 5 (file-attributes file))))
+                    age))
+        (message "delete: %s" file)
+        (delete-file file)))))
+
+(use-package files
+  :custom
+  (backup-by-copying t)
+  (confirm-kill-emacs 'yes-or-no-p)
+  (delete-old-versions t)
+  (kept-new-versions 30)
+  (kept-old-versions 30)
+  (small-temporary-file-directory "/tmp/")
+  (version-control t)
+  (view-read-only t)
+
+  :config
+  (let ((backup-dir (file-name-concat me-emacs-cache-dir "backup")))
+    (unless (file-exists-p backup-dir)
+      (mkdir backup-dir))
+    (setopt backup-directory-alist `(("." . ,backup-dir)))
+    (me//cleanup-old-files backup-dir 7))
+
+  ;; Backup buffer before each save.
+  (add-hook 'before-save-hook #'me//force-backup-of-buffer))
+
+(use-package vc-hooks
+  :custom
+  (vc-make-backup-files t))
+
+;; startup.el
+(setopt auto-save-list-file-prefix
+        (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
+
+(use-package select
+  :custom
+  (select-enable-clipboard t))
+
+;; indent.el
+(setopt tab-always-indent t
+        standard-indent 2
+        tab-stop-list (number-sequence 2 120 2))
+
+(use-package sort
+  :custom
+  (sort-fold-case t))
+
+(setopt
+ delete-by-moving-to-trash t
+ fill-column 80
+ history-delete-duplicates t
+ tab-width 4
+ truncate-lines t)
 
 (use-package comp
-  :config
-  (setq native-comp-async-report-warnings-errors nil))
+  :custom
+  (native-comp-async-report-warnings-errors nil))
 
 (use-package delsel
   :config
@@ -690,25 +751,25 @@ all '.<space>' with '.<space><space>'."
   :config
   (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
   (add-hook 'text-mode-hook #'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-auto-character-face-perc 10)
-  (setq highlight-indent-guides-auto-top-character-face-perc 30)
-  (setq highlight-indent-guides-method 'character
-        highlight-indent-guides-character ?⎜)
-
-  (setq highlight-indent-guides-responsive 'top))
+  (setopt highlight-indent-guides-auto-character-face-perc 10
+          highlight-indent-guides-auto-top-character-face-perc 30
+          highlight-indent-guides-character ?⎜
+          highlight-indent-guides-method 'character
+          highlight-indent-guides-responsive 'top))
 
 (use-package whitespace
   :after highlight-indent-guides
   :delight global-whitespace-mode
+  :custom
+  (whitespace-line-column nil)
+  (whitespace-style '(empty face indentation lines-tail
+                            space-after-tab space-before-tab
+                            tabs trailing))
+  (whitespace-global-modes t)
+
   :config
-  (setq whitespace-line-column nil)
-  (setq whitespace-style '(empty face indentation lines-tail
-                                 space-after-tab space-before-tab
-                                 tabs trailing))
-  (setq whitespace-global-modes t)
   (dolist (hook '(prog-mode-hook org-mode-hook))
     (add-hook hook #'whitespace-mode))
-  ;; (global-whitespace-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
 
 (use-package volatile-highlights
@@ -718,26 +779,16 @@ all '.<space>' with '.<space><space>'."
 
 (use-package rainbow-delimiters
   :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
-  ;; (let ((me//paren-dual-colors '("deep sky blue" "navajo white")))
-  ;;   (cl-loop
-  ;;    for index from 1 to rainbow-delimiters-max-face-count
-  ;;    do
-  ;;    (set-face-foreground
-  ;;     (intern (format "rainbow-delimiters-depth-%d-face" index))
-  ;;     (elt me//paren-dual-colors
-  ;;          (if (cl-evenp index) 0 1)))))
-  )
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package wgrep
-  :config (setq wgrep-auto-save-buffer t))
+  :config (setopt wgrep-auto-save-buffer t))
 
 (use-package golden-ratio-scroll-screen
   :config
-  (setq golden-ratio-scroll-highlight-flag nil)
-  (global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
-  (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up))
+  (setopt golden-ratio-scroll-highlight-flag nil)
+  (global-set-key [remap scroll-down-command] #'golden-ratio-scroll-screen-down)
+  (global-set-key [remap scroll-up-command] #'golden-ratio-scroll-screen-up))
 
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
@@ -751,31 +802,30 @@ all '.<space>' with '.<space><space>'."
 ;; -----------------------------------------------------------------------------
 
 ;; Saves the undo history across sessions.
-(use-package undo-fu-session
-  :config
-  (setq undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
-  (undo-fu-session-global-mode))
+;; (use-package undo-fu-session
+;;   :config
+;;   (setq undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
+;;   (undo-fu-session-global-mode))
 
 ;; Navigates undo history in a tree style.
 (use-package vundo
-  :bind ("C-/" . vundo)
-  :config
-
-  (custom-set-faces '(vundo-highlight ((t (:inverse-video t)))))
-
-  (define-key vundo-mode-map (kbd "l") #'vundo-forward)
-  (define-key vundo-mode-map (kbd "<right>") #'vundo-forward)
-  (define-key vundo-mode-map (kbd "h") #'vundo-backward)
-  (define-key vundo-mode-map (kbd "<left>") #'vundo-backward)
-  (define-key vundo-mode-map (kbd "j") #'vundo-next)
-  (define-key vundo-mode-map (kbd "<down>") #'vundo-next)
-  (define-key vundo-mode-map (kbd "k") #'vundo-previous)
-  (define-key vundo-mode-map (kbd "<up>") #'vundo-previous)
-  (define-key vundo-mode-map (kbd "<home>") #'vundo-stem-root)
-  (define-key vundo-mode-map (kbd "<end>") #'vundo-stem-end)
-  (define-key vundo-mode-map (kbd "q") #'vundo-quit)
-  (define-key vundo-mode-map (kbd "C-g") #'vundo-quit)
-  (define-key vundo-mode-map (kbd "RET") #'vundo-confirm))
+  :bind (("C-x u" . vundo)
+         :map vundo-mode-map
+         ("l"       . #'vundo-forward)
+         ("<right>" . #'vundo-forward)
+         ("h"       . #'vundo-backward)
+         ("<left>"  . #'vundo-backward)
+         ("j"       . #'vundo-next)
+         ("<down>"  . #'vundo-next)
+         ("k"       . #'vundo-previous)
+         ("<up>"    . #'vundo-previous)
+         ("<home>"  . #'vundo-stem-root)
+         ("<end>"   . #'vundo-stem-end)
+         ("q"       . #'vundo-quit)
+         ("C-g"     . #'vundo-quit)
+         ("RET"     . #'vundo-confirm))
+  :custom-face
+  (vundo-highlight ((t (:inverse-video t)))))
 
 ;; Searching
 ;; -----------------------------------------------------------------------------
@@ -794,31 +844,36 @@ all '.<space>' with '.<space><space>'."
 
 (use-package imenu-list
   :config
-  (setq imenu-list-position 'left))
+  (setopt imenu-list-position 'left))
 
 (use-package imenu
-  :config
-  (setq imenu-sort-function #'imenu--sort-by-name))
+  :custom (imenu-sort-function #'imenu--sort-by-name))
 
 ;; Completion
 ;; -----------------------------------------------------------------------------
 
 (use-package abbrev
-  :config
-  (setq abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
+  :custom
+  (abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
 
 (use-package yasnippet
   :delight yas-minor-mode
   :config
-  (setq yas-snippet-dirs `(,(file-name-concat me-emacs-data-dir "snippets")))
+  (setopt yas-snippet-dirs `(,(file-name-concat me-emacs-data-dir "snippets")))
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'org-mode-hook #'yas-minor-mode))
 
-;; (use-package company
-;;   :delight
-;;   :config
-;;   (add-hook 'prog-mode-hook #'company-mode))
+(use-package company
+  :delight
+  :custom
+  (company-format-margin-function #'company-text-icons-margin)
+  (company-insertion-on-trigger-p)
+  :bind (:map prog-mode-map
+              ("<tab>" . company-indent-or-complete-common))
+  :config
+  (setopt company-idle-delay nil)
+  (add-hook 'prog-mode-hook #'company-mode))
 
 ;; Encoding
 ;; -----------------------------------------------------------------------------
@@ -832,131 +887,81 @@ all '.<space>' with '.<space><space>'."
 ;; Bookkeeping
 ;; =============================================================================
 
-(defun me//force-backup-of-buffer ()
-  "Force to backup buffer."
-  (setq-local buffer-backed-up nil))
-
-(defun me//cleanup-old-files (directory nday)
-  "Cleanup DIRECTORY files older than NDAY."
-  (let ((age (* 60 60 24 (or nday 7)))
-        (current (float-time (current-time))))
-    (message "Deleting old backup files...")
-    (dolist (file (directory-files directory t))
-      (when (and (backup-file-name-p file)
-                 (> (- current (float-time (nth 5 (file-attributes file))))
-                    age))
-        (message "delete: %s" file)
-        (delete-file file)))))
-
-;; backup!!!
-(use-package files
-  :config
-  (setq auto-save-list-file-prefix
-        (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
-
-  (let ((backup-dir (file-name-concat me-emacs-cache-dir "backup")))
-    (unless (file-exists-p backup-dir)
-      (mkdir backup-dir))
-
-    (setq backup-directory-alist `(("." . ,backup-dir)))
-    (me//cleanup-old-files backup-dir 7))
-  (setq small-temporary-file-directory "/tmp/")
-
-  (setq backup-by-copying    t
-        delete-old-versions  t
-        kept-new-versions    30
-        kept-old-versions    30
-        vc-make-backup-files t
-        version-control      t)
-
-  ;; Backup buffer before each save.
-  (add-hook 'before-save-hook #'me//force-backup-of-buffer))
-
 (defun me//make-file-precious-when-remote ()
-    "Set FILE-PRECIOUS-FLAG for remote files."
-    (when (file-remote-p default-directory)
-      (set (make-local-variable 'file-precious-flag) t)))
+  "Set FILE-PRECIOUS-FLAG for remote files."
+  (when (file-remote-p default-directory)
+    (set (make-local-variable 'file-precious-flag) t)))
 (add-hook 'find-file-hook #'me//make-file-precious-when-remote)
 
 ;; Save recent visited file list.
 (use-package recentf
+  :custom
+  (recentf-max-saved-items 50)
+  (recentf-save-file (file-name-concat me-emacs-cache-dir "recentf"))
+
   :config
-  (setq recentf-save-file (file-name-concat me-emacs-cache-dir "recentf"))
-  (setq recentf-max-saved-items 50)
   (let ((ignores `(,(file-name-concat me-emacs-cache-dir ".*") "~/.mail/.*")))
     (mapc (lambda (x) (add-to-list 'recentf-exclude x)) ignores))
+
   (recentf-mode))
 
 ;; Save minibuffer history
 (use-package savehist
+  :custom
+  (savehist-additional-variables '(search ring regexp-search-ring))
+  (savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
+
   :config
-  (setq savehist-additional-variables '(search ring regexp-search-ring)
-        savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
 (use-package saveplace
-  :config
-  (setq save-place-file (file-name-concat me-emacs-cache-dir "saveplace"))
-  (save-place-mode))
+  :custom (save-place-file (file-name-concat me-emacs-cache-dir "saveplace"))
+  :config (save-place-mode))
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :config
-  (setq persistent-scratch-backup-directory
-        (file-name-concat me-emacs-cache-dir "scratch.d")
-        persistent-scratch-save-file
-        (file-name-concat me-emacs-cache-dir "scratch.d/scratch")
-        ;; keep backups not older than a month
-        persistent-scratch-backup-filter
-        (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
+  (setopt persistent-scratch-backup-directory
+          (file-name-concat me-emacs-cache-dir "scratch.d")
+          persistent-scratch-save-file
+          (file-name-concat me-emacs-cache-dir "scratch.d/scratch")
+          ;; keep backups not older than a month
+          persistent-scratch-backup-filter
+          (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
 
-  (persistent-scratch-setup-default)
-  (persistent-scratch-autosave-mode))
+  (persistent-scratch-setup-default))
 
 ;; Syntax check
-(use-package flycheck
-  :config
-  (bind-keys ("M-\"" . flycheck-keymap-prefix))
-  (define-prefix-command 'flycheck-keymap-prefix)
-  (fset 'flycheck-keymap-prefix flycheck-command-map)
-  (setq flycheck-emacs-lisp-load-path 'inherit
-        flycheck-global-modes '(not org-mode)
-        flycheck-keymap-prefix flycheck-command-map
-        flycheck-python-flake8-executable "flake8"
-        flycheck-python-pycompile-executable "python3"
-        flycheck-python-pylint-executable "python3")
-  (global-flycheck-mode))
+;; (use-package flycheck
+;;   :config
+;;   (setq flycheck-emacs-lisp-load-path 'inherit
+;;         flycheck-global-modes '(not org-mode)))
 
-(use-package helm-flycheck
-  :bind ("C-c c" . helm-flycheck))
+;; (use-package helm-flycheck
+;;   :bind ("C-c c" . helm-flycheck))
 
 (use-package bookmark
+  :custom
+  (bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
   :config
   (defun me//init-bookmark-bmenu ()
     (set (make-local-variable 'writeroom-width) 150)
     (set-face-bold 'bookmark-menu-bookmark nil)
     (hl-line-mode))
 
-  (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu)
-  (setq bookmark-default-file
-        (file-name-concat me-emacs-data-dir "bookmarks")))
+  (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu))
 
 ;; =============================================================================
 ;; General utilities
 ;; =============================================================================
-
-;; Hint on keybindings.
-;; (use-package which-key
-;;   :config (which-key-mode)
-;;   :delight which-key-mode)
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
 (use-package esh-mode
   :config
-  (setq eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
+  (setopt eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
 ;; Dired
 ;; -----------------------------------------------------------------------------
@@ -969,7 +974,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package dired
   :bind (:map dired-mode-map
-         ("f" . find-file-literally-at-point))
+              ("f" . find-file-literally-at-point))
   :config
   (add-hook 'dired-mode-hook #'me//init-dired)
   (put 'dired-find-alternate-file 'disabled nil)
@@ -987,7 +992,7 @@ all '.<space>' with '.<space><space>'."
     :group 'me-dired)
 
   (defface me-dired-executable
-    '((((class color) (min-colors 8)) :background "green"))
+    '((((class color) (min-colors 8)) :background "#b3fabf"))
     "face for executables"
     :group 'me-dired)
 
@@ -1024,76 +1029,70 @@ all '.<space>' with '.<space><space>'."
   :config (dired-async-mode))
 
 (use-package ls-lisp
-  :config
-  (setq ls-lisp-dirs-first t
-        ls-lisp-use-string-collate nil
-        ls-lisp-use-insert-directory-program nil))
+  :custom
+  (ls-lisp-dirs-first t)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-use-string-collate nil))
 
 ;; Calendar
 ;; -----------------------------------------------------------------------------
 
 (use-package solar
-  :config
-  (setq calendar-latitude 32.6)
-  (setq calendar-longitude -85.5))
+  :custom
+  (calendar-latitude 32.6)
+  (calendar-longitude -85.5))
 
 (use-package calendar
+  :custom
+  (calendar-chinese-all-holidays-flag t)
+  (calendar-intermonth-header
+   (propertize "Wk" 'font-lock-face '(:foreground "gray50" :bold t)))
+  (calendar-intermonth-text
+   '(propertize
+     (format "%2d"
+             (car (calendar-iso-from-absolute
+                   (calendar-absolute-from-gregorian
+                    (list month day year)))))
+     'font-lock-face '(:foreground "gray70")))
+  (calendar-mark-diary-entries-flag t)
+  (calendar-mark-holidays-flag t)
+  (calendar-view-diary-initially-flag nil)
+  (calendar-view-holidays-initially-flag nil)
+  (calendar-week-start-day 1)
+  (diary-file (file-name-concat me-emacs-data-dir "time-machine/diary"))
+
   :config
-  (setq calendar-week-start-day 1
-        calendar-chinese-all-holidays-flag t
-        diary-file (file-name-concat me-emacs-data-dir
-                                     "org/time-machine/diary"))
-  (calendar-set-date-style 'iso)
-
-  (defface calendar-iso-week-face
-    '((default :weight bold :foreground "pink"))
-    "Face for calendar week number"
-    :group 'calendar)
-
-  (defface calendar-iso-week-header-face
-    '((default :foreground "cyan1"))
-    "Face for calendar week title"
-    :group 'calendar)
-
-  (setq calendar-intermonth-text
-        '(propertize
-          (format "%2d"
-                  (car (calendar-iso-from-absolute
-                        (calendar-absolute-from-gregorian
-                         (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face))
-
-  (setq calendar-intermonth-header
-        (propertize "Wk" 'font-lock-face 'calendar-iso-week-header-face)))
+  (calendar-set-date-style 'iso))
 
 (use-package cal-china-x
+  :custom-face
+  (cal-china-x-important-holiday-face ((t :background "#ff9580")))
+
   :config
-  (setq calendar-mark-holidays-flag t
-        calendar-view-diary-initially-flag nil
-        calendar-view-holidays-initially-flag nil
-        calendar-mark-diary-entries-flag t)
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
 
-  (setq holiday-other-holidays
-        '((holiday-fixed 3  8  "婦女節")
-          (holiday-fixed 3  12 "植樹節")
-          (holiday-fixed 5  4  "青年節")
-          (holiday-fixed 6  1  "兒童節")
-          (holiday-fixed 9  10 "教師節")
-          ;; 阴历节日
-          (holiday-lunar 1 15  "元宵節 (上元節)")
-          (holiday-lunar 2 2   "中和節 (青龍節，龍抬頭)")
-          (holiday-lunar 3 3   "上巳節 (黄帝诞辰)")
-          (holiday-lunar 7 7   "七夕節 (乞巧節)")
-          (holiday-lunar 7 15  "中元節 (鬼節)")
-          (holiday-lunar 9 9   "重陽節")))
+  (setopt holiday-other-holidays
+          (append '((holiday-fixed 3  8  "婦女節")
+                    (holiday-fixed 3  12 "植樹節")
+                    (holiday-fixed 5  4  "青年節")
+                    (holiday-fixed 6  1  "兒童節")
+                    (holiday-fixed 9  10 "教師節")
+                    ;; 阴历节日
+                    (holiday-lunar 1 15  "元宵節 (上元節)")
+                    (holiday-lunar 2 2   "中和節 (青龍節，龍抬頭)")
+                    (holiday-lunar 3 3   "上巳節 (黄帝诞辰)")
+                    (holiday-lunar 7 7   "七夕節 (乞巧節)")
+                    (holiday-lunar 7 15  "中元節 (鬼節)")
+                    (holiday-lunar 9 9   "重陽節"))
+                  holiday-other-holidays))
 
-  (setq calendar-holidays
-        (append cal-china-x-important-holidays
-                cal-china-x-general-holidays
-                holiday-other-holidays))
+  (setopt calendar-holidays
+          (append cal-china-x-chinese-holidays
+                  cal-china-x-general-holidays
+                  holiday-other-holidays))
 
-  (setq calendar-date-display-form calendar-iso-date-display-form))
+  ;; Prevents cal-china-x from chaning the date format in diary.
+  (setopt calendar-date-display-form calendar-iso-date-display-form))
 
 ;; Show buffers
 (use-package ibuffer
@@ -1196,7 +1195,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package cc-mode
   :bind (:map c++-mode-map
-         ("C-!" . clang-format))
+              ("C-!" . clang-format))
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
@@ -1213,17 +1212,11 @@ all '.<space>' with '.<space><space>'."
 
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
-  :config
-  (defun me//init-web-mode()
-    (setq web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-enable-current-element-highlight t))
-  (add-hook 'web-mode-hook #'me//init-web-mode))
-
-;; (use-package blacken
-;;   :config
-;;   (setq blacken-executable "pyink"))
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-enable-current-element-highlight t)
+  (web-mode-markup-indent-offset 2))
 
 (use-package sphinx-doc
   :delight)
@@ -1243,53 +1236,54 @@ all '.<space>' with '.<space><space>'."
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
-         ("C-!" . #'google-pyformat)
-         ("C-c C-s" . #'me//isort-region-or-buffer))
+              ("C-!" . #'google-pyformat)
+              ("C-c C-s" . #'me//isort-region-or-buffer))
+  :custom
+  (python-indent-offset 2)
   :config
   (defun me//init-python()
     "Init python model."
     (sphinx-doc-mode)
     (setq-local comment-inline-offset 2)
     (setq-local yas-indent-line 'fixed)
-    (setq-local comment-column 0)
-    (setq-local python-indent-offset 2)
-    (setq-local fill-column 80))
+    (setq-local comment-column 0))
 
   (add-hook 'python-mode-hook #'me//init-python)
   (add-hook 'python-mode-hook #'flyspell-prog-mode))
 
-(use-package json-mode
-  :config
-  (setq json-reformat:indent-width 4))
+(use-package json-mode)
+
+(use-package js
+  :custom (js-indent-level 2))
 
 (use-package js2-mode
   :mode "\\.js\\'"
   :delight (js2-mode "JS2")
   :bind (:map js2-mode-map
-         ("C-!" . clang-format-region))
-  :config
-  (setq js2-basic-offset 2
-        js-indent-level 2
-        js2-include-node-externs t
-        js2-include-browser-externs t)
+              ("C-!" . clang-format-region))
+  :custom
+  (js2-basic-offset 2)
+  (js2-include-node-externs t)
+  (js2-include-browser-externs t)
 
+  :config
   (setq-default js2-additional-externs
-              '("$"
-                "KeyEvent"
-                "google"
-                "sessionStorage"
-                "URLSearchParams"
-                "URL"
-                "ResizeObserver")))
+                '("$"
+                  "KeyEvent"
+                  "google"
+                  "sessionStorage"
+                  "URLSearchParams"
+                  "URL"
+                  "ResizeObserver")))
 
 (use-package image-mode
   :bind (:map image-mode-map
-         ("H"   . image-transform-fit-to-window)
-         ("q"   . quit-window)
-         ("Q"   . kill-this-buffer)
-         ("r"   . image-transform-set-rotation)
-         ("W"   . image-transform-fit-to-window)
-         ("SPC" . image-transform-reset-to-initial)))
+              ("H"   . image-transform-fit-to-window)
+              ("q"   . quit-window)
+              ("Q"   . kill-this-buffer)
+              ("r"   . image-transform-set-rotation)
+              ("W"   . image-transform-fit-to-window)
+              ("SPC" . image-transform-reset-to-initial)))
 
 (use-package ssh-config-mode
   :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
@@ -1299,9 +1293,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package octave
   :mode "\\.m\\'"
-  :init
-  (defvar octave-comment-char)
-  (setq octave-comment-char ?%))
+  :custom (octave-comment-char ?%))
 
 (use-package markdown-mode
   :config
@@ -1314,9 +1306,9 @@ all '.<space>' with '.<space><space>'."
 
 (use-package typescript-mode
   :bind (:map typescript-mode-map
-         ("C-!" . clang-format))
-  :config
-  (setq typescript-indent-level 2))
+              ("C-!" . clang-format))
+  :custom
+  (typescript-indent-level 2))
 
 (use-package jsonnet-mode)
 (use-package yaml-mode)
@@ -1357,47 +1349,39 @@ all '.<space>' with '.<space><space>'."
   (org-src-fontify-natively t)
   (org-src-preserve-indentation t)
   (org-support-shift-select t)
+  (org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+     (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
+  (org-todo-keyword-faces
+   '(("TODO" :inherit modus-themes-nuanced-red)
+     ("NEXT" :inherit modus-themes-nuanced-yellow)
+     ("DONE" :inherit modus-themes-nuanced-green)
+     ("WAIT" :inherit modus-themes-nuanced-blue)
+     ("HOLD" :inherit modus-themes-nuanced-magenta)
+     ("KILL" :inherit modus-themes-subtle-green)))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
   (org-use-fast-tag-selection 'auto)
   (org-use-fast-todo-selection t)
 
   :config
   (add-hook 'org-mode-hook #'me//init-org)
-
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
+  (setopt org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (define-key org-mode-map (kbd "C-c [") nil)
-
-  (setq org-todo-keywords
-        '((sequence
-           "TODO(t)" "NEXT(n)" "|"
-           "DONE(d!)")
-          (sequence
-           "WAIT(w@/!)" "HOLD(h@/!)" "|"
-           "KILL(k@)")))
-
-  (setq org-todo-keyword-faces
-        `(("TODO" :inherit modus-themes-nuanced-red)
-          ("NEXT" :inherit modus-themes-nuanced-yellow)
-          ("DONE" :inherit modus-themes-nuanced-green)
-          ("WAIT" :inherit modus-themes-nuanced-blue)
-          ("HOLD" :inherit modus-themes-nuanced-magenta)
-          ("KILL" :inherit modus-themes-subtle-green)))
-
-  (setq org-time-stamp-custom-formats
-        '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (load-file (file-name-concat org-directory "my-org-misc.el")))
 
 (use-package org-appear
+  :custom
+  (org-appear-autolinks t)
   :config
-  (add-hook 'org-mode-hook #'org-appear-mode)
-  (setq org-appear-autolinks t))
+  (add-hook 'org-mode-hook #'org-appear-mode))
 
 (use-package org-refile
-  :config
-  (setq org-refile-targets '((nil :maxlevel . 4))
-        org-refile-use-outline-path t
-        org-outline-path-complete-in-steps nil))
+  :custom
+  (org-refile-targets '((nil :maxlevel . 4)))
+  (org-refile-use-outline-path t)
+  (org-outline-path-complete-in-steps nil))
 
 (defun me//org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
@@ -1418,25 +1402,50 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       nil)))
 
 (use-package org-habit
-  :config
-  (setq org-habit-graph-column   50
-        org-habit-preceding-days 28
-        org-habit-following-days 1))
+  :custom
+  (org-habit-following-days 1)
+  (org-habit-graph-column   50)
+  (org-habit-preceding-days 28))
 
 (use-package org-clock
+  :custom
+  (org-clock-history-length 32)
+  (org-clock-idle-time 10)
+  (org-clock-in-resume t)
+  (org-clock-into-drawer t)
+  (org-clock-persist t)
+  (org-clock-persist-file
+   (file-name-concat me-emacs-cache-dir "org-clock-save.el"))
+  (org-log-into-drawer t)
+
   :config
-  (setq org-clock-history-length 32
-        org-clock-idle-time 10
-        org-clock-in-resume t
-        org-clock-into-drawer t
-        org-clock-persist t
-        org-clock-persist-file (file-name-concat me-emacs-cache-dir "org-clock-save.el")
-        org-log-into-drawer t)
   (org-clock-persistence-insinuate))
 
 (use-package org-agenda
-  :config
+  :custom
+  (org-agenda-columns-add-appointments-to-effort-sum t)
+  (org-agenda-compact-blocks nil)
+  (org-agenda-dim-blocked-tasks t)
+  (org-agenda-files (file-name-concat org-directory "orgfile"))
+  (org-agenda-include-diary t)
+  (org-agenda-show-all-dates t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+  (org-agenda-sorting-strategy)
+  '((agenda habit-down time-up user-defined-down priority-down
+            category-keep)
+    ((todo priority-down category-keep))
+    ((tags priority-down category-keep))
+    (search category-keep))
+  (org-agenda-start-with-log-mode t)
+  (org-agenda-tags-column -130)
+  (org-agenda-prefix-format
+   '((agenda   . " %i %-12:c%?-20t%?-15 s")
+     (timeline . "  % s")
+     (todo     . " %i %-12:T")
+     (tags     . " %i %-12:T")
+     (search   . " %i %-12:T")))
 
+  :config
   (defun me//init-org-agenda ()
     ;; (set (make-local-variable 'fill-column) 130)
     (set (make-local-variable 'writeroom-width) 150)
@@ -1468,32 +1477,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       (cond ((< la lb) -1)
             ((< lb la) +1))))
 
-  (setq org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
-
-  (setq org-agenda-compact-blocks nil
-        org-agenda-columns-add-appointments-to-effort-sum t
-        org-agenda-dim-blocked-tasks t
-        org-agenda-files (file-name-concat org-directory "orgfile")
-        org-agenda-include-diary t
-        org-agenda-show-all-dates t
-        org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
-        org-agenda-sorting-strategy
-        '((agenda habit-down time-up user-defined-down priority-down
-                  category-keep)
-          (todo priority-down category-keep)
-          (tags priority-down category-keep)
-          (search category-keep))
-        org-agenda-start-with-log-mode t
-        org-agenda-tags-column -130)
-
-  (setq org-agenda-prefix-format
-        '((agenda   . " %i %-12:c%?-20t%?-15 s")
-          (timeline . "  % s")
-          (todo     . " %i %-12:T")
-          (tags     . " %i %-12:T")
-          (search   . " %i %-12:T")))
-
-  (setq org-agenda-custom-commands
+  (setopt org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
+  (setopt org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
            ((tags "PRIORITY=\"A\""
                   ((org-agenda-skip-function
@@ -1512,74 +1497,80 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            ((org-agenda-compact-blocks nil))))))
 
 (use-package org-capture
-  :config
-  (setq org-capture-templates
-        `(
-          ("b" "Books")
-          ("br" "Books Reference" plain
-           (file "books.bib")
-           (file "capture/book.bib")
-           :empty-lines 1
-           :jump-to-captured t)
-          ("bt" "Books TODO" entry
-           (file+headline "todo.org" "Books")
-           (file "capture/todo.org")
-           :empty-lines 1
-           :jump-to-captured t)
+  :custom
+  (org-capture-templates
+   '(
+     ("l" "Log daily" plain
+      (file+olp+datetree
+       (lambda()
+         (file-name-concat me-emacs-data-dir
+                           (format-time-string "time-machine/%Y.org"))))
+      "%?"
+      :empty-lines 1
+      :jump-to-captured t
+      :tree-type week)
 
-          ("l" "Log daily" plain
-           (file+olp+datetree "time-machine/time-machine.txt")
-           "%?"
-           :empty-lines 1
-           :jump-to-captured t
-           :tree-type week)
-
-          ("t" "TODO" entry
-           (file+headline "todo.org" "Scratch")
-           (file "capture/todo.org")
-           :empty-lines 1
-           :jump-to-captured t)
-          )))
+     ("t" "TODO" entry
+      (file+headline "todo.org" "Scratch")
+      (file "capture/todo.org")
+      :empty-lines 1
+      :jump-to-captured t)
+     )))
 
 (use-package ox
-  :config
-  (setq org-export-global-macros
-        '(("tex" . "@@latex:$1@@")
-          ("html" . "@@html:$1@@"))))
+  :custom
+  (org-export-global-macros
+   '(("tex" . "@@latex:$1@@")
+     ("html" . "@@html:$1@@"))))
 
 (use-package org-contrib)
-
 (use-package ox-extra
-  :config
-  (ox-extras-activate '(ignore-headlines)))
+  :config (ox-extras-activate '(ignore-headlines)))
 
 (use-package ox-html
-  :config
-  (setq org-html-allow-name-attribute-in-anchors t
-        org-html-doctype "html5"
-        org-html-head-include-default-style nil
-        org-html-head-include-scripts nil
-        org-html-html5-fancy t
-        org-html-htmlize-output-type 'css)
-
-  ;; Postamble.
-  (setq org-html-postamble t
-        org-html-postamble-format
-        '(("en" "<a class=\"author\"
+  :custom
+  (org-html-allow-name-attribute-in-anchors t)
+  (org-html-doctype "html5")
+  (org-html-head-include-default-style nil)
+  (org-html-head-include-scripts nil)
+  (org-html-html5-fancy t)
+  (org-html-htmlize-output-type 'css)
+  (org-html-postamble t)
+  (org-html-postamble-format
+   '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>"))))
 
 (use-package ox-bibtex)
-
 (use-package ox-latex
-  :config
-  (setq org-latex-prefer-user-labels t
-        org-latex-caption-above nil)
-  (setq org-latex-pdf-process
-        `(,(concat "PDFLATEX=%latex texi2dvi"
-                   " --shell-escape --pdf --tidy --verbose --batch %f")))
+  :custom
+  (org-latex-caption-above nil)
+  (org-latex-hyperref-template "\\hypersetup{
+      pdfauthor={%a},
+      pdftitle={%t},
+      pdfkeywords={%k},
+      pdfsubject={%d},
+      pdfcreator={%c},
+      pdflang={%L},
+      bookmarks=true,
+      unicode=true,
+      pdftoolbar=true,
+      pdfmenubar=true,
+      pdffitwindow=false,
+      pdfstartview={FitH},
+      pdfnewwindow=true,
+      colorlinks=true,
+      linkcolor=Maroon,
+      citecolor=ForestGreen,
+      filecolor=Mulberry,
+      urlcolor=MidnightBlue}\n")
+  (org-latex-pdf-process
+   `(,(concat "PDFLATEX=%latex texi2dvi"
+              " --shell-escape --pdf --tidy --verbose --batch %f")))
+  (org-latex-prefer-user-labels t)
+  (org-latex-src-block-backend 'minted)
 
-  (setq org-latex-src-block-backend 'minted)
+  :config
   (add-to-list 'org-latex-packages-alist '("dvipsnames,svgnames,x11names,hyperref" "xcolor"))
   ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
   ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
@@ -1609,27 +1600,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-  (setq org-latex-hyperref-template "\\hypersetup{
-      pdfauthor={%a},
-      pdftitle={%t},
-      pdfkeywords={%k},
-      pdfsubject={%d},
-      pdfcreator={%c},
-      pdflang={%L},
-      bookmarks=true,
-      unicode=true,
-      pdftoolbar=true,
-      pdfmenubar=true,
-      pdffitwindow=false,
-      pdfstartview={FitH},
-      pdfnewwindow=true,
-      colorlinks=true,
-      linkcolor=Maroon,
-      citecolor=ForestGreen,
-      filecolor=Mulberry,
-      urlcolor=MidnightBlue}\n"))
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 
 (use-package ox-beamer
   :config
@@ -1761,11 +1732,6 @@ argument FORCE, force the creation of a new ID."
            (lambda () (me/org-custom-id-get (point) force 'uniq))))
       (org-map-entries me//org-custom-id-get-wrapper))))
 
-;; The gcal contains some senstive information, thus in a separate file.
-;; -----------------------------------------------------------------------------
-
-;(require 'gcal-conf)
-
 ;; =============================================================================
 ;; Helm
 ;; =============================================================================
@@ -1773,9 +1739,15 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-mode
   :delight
   :load-path "~/.cache/emacs/straight/repos/helm"
+  :custom
+  (helm-split-window-inside-p t)
+
+  :custom-face
+  (helm-M-x-key ((t :foreground "#0031a9")))
+
   :config
-  (helm-mode 1)
-  (bind-keys ("M-x"     . helm-M-x)
+  (bind-keys ("C-c h"   . helm-command-prefix)
+             ("M-x"     . helm-M-x)
              ("C-x C-f" . helm-find-files)
              ("M-s g"   . helm-ag)
              ("C-b"     . helm-mini)
@@ -1784,23 +1756,20 @@ argument FORCE, force the creation of a new ID."
              ("C-i"     . helm-execute-persistent-action)
              ("C-z"     . helm-select-action)
              :map helm-command-map
-             ("d"       . helm-bookmarks)
-             ;; :map helm-moccur-map
-             ;; ("C-s"     . me//isearch-from-helm-occur)
-             )
-  (helm-autoresize-mode)
-  (global-set-key (kbd "C-c h") #'helm-command-prefix)
-  (setq helm-split-window-inside-p t))
+             ("d"       . helm-bookmarks))
+
+  (helm-mode 1)
+  (helm-autoresize-mode))
 
 (use-package helm-adaptive
+  :custom
+  (helm-adaptive-history-file
+   (file-name-concat me-emacs-cache-dir "helm-adaptive-history"))
   :config
-  (setq helm-adaptive-history-file
-        (file-name-concat me-emacs-cache-dir "helm-adaptive-history"))
   (helm-adaptive-mode))
 
 (use-package helm-bookmark
-  :config
-  (setq helm-bookmark-show-location t))
+  :custom (helm-bookmark-show-location t))
 
 (defun me//isearch-from-helm-occur ()
   "Continue isearch from helm-occur."
@@ -1813,16 +1782,19 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-buffers
   :custom
-  (setopt helm-buffer-max-length 40
-          helm-buffers-fuzzy-matching t
-          helm-buffer-skip-remote-checking nil)
+  (helm-buffer-max-length 40)
+  (helm-buffer-skip-remote-checking nil)
+  (helm-buffers-fuzzy-matching t)
+
   :custom-face
   (helm-buffer-directory ((t :inherit 'dired-directory))))
 
 (use-package helm-files
   :custom
   (helm-ff-file-name-history-use-recentf t)
-  (helm-ff-search-library-in-sexp t))
+  (helm-ff-search-library-in-sexp t)
+  :custom-face
+  (helm-ff-dotted-directory ((t :background "gray80"))))
 
 (use-package helm-for-files
   :custom
@@ -1833,18 +1805,17 @@ argument FORCE, force the creation of a new ID."
   (helm-lisp-fuzzy-completion t))
 
 (use-package helm-locate
-  :custom
-  (setopt helm-locate-fuzzy-match t))
+  :custom (helm-locate-fuzzy-match t))
 
 (use-package helm-flyspell)
 (use-package flyspell
   :after helm-flyspell
   :bind (:map flyspell-mode-map
-         ("C-;" . comment-or-uncomment-region)
-         ("s-;" . helm-flyspell-correct)))
+              ("C-;" . comment-or-uncomment-region)
+              ("s-;" . helm-flyspell-correct)))
 
 (use-package tramp
- :custom
+  :custom
   (tramp-default-method "ssh")
   (tramp-backup-directory-alist nil))
 
@@ -1890,8 +1861,23 @@ argument FORCE, force the creation of a new ID."
 ;; i - maximize window (select which window)
 ;; o - maximize current window
 
+(use-package which-key
+  :delight
+  :config (which-key-mode))
+
 ;; deft
 ;; -----------------------------------------------------------------------------
+
+(defun me//deft-parse-title (file contents)
+  "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+    (if begin
+        (string-trim (substring contents begin (match-end 0))
+                     "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+      (deft-base-filename file))))
 
 (use-package deft
   :bind ("<f8>" . deft)
@@ -1904,21 +1890,39 @@ argument FORCE, force the creation of a new ID."
                             (case-fn . downcase)))
   (deft-recursive t)
   (deft-use-filename-as-title nil)
-  (deft-use-filter-string-for-filename t))
+  (deft-use-filter-string-for-filename t)
+
+  :config
+  (advice-add 'deft-parse-title :override #'me//deft-parse-title)
+
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "\n"              ; newline
+                "\\|^:.+:.*$"     ; any line with a :SOMETHING:
+                "\\|^#\\+.*$"     ; anyline starting with a #+
+                "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
+                "\\)")))
+
+(use-package org-roam
+  :custom
+  (org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
+  (org-roam-complete-everywhere t)
+  :bind (:prefix-map me-org-roam-command-map
+         :prefix "C-c n"
+         ("c" . org-roam-capture)
+         ("f" . org-roam-node-find)
+         ("g" . org-roam-graph)
+         ("i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-c n l" . org-roam-buffer-toggle))
+  :config
+  (org-roam-db-autosync-mode))
 
 ;; Appt
 ;; -----------------------------------------------------------------------------
 
 (appt-activate 1)
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-
-;; Epub
-;; -----------------------------------------------------------------------------
-; (use-package nov :mode ("\\.epub\\'"))
-
-;(use-package graphviz-dot-mode
-;  :config
-;  (setq graphviz-dot-indent-width 2))
 
 ;; =============================================================================
 ;; mail
@@ -2011,19 +2015,19 @@ argument FORCE, force the creation of a new ID."
 
 (eval-when-compile
   (defun me/cleanup-bibtex-file (arg)
-  "Cleanup entries, start from the begnning if ARG."
-  (interactive "P")
-  (bibtex-progress-message "Cleanup bibtex buffer...")
-  (save-excursion
-    (if arg
-        (bibtex-beginning-first-field)
-      (bibtex-beginning-of-entry))
-    (save-restriction
-      (narrow-to-region (point) (point-max))
-      (bibtex-map-entries (lambda (_key _start _end)
-                            (bibtex-progress-message)
-                            (org-ref-clean-bibtex-entry)))))
-  (bibtex-progress-message 'done)))
+    "Cleanup entries, start from the begnning if ARG."
+    (interactive "P")
+    (bibtex-progress-message "Cleanup bibtex buffer...")
+    (save-excursion
+      (if arg
+          (bibtex-beginning-first-field)
+        (bibtex-beginning-of-entry))
+      (save-restriction
+        (narrow-to-region (point) (point-max))
+        (bibtex-map-entries (lambda (_key _start _end)
+                              (bibtex-progress-message)
+                              (org-ref-clean-bibtex-entry)))))
+    (bibtex-progress-message 'done)))
 
 (defun me/bibtex-find-text-begin ()
   "Go to the beginning of a field entry."
@@ -2058,12 +2062,12 @@ Each index is a list (KEY TIMESTAMP)."
 
 (use-package bibtex
   :bind (:map bibtex-mode-map
-         ([remap fill-paragraph]     . bibtex-fill-entry)
-         ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
-         ("C-c C-v"                  . bibtex-validate)
-         ("<backtab>"                . me/bibtex-find-text-begin)
-         ("M-<down>"                 . bibtex-end-of-entry)
-         ("M-<up>"                   . bibtex-beginning-of-entry))
+              ([remap fill-paragraph]     . bibtex-fill-entry)
+              ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
+              ("C-c C-v"                  . bibtex-validate)
+              ("<backtab>"                . me/bibtex-find-text-begin)
+              ("M-<down>"                 . bibtex-end-of-entry)
+              ("M-<up>"                   . bibtex-beginning-of-entry))
 
   :custom
   (bibtex-align-at-equal-sign t)
@@ -2244,28 +2248,28 @@ If ARG, open with external program.  Otherwise open in Emacs."
 
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
-         ("<delete>"   . pdf-view-scroll-up-or-next-page)
-         ("<down>"     . me/pdf-view-next-few-lines)
-         ("<up>"       . me/pdf-view-prev-few-lines)
-         ("<left>"     . me/image-forward-hscroll-few-lines)
-         ("<right>"    . me/image-backward-hscroll-few-lines)
-         ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
-         ("<PageDown>" . pdf-view-scroll-up-or-next-page)
-         ("b"          . me/pdf-set-last-viewed-bookmark)
-         ("c"          . me/org-ref-open-entry)
-         ;; ("d"       . pdf-view-scroll-up-or-next-page)
-         ;; ("e"       . pdf-view-scroll-down-or-previous-page)
-         ("d"          . me/pdf-view-next-few-lines)
-         ("e"          . me/pdf-view-prev-few-lines)
-         ("g"          . pdf-view-goto-page)
-         ;; ("j"       . pdf-view-scroll-up-or-next-page)
-         ;; ("k"       . pdf-view-scroll-down-or-previous-page)
-         ("j"          . me/pdf-view-next-few-lines)
-         ("k"          . me/pdf-view-prev-few-lines)
-         ("n"          . me/org-ref-open-note)
-         ("z"          . delete-other-windows)
-         ("C-<left>"   . pdf-view-previous-page-command)
-         ("C-<right>"  . pdf-view-next-page-command))
+              ("<delete>"   . pdf-view-scroll-up-or-next-page)
+              ("<down>"     . me/pdf-view-next-few-lines)
+              ("<up>"       . me/pdf-view-prev-few-lines)
+              ("<left>"     . me/image-forward-hscroll-few-lines)
+              ("<right>"    . me/image-backward-hscroll-few-lines)
+              ("<PageUp>"   . pdf-view-scroll-down-or-previous-page)
+              ("<PageDown>" . pdf-view-scroll-up-or-next-page)
+              ("b"          . me/pdf-set-last-viewed-bookmark)
+              ("c"          . me/org-ref-open-entry)
+              ;; ("d"       . pdf-view-scroll-up-or-next-page)
+              ;; ("e"       . pdf-view-scroll-down-or-previous-page)
+              ("d"          . me/pdf-view-next-few-lines)
+              ("e"          . me/pdf-view-prev-few-lines)
+              ("g"          . pdf-view-goto-page)
+              ;; ("j"       . pdf-view-scroll-up-or-next-page)
+              ;; ("k"       . pdf-view-scroll-down-or-previous-page)
+              ("j"          . me/pdf-view-next-few-lines)
+              ("k"          . me/pdf-view-prev-few-lines)
+              ("n"          . me/org-ref-open-note)
+              ("z"          . delete-other-windows)
+              ("C-<left>"   . pdf-view-previous-page-command)
+              ("C-<right>"  . pdf-view-next-page-command))
   :custom
   (pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
 
@@ -2334,35 +2338,11 @@ alphabetically (in ascending or descending order)."
 (open-dribble-file
  (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
-;; undo.  It is weird that I have to load undo-tree at the end,
-;; otherwise some pakcages, e.g., helm-elisp fails loading.
-;; -----------------------------------------------------------------------------
-
-;; (use-package undo-tree
-;;   :delight
-;;   :bind ("C-c u" . undo-tree-visualize)
-;;   :config
-;;   (setq undo-tree-visualizer-timestamps t
-;;         undo-tree-auto-save-history t
-;;         undo-tree-history-directory-alist
-;;         `(("." . ,(file-name-concat me-emacs-cache-dir "undo"))))
-
-;;   (defadvice undo-tree-make-history-save-file-name
-;;       (after undo-tree activate)
-;;     (setq ad-return-value (concat ad-return-value ".gz")))
-
-;;   (global-undo-tree-mode))
-
 ;; =============================================================================
 ;; Other stuff
 ;; =============================================================================
 
 (require 'dm)
-
-;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/lilypond"))
-;; (use-package lilypond-init
-;;   :load-path "site-lisp/lilypond"
-;;   :mode ("\\.ly\\'" . LilyPond-mode))
 
 ;; =============================================================================
 ;; Theme
@@ -2372,11 +2352,11 @@ alphabetically (in ascending or descending order)."
   :load-path "~/.cache/emacs/straight/repos/modus-themes"
 
   :custom
+  (modus-themes-common-palette-overrides '((bg-region bg-ochre)
+                                           (fg-region unspecified)))
   (modus-themes-bold-constructs nil)
   (modus-themes-italic-constructs t)
   (modus-themes-region '(bg-only no-extend))
-  (modus-themes-common-palette-overrides '((bg-region bg-ochre)
-                                           (fg-region unspecified)))
 
   :custom-face
   (region ((t :extend nil)))
