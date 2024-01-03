@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2023-12-21 16:33:01 gongzhitaao>
+;; Time-stamp: <2024-01-03 11:57:13 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1907,6 +1907,7 @@ argument FORCE, force the creation of a new ID."
   :custom
   (org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
   (org-roam-complete-everywhere t)
+  (org-roam-graph-viewer nil)
   :bind (:prefix-map me-org-roam-command-map
          :prefix "C-c n"
          ("c" . org-roam-capture)
