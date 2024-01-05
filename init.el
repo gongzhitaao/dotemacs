@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-01-03 11:57:13 gongzhitaao>
+;; Time-stamp: <2024-01-04 19:44:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1032,7 +1032,8 @@ all '.<space>' with '.<space><space>'."
   :custom
   (ls-lisp-dirs-first t)
   (ls-lisp-use-insert-directory-program nil)
-  (ls-lisp-use-string-collate nil))
+  (ls-lisp-use-string-collate nil)
+  (ls-lisp-ignore-case t))
 
 ;; Calendar
 ;; -----------------------------------------------------------------------------
@@ -1348,6 +1349,7 @@ all '.<space>' with '.<space><space>'."
   (org-provide-todo-statistics t)
   (org-src-fontify-natively t)
   (org-src-preserve-indentation t)
+  (org-startup-folded 'content)
   (org-support-shift-select t)
   (org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (org-todo-keywords
@@ -1987,8 +1989,6 @@ argument FORCE, force the creation of a new ID."
 
 (use-package org-ref
   :load-path "~/.cache/emacs/straight/repos/org-ref"
-  :bind (:map org-mode-map
-              ("C-c ]" . org-ref-insert-ref-link))
   :custom
   (doi-utils-download-pdf nil)
   (bibtex-completion-display-formats
@@ -2000,6 +2000,9 @@ argument FORCE, force the creation of a new ID."
   (bibtex-completion-additional-search-fields '(keywords journal booktitle))
 
   :config
+  (bind-keys :map org-mode-map
+             ("C-c ]" . org-ref-insert-ref-link))
+
   (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
     (add-hook 'org-ref-clean-bibtex-entry-hook func))
 
