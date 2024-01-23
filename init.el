@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-01-04 19:44:01 gongzhitaao>
+;; Time-stamp: <2024-01-22 09:18:16 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -107,6 +107,7 @@
                                         ;(package-initialize)
 
 (setq straight-base-dir me-emacs-cache-dir)
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -117,7 +118,7 @@
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
@@ -1201,11 +1202,11 @@ all '.<space>' with '.<space><space>'."
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
 
-  (defun me//disable-company-for-remote ()
-    (when (and (fboundp 'company-mode)
-               (file-remote-p default-directory))
-      (company-mode -1)))
-  (add-hook 'c-mode-common-hook #'me//disable-company-for-remote)
+  ;; (defun me//disable-company-for-remote ()
+  ;;   (when (and (fboundp 'company-mode)
+  ;;              (file-remote-p default-directory))
+  ;;     (company-mode -1)))
+  ;; (add-hook 'c-mode-common-hook #'me//disable-company-for-remote)
 
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
@@ -1429,15 +1430,15 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-compact-blocks nil)
   (org-agenda-dim-blocked-tasks t)
   (org-agenda-files (file-name-concat org-directory "orgfile"))
-  (org-agenda-include-diary t)
+  (org-agenda-include-diary nil)
   (org-agenda-show-all-dates t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-  (org-agenda-sorting-strategy)
-  '((agenda habit-down time-up user-defined-down priority-down
-            category-keep)
-    ((todo priority-down category-keep))
-    ((tags priority-down category-keep))
-    (search category-keep))
+  (org-agenda-sorting-strategy
+   '((agenda habit-down time-up user-defined-down priority-down
+             category-keep)
+     ((todo priority-down category-keep))
+     ((tags priority-down category-keep))
+     (search category-keep)))
   (org-agenda-start-with-log-mode t)
   (org-agenda-tags-column -130)
   (org-agenda-prefix-format
@@ -2134,7 +2135,6 @@ Each index is a list (KEY TIMESTAMP)."
 
 (use-package separedit
   :bind ("C-c ," . separedit)
-
   :custom
   (separedit-continue-fill-column t)
   (separedit-default-mode 'markdown-mode))
