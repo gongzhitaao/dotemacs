@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-01-22 09:18:16 gongzhitaao>
+;; Time-stamp: <2024-02-23 10:17:32 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1434,7 +1434,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-show-all-dates t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
   (org-agenda-sorting-strategy
-   '((agenda habit-down time-up user-defined-down priority-down
+   '((agenda habit-down time-up priority-down user-defined-down
              category-keep)
      ((todo priority-down category-keep))
      ((tags priority-down category-keep))
@@ -1502,12 +1502,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-capture
   :custom
   (org-capture-templates
-   '(
+   `(
      ("l" "Log daily" plain
       (file+olp+datetree
-       (lambda()
-         (file-name-concat me-emacs-data-dir
-                           (format-time-string "time-machine/%Y.org"))))
+       ,(file-name-concat me-emacs-data-dir
+                          (format-time-string "time-machine/%Y.org")))
       "%?"
       :empty-lines 1
       :jump-to-captured t
