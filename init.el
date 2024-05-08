@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-02-23 10:17:32 gongzhitaao>
+;; Time-stamp: <2024-05-08 15:24:53 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -480,6 +480,23 @@ all '.<space>' with '.<space><space>'."
     (delete-trailing-whitespace)
     (kill-new (buffer-string))))
 
+(defun me/make-username (stem)
+  "Make a random username from STEM.
+
+It is used to make an arbitrary but determinsitc username, e.g.,
+for a website.  I have Catch-all configured for one of my
+domains, so I can use this username@mydomain as the registration
+email.
+"
+  (interactive "sUsername stem: ")
+  (let* ((suffix
+         (downcase
+          (substring (base32-encode (secure-hash 'sha256 stem nil nil t))
+                     0 5)))
+         (username (format "%s.%s" stem suffix)))
+    (message "Username: %s copied" username)
+    (kill-new username)))
+
 ;; =============================================================================
 ;; Appearance
 ;; =============================================================================
@@ -597,17 +614,17 @@ all '.<space>' with '.<space><space>'."
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
-(defun me//resolution-2k-p ()
-  "Return TRUE if 2K resolution."
+(defun me//high-resolution-p ()
+  "Return TRUE if high resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560 6400))))))
+    (not (not (memq width '(1920 1998 2048 2560 3840 6400))))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
                       :family "Iosevka SS09"
                       :height 160)
 
-  (let ((size (if (me//resolution-2k-p) 22 44)))
+  (let ((size (if (me//high-resolution-p) 22 44)))
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
@@ -870,11 +887,12 @@ all '.<space>' with '.<space><space>'."
   :custom
   (company-format-margin-function #'company-text-icons-margin)
   (company-insertion-on-trigger-p)
-  :bind (:map prog-mode-map
-              ("<tab>" . company-indent-or-complete-common))
+
   :config
   (setopt company-idle-delay nil)
   (add-hook 'prog-mode-hook #'company-mode))
+  (bind-keys :map prog-mode-map
+             ("<tab>" . company-indent-or-complete-common))
 
 ;; Encoding
 ;; -----------------------------------------------------------------------------
@@ -1315,6 +1333,8 @@ all '.<space>' with '.<space><space>'."
 (use-package jsonnet-mode)
 (use-package yaml-mode)
 (use-package protobuf-mode)
+(use-package ncl-mode)
+(use-package cython-mode)
 
 (defun me//init-org ()
   "Init orgmode."
