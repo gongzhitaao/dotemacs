@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-05-08 15:24:53 gongzhitaao>
+;; Time-stamp: <2024-05-16 13:40:26 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -485,8 +485,13 @@ all '.<space>' with '.<space><space>'."
 
 It is used to make an arbitrary but determinsitc username, e.g.,
 for a website.  I have Catch-all configured for one of my
-domains, so I can use this username@mydomain as the registration
-email.
+domains, so I can use username@mydomain as the email.
+
+The username needs to include two parts:
+- A unique handle about the website that I can easily recall.
+- A random string that prevents spam guessing my pattern.
+  Ideally this string is arbitrary but deterministic so that I
+  can regenerate later.
 "
   (interactive "sUsername stem: ")
   (let* ((suffix
@@ -1330,11 +1335,12 @@ email.
   :custom
   (typescript-indent-level 2))
 
-(use-package jsonnet-mode)
-(use-package yaml-mode)
-(use-package protobuf-mode)
-(use-package ncl-mode)
 (use-package cython-mode)
+(use-package jsonnet-mode)
+(use-package ncl-mode)
+(use-package protobuf-mode)
+(use-package yaml-mode)
+(use-package base32)
 
 (defun me//init-org ()
   "Init orgmode."
