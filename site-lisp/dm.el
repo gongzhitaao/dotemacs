@@ -29,7 +29,7 @@
     (remove-hook 'write-file-hooks hook)
     (add-hook 'before-save-hook hook)))
 
-(defun me/g3-make-py-import (filepath)
+(defun me//g3-make-py-import (filepath)
   "Return a proper Python import statement for FILEPATH."
   (let* ((parts (split-string filepath "/"))
          (module (car (last parts)))
@@ -45,7 +45,7 @@
               ("py" (file-name-sans-extension module))
               ("proto" (format "%s_pb2" (file-name-sans-extension module)))))))
 
-(defun me/g3-make-cc-include (filepath)
+(defun me//g3-make-cc-include (filepath)
   "Return a proper cc include statement for FILEPATH."
   (let ((ext (file-name-extension filepath))
         (stem (file-name-sans-extension filepath))
@@ -56,13 +56,17 @@
                    ("proto" ".proto.h")))
     (format "#include \"%s%s\"" stem suffix)))
 
-(defun me/g3-make-build-target (filepath)
+(defun me//g3-make-build-target (filepath)
   "Return a proper build target for FILEPATH."
   (let ((dir (substring (file-name-directory filepath) 0 -1))
         (module (file-name-sans-extension (file-name-base filepath))))
     (format "%s:%s" dir module)))
 
-(defun me/g3-filepath (filepath)
+(defun me//string-capitalized-p (str)
+  (let ((case-fold-search nil))
+    (string-match-p "\\`[[:upper:]]+\\'" str)))
+
+(defun me//g3-filepath (filepath)
   "Return google3/ path if FILEPATH is a google3 file."
   (string-match "/google/src/cloud/\\w+/\\w+/google3/" filepath)
   (let ((start (match-end 0))
@@ -76,23 +80,28 @@
       (setq g3path (substring filepath start))
 
       (push g3path candidates)
-      (push (me/g3-make-build-target g3path) candidates)
+
+      (unless (me//string-capitalized-p (file-name-base g3path))
+        (push (me//g3-make-build-target g3path) candidates))
 
       (pcase (file-name-extension g3path)
-        ("h" ,(push (me/g3-make-cc-include g3path) candidates))
-        ("cc" (push (me/g3-make-cc-include g3path) candidates))
-        ("py" (push (me/g3-make-py-import g3path) candidates))
+        ("h" ,(push (me//g3-make-cc-include g3path) candidates))
+        ("cc" (push (me//g3-make-cc-include g3path) candidates))
+        ("py" (push (me//g3-make-py-import g3path) candidates))
         ("proto"
-         (push (me/g3-make-py-import g3path) candidates)
-         (push (me/g3-make-cc-include g3path) candidates)))
+         (push (me//g3-make-py-import g3path) candidates)
+         (push (me//g3-make-cc-include g3path) candidates)))
 
-      (setq selection (completing-read "Select to copy: " candidates))
+      (if (eq (length candidates) 1)
+          (setq selection (nth 0 candidates))
+        (setq selection (completing-read "Select to copy: " candidates)))
+
       (unless (string= selection "")
         (kill-new selection)
         (message selection)))))
 
 (advice-add 'dired-copy-filename-as-kill
-            :filter-return #'me/g3-filepath)
+            :filter-return #'me//g3-filepath)
 (add-to-list 'auto-mode-alist '("\\.st_schemas\\'" . spansdl-mode))
 
 (defun me//make-temp-file-in-tmp (args)
