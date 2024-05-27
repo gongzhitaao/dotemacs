@@ -85,7 +85,7 @@
         (push (me//g3-make-build-target g3path) candidates))
 
       (pcase (file-name-extension g3path)
-        ("h" ,(push (me//g3-make-cc-include g3path) candidates))
+        ("h" (push (me//g3-make-cc-include g3path) candidates))
         ("cc" (push (me//g3-make-cc-include g3path) candidates))
         ("py" (push (me//g3-make-py-import g3path) candidates))
         ("proto"
