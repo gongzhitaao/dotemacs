@@ -60,7 +60,9 @@
   "Return a proper build target for FILEPATH."
   (let ((dir (substring (file-name-directory filepath) 0 -1))
         (module (file-name-sans-extension (file-name-base filepath))))
-    (format "%s:%s" dir module)))
+    (if (string= "proto" (file-name-extension filepath))
+        (setq module (concat module "_proto")))
+    (format "//%s:%s" dir module)))
 
 (defun me//string-capitalized-p (str)
   (let ((case-fold-search nil))
