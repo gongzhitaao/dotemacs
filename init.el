@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-06-03 13:41:05 gongzhitaao>
+;; Time-stamp: <2024-07-05 08:01:42 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -987,6 +987,17 @@ The username needs to include two parts:
   :config
   (setopt eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
+(use-package tramp
+  :load-path "~/.cache/emacs/straight/build/tramp/"
+  :custom
+  (tramp-default-method "ssh")
+  (tramp-backup-directory-alist nil))
+
+(use-package tramp-cache
+  :load-path "~/.cache/emacs/straight/build/tramp/"
+  :custom
+  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
+
 ;; Dired
 ;; -----------------------------------------------------------------------------
 
@@ -1360,7 +1371,7 @@ The username needs to include two parts:
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :load-path "~/.cache/emacs/straight/repos/org/lisp/"
+  :load-path "~/.cache/emacs/straight/build/org/lisp/"
   :custom
   (org-adapt-indentation nil)
   (org-directory (file-name-concat me-emacs-data-dir "org"))
@@ -1394,6 +1405,9 @@ The username needs to include two parts:
   (org-use-fast-todo-selection t)
 
   :config
+  (bind-keys :map org-mode-map
+             ("C-J" . me/join-next-line))
+
   (add-hook 'org-mode-hook #'me//init-org)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (setopt org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
@@ -1766,7 +1780,7 @@ argument FORCE, force the creation of a new ID."
 
 (use-package helm-mode
   :delight
-  :load-path "~/.cache/emacs/straight/repos/helm"
+  :load-path "~/.cache/emacs/straight/build/helm"
   :custom
   (helm-split-window-inside-p t)
 
@@ -1841,15 +1855,6 @@ argument FORCE, force the creation of a new ID."
   :bind (:map flyspell-mode-map
               ("C-;" . comment-or-uncomment-region)
               ("s-;" . helm-flyspell-correct)))
-
-(use-package tramp
-  :custom
-  (tramp-default-method "ssh")
-  (tramp-backup-directory-alist nil))
-
-(use-package tramp-cache
-  :custom
-  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
 
 ;; delight
 ;; -----------------------------------------------------------------------------
@@ -1988,9 +1993,9 @@ argument FORCE, force the creation of a new ID."
 (defvar me-bib-notes (file-name-concat me-bib "notes")
   "Path to store my notes on each papers.")
 
-(use-package helm-bibtex
-  :load-path "~/.cache/emacs/straight/repos/helm-bibtex"
-  :bind ("C-c b" . helm-bibtex))
+;; (use-package helm-bibtex
+;;   :load-path "~/.cache/emacs/straight/build/helm-bibtex"
+;;   :bind ("C-c b" . helm-bibtex))
 
 (use-package oc                         ;org-cite
   :custom
@@ -2000,7 +2005,7 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 
 (use-package f
-  :load-path "~/.cache/emacs/straight/repos/f.el")
+  :load-path "~/.cache/emacs/straight/build/f.el")
 
 (defun me//org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
@@ -2014,7 +2019,7 @@ argument FORCE, force the creation of a new ID."
     (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
 
 (use-package org-ref
-  :load-path "~/.cache/emacs/straight/repos/org-ref"
+  :load-path "~/.cache/emacs/straight/build/org-ref"
   :custom
   (doi-utils-download-pdf nil)
   (bibtex-completion-display-formats
@@ -2041,7 +2046,7 @@ argument FORCE, force the creation of a new ID."
   (add-to-list 'org-ref-bibtex-journal-abbreviations
                '("ArXiv" "Archive e-print" "CoRR")))
 
-(require 'org-ref-helm)
+;; (require 'org-ref-helm)
 
 (eval-when-compile
   (defun me/cleanup-bibtex-file (arg)
@@ -2378,7 +2383,7 @@ alphabetically (in ascending or descending order)."
 ;; =============================================================================
 
 (use-package modus-themes
-  :load-path "~/.cache/emacs/straight/repos/modus-themes"
+  :load-path "~/.cache/emacs/straight/build/modus-themes"
 
   :custom
   (modus-themes-common-palette-overrides '((bg-region bg-ochre)
