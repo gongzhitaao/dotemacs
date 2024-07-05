@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-07-05 08:01:42 gongzhitaao>
+;; Time-stamp: <2024-07-05 08:04:39 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1993,9 +1993,9 @@ argument FORCE, force the creation of a new ID."
 (defvar me-bib-notes (file-name-concat me-bib "notes")
   "Path to store my notes on each papers.")
 
-;; (use-package helm-bibtex
-;;   :load-path "~/.cache/emacs/straight/build/helm-bibtex"
-;;   :bind ("C-c b" . helm-bibtex))
+(use-package helm-bibtex
+  :load-path "~/.cache/emacs/straight/build/helm-bibtex"
+  :bind ("C-c b" . helm-bibtex))
 
 (use-package oc                         ;org-cite
   :custom
