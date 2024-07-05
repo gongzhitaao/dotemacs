@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-07-05 08:04:39 gongzhitaao>
+;; Time-stamp: <2024-10-10 10:22:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -138,6 +138,7 @@
      emacs
      esh-mode
      files
+     google-java-format
      google-pyformat
      google3-build-mode
      helm-adaptive
@@ -195,16 +196,12 @@
 ;; Key binding
 ;; =============================================================================
 
-(global-set-key (kbd "C-z") #'delete-other-windows)
-(global-set-key (kbd "<backtab>") #'decrease-left-margin)
-
-(global-set-key (kbd "C-J") #'me/join-next-line)
-(global-set-key (kbd "C-.") #'mc/mark-next-like-this-word)
-(global-set-key (kbd "C->") #'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
-(global-set-key (kbd "M-<delete>") #'kill-word)
-
 (global-set-key (kbd "C-;") #'comment-or-uncomment-region)
+(global-set-key (kbd "C-J") #'me/join-next-line)
+(global-set-key (kbd "C-z") #'delete-other-windows)
+
+(global-set-key (kbd "M-<delete>") #'kill-word)
 
 (global-set-key (kbd "S-<up>") #'windmove-up)
 (global-set-key (kbd "S-<right>") #'windmove-right)
@@ -609,7 +606,7 @@ The username needs to include two parts:
                  nil :actions nil))
 
 (use-package editorconfig
-  :delight)
+ :delight)
 
 (use-package all-the-icons
   :if (display-graphic-p)
@@ -816,6 +813,13 @@ The username needs to include two parts:
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
+(use-package ls-lisp
+  :custom
+  (ls-lisp-dirs-first t)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-use-string-collate nil)
+  (ls-lisp-ignore-case t))
+
 ;; -----------------------------------------------------------------------------
 ;; UNDO
 ;;
@@ -871,6 +875,13 @@ The username needs to include two parts:
 
 (use-package imenu
   :custom (imenu-sort-function #'imenu--sort-by-name))
+
+;; (use-package projectile
+;;   :bind (:map projectile-mode-map
+;;               ("C-c p" . projectile-command-map))
+;;   :init
+;;   (projectile-mode))
+;; (use-package helm-projectile)
 
 ;; Completion
 ;; -----------------------------------------------------------------------------
@@ -990,7 +1001,6 @@ The username needs to include two parts:
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp/"
   :custom
-  (tramp-default-method "ssh")
   (tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
@@ -1012,7 +1022,6 @@ The username needs to include two parts:
               ("f" . find-file-literally-at-point))
   :config
   (add-hook 'dired-mode-hook #'me//init-dired)
-  (put 'dired-find-alternate-file 'disabled nil)
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always
         dired-recursive-copies 'always
@@ -1062,13 +1071,6 @@ The username needs to include two parts:
 (use-package async
   :delight dired-async-mode
   :config (dired-async-mode))
-
-(use-package ls-lisp
-  :custom
-  (ls-lisp-dirs-first t)
-  (ls-lisp-use-insert-directory-program nil)
-  (ls-lisp-use-string-collate nil)
-  (ls-lisp-ignore-case t))
 
 ;; Calendar
 ;; -----------------------------------------------------------------------------
@@ -1388,6 +1390,7 @@ The username needs to include two parts:
   (org-src-fontify-natively t)
   (org-src-preserve-indentation t)
   (org-startup-folded 'content)
+  (org-startup-with-inline-images t)
   (org-support-shift-select t)
   (org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (org-todo-keywords
@@ -1978,7 +1981,12 @@ argument FORCE, force the creation of a new ID."
 
   :config
   (bbdb-initialize 'message 'anniv)
-  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
+  (add-hook 'message-setup-hook 'bbdb-mail-aliases)
+
+  :straight (:type git
+                   :repo "https://git.savannah.nongnu.org/git/bbdb.git"
+                   :files (:defaults "lisp/bbdb-site.el.in"))
+  )
 
 ;; =============================================================================
 ;; Bibliography manager

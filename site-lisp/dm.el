@@ -116,6 +116,8 @@
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
 (use-package google-pyformat)
+(use-package google-java-format
+  :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts")
 ;; (use-package ffap
 ;;   :config
 ;;   (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
