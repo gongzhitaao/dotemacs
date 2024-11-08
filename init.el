@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-10-10 10:22:34 gongzhitaao>
+;; Time-stamp: <2024-11-04 15:04:44 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -124,7 +124,9 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
+(straight-use-package 'use-package
+  :config
+  (setq use-package-compute-statistics t))
 
 (use-package straight
   :custom
@@ -134,6 +136,7 @@
      ;; keep-sorted begin
      abbrev
      comp
+     composite
      dired
      emacs
      esh-mode
@@ -141,6 +144,7 @@
      google-java-format
      google-pyformat
      google3-build-mode
+     google3-eglot
      helm-adaptive
      helm-bookmark
      helm-buffers
@@ -172,12 +176,14 @@
      ox-html
      ox-latex
      pdf-view
+     project
      python
      rfn-eshadow
      simple
      solar
      tramp-cache
      uniquify
+     xref
      vc-hooks
      ;; keep-sorted end
      )))
@@ -536,9 +542,9 @@ The username needs to include two parts:
   :custom
   (writeroom-fullscreen-effect nil)
   (writeroom-major-modes
-   '(prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
-               org-agenda-mode bibtex-mode bookmark-bmenu-mode
-               LilyPond-mode notmuch-show-mode protobuf-mode))
+   '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
+      org-agenda-mode bibtex-mode bookmark-bmenu-mode
+      LilyPond-mode notmuch-show-mode protobuf-mode))
   (writeroom-major-modes-exceptions '(web-mode))
   (writeroom-maximize-window nil)
   (writeroom-mode-line t)
@@ -619,15 +625,15 @@ The username needs to include two parts:
 (defun me//high-resolution-p ()
   "Return TRUE if high resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560 3840 6400))))))
+    (not (not (memq width '(1920 1998 2048 2560))))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-                      :family "Iosevka SS09"
+                      :family "Iosevka Term SS09"
                       :height 160)
 
   (let ((size (if (me//high-resolution-p) 22 44)))
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
                                             :family "Sarasa Mono TC"
@@ -640,6 +646,20 @@ The username needs to include two parts:
                                  :size size))))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
+
+(use-package ligature
+  :config
+  ;; Enable all Iosevka ligatures in programming modes
+  (ligature-set-ligatures
+   'prog-mode
+   '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->"
+     "<!--" "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>"
+     "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+     ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>"
+     "++" "+++"))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
 
 ;; modeline
 ;; -----------------------------------------------------------------------------
@@ -766,25 +786,29 @@ The username needs to include two parts:
 
 ;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
 ;; no guides are shown.
-(use-package highlight-indent-guides
-  :delight
-  :config
-  (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-  (add-hook 'text-mode-hook #'highlight-indent-guides-mode)
-  (setopt highlight-indent-guides-auto-character-face-perc 10
-          highlight-indent-guides-auto-top-character-face-perc 30
-          highlight-indent-guides-character ?⎜
-          highlight-indent-guides-method 'character
-          highlight-indent-guides-responsive 'top))
+;; (use-package highlight-indent-guides
+;;   :delight
+;;   :hook ((python-mode) . highlight-indent-guides-mode)
+;;   :config
+;;   (setopt highlight-indent-guides-auto-character-face-perc 10
+;;           highlight-indent-guides-auto-top-character-face-perc 30
+;;           highlight-indent-guides-character ?⎜
+;;           highlight-indent-guides-method 'character
+;;           highlight-indent-guides-responsive 'top))
+
+(use-package indent-bars
+  :hook ((python-mode) . indent-bars-mode)
+  :custom
+  (indent-bars-width-frac 0.2)
+  (indent-bars-no-descend-lists t))
 
 (use-package whitespace
-  :after highlight-indent-guides
   :delight global-whitespace-mode
   :custom
   (whitespace-line-column nil)
-  (whitespace-style '(empty face indentation lines-tail
-                            space-after-tab space-before-tab
-                            tabs trailing))
+  (whitespace-style '( empty face indentation lines-tail
+                       space-after-tab space-before-tab
+                       tabs trailing))
   (whitespace-global-modes t)
 
   :config
@@ -813,13 +837,6 @@ The username needs to include two parts:
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
-(use-package ls-lisp
-  :custom
-  (ls-lisp-dirs-first t)
-  (ls-lisp-use-insert-directory-program nil)
-  (ls-lisp-use-string-collate nil)
-  (ls-lisp-ignore-case t))
-
 ;; -----------------------------------------------------------------------------
 ;; UNDO
 ;;
@@ -829,10 +846,11 @@ The username needs to include two parts:
 ;; -----------------------------------------------------------------------------
 
 ;; Saves the undo history across sessions.
-;; (use-package undo-fu-session
-;;   :config
-;;   (setq undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
-;;   (undo-fu-session-global-mode))
+(use-package undo-fu-session
+  :custom
+  (undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
+  :config
+  (undo-fu-session-global-mode))
 
 ;; Navigates undo history in a tree style.
 (use-package vundo
@@ -967,15 +985,6 @@ The username needs to include two parts:
 
   (persistent-scratch-setup-default))
 
-;; Syntax check
-;; (use-package flycheck
-;;   :config
-;;   (setq flycheck-emacs-lisp-load-path 'inherit
-;;         flycheck-global-modes '(not org-mode)))
-
-;; (use-package helm-flycheck
-;;   :bind ("C-c c" . helm-flycheck))
-
 (use-package bookmark
   :custom
   (bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
@@ -990,6 +999,12 @@ The username needs to include two parts:
 ;; =============================================================================
 ;; General utilities
 ;; =============================================================================
+
+(use-package go-translate
+  :custom
+  (gt-langs '(en fr))
+  (gt-default-translator
+   (gt-translator :engines (gt-google-engine))))
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
@@ -1008,6 +1023,15 @@ The username needs to include two parts:
   :custom
   (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
 
+(use-package flycheck
+  :load-path "~/.cache/emacs/straight/build/flycheck")
+
+(use-package eglot
+  :load-path "~/.cache/emacs/straight/build/eglot"
+  :config
+  (set-face-attribute 'eglot-highlight-symbol-face nil
+                      :inherit 'modus-themes-subtle-red))
+
 ;; Dired
 ;; -----------------------------------------------------------------------------
 
@@ -1020,12 +1044,13 @@ The username needs to include two parts:
 (use-package dired
   :bind (:map dired-mode-map
               ("f" . find-file-literally-at-point))
+  :custom
+  (dired-recursive-deletes 'always)
+  (dired-recursive-copies 'always)
+  (dired-listing-switches "-alh")
+
   :config
   (add-hook 'dired-mode-hook #'me//init-dired)
-  ;; always delete and copy recursively
-  (setq dired-recursive-deletes 'always
-        dired-recursive-copies 'always
-        dired-listing-switches "-alh")
 
   (defface me-dired-dim-0 '((t (:foreground "gray50")))
     "Dimmed face."
@@ -1067,6 +1092,13 @@ The username needs to include two parts:
                                (,date-1 nil nil (0 'me-dired-dim-1)))
                               (,executable
                                (1 'me-dired-executable))))))
+
+(use-package ls-lisp
+  :custom
+  (ls-lisp-dirs-first t)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-use-string-collate nil)
+  (ls-lisp-ignore-case nil))
 
 (use-package async
   :delight dired-async-mode
@@ -1228,22 +1260,12 @@ The username needs to include two parts:
 ;; Major modes
 ;; =============================================================================
 
-;; Fix the silly property list indentation problem:
-;; https://github.com/Fuco1/.emacs.d/blob/af82072196564fa57726bdbabf97f1d35c43b7f7/site-lisp/redef.el#L12-L94
-
 (use-package cc-mode
   :bind (:map c++-mode-map
               ("C-!" . clang-format))
   :config
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
-
-  ;; (defun me//disable-company-for-remote ()
-  ;;   (when (and (fboundp 'company-mode)
-  ;;              (file-remote-p default-directory))
-  ;;     (company-mode -1)))
-  ;; (add-hook 'c-mode-common-hook #'me//disable-company-for-remote)
-
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
 (use-package clang-format)
@@ -1373,7 +1395,7 @@ The username needs to include two parts:
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :load-path "~/.cache/emacs/straight/build/org/lisp/"
+  :load-path "~/.cache/emacs/straight/build/org/"
   :custom
   (org-adapt-indentation nil)
   (org-directory (file-name-concat me-emacs-data-dir "org"))
@@ -1855,6 +1877,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-flyspell)
 (use-package flyspell
   :after helm-flyspell
+  :hook ((tex-mode) . flyspell-mode)
   :bind (:map flyspell-mode-map
               ("C-;" . comment-or-uncomment-region)
               ("s-;" . helm-flyspell-correct)))
@@ -2142,7 +2165,7 @@ Each index is a list (KEY TIMESTAMP)."
   (bibtex-completion-notes-extension ".org")
   (bibtex-completion-notes-path me-bib-notes)
   (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-pdf-symbol "P"))
+  (bibtex-completion-pdf-symbol ""))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
@@ -2157,17 +2180,6 @@ Each index is a list (KEY TIMESTAMP)."
 
   :config
   (add-hook 'TeX-mode-hook #'turn-on-reftex))
-
-;; turn on flyspell on latex
-;; -----------------------------------------------------------------------------
-
-(defun me//init-tex()
-  "Init tex mode."
-  (flyspell-mode))
-
-(use-package tex-mode
-  :config
-  (add-hook 'tex-mode-hook #'me//init-tex))
 
 ;; -----------------------------------------------------------------------------
 
@@ -2389,6 +2401,18 @@ alphabetically (in ascending or descending order)."
 ;; =============================================================================
 ;; Theme
 ;; =============================================================================
+
+;; (straight-use-package
+;;  '(nano :type git :host github :repo "rougier/nano-emacs"))
+
+;; (use-package nano
+;;   :custom
+;;   (nano-font-family-monospaced "Iosevka Term SS09")
+;;   (nano-font-size 16))
+
+;; (require 'nano-help)
+;; (require 'nano-modeline)
+;; (require 'nano-layout)
 
 (use-package modus-themes
   :load-path "~/.cache/emacs/straight/build/modus-themes"

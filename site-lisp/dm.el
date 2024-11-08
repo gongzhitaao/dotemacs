@@ -17,7 +17,6 @@
   :straight nil)
 (use-package bazel)
 (use-package p4)
-(use-package company)
 (use-package google-borg-helpers
   :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/third_party/elisp/google_borg_helpers"
   :straight nil)
@@ -118,9 +117,19 @@
 (use-package google-pyformat)
 (use-package google-java-format
   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts")
-;; (use-package ffap
-;;   :config
-;;   (setf ffap-alist (assoc-delete-all (rx anything) ffap-alist)))
+
+(use-package google3-eglot
+  :custom
+  (google3-eglot-compose 't)
+  :config
+  (google3-eglot-setup))
+
+(delight '((eldoc-mode nil t)))
+
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
 
 (provide 'dm)
 ;;; dm.el ends here
