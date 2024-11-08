@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-04 15:04:44 gongzhitaao>
+;; Time-stamp: <2024-11-07 20:17:20 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -34,10 +34,6 @@
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
 (add-to-list 'load-path (file-name-concat me-emacs-config-dir "site-lisp"))
-
-(when (boundp 'native-comp-eln-load-path)
-  (startup-redirect-eln-cache
-   (file-name-concat me-emacs-cache-dir "eln-cache")))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()

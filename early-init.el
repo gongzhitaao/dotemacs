@@ -27,5 +27,9 @@
 (setopt package-enable-at-startup nil)
 (set-language-environment "UTF-8")
 
+(require 'xdg)
+(startup-redirect-eln-cache
+ (expand-file-name "emacs/eln-cache" (xdg-cache-home)))
+
 (provide 'early-init)
 ;;; early-init.el ends here
