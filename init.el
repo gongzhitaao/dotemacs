@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-07 20:17:20 gongzhitaao>
+;; Time-stamp: <2024-11-11 16:04:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -137,6 +137,7 @@
      emacs
      esh-mode
      files
+     google-coding-style
      google-java-format
      google-pyformat
      google3-build-mode
@@ -297,13 +298,9 @@
 ;; M-f forward-word
 ;; M-h mark-paragraph
 ;; M-i tab-to-tab-stop
-;; M-j ace-jump
 ;; M-k kill-sentence
 ;; M-l downcase-word
 ;; M-m back-to-indentation
-;; M-n
-;; M-o facemenu
-;; M-p ace-window
 ;; M-q fill-paragraph
 (global-set-key (kbd "M-Q") #'me/unfill-paragraph)
 ;; M-r move-to-window-line-top-bottom
@@ -531,7 +528,7 @@ The username needs to include two parts:
 (use-package anzu
   :delight
   :custom (anzu-search-threshold 1000)
-  :config (global-anzu-mode +1))
+  :config (global-anzu-mode))
 
 ;; Center the editing content.
 (use-package writeroom-mode
@@ -793,24 +790,22 @@ The username needs to include two parts:
 ;;           highlight-indent-guides-responsive 'top))
 
 (use-package indent-bars
-  :hook ((python-mode) . indent-bars-mode)
+  :hook (python-mode . indent-bars-mode)
   :custom
   (indent-bars-width-frac 0.2)
   (indent-bars-no-descend-lists t))
 
 (use-package whitespace
-  :delight global-whitespace-mode
+  :delight
+
   :custom
   (whitespace-line-column nil)
   (whitespace-style '( empty face indentation lines-tail
                        space-after-tab space-before-tab
                        tabs trailing))
-  (whitespace-global-modes t)
 
-  :config
-  (dolist (hook '(prog-mode-hook org-mode-hook))
-    (add-hook hook #'whitespace-mode))
-  (add-hook 'before-save-hook 'whitespace-cleanup))
+  :hook (((prog-mode org-mode) . whitespace-mode)
+         (before-save . whitespace-cleanup)))
 
 (use-package volatile-highlights
   :delight
@@ -818,8 +813,7 @@ The username needs to include two parts:
   (volatile-highlights-mode))
 
 (use-package rainbow-delimiters
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package wgrep
   :config (setopt wgrep-auto-save-buffer t))
@@ -832,6 +826,14 @@ The username needs to include two parts:
 
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
+
+(use-package flyspell
+  :delight
+  :hook ((prog-mode . flyspell-prog-mode)
+         ((tex-mode org-mode) . flyspell-mode))
+  :bind (:map flyspell-mode-map
+              ("C-;" . comment-or-uncomment-region)
+              ("s-;" . helm-flyspell-correct)))
 
 ;; -----------------------------------------------------------------------------
 ;; UNDO
@@ -906,11 +908,10 @@ The username needs to include two parts:
 
 (use-package yasnippet
   :delight yas-minor-mode
+  :hook ((prog-mode org-mode) . yas-minor-mode)
   :config
   (setopt yas-snippet-dirs `(,(file-name-concat me-emacs-data-dir "snippets")))
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
-  (add-hook 'org-mode-hook #'yas-minor-mode))
+  (yas-reload-all))
 
 (use-package company
   :delight
@@ -918,11 +919,12 @@ The username needs to include two parts:
   (company-format-margin-function #'company-text-icons-margin)
   (company-insertion-on-trigger-p)
 
+  :hook (prog-mode . company-mode)
+
   :config
   (setopt company-idle-delay nil)
-  (add-hook 'prog-mode-hook #'company-mode))
   (bind-keys :map prog-mode-map
-             ("<tab>" . company-indent-or-complete-common))
+             ("<tab>" . company-indent-or-complete-common)))
 
 ;; Encoding
 ;; -----------------------------------------------------------------------------
@@ -970,15 +972,16 @@ The username needs to include two parts:
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
-  :config
-  (setopt persistent-scratch-backup-directory
-          (file-name-concat me-emacs-cache-dir "scratch.d")
-          persistent-scratch-save-file
-          (file-name-concat me-emacs-cache-dir "scratch.d/scratch")
-          ;; keep backups not older than a month
-          persistent-scratch-backup-filter
-          (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
+  :custom
 
+  (persistent-scratch-backup-directory
+   (file-name-concat me-emacs-cache-dir "scratch.d"))
+  (persistent-scratch-save-file
+   (file-name-concat me-emacs-cache-dir "scratch.d/scratch"))
+
+  :config
+  (setopt persistent-scratch-backup-filter
+           (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
   (persistent-scratch-setup-default))
 
 (use-package bookmark
@@ -1010,12 +1013,12 @@ The username needs to include two parts:
   (setopt eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
 (use-package tramp
-  :load-path "~/.cache/emacs/straight/build/tramp/"
+  :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
   (tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
-  :load-path "~/.cache/emacs/straight/build/tramp/"
+  :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
   (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
 
@@ -1256,13 +1259,13 @@ The username needs to include two parts:
 ;; Major modes
 ;; =============================================================================
 
+(use-package google-coding-style
+  :hook (c-mode-common . google-set-c-style))
+
 (use-package cc-mode
   :bind (:map c++-mode-map
               ("C-!" . clang-format))
-  :config
-  (add-hook 'c-mode-common-hook #'google-set-c-style)
-  (add-hook 'c-mode-common-hook #'flyspell-prog-mode)
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
+  :mode "\\.h\\'")
 
 (use-package clang-format)
 
@@ -1304,8 +1307,7 @@ The username needs to include two parts:
     (setq-local yas-indent-line 'fixed)
     (setq-local comment-column 0))
 
-  (add-hook 'python-mode-hook #'me//init-python)
-  (add-hook 'python-mode-hook #'flyspell-prog-mode))
+  (add-hook 'python-mode-hook #'me//init-python))
 
 (use-package json-mode)
 
@@ -1353,8 +1355,6 @@ The username needs to include two parts:
 
 (use-package markdown-mode
   :config
-  (add-hook 'markdown-mode-hook #'turn-on-flyspell)
-
   (make-local-variable 'ispell-skip-region-alist)
   (add-to-list 'ispell-skip-region-alist '("`" "`"))
   (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
@@ -1372,6 +1372,9 @@ The username needs to include two parts:
 (use-package protobuf-mode)
 (use-package yaml-mode)
 (use-package base32)
+
+(use-package repeat
+  :hook (org-mode . repeat-mode))
 
 (defun me//init-org ()
   "Init orgmode."
@@ -1438,8 +1441,7 @@ The username needs to include two parts:
 (use-package org-appear
   :custom
   (org-appear-autolinks t)
-  :config
-  (add-hook 'org-mode-hook #'org-appear-mode))
+  :hook (org-mode . org-appear-mode))
 
 (use-package org-refile
   :custom
@@ -1870,14 +1872,6 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-locate
   :custom (helm-locate-fuzzy-match t))
 
-(use-package helm-flyspell)
-(use-package flyspell
-  :after helm-flyspell
-  :hook ((tex-mode) . flyspell-mode)
-  :bind (:map flyspell-mode-map
-              ("C-;" . comment-or-uncomment-region)
-              ("s-;" . helm-flyspell-correct)))
-
 ;; delight
 ;; -----------------------------------------------------------------------------
 
@@ -1886,12 +1880,10 @@ argument FORCE, force the creation of a new ID."
    (auto-fill-function " " t)
    (auto-revert-mode " " autorevert)
    (eldoc-mode nil t)
-   (flyspell-mode nil flyspell)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
    (subword-mode nil subword)
-   (view-mode " " view)
-   (whitespace-mode nil whitespace)))
+   (view-mode " " view)))
 
 (use-package re-builder
   :custom
@@ -1998,14 +1990,15 @@ argument FORCE, force the creation of a new ID."
   (bbdb-message-all-addresses t)
   (bbdb-mua-pop-up nil)
 
+  :hook
+  (message-setup . bbdb-mail-aliases)
+
   :config
   (bbdb-initialize 'message 'anniv)
-  (add-hook 'message-setup-hook 'bbdb-mail-aliases)
 
   :straight (:type git
                    :repo "https://git.savannah.nongnu.org/git/bbdb.git"
-                   :files (:defaults "lisp/bbdb-site.el.in"))
-  )
+                   :files (:defaults "lisp/bbdb-site.el.in")))
 
 ;; =============================================================================
 ;; Bibliography manager
@@ -2122,46 +2115,46 @@ Each index is a list (KEY TIMESTAMP)."
              (string< (car index1) (car index2)))
         (< t1 t2))))
 
-(use-package bibtex
-  :bind (:map bibtex-mode-map
-              ([remap fill-paragraph]     . bibtex-fill-entry)
-              ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
-              ("C-c C-v"                  . bibtex-validate)
-              ("<backtab>"                . me/bibtex-find-text-begin)
-              ("M-<down>"                 . bibtex-end-of-entry)
-              ("M-<up>"                   . bibtex-beginning-of-entry))
+;; (use-package bibtex
+;;   :bind (:map bibtex-mode-map
+;;               ([remap fill-paragraph]     . bibtex-fill-entry)
+;;               ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
+;;               ("C-c C-v"                  . bibtex-validate)
+;;               ("<backtab>"                . me/bibtex-find-text-begin)
+;;               ("M-<down>"                 . bibtex-end-of-entry)
+;;               ("M-<up>"                   . bibtex-beginning-of-entry))
 
-  :custom
-  (bibtex-align-at-equal-sign t)
-  (bibtex-autokey-name-year-separator "")
-  (bibtex-autokey-titleword-length nil)
-  (bibtex-autokey-titleword-separator "_")
-  (bibtex-autokey-titlewords 1)
-  (bibtex-autokey-titlewords-stretch 0)
-  (bibtex-autokey-year-length 4)
-  (bibtex-autokey-year-title-separator "-")
-  (bibtex-dialect 'biblatex)
-  (bibtex-entry-format t)
-  (bibtex-maintain-sorted-entries t)
-  (bibtex-text-indentation 20)
+;;   :custom
+;;   (bibtex-align-at-equal-sign t)
+;;   (bibtex-autokey-name-year-separator "")
+;;   (bibtex-autokey-titleword-length nil)
+;;   (bibtex-autokey-titleword-separator "_")
+;;   (bibtex-autokey-titlewords 1)
+;;   (bibtex-autokey-titlewords-stretch 0)
+;;   (bibtex-autokey-year-length 4)
+;;   (bibtex-autokey-year-title-separator "-")
+;;   (bibtex-dialect 'biblatex)
+;;   (bibtex-entry-format t)
+;;   (bibtex-maintain-sorted-entries t)
+;;   (bibtex-text-indentation 20)
 
-  :config
-  (defun me//init-bibtex ()
-    "Init bibtex mode."
-    (set (make-local-variable 'fill-column) 140)
-    (set (make-local-variable 'writeroom-width) 150)
-    (setq bibtex-maintain-sorted-entries
-          '(me//bibtex-entry-index me//bibtex-lessp)))
-  (add-hook 'bibtex-mode-hook #'me//init-bibtex))
+;;   :config
+;;   (defun me//init-bibtex ()
+;;     "Init bibtex mode."
+;;     (set (make-local-variable 'fill-column) 140)
+;;     (set (make-local-variable 'writeroom-width) 150)
+;;     (setq bibtex-maintain-sorted-entries
+;;           '(me//bibtex-entry-index me//bibtex-lessp)))
+;;   (add-hook 'bibtex-mode-hook #'me//init-bibtex))
 
-(use-package bibtex-completion
-  :custom
-  (bibtex-completion-bibliography me-bib-files)
-  (bibtex-completion-library-path me-bib-pdfs)
-  (bibtex-completion-notes-extension ".org")
-  (bibtex-completion-notes-path me-bib-notes)
-  (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-pdf-symbol ""))
+;; (use-package bibtex-completion
+;;   :custom
+;;   (bibtex-completion-bibliography me-bib-files)
+;;   (bibtex-completion-library-path me-bib-pdfs)
+;;   (bibtex-completion-notes-extension ".org")
+;;   (bibtex-completion-notes-path me-bib-notes)
+;;   (bibtex-completion-notes-symbol "N")
+;;   (bibtex-completion-pdf-symbol ""))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
@@ -2174,8 +2167,7 @@ Each index is a list (KEY TIMESTAMP)."
   (reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref"))
   (reftex-default-bibliography me-bib-files)
 
-  :config
-  (add-hook 'TeX-mode-hook #'turn-on-reftex))
+  :hook (tex-mode . reftex-mode))
 
 ;; -----------------------------------------------------------------------------
 
