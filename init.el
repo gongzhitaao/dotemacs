@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-11 16:04:28 gongzhitaao>
+;; Time-stamp: <2024-11-11 19:37:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -100,7 +100,8 @@
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
 ;; by adding a semicolon to the start of the line.  You may delete these
 ;; explanatory comments.
-                                        ;(package-initialize)
+;;
+;;(package-initialize)
 
 (setq straight-base-dir me-emacs-cache-dir)
 
@@ -189,11 +190,6 @@
 (use-package bind-key)
 
 (setq load-prefer-newer t)
-
-;; I'm always skeptical about cask and use-package.  If they fail mysteriously,
-;; I could not start my Emacs.  I guess a better way is to backup the packages
-;; every day just in case.  However, use-package, bind-keys are so much more
-;; convenient, I surrender.
 
 ;; =============================================================================
 ;; Key binding
@@ -553,7 +549,7 @@ The username needs to include two parts:
   :bind ("C-=" . #'er/expand-region))
 
 (use-package smartparens
-  :delight smartparens-mode
+  :delight
   :config
   (require 'smartparens-config)
 
@@ -603,14 +599,6 @@ The username needs to include two parts:
                  nil :when '(sp-in-string-p))
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
                  nil :actions nil))
-
-(use-package editorconfig
- :delight)
-
-(use-package all-the-icons
-  :if (display-graphic-p)
-  :custom
-  (all-the-icons-fonts-subdirectory "all-the-icons"))
 
 ;; fonts
 ;; -----------------------------------------------------------------------------
@@ -1990,15 +1978,13 @@ argument FORCE, force the creation of a new ID."
   (bbdb-message-all-addresses t)
   (bbdb-mua-pop-up nil)
 
-  :hook
-  (message-setup . bbdb-mail-aliases)
-
   :config
   (bbdb-initialize 'message 'anniv)
+  (add-hook 'message-setup-hook 'bbdb-mail-aliases)
 
-  :straight (:type git
-                   :repo "https://git.savannah.nongnu.org/git/bbdb.git"
-                   :files (:defaults "lisp/bbdb-site.el.in")))
+  :straight ( :type git
+              :repo "https://git.savannah.nongnu.org/git/bbdb.git"
+              :files (:defaults "lisp/bbdb-site.el.in")))
 
 ;; =============================================================================
 ;; Bibliography manager

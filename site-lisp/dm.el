@@ -9,6 +9,9 @@
 (use-package with-editor)
 (require 'google)
 
+(use-package editorconfig
+  :delight)
+
 (use-package vc-fig
   :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/vc"
   :straight nil)
