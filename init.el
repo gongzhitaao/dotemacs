@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-11 19:37:24 gongzhitaao>
+;; Time-stamp: <2024-11-12 16:34:47 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -202,11 +202,6 @@
 
 (global-set-key (kbd "M-<delete>") #'kill-word)
 
-(global-set-key (kbd "S-<up>") #'windmove-up)
-(global-set-key (kbd "S-<right>") #'windmove-right)
-(global-set-key (kbd "S-<down>") #'windmove-down)
-(global-set-key (kbd "S-<left>") #'windmove-left)
-
 ;; FN keys
 ;; -----------------------------------------------------------------------------
 
@@ -321,6 +316,8 @@
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
 ;; M-s s helm-swoop
+
+(use-package repeat)
 
 ;; =============================================================================
 ;; General helpers
@@ -815,6 +812,7 @@ The username needs to include two parts:
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
+(use-package helm-flyspell)
 (use-package flyspell
   :delight
   :hook ((prog-mode . flyspell-prog-mode)
@@ -987,11 +985,13 @@ The username needs to include two parts:
 ;; General utilities
 ;; =============================================================================
 
-(use-package go-translate
-  :custom
-  (gt-langs '(en fr))
-  (gt-default-translator
-   (gt-translator :engines (gt-google-engine))))
+;; (use-package go-translate
+;;   :custom
+;;   (gt-langs '(en fr))
+;;   (gt-default-translator
+;;    (gt-translator
+;;     :engines (gt-google-engine)
+;;     :render  (gt-buffer-render))))
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
@@ -1017,7 +1017,7 @@ The username needs to include two parts:
   :load-path "~/.cache/emacs/straight/build/eglot"
   :config
   (set-face-attribute 'eglot-highlight-symbol-face nil
-                      :inherit 'modus-themes-subtle-red))
+                      :inherit 'modus-themes-nuanced-red))
 
 ;; Dired
 ;; -----------------------------------------------------------------------------
@@ -1360,9 +1360,6 @@ The username needs to include two parts:
 (use-package protobuf-mode)
 (use-package yaml-mode)
 (use-package base32)
-
-(use-package repeat
-  :hook (org-mode . repeat-mode))
 
 (defun me//init-org ()
   "Init orgmode."
