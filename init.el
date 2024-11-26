@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-26 08:25:25 gongzhitaao>
+;; Time-stamp: <2024-11-26 11:38:51 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1099,8 +1099,9 @@ The username needs to include two parts:
 
 (use-package solar
   :custom
-  (calendar-latitude 32.6)
-  (calendar-longitude -85.5))
+  ;; Montreal
+  (calendar-latitude [45 50 north])
+  (calendar-longitude [73 57 west]))
 
 (use-package calendar
   :custom
