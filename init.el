@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-12 16:34:47 gongzhitaao>
+;; Time-stamp: <2024-11-26 08:25:25 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -317,7 +317,8 @@
 ;; M-s q vr/query-replace
 ;; M-s s helm-swoop
 
-(use-package repeat)
+(use-package repeat
+  :config (repeat-mode))
 
 ;; =============================================================================
 ;; General helpers
@@ -603,7 +604,7 @@ The username needs to include two parts:
 (defun me//high-resolution-p ()
   "Return TRUE if high resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560))))))
+    (not (not (memq width '(1920 1998 2048 2560 3840))))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
@@ -617,7 +618,7 @@ The username needs to include two parts:
                                             :family "Sarasa Mono TC"
                                             :size size)))
 
-    (set-fontset-font "fontset-default"
+    (set-fontset-font t
                       (cons (decode-char 'ucs #xF000)
                             (decode-char 'ucs #xF890))
                       (font-spec :family "Font Awesome 6 Free"
@@ -1003,12 +1004,14 @@ The username needs to include two parts:
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
+  (tramp-con)
   (tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
-  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp")))
+  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
+  (tramp-use-connection-share nil))
 
 (use-package flycheck
   :load-path "~/.cache/emacs/straight/build/flycheck")
@@ -1400,7 +1403,7 @@ The username needs to include two parts:
   (org-support-shift-select t)
   (org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+   '((sequence "TODO(t!)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
   (org-todo-keyword-faces
    '(("TODO" :inherit modus-themes-nuanced-red)
@@ -1410,6 +1413,7 @@ The username needs to include two parts:
      ("HOLD" :inherit modus-themes-nuanced-magenta)
      ("KILL" :inherit modus-themes-subtle-green)))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
+  (org-treat-insert-todo-heading-as-state-change t)
   (org-use-fast-tag-selection 'auto)
   (org-use-fast-todo-selection t)
 
@@ -1547,6 +1551,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
             )
            ((org-agenda-compact-blocks nil))))))
 
+(defun me//add-property-with-date-captured ()
+  "Add CREATED property to the current item."
+  (interactive)
+  (org-set-property "CREATED" (format-time-string "%FT%T%z")))
+
 (use-package org-capture
   :custom
   (org-capture-templates
@@ -1565,7 +1574,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       (file "capture/todo.org")
       :empty-lines 1
       :jump-to-captured t)
-     )))
+     ))
+
+  :config
+  (add-hook 'org-capture-before-finalize-hook #'me//add-property-with-date-captured))
 
 (use-package ox
   :custom
@@ -1977,11 +1989,7 @@ argument FORCE, force the creation of a new ID."
 
   :config
   (bbdb-initialize 'message 'anniv)
-  (add-hook 'message-setup-hook 'bbdb-mail-aliases)
-
-  :straight ( :type git
-              :repo "https://git.savannah.nongnu.org/git/bbdb.git"
-              :files (:defaults "lisp/bbdb-site.el.in")))
+  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; =============================================================================
 ;; Bibliography manager
@@ -1989,12 +1997,58 @@ argument FORCE, force the creation of a new ID."
 
 (defvar me-bib (file-name-concat me-emacs-data-dir "bibliography")
   "My bibliography collection path.")
-(defvar me-bib-files `(,(file-name-concat me-bib "refdb.bib"))
+(defvar me-bib-files (file-name-concat me-bib "refdb.bib")
   "My bibliography files.")
 (defvar me-bib-pdfs `(,(file-name-concat me-bib "pdf"))
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes (file-name-concat me-bib "notes")
   "Path to store my notes on each papers.")
+
+(defun me/bibtex-find-text-begin ()
+  "Go to the beginning of a field entry."
+  (interactive)
+  (bibtex-find-text t))
+
+(use-package bibtex
+  :bind (:map bibtex-mode-map
+              ([remap fill-paragraph]     . bibtex-fill-entry)
+              ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
+              ("C-c C-v"                  . bibtex-validate)
+              ("<backtab>"                . me/bibtex-find-text-begin)
+              ("M-<down>"                 . bibtex-end-of-entry)
+              ("M-<up>"                   . bibtex-beginning-of-entry))
+
+  :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-titleword-length nil)
+  (bibtex-autokey-titleword-separator "_")
+  (bibtex-autokey-titlewords 1)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-year-title-separator "-")
+  (bibtex-dialect 'biblatex)
+  (bibtex-entry-format t)
+  (bibtex-maintain-sorted-entries t)
+  (bibtex-text-indentation 20)
+
+  :config
+  (defun me//init-bibtex ()
+    "Init bibtex mode."
+    (set (make-local-variable 'fill-column) 140)
+    (set (make-local-variable 'writeroom-width) 150)
+    (setq bibtex-maintain-sorted-entries
+          '(me//bibtex-entry-index me//bibtex-lessp)))
+  (add-hook 'bibtex-mode-hook #'me//init-bibtex))
+
+(use-package bibtex-completion
+  :custom
+  (bibtex-completion-bibliography me-bib-files)
+  (bibtex-completion-library-path me-bib-pdfs)
+  (bibtex-completion-notes-extension ".org")
+  (bibtex-completion-notes-path me-bib-notes)
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-pdf-symbol ""))
 
 (use-package helm-bibtex
   :load-path "~/.cache/emacs/straight/build/helm-bibtex"
@@ -2008,7 +2062,7 @@ argument FORCE, force the creation of a new ID."
 ;; -----------------------------------------------------------------------------
 
 (use-package f
-  :load-path "~/.cache/emacs/straight/build/f.el")
+  :load-path "~/.cache/emacs/straight/build/f")
 
 (defun me//org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
@@ -2067,11 +2121,6 @@ argument FORCE, force the creation of a new ID."
                               (org-ref-clean-bibtex-entry)))))
     (bibtex-progress-message 'done)))
 
-(defun me/bibtex-find-text-begin ()
-  "Go to the beginning of a field entry."
-  (interactive)
-  (bibtex-find-text t))
-
 (defun me//random-time ()
   "Generate random timestamp from epoch and now."
   (random (time-convert (current-time) 'integer)))
@@ -2097,47 +2146,6 @@ Each index is a list (KEY TIMESTAMP)."
     (or (and (= t1 t2)
              (string< (car index1) (car index2)))
         (< t1 t2))))
-
-;; (use-package bibtex
-;;   :bind (:map bibtex-mode-map
-;;               ([remap fill-paragraph]     . bibtex-fill-entry)
-;;               ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
-;;               ("C-c C-v"                  . bibtex-validate)
-;;               ("<backtab>"                . me/bibtex-find-text-begin)
-;;               ("M-<down>"                 . bibtex-end-of-entry)
-;;               ("M-<up>"                   . bibtex-beginning-of-entry))
-
-;;   :custom
-;;   (bibtex-align-at-equal-sign t)
-;;   (bibtex-autokey-name-year-separator "")
-;;   (bibtex-autokey-titleword-length nil)
-;;   (bibtex-autokey-titleword-separator "_")
-;;   (bibtex-autokey-titlewords 1)
-;;   (bibtex-autokey-titlewords-stretch 0)
-;;   (bibtex-autokey-year-length 4)
-;;   (bibtex-autokey-year-title-separator "-")
-;;   (bibtex-dialect 'biblatex)
-;;   (bibtex-entry-format t)
-;;   (bibtex-maintain-sorted-entries t)
-;;   (bibtex-text-indentation 20)
-
-;;   :config
-;;   (defun me//init-bibtex ()
-;;     "Init bibtex mode."
-;;     (set (make-local-variable 'fill-column) 140)
-;;     (set (make-local-variable 'writeroom-width) 150)
-;;     (setq bibtex-maintain-sorted-entries
-;;           '(me//bibtex-entry-index me//bibtex-lessp)))
-;;   (add-hook 'bibtex-mode-hook #'me//init-bibtex))
-
-;; (use-package bibtex-completion
-;;   :custom
-;;   (bibtex-completion-bibliography me-bib-files)
-;;   (bibtex-completion-library-path me-bib-pdfs)
-;;   (bibtex-completion-notes-extension ".org")
-;;   (bibtex-completion-notes-path me-bib-notes)
-;;   (bibtex-completion-notes-symbol "N")
-;;   (bibtex-completion-pdf-symbol ""))
 
 ;; reftex
 ;; -----------------------------------------------------------------------------
