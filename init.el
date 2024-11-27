@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-26 11:38:51 gongzhitaao>
+;; Time-stamp: <2024-11-26 16:28:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1806,7 +1806,8 @@ argument FORCE, force the creation of a new ID."
   (helm-split-window-inside-p t)
 
   :custom-face
-  (helm-M-x-key ((t :foreground "#0031a9")))
+  (helm-M-x-key ((t :foreground nil :inherit modus-themes-prompt)))
+  (helm-selection ((t :background nil :inherit hl-line)))
 
   :config
   (bind-keys ("C-c h"   . helm-command-prefix)
@@ -1850,14 +1851,18 @@ argument FORCE, force the creation of a new ID."
   (helm-buffers-fuzzy-matching t)
 
   :custom-face
-  (helm-buffer-directory ((t :inherit 'dired-directory))))
+  (helm-buffer-directory ((t :inherit dired-directory))))
 
 (use-package helm-files
   :custom
   (helm-ff-file-name-history-use-recentf t)
   (helm-ff-search-library-in-sexp t)
   :custom-face
-  (helm-ff-dotted-directory ((t :background "gray80"))))
+  (helm-ff-directory ((t :background nil :foreground nil :inherit (dired-directory modus-themes-nuanced-cyan))))
+  (helm-ff-dotted-directory ((t :background "gray80")))
+  (helm-ff-executable ((t :foreground nil :inherit modus-themes-subtle-green)))
+  (helm-ff-file ((t :inherit default)))
+  (helm-ff-file-extension ((t :foreground nil :inherit modus-themes-fg-red-intense))))
 
 (use-package helm-for-files
   :custom
