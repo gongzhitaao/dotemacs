@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-26 16:28:08 gongzhitaao>
+;; Time-stamp: <2024-11-27 17:25:51 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -604,7 +604,7 @@ The username needs to include two parts:
 (defun me//high-resolution-p ()
   "Return TRUE if high resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560 3840))))))
+    (not (not (memq width '(1920 1998 2048 2560))))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
@@ -1461,7 +1461,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :custom
   (org-habit-following-days 1)
   (org-habit-graph-column   50)
-  (org-habit-preceding-days 28))
+  (org-habit-preceding-days 28)
+
+  :custom-face
+  (org-habit-alert-face ((t :background nil :inherit modus-themes-subtle-yellow)))
+  (org-habit-alert-future-face ((t :background nil :inherit modus-themes-nuanced-yellow)))
+  (org-habit-clear-face ((t :background nil :inherit modus-themes-subtle-blue)))
+  (org-habit-clear-future-face ((t :background nil :inherit modus-themes-nuanced-blue)))
+  (org-habit-overdue-face ((t :background nil :inherit modus-themes-subtle-red)))
+  (org-habit-overdue-future-face ((t :background nil :inherit modus-themes-nuanced-red)))
+  (org-habit-ready-face ((t :background nil :inherit modus-themes-subtle-green)))
+  (org-habit-ready-future-face ((t :background nil :inherit modus-themes-nuanced-green))))
 
 (use-package org-clock
   :custom
@@ -1851,7 +1861,9 @@ argument FORCE, force the creation of a new ID."
   (helm-buffers-fuzzy-matching t)
 
   :custom-face
-  (helm-buffer-directory ((t :inherit dired-directory))))
+  (helm-buffer-directory ((t :foreground nil :background: nil :inherit dired-directory)))
+  (helm-buffer-file ((t :inherit default)))
+  (helm-non-file-buffer ((t :inherit dired-special))))
 
 (use-package helm-files
   :custom
@@ -1862,7 +1874,7 @@ argument FORCE, force the creation of a new ID."
   (helm-ff-dotted-directory ((t :background "gray80")))
   (helm-ff-executable ((t :foreground nil :inherit modus-themes-subtle-green)))
   (helm-ff-file ((t :inherit default)))
-  (helm-ff-file-extension ((t :foreground nil :inherit modus-themes-fg-red-intense))))
+  (helm-ff-file-extension ((t :foreground nil :inherit default))))
 
 (use-package helm-for-files
   :custom

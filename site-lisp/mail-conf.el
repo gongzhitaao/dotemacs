@@ -109,6 +109,9 @@
   (add-hook 'message-send-hook #'me//auto-choose-email-account))
 
 (use-package notmuch
+  :custom-face
+  (notmuch-tag-deleted ((t :inherit modus-themes-mark-del)))
+
   :config
   (defvar me-notmuch-tag-map-prefix "f"
     "Prefix to active the tags keymap.")
