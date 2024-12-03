@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-11-27 17:25:51 gongzhitaao>
+;; Time-stamp: <2024-12-02 21:34:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1386,7 +1386,7 @@ The username needs to include two parts:
   :load-path "~/.cache/emacs/straight/build/org/"
   :custom
   (org-adapt-indentation nil)
-  (org-directory (file-name-concat me-emacs-data-dir "org"))
+  (org-directory (file-name-concat me-emacs-data-dir "notes"))
   (org-display-remote-inline-images 'cache)
   (org-export-backends '(ascii beamer html latex md))
   (org-fold-catch-invisible-edits 'smart)
@@ -1425,8 +1425,7 @@ The username needs to include two parts:
   (add-hook 'org-mode-hook #'me//init-org)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (setopt org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (define-key org-mode-map (kbd "C-c [") nil)
-  (load-file (file-name-concat org-directory "my-org-misc.el")))
+  (define-key org-mode-map (kbd "C-c [") nil))
 
 (use-package org-appear
   :custom
@@ -1435,8 +1434,8 @@ The username needs to include two parts:
 
 (use-package org-refile
   :custom
-  (org-refile-targets '((nil :maxlevel . 4)))
-  (org-refile-use-outline-path t)
+  (org-refile-targets '((org-agenda-files :maxlevel . 4)))
+  (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil))
 
 (defun me//org-skip-subtree-if-habit ()
@@ -1492,7 +1491,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-columns-add-appointments-to-effort-sum t)
   (org-agenda-compact-blocks nil)
   (org-agenda-dim-blocked-tasks t)
-  (org-agenda-files (file-name-concat org-directory "orgfile"))
+  (org-agenda-files (file-name-concat org-directory (format-time-string "%Y") "agenda"))
   (org-agenda-include-diary nil)
   (org-agenda-show-all-dates t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
@@ -1505,11 +1504,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-start-with-log-mode t)
   (org-agenda-tags-column -130)
   (org-agenda-prefix-format
-   '((agenda   . " %i %-12:c%?-20t%?-15 s")
+   '((agenda   . " %-16:c%-13t%-20 s")
      (timeline . "  % s")
-     (todo     . " %i %-12:T")
-     (tags     . " %i %-12:T")
-     (search   . " %i %-12:T")))
+     (todo     . " %-16:T")
+     (tags     . " %-16:T")
+     (search   . " %-16:T")))
+  (org-agenda-remove-tags t)
 
   :config
   (defun me//init-org-agenda ()
@@ -1581,7 +1581,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       :tree-type week)
 
      ("t" "TODO" entry
-      (file+headline "todo.org" "Scratch")
+      (file+headline ,(file-name-concat (format-time-string "%Y") "misc") "Inbox")
       (file "capture/todo.org")
       :empty-lines 1
       :jump-to-captured t)
@@ -1965,21 +1965,21 @@ argument FORCE, force the creation of a new ID."
                 "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
                 "\\)")))
 
-(use-package org-roam
-  :custom
-  (org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
-  (org-roam-complete-everywhere t)
-  (org-roam-graph-viewer nil)
-  :bind (:prefix-map me-org-roam-command-map
-         :prefix "C-c n"
-         ("c" . org-roam-capture)
-         ("f" . org-roam-node-find)
-         ("g" . org-roam-graph)
-         ("i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-c n l" . org-roam-buffer-toggle))
-  :config
-  (org-roam-db-autosync-mode))
+;; (use-package org-roam
+;;   :custom
+;;   (org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
+;;   (org-roam-complete-everywhere t)
+;;   (org-roam-graph-viewer nil)
+;;   :bind (:prefix-map me-org-roam-command-map
+;;          :prefix "C-c n"
+;;          ("c" . org-roam-capture)
+;;          ("f" . org-roam-node-find)
+;;          ("g" . org-roam-graph)
+;;          ("i" . org-roam-node-insert)
+;;          :map org-mode-map
+;;          ("C-c n l" . org-roam-buffer-toggle))
+;;   :config
+;;   (org-roam-db-autosync-mode))
 
 ;; Appt
 ;; -----------------------------------------------------------------------------
