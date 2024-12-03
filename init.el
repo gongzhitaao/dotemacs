@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-12-02 21:34:56 gongzhitaao>
+;; Time-stamp: <2024-12-03 16:32:32 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -717,7 +717,6 @@ The username needs to include two parts:
   :custom
   (vc-make-backup-files t))
 
-;; startup.el
 (setopt auto-save-list-file-prefix
         (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
 
@@ -725,7 +724,6 @@ The username needs to include two parts:
   :custom
   (select-enable-clipboard t))
 
-;; indent.el
 (setopt tab-always-indent t
         standard-indent 2
         tab-stop-list (number-sequence 2 120 2))
@@ -762,18 +760,6 @@ The username needs to include two parts:
 (use-package subword
   :config
   (global-subword-mode 1))
-
-;; Whitespace-mode need to be called before highlight-indent-guides, otherwise
-;; no guides are shown.
-;; (use-package highlight-indent-guides
-;;   :delight
-;;   :hook ((python-mode) . highlight-indent-guides-mode)
-;;   :config
-;;   (setopt highlight-indent-guides-auto-character-face-perc 10
-;;           highlight-indent-guides-auto-top-character-face-perc 30
-;;           highlight-indent-guides-character ?⎜
-;;           highlight-indent-guides-method 'character
-;;           highlight-indent-guides-responsive 'top))
 
 (use-package indent-bars
   :hook (python-mode . indent-bars-mode)
@@ -1175,8 +1161,7 @@ The username needs to include two parts:
                 (mode . bbdb-mode)
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")
-                (name . "todo.org")
-                (name . "work.org")
+                (filename . "emacs/notes/.*")
                 (name . "time-machine.txt")
                 (filename . "Dropbox/plan.*")))
            ("Dired" (mode . dired-mode))
@@ -1463,14 +1448,21 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-habit-preceding-days 28)
 
   :custom-face
-  (org-habit-alert-face ((t :background nil :inherit modus-themes-subtle-yellow)))
-  (org-habit-alert-future-face ((t :background nil :inherit modus-themes-nuanced-yellow)))
-  (org-habit-clear-face ((t :background nil :inherit modus-themes-subtle-blue)))
-  (org-habit-clear-future-face ((t :background nil :inherit modus-themes-nuanced-blue)))
-  (org-habit-overdue-face ((t :background nil :inherit modus-themes-subtle-red)))
-  (org-habit-overdue-future-face ((t :background nil :inherit modus-themes-nuanced-red)))
-  (org-habit-ready-face ((t :background nil :inherit modus-themes-subtle-green)))
-  (org-habit-ready-future-face ((t :background nil :inherit modus-themes-nuanced-green))))
+  (org-habit-alert-face ((t :background unspecified
+                            :inherit modus-themes-subtle-yellow)))
+  (org-habit-alert-future-face ((t :background unspecified
+                                   :inherit modus-themes-nuanced-yellow)))
+  (org-habit-clear-face ((t :background unspecified :inherit modus-themes-subtle-blue)))
+  (org-habit-clear-future-face ((t :background unspecified
+                                   :inherit modus-themes-nuanced-blue)))
+  (org-habit-overdue-face ((t :background unspecified
+                              :inherit modus-themes-subtle-red)))
+  (org-habit-overdue-future-face ((t :background unspecified
+                                     :inherit modus-themes-nuanced-red)))
+  (org-habit-ready-face ((t :background unspecified
+                            :inherit modus-themes-subtle-green)))
+  (org-habit-ready-future-face ((t :background unspecified
+                                   :inherit modus-themes-nuanced-green))))
 
 (use-package org-clock
   :custom
@@ -1562,11 +1554,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
             )
            ((org-agenda-compact-blocks nil))))))
 
-(defun me//add-property-with-date-captured ()
-  "Add CREATED property to the current item."
-  (interactive)
-  (org-set-property "CREATED" (format-time-string "%FT%T%z")))
-
 (use-package org-capture
   :custom
   (org-capture-templates
@@ -1585,10 +1572,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       (file "capture/todo.org")
       :empty-lines 1
       :jump-to-captured t)
-     ))
-
-  :config
-  (add-hook 'org-capture-before-finalize-hook #'me//add-property-with-date-captured))
+     )))
 
 (use-package ox
   :custom
@@ -1816,8 +1800,8 @@ argument FORCE, force the creation of a new ID."
   (helm-split-window-inside-p t)
 
   :custom-face
-  (helm-M-x-key ((t :foreground nil :inherit modus-themes-prompt)))
-  (helm-selection ((t :background nil :inherit hl-line)))
+  (helm-M-x-key ((t :foreground unspecified :inherit modus-themes-prompt)))
+  (helm-selection ((t :background unspecified :inherit hl-line)))
 
   :config
   (bind-keys ("C-c h"   . helm-command-prefix)
@@ -1861,7 +1845,9 @@ argument FORCE, force the creation of a new ID."
   (helm-buffers-fuzzy-matching t)
 
   :custom-face
-  (helm-buffer-directory ((t :foreground nil :background: nil :inherit dired-directory)))
+  (helm-buffer-directory ((t :foreground unspecified
+                             :background: unspecified
+                             :inherit dired-directory)))
   (helm-buffer-file ((t :inherit default)))
   (helm-non-file-buffer ((t :inherit dired-special))))
 
@@ -1870,11 +1856,14 @@ argument FORCE, force the creation of a new ID."
   (helm-ff-file-name-history-use-recentf t)
   (helm-ff-search-library-in-sexp t)
   :custom-face
-  (helm-ff-directory ((t :background nil :foreground nil :inherit (dired-directory modus-themes-nuanced-cyan))))
+  (helm-ff-directory ((t :background unspecified
+                         :foreground unspecified
+                         :inherit (dired-directory modus-themes-nuanced-cyan))))
   (helm-ff-dotted-directory ((t :background "gray80")))
-  (helm-ff-executable ((t :foreground nil :inherit modus-themes-subtle-green)))
+  (helm-ff-executable ((t :foreground unspecified
+                          :inherit modus-themes-subtle-green)))
   (helm-ff-file ((t :inherit default)))
-  (helm-ff-file-extension ((t :foreground nil :inherit default))))
+  (helm-ff-file-extension ((t :foreground unspecified :inherit default))))
 
 (use-package helm-for-files
   :custom
