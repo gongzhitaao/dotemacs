@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-12-03 16:32:32 gongzhitaao>
+;; Time-stamp: <2024-12-06 15:52:26 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1470,6 +1470,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-clock-idle-time 10)
   (org-clock-in-resume t)
   (org-clock-into-drawer t)
+  (org-clock-mode-line-total 'today)
   (org-clock-persist t)
   (org-clock-persist-file
    (file-name-concat me-emacs-cache-dir "org-clock-save.el"))
@@ -1480,21 +1481,14 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-agenda
   :custom
+  (org-agenda-clockreport-parameter-plist
+   '(:link t :maxlevel 2 :compact t :formula % :fileskip0 t ::stepskip0 t))
   (org-agenda-columns-add-appointments-to-effort-sum t)
   (org-agenda-compact-blocks nil)
   (org-agenda-dim-blocked-tasks t)
-  (org-agenda-files (file-name-concat org-directory (format-time-string "%Y") "agenda"))
+  (org-agenda-files (file-name-concat org-directory
+                                      (format-time-string "%Y") "agenda"))
   (org-agenda-include-diary nil)
-  (org-agenda-show-all-dates t)
-  (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-  (org-agenda-sorting-strategy
-   '((agenda habit-down time-up priority-down user-defined-down
-             category-keep)
-     ((todo priority-down category-keep))
-     ((tags priority-down category-keep))
-     (search category-keep)))
-  (org-agenda-start-with-log-mode t)
-  (org-agenda-tags-column -130)
   (org-agenda-prefix-format
    '((agenda   . " %-16:c%-13t%-20 s")
      (timeline . "  % s")
@@ -1502,6 +1496,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
      (tags     . " %-16:T")
      (search   . " %-16:T")))
   (org-agenda-remove-tags t)
+  (org-agenda-show-all-dates t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+  (org-agenda-sorting-strategy
+   '(( agenda habit-down time-up priority-down user-defined-down
+       category-keep)
+     ((todo priority-down category-keep))
+     ((tags priority-down category-keep))
+     (search category-keep)))
+  (org-agenda-span 'day)
+  (org-agenda-start-with-log-mode nil)
+  (org-agenda-tags-column -130)
 
   :config
   (defun me//init-org-agenda ()

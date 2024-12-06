@@ -134,5 +134,10 @@
   :config
   (global-flycheck-eglot-mode 1))
 
+(use-package codesearch
+  :custom
+  (codesearch-default-client
+   "/ssh:dm-cloud:/google/src/cloud/gongzhitaao/default/"))
+
 (provide 'dm)
 ;;; dm.el ends here
