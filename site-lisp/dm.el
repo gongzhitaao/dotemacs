@@ -135,6 +135,7 @@
   (global-flycheck-eglot-mode 1))
 
 (use-package codesearch
+  :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs/"
   :custom
   (codesearch-default-client
    "/ssh:dm-cloud:/google/src/cloud/gongzhitaao/default/"))
