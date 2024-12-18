@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-12-06 15:52:26 gongzhitaao>
+;; Time-stamp: <2024-12-18 10:00:05 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -987,6 +987,13 @@ The username needs to include two parts:
   :config
   (setopt eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
 
+;; Workaround for tramp.
+;;
+;; tramp-loaddefs.el is modified after straight builds the tramp directory.
+;; This results in dirty directory and prevents straight from pulling.
+(call-process-shell-command
+ "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
+
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
@@ -998,6 +1005,13 @@ The username needs to include two parts:
   :custom
   (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
   (tramp-use-connection-share nil))
+
+;; Workaround for tramp.
+;;
+;; tramp-loaddefs.el is modified after straight builds the tramp directory.
+;; This results in dirty directory and prevents straight from pulling.
+(call-process-shell-command
+ "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
 
 (use-package flycheck
   :load-path "~/.cache/emacs/straight/build/flycheck")
@@ -1021,6 +1035,7 @@ The username needs to include two parts:
   :bind (:map dired-mode-map
               ("f" . find-file-literally-at-point))
   :custom
+  (dired-dwim-target t)
   (dired-recursive-deletes 'always)
   (dired-recursive-copies 'always)
   (dired-listing-switches "-alh")
