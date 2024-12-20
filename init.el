@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-12-18 10:00:05 gongzhitaao>
+;; Time-stamp: <2024-12-20 10:48:49 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -2435,7 +2435,11 @@ alphabetically (in ascending or descending order)."
 
   :config
   (require-theme 'modus-themes)
-  (load-theme 'modus-operandi :no-confirm))
+  (load-theme 'modus-operandi :no-confirm)
+
+  (with-eval-after-load "org-faces"
+    (set-face-attribute 'org-mode-line-clock nil
+                       :inherit 'modus-themes-subtle-red)))
 
 ;; =============================================================================
 ;; Now start the server
