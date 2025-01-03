@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2024-12-20 10:48:49 gongzhitaao>
+;; Time-stamp: <2025-01-03 11:31:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1570,8 +1570,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                             (me//org-skip-subtree-if-priority ?A)
                             (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header
-                       "ALL normal priority tasks:")))
-            )
+                       "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks nil))))))
 
 (use-package org-capture
@@ -1588,7 +1587,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       :tree-type week)
 
      ("t" "TODO" entry
-      (file+headline ,(file-name-concat (format-time-string "%Y") "misc") "Inbox")
+      (file+headline
+       ,(file-name-concat (format-time-string "%Y") "misc") "Inbox")
       (file "capture/todo.org")
       :empty-lines 1
       :jump-to-captured t)
