@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-01-03 11:31:01 gongzhitaao>
+;; Time-stamp: <2025-01-08 15:41:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1588,7 +1588,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
      ("t" "TODO" entry
       (file+headline
-       ,(file-name-concat (format-time-string "%Y") "misc") "Inbox")
+       ,(file-name-concat (format-time-string "%Y") "inbox") "Refile Me")
       (file "capture/todo.org")
       :empty-lines 1
       :jump-to-captured t)
@@ -2024,9 +2024,9 @@ argument FORCE, force the creation of a new ID."
 
 (defvar me-bib (file-name-concat me-emacs-data-dir "bibliography")
   "My bibliography collection path.")
-(defvar me-bib-files (file-name-concat me-bib "refdb.bib")
+(defvar me-bib-files (list (file-name-concat me-bib "refdb.bib"))
   "My bibliography files.")
-(defvar me-bib-pdfs `(,(file-name-concat me-bib "pdf"))
+(defvar me-bib-pdfs (list (file-name-concat me-bib "pdf"))
   "Paths containing my PDFs of the bibliography.")
 (defvar me-bib-notes (file-name-concat me-bib "notes")
   "Path to store my notes on each papers.")

@@ -121,18 +121,18 @@
 (use-package google-java-format
   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts")
 
-(use-package google3-eglot
-  :custom
-  (google3-eglot-compose 't)
-  :config
-  (google3-eglot-setup))
+;; (use-package google3-eglot
+;;   :custom
+;;   (google3-eglot-compose 't)
+;;   :config
+;;   (google3-eglot-setup))
 
 (delight '((eldoc-mode nil t)))
 
-(use-package flycheck-eglot
-  :after (flycheck eglot)
-  :config
-  (global-flycheck-eglot-mode 1))
+;; (use-package flycheck-eglot
+;;   :after (flycheck eglot)
+;;   :config
+;;   (global-flycheck-eglot-mode 1))
 
 (use-package codesearch
   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs/"
