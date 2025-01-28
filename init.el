@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-01-08 15:41:28 gongzhitaao>
+;; Time-stamp: <2025-01-28 16:05:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1425,7 +1425,8 @@ The username needs to include two parts:
   (add-hook 'org-mode-hook #'me//init-org)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (setopt org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (define-key org-mode-map (kbd "C-c [") nil))
+  (define-key org-mode-map (kbd "C-c [") nil)
+  (setf (alist-get "+" org-emphasis-alist) '((:strike-through "red"))))
 
 (use-package org-appear
   :custom
