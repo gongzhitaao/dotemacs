@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-01-28 16:05:01 gongzhitaao>
+;; Time-stamp: <2025-04-16 16:33:54 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -604,7 +604,7 @@ The username needs to include two parts:
 (defun me//high-resolution-p ()
   "Return TRUE if high resolution."
   (let ((width (display-pixel-width)))
-    (not (not (memq width '(1920 1998 2048 2560))))))
+    (memq width '(1920 1998 2048 2560 3840))))
 
 (when (display-graphic-p)
   (set-face-attribute 'default nil
@@ -712,6 +712,13 @@ The username needs to include two parts:
 
   ;; Backup buffer before each save.
   (add-hook 'before-save-hook #'me//force-backup-of-buffer))
+
+(defun me//make-temp-file-in-tmp (args)
+  "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
+  (cons
+   (concat (file-remote-p (car args)) temporary-file-directory)
+   (cdr args)))
+(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
 (use-package vc-hooks
   :custom
@@ -997,7 +1004,6 @@ The username needs to include two parts:
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
-  (tramp-con)
   (tramp-backup-directory-alist nil))
 
 (use-package tramp-cache
@@ -1030,6 +1036,11 @@ The username needs to include two parts:
 (defun me//init-dired ()
   "Initialize Dired mode."
   (hl-line-mode))
+
+(defun me/dired-do-delete-skip-trash (&optional arg)
+  (interactive "P")
+  (let ((delete-by-moving-to-trash nil))
+    (dired-do-delete arg)))
 
 (use-package dired
   :bind (:map dired-mode-map
@@ -1102,7 +1113,11 @@ The username needs to include two parts:
   :custom
   ;; Montreal
   (calendar-latitude [45 50 north])
-  (calendar-longitude [73 57 west]))
+  (calendar-longitude [73 57 west])
+  ;; London
+  ;; (calendar-latitude [51 50 north])
+  ;; (calendar-longitude [0 12 west])
+  )
 
 (use-package calendar
   :custom
@@ -1297,7 +1312,8 @@ The username needs to include two parts:
     (sphinx-doc-mode)
     (setq-local comment-inline-offset 2)
     (setq-local yas-indent-line 'fixed)
-    (setq-local comment-column 0))
+    (setq-local comment-column 0)
+    (eldoc-mode -1))
 
   (add-hook 'python-mode-hook #'me//init-python))
 
@@ -1364,6 +1380,9 @@ The username needs to include two parts:
 (use-package protobuf-mode)
 (use-package yaml-mode)
 (use-package base32)
+
+(use-package eldoc
+  :config ())
 
 (defun me//init-org ()
   "Init orgmode."

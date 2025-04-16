@@ -108,15 +108,6 @@
             :filter-return #'me//g3-filepath)
 (add-to-list 'auto-mode-alist '("\\.st_schemas\\'" . spansdl-mode))
 
-(defun me//make-temp-file-in-tmp (args)
-  "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
-  (cons
-   (replace-regexp-in-string
-    "/google/src/cloud/\\([[:alnum:]-_.]+?/\\)+"
-    temporary-file-directory (car args))
-   (cdr args)))
-(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
-
 (use-package google-pyformat)
 (use-package google-java-format
   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts")
