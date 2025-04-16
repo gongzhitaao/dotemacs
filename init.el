@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-04-16 16:33:54 gongzhitaao>
+;; Time-stamp: <2025-04-16 16:46:14 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -721,8 +721,12 @@ The username needs to include two parts:
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
 (use-package vc-hooks
+  :after tramp
   :custom
-  (vc-make-backup-files t))
+  (vc-make-backup-files t)
+  (vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
+                                vc-ignore-dir-regexp
+                                tramp-file-name-regexp)))
 
 (setopt auto-save-list-file-prefix
         (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
