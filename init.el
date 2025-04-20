@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-04-16 16:46:14 gongzhitaao>
+;; Time-stamp: <2025-04-19 20:02:42 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -716,7 +716,8 @@ The username needs to include two parts:
 (defun me//make-temp-file-in-tmp (args)
   "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
   (cons
-   (concat (file-remote-p (car args)) temporary-file-directory)
+   (file-name-as-directory
+    (concat (file-remote-p (car args)) temporary-file-directory))
    (cdr args)))
 (advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
