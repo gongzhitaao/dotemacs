@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-04-19 20:02:42 gongzhitaao>
+;; Time-stamp: <2025-06-01 20:58:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -606,23 +606,50 @@ The username needs to include two parts:
   (let ((width (display-pixel-width)))
     (memq width '(1920 1998 2048 2560 3840))))
 
-(when (display-graphic-p)
+;; First we set the default font height.
+;; Then we get the base size with (frame-char-width).
+;; Then based upon the ppi, we scale the unicode size as multiple of base size.
+
+(defun me//default-font-height ()
+  "Return the default font height"
+  160)
+
+(defun me//ppi (&optional frame)
+ (let* ((attrs (frame-monitor-attributes frame))
+         (size (alist-get 'mm-size attrs))
+         (geometry (alist-get 'geometry attrs)))
+   (/ (caddr geometry) (/ (car size) 25.4))))
+
+(defun me//unicode-font-size ()
+  "Return the incremental size of unicode font."
+  (let ((unit (frame-char-width))
+        (multiple (if (> (me//ppi) 322)
+                      2
+                    1)))
+    (* unit multiple)))
+
+(defun me/reset-font-size ()
+  "Manually reset all font size."
+  (interactive)
+
   (set-face-attribute 'default nil
                       :family "Iosevka Term SS09"
-                      :height 160)
+                      :height (me//default-font-height))
 
-  (let ((size (if (me//high-resolution-p) 22 44)))
+  (let ((size (me//unicode-font-size)))
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
                                             :family "Sarasa Mono TC"
                                             :size size)))
-
     (set-fontset-font t
                       (cons (decode-char 'ucs #xF000)
                             (decode-char 'ucs #xF890))
                       (font-spec :family "Font Awesome 6 Free"
                                  :size size))))
+
+(when (display-graphic-p)
+  (me/reset-font-size))
 
 (set-face-attribute 'fixed-pitch nil :height 110)
 
