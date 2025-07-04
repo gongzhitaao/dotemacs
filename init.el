@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-06-01 20:58:01 gongzhitaao>
+;; Time-stamp: <2025-07-04 14:25:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -601,11 +601,6 @@ The username needs to include two parts:
 ;; fonts
 ;; -----------------------------------------------------------------------------
 
-(defun me//high-resolution-p ()
-  "Return TRUE if high resolution."
-  (let ((width (display-pixel-width)))
-    (memq width '(1920 1998 2048 2560 3840))))
-
 ;; First we set the default font height.
 ;; Then we get the base size with (frame-char-width).
 ;; Then based upon the ppi, we scale the unicode size as multiple of base size.
@@ -618,14 +613,13 @@ The username needs to include two parts:
  (let* ((attrs (frame-monitor-attributes frame))
          (size (alist-get 'mm-size attrs))
          (geometry (alist-get 'geometry attrs)))
+   ;; 1 inches = 1 mm / 25.4
    (/ (caddr geometry) (/ (car size) 25.4))))
 
 (defun me//unicode-font-size ()
   "Return the incremental size of unicode font."
   (let ((unit (frame-char-width))
-        (multiple (if (> (me//ppi) 322)
-                      2
-                    1)))
+        (multiple 2))
     (* unit multiple)))
 
 (defun me/reset-font-size ()
