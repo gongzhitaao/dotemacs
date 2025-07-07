@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-07-04 14:25:08 gongzhitaao>
+;; Time-stamp: <2025-07-07 15:51:13 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -23,7 +23,7 @@
 (defconst me-keylog (file-name-concat me-emacs-data-dir "keylog")
   "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
-  (mkdir me-keylog))
+  (mkdir me-keylog t))
 
 (setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
