@@ -7,11 +7,16 @@
 (setq google-update-load-path nil)
 (use-package aio)
 (use-package with-editor)
-(require 'google)
+(use-package google
+   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs/"
+   :straight nil)
 
 (use-package editorconfig
   :delight)
 
+(use-package google-emacs-utilities
+   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs/"
+   :straight nil)
 (use-package vc-fig
   :load-path "/usr/share/google-emacs/site-lisp/emacs-google-config/devtools/editors/emacs/vc"
   :straight nil)
@@ -108,9 +113,12 @@
             :filter-return #'me//g3-filepath)
 (add-to-list 'auto-mode-alist '("\\.st_schemas\\'" . spansdl-mode))
 
-(use-package google-pyformat)
+(use-package google-pyformat
+  :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs"
+  :straight nil)
 (use-package google-java-format
-  :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts")
+  :load-path "/usr/share/emacs/site-lisp/emacs-google-config/third_party/java_src/google_java_format/project/core/src/main/scripts"
+  :straight nil)
 
 ;; (use-package google3-eglot
 ;;   :custom
@@ -127,6 +135,7 @@
 
 (use-package codesearch
   :load-path "/usr/share/emacs/site-lisp/emacs-google-config/devtools/editors/emacs/"
+  :straight nil
   :custom
   (codesearch-default-client
    "/ssh:dm-cloud:/google/src/cloud/gongzhitaao/default/"))

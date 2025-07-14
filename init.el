@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-07-07 15:51:13 gongzhitaao>
+;; Time-stamp: <2025-07-11 15:16:21 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -16,11 +16,11 @@
 (defconst me-emacs-data-dir "~/.local/share/emacs" "Emacs data directory.")
 (defconst me-emacs-cache-dir "~/.cache/emacs" "Directory for temporary files.")
 (unless (file-exists-p me-emacs-cache-dir)
-  (mkdir me-emacs-cache-dir))
+  (mkdir me-emacs-cache-dir t))
 
 (setq user-emacs-directory (file-name-as-directory me-emacs-cache-dir))
 
-(defconst me-keylog (file-name-concat me-emacs-data-dir "keylog")
+(defconst me-keylog (file-name-as-directory (file-name-concat me-emacs-data-dir "keylog"))
   "The file path that Logs every key stroke in my EMACS.")
 (unless (file-exists-p me-keylog)
   (mkdir me-keylog t))
@@ -33,7 +33,7 @@
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
-(add-to-list 'load-path (file-name-concat me-emacs-config-dir "site-lisp"))
+(add-to-list 'load-path (file-name-as-directory (file-name-concat me-emacs-config-dir "site-lisp")))
 
 ;; copied from spacemacs
 (defun me//remove-gui-elements ()
@@ -143,6 +143,7 @@
      google-pyformat
      google3-build-mode
      google3-eglot
+     google
      helm-adaptive
      helm-bookmark
      helm-buffers
@@ -725,9 +726,9 @@ The username needs to include two parts:
   (view-read-only t)
 
   :config
-  (let ((backup-dir (file-name-concat me-emacs-cache-dir "backup")))
+  (let ((backup-dir (file-name-as-directory (file-name-concat me-emacs-cache-dir "backup"))))
     (unless (file-exists-p backup-dir)
-      (mkdir backup-dir))
+      (mkdir backup-dir t))
     (setopt backup-directory-alist `(("." . ,backup-dir)))
     (me//cleanup-old-files backup-dir 7))
 
@@ -852,7 +853,7 @@ The username needs to include two parts:
 ;; Saves the undo history across sessions.
 (use-package undo-fu-session
   :custom
-  (undo-fu-session-directory (file-name-concat me-emacs-cache-dir "undo"))
+  (undo-fu-session-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "undo")))
   :config
   (undo-fu-session-global-mode))
 
@@ -916,7 +917,7 @@ The username needs to include two parts:
   :delight yas-minor-mode
   :hook ((prog-mode org-mode) . yas-minor-mode)
   :config
-  (setopt yas-snippet-dirs `(,(file-name-concat me-emacs-data-dir "snippets")))
+  (setopt yas-snippet-dirs `(,(file-name-as-directory (file-name-concat me-emacs-data-dir "snippets"))))
   (yas-reload-all))
 
 (use-package company
@@ -981,11 +982,15 @@ The username needs to include two parts:
   :custom
 
   (persistent-scratch-backup-directory
-   (file-name-concat me-emacs-cache-dir "scratch.d"))
+   (file-name-as-directory (file-name-concat me-emacs-cache-dir "scratch.d")))
+
   (persistent-scratch-save-file
    (file-name-concat me-emacs-cache-dir "scratch.d/scratch"))
 
   :config
+  (unless (file-exists-p persistent-scratch-backup-directory)
+    (mkdir persistent-scratch-backup-directory t))
+
   (setopt persistent-scratch-backup-filter
            (persistent-scratch-keep-backups-not-older-than (days-to-time 30)))
   (persistent-scratch-setup-default))
@@ -1006,19 +1011,19 @@ The username needs to include two parts:
 ;; =============================================================================
 
 ;; (use-package go-translate
-;;   :custom
-;;   (gt-langs '(en fr))
-;;   (gt-default-translator
-;;    (gt-translator
-;;     :engines (gt-google-engine)
-;;     :render  (gt-buffer-render))))
+;;   :config
+;;   (setq gt-langs '(en fr zh))
+;;   (setq gt-default-translator
+;;         (gt-translator
+;;          :engines (gt-google-engine)
+;;          :render  (gt-buffer-render))))
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
 (use-package esh-mode
   :config
-  (setopt eshell-directory-name (file-name-concat me-emacs-cache-dir "eshell")))
+  (setopt eshell-directory-name (file-name-as-directory (file-name-concat me-emacs-cache-dir "eshell"))))
 
 ;; Workaround for tramp.
 ;;
@@ -1149,7 +1154,7 @@ The username needs to include two parts:
   :custom
   (calendar-chinese-all-holidays-flag t)
   (calendar-intermonth-header
-   (propertize "Wk" 'font-lock-face '(:foreground "gray50" :bold t)))
+   (propertize "Wk" 'font-lock-face '(:foreground "gray50")))
   (calendar-intermonth-text
    '(propertize
      (format "%2d"
@@ -1431,7 +1436,7 @@ The username needs to include two parts:
   :load-path "~/.cache/emacs/straight/build/org/"
   :custom
   (org-adapt-indentation nil)
-  (org-directory (file-name-concat me-emacs-data-dir "notes"))
+  (org-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
   (org-display-remote-inline-images 'cache)
   (org-export-backends '(ascii beamer html latex md))
   (org-fold-catch-invisible-edits 'smart)
@@ -1441,6 +1446,7 @@ The username needs to include two parts:
   (org-image-actual-width nil)
   (org-log-done 'time)
   (org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
+  (org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
   (org-provide-todo-statistics t)
   (org-src-fontify-natively t)
   (org-src-preserve-indentation t)
@@ -1469,7 +1475,7 @@ The username needs to include two parts:
 
   (add-hook 'org-mode-hook #'me//init-org)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
-  (setopt org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setopt org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
   (define-key org-mode-map (kbd "C-c [") nil)
   (setf (alist-get "+" org-emphasis-alist) '((:strike-through "red"))))
 
@@ -2001,7 +2007,7 @@ argument FORCE, force the creation of a new ID."
   :custom
   (deft-auto-save-interval 0)
   (deft-default-extension "org")
-  (deft-directory (file-name-concat me-emacs-data-dir "notes"))
+  (deft-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
   (deft-file-naming-rules '((noslash . "-")
                             (nospace . "-")
                             (case-fn . downcase)))
@@ -2068,13 +2074,13 @@ argument FORCE, force the creation of a new ID."
 ;; Bibliography manager
 ;; =============================================================================
 
-(defvar me-bib (file-name-concat me-emacs-data-dir "bibliography")
+(defvar me-bib (file-name-as-directory (file-name-concat me-emacs-data-dir "bibliography"))
   "My bibliography collection path.")
 (defvar me-bib-files (list (file-name-concat me-bib "refdb.bib"))
   "My bibliography files.")
-(defvar me-bib-pdfs (list (file-name-concat me-bib "pdf"))
+(defvar me-bib-pdfs (list (file-name-as-directory (file-name-concat me-bib "pdf")))
   "Paths containing my PDFs of the bibliography.")
-(defvar me-bib-notes (file-name-concat me-bib "notes")
+(defvar me-bib-notes (file-name-as-directory (file-name-concat me-bib "notes"))
   "Path to store my notes on each papers.")
 
 (defun me/bibtex-find-text-begin ()
