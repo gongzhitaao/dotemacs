@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-07-11 15:16:21 gongzhitaao>
+;; Time-stamp: <2025-07-14 17:26:29 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -668,7 +668,7 @@ The username needs to include two parts:
 (use-package time
   :custom
   (display-time-24hr-format t)
-  (display-time-day-and-date nil)
+  (display-time-day-and-date t)
   (display-time-default-load-average nil)
 
   :config
@@ -813,10 +813,10 @@ The username needs to include two parts:
   :hook (((prog-mode org-mode) . whitespace-mode)
          (before-save . whitespace-cleanup)))
 
-(use-package volatile-highlights
-  :delight
-  :config
-  (volatile-highlights-mode))
+;(use-package volatile-highlights
+;  :delight
+;  :config
+;  (volatile-highlights-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -1010,7 +1010,7 @@ The username needs to include two parts:
 ;; General utilities
 ;; =============================================================================
 
-;; (use-package go-translate
+;; (use-package gt
 ;;   :config
 ;;   (setq gt-langs '(en fr zh))
 ;;   (setq gt-default-translator
