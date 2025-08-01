@@ -52,7 +52,9 @@
   :config
   ;; Define two identities, "home" and "work"
   (setq gnus-alias-identity-alist
-        `(("personal"
+        `(
+
+          ("personal"
            nil ;; Does not refer to any other identity
            "Zhitao <zhitaao.gong@gmail.com>" ;; Sender address
            nil ;; No organization header
@@ -60,22 +62,37 @@
            nil ;; No extra body text
            ,(expand-file-name "signature/personal"
                               me-emacs-data-dir))
-          ("work"
-           nil
-           "Zhitao <gongzhitaao@google.com>"
-           "Google DeepMind"
-           nil
-           nil
-           ,(expand-file-name "signature/work"
-                              me-emacs-data-dir))))
+
+          ("makermaker"
+           nil ;; Does not refer to any other identity
+           "Zhitao <gongzhitaao@makermaker.ai>" ;; Sender address
+           "MakerMaker"
+           nil ;; No extra headers
+           nil ;; No extra body text
+           ,(expand-file-name "signature/makermaker"
+                              me-emacs-data-dir))
+
+          ;; ("gdm"
+          ;;  nil
+          ;;  "Zhitao <gongzhitaao@google.com>"
+          ;;  "Google DeepMind"
+          ;;  nil
+          ;;  nil
+          ;;  ,(expand-file-name "signature/gdm"
+          ;;                     me-emacs-data-dir))
+          ))
 
   ;; Use "home" identity by default
   (setq gnus-alias-default-identity "personal")
 
   ;; Define rules to match work identity
+  ;; (setq gnus-alias-identity-rules
+  ;;       '(("work" ("any" "gongzhitaao@\\(google\\|deepmind\\)\\.com" both)
+  ;;          "work")))
+
   (setq gnus-alias-identity-rules
-        '(("work" ("any" "gongzhitaao@\\(google\\|deepmind\\)\\.com" both)
-           "work")))
+        '(("For Makermaker" ("any" "gongzhitaao@makermaker.ai" both)
+           "makermaker")))
 
   ;; Determine identity when message-mode loads
   (add-hook 'message-setup-hook 'gnus-alias-determine-identity))
@@ -91,9 +108,12 @@
 
 (defun me//auto-choose-email-account ()
   "Choose email account automatically."
-    (let* ((accounts '(("gongzhitaao@google.com" . "~/.mail/corp")
-                       ("gongzhitaao@deepmind.com" . "~/.mail/corp")
-                       ("zhitaao.gong@gmail.com" . "~/.mail/personal")))
+  (let* ((accounts '(
+                     ;; ("gongzhitaao@google.com" . "~/.mail/corp")
+                     ;; ("gongzhitaao@deepmind.com" . "~/.mail/corp")
+                     ("gongzhitaao@makermaker.ai" . "~/.mail/makermaker")
+                     ("zhitaao.gong@gmail.com" . "~/.mail/personal")
+                     ))
            (from (me//get-email-address (message-fetch-field "from")))
            (mail-dir (alist-get from accounts nil nil #'string=)))
       (if mail-dir
@@ -140,10 +160,15 @@
 
   (setq notmuch-saved-searches
         '(
-          (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
+          ;; (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
+          ;;  :key "ci")
+          ;; (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
+          ;; (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
+
+          (:name "maker/inbox:7d" :query "tag:maker and tag:inbox date:<7d>.."
            :key "ci")
-          (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
-          (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
+          (:name "maker/unread" :query "tag:maker and tag:unread" :key "cu")
+          (:name "maker/starred" :query "tag:maker and tag:flagged" :key "cs")
 
           (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
            :key "hi")
