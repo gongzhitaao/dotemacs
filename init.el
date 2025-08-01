@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-07-14 17:26:29 gongzhitaao>
+;; Time-stamp: <2025-08-01 08:57:55 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -608,7 +608,7 @@ The username needs to include two parts:
 
 (defun me//default-font-height ()
   "Return the default font height"
-  160)
+  140)
 
 (defun me//ppi (&optional frame)
  (let* ((attrs (frame-monitor-attributes frame))
@@ -640,7 +640,7 @@ The username needs to include two parts:
     (set-fontset-font t
                       (cons (decode-char 'ucs #xF000)
                             (decode-char 'ucs #xF890))
-                      (font-spec :family "Font Awesome 6 Free"
+                      (font-spec :family "Font Awesome 7 Free"
                                  :size size))))
 
 (when (display-graphic-p)
@@ -2454,7 +2454,7 @@ alphabetically (in ascending or descending order)."
 ;; Other stuff
 ;; =============================================================================
 
-(require 'dm)
+;; (require 'dm)
 
 ;; =============================================================================
 ;; Theme
