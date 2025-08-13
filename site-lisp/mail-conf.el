@@ -165,10 +165,10 @@
           ;; (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
           ;; (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
 
-          (:name "maker/inbox:7d" :query "tag:maker and tag:inbox date:<7d>.."
+          (:name "makerⁿ/inbox:7d" :query "tag:maker and tag:inbox date:<7d>.."
            :key "ci")
-          (:name "maker/unread" :query "tag:maker and tag:unread" :key "cu")
-          (:name "maker/starred" :query "tag:maker and tag:flagged" :key "cs")
+          (:name "makerⁿ/unread" :query "tag:maker and tag:unread" :key "cu")
+          (:name "makerⁿ/starred" :query "tag:maker and tag:flagged" :key "cs")
 
           (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
            :key "hi")

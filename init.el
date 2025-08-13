@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-08-01 08:57:55 gongzhitaao>
+;; Time-stamp: <2025-08-13 15:10:52 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -138,12 +138,6 @@
      emacs
      esh-mode
      files
-     google-coding-style
-     google-java-format
-     google-pyformat
-     google3-build-mode
-     google3-eglot
-     google
      helm-adaptive
      helm-bookmark
      helm-buffers
@@ -168,6 +162,7 @@
      org-id
      org-refile
      org-src
+     org-timer
      ox
      ox-beamer
      ox-bibtex
@@ -1408,7 +1403,8 @@ The username needs to include two parts:
 (use-package cython-mode)
 (use-package jsonnet-mode)
 (use-package ncl-mode)
-(use-package protobuf-mode)
+(use-package tree-sitter)
+(use-package protobuf-ts-mode)
 (use-package yaml-mode)
 (use-package base32)
 
@@ -1545,6 +1541,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   :config
   (org-clock-persistence-insinuate))
+
+(use-package org-timer
+  :custom
+  (org-timer-display 'both))
 
 (use-package org-agenda
   :custom
