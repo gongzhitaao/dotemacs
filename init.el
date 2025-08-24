@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-08-13 15:10:52 gongzhitaao>
+;; Time-stamp: <2025-08-24 13:03:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -623,7 +623,7 @@ The username needs to include two parts:
   (interactive)
 
   (set-face-attribute 'default nil
-                      :family "Iosevka Term SS09"
+                      :family "Victor Mono"
                       :height (me//default-font-height))
 
   (let ((size (me//unicode-font-size)))
@@ -1030,7 +1030,15 @@ The username needs to include two parts:
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
-  (tramp-backup-directory-alist nil))
+  (tramp-backup-directory-alist nil)
+  :config
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+  (connection-local-set-profiles
+   '(:application tramp :protocol "ssh")
+   'remote-direct-async-process)
+  )
 
 (use-package tramp-cache
   :load-path "~/.cache/emacs/straight/build/tramp"
@@ -1059,78 +1067,132 @@ The username needs to include two parts:
 
 (use-package ffap)
 
-(defun me//init-dired ()
-  "Initialize Dired mode."
-  (hl-line-mode))
+;; (defun me//init-dired ()
+;;   "Initialize Dired mode."
+;;   (hl-line-mode))
 
-(defun me/dired-do-delete-skip-trash (&optional arg)
-  (interactive "P")
-  (let ((delete-by-moving-to-trash nil))
-    (dired-do-delete arg)))
+;; (defun me/dired-do-delete-skip-trash (&optional arg)
+;;   (interactive "P")
+;;   (let ((delete-by-moving-to-trash nil))
+;;     (dired-do-delete arg)))
+
+;; (use-package dired
+;;   :bind (:map dired-mode-map
+;;               ("f" . find-file-literally-at-point))
+;;   :custom
+;;   (dired-dwim-target t)
+;;   (dired-recursive-deletes 'always)
+;;   (dired-recursive-copies 'always)
+;;   (dired-listing-switches "-alh")
+
+;;   :config
+;;   (add-hook 'dired-mode-hook #'me//init-dired)
+
+;;   (defface me-dired-dim-0 '((t (:foreground "gray50")))
+;;     "Dimmed face."
+;;     :group 'me-dired)
+
+;;   (defface me-dired-dim-1 '((t (:foreground "gray70")))
+;;     "Dimmed face."
+;;     :group 'me-dired)
+
+;;   (defface me-dired-executable
+;;     '((((class color) (min-colors 8)) :background "#b3fabf"))
+;;     "face for executables"
+;;     :group 'me-dired)
+
+;;   (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]*"
+;;                                     "\\(?:[0-9]*?\\)[ ]+"
+;;                                     "\\(.*?\\)[ ]+"
+;;                                     "\\(.*?\\)[ ]+"
+;;                                     "\\(?:.*?\\)[ ]+"))
+;;          (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
+;;          (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
+;;          (executable (concat "^[ ].-\\(?:.*x.*?\\)[ ]"
+;;                              "\\(?:.*?\\(?:[0-9][0-9]:[0-9][0-9]\\)\\|"
+;;                              "\\(?:[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)\\)[ ]+"
+;;                              "\\(.*$\\)")))
+;;     (font-lock-add-keywords 'dired-mode
+;;                             `((,user-group-anchor
+;;                                (1 'me-dired-dim-1)
+;;                                (2 'me-dired-dim-1)
+;;                                (,date-0 nil nil (0 'me-dired-dim-0))
+;;                                (,date-1 nil nil (0 'me-dired-dim-1)))
+;;                               (,executable
+;;                                (1 'me-dired-executable))))
+;;     (font-lock-add-keywords 'wdired-mode
+;;                             `((,user-group-anchor
+;;                                (1 'me-dired-dim-1)
+;;                                (2 'me-dired-dim-1)
+;;                                (,date-0 nil nil (0 'me-dired-dim-0))
+;;                                (,date-1 nil nil (0 'me-dired-dim-1)))
+;;                               (,executable
+;;                                (1 'me-dired-executable))))))
+
+;; (use-package ls-lisp
+;;   :custom
+;;   (ls-lisp-dirs-first t)
+;;   (ls-lisp-use-insert-directory-program nil)
+;;   (ls-lisp-use-string-collate nil)
+;;   (ls-lisp-ignore-case nil))
+
 
 (use-package dired
-  :bind (:map dired-mode-map
-              ("f" . find-file-literally-at-point))
   :custom
-  (dired-dwim-target t)
-  (dired-recursive-deletes 'always)
-  (dired-recursive-copies 'always)
-  (dired-listing-switches "-alh")
-
+  (dired-listing-switches
+   "-l --almost-all --human-readable --group-directories-first --no-group")
   :config
-  (add-hook 'dired-mode-hook #'me//init-dired)
-
-  (defface me-dired-dim-0 '((t (:foreground "gray50")))
-    "Dimmed face."
-    :group 'me-dired)
-
-  (defface me-dired-dim-1 '((t (:foreground "gray70")))
-    "Dimmed face."
-    :group 'me-dired)
-
-  (defface me-dired-executable
-    '((((class color) (min-colors 8)) :background "#b3fabf"))
-    "face for executables"
-    :group 'me-dired)
-
-  (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]*"
-                                    "\\(?:[0-9]*?\\)[ ]+"
-                                    "\\(.*?\\)[ ]+"
-                                    "\\(.*?\\)[ ]+"
-                                    "\\(?:.*?\\)[ ]+"))
-         (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
-         (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
-         (executable (concat "^[ ].-\\(?:.*x.*?\\)[ ]"
-                             "\\(?:.*?\\(?:[0-9][0-9]:[0-9][0-9]\\)\\|"
-                             "\\(?:[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)\\)[ ]+"
-                             "\\(.*$\\)")))
-    (font-lock-add-keywords 'dired-mode
-                            `((,user-group-anchor
-                               (1 'me-dired-dim-1)
-                               (2 'me-dired-dim-1)
-                               (,date-0 nil nil (0 'me-dired-dim-0))
-                               (,date-1 nil nil (0 'me-dired-dim-1)))
-                              (,executable
-                               (1 'me-dired-executable))))
-    (font-lock-add-keywords 'wdired-mode
-                            `((,user-group-anchor
-                               (1 'me-dired-dim-1)
-                               (2 'me-dired-dim-1)
-                               (,date-0 nil nil (0 'me-dired-dim-0))
-                               (,date-1 nil nil (0 'me-dired-dim-1)))
-                              (,executable
-                               (1 'me-dired-executable))))))
-
-(use-package ls-lisp
-  :custom
-  (ls-lisp-dirs-first t)
-  (ls-lisp-use-insert-directory-program nil)
-  (ls-lisp-use-string-collate nil)
-  (ls-lisp-ignore-case nil))
+  ;; this command is useful when you want to close the window of `dirvish-side'
+  ;; automatically when opening a file
+  (put 'dired-find-alternate-file 'disabled nil))
 
 (use-package async
   :delight dired-async-mode
   :config (dired-async-mode))
+
+(use-package nerd-icons)
+
+(use-package dirvish
+  :ensure t
+  :init
+  (dirvish-override-dired-mode)
+  :custom
+  (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+   '(("h" "~/"                          "Home")
+     ("d" "~/Downloads/"                "Downloads")
+     ("pn" "/ssh:makermaker-cloud:~/"   "SSH server"
+     ("t" "~/.local/share/Trash/"       "TrashCan"))))
+  :config
+  ;; (dirvish-peek-mode)             ; Preview files in minibuffer
+  ;; (dirvish-side-follow-mode)      ; similar to `treemacs-follow-mode'
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-attributes           ; The order *MATTERS* for some attributes
+        '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size)
+        dirvish-side-attributes
+        '(vc-state nerd-icons collapse file-size))
+  ;; open large directory (over 20000 files) asynchronously with `fd' command
+  (setq dirvish-large-directory-threshold 1000)
+  :bind ; Bind `dirvish-fd|dirvish-side|dirvish-dwim' as you see fit
+  (("C-c f" . dirvish)
+   :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
+   (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
+   ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
+   ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
+   ("f"   . dirvish-file-info-menu)    ; [f]ile info
+   ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+   ("s"   . dirvish-quicksort)         ; [s]ort flie list
+   ("r"   . dirvish-history-jump)      ; [r]ecent visited
+   ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
+   ("v"   . dirvish-vc-menu)           ; [v]ersion control commands
+   ("*"   . dirvish-mark-menu)
+   ("y"   . dirvish-yank-menu)
+   ("N"   . dirvish-narrow)
+   ("^"   . dirvish-history-last)
+   ("TAB" . dirvish-subtree-toggle)
+   ("M-f" . dirvish-history-go-forward)
+   ("M-b" . dirvish-history-go-backward)
+   ("M-e" . dirvish-emerge-menu)))
 
 ;; Calendar
 ;; -----------------------------------------------------------------------------
@@ -1292,7 +1354,7 @@ The username needs to include two parts:
 ;; Major modes
 ;; =============================================================================
 
-(use-package google-coding-style
+(use-package google-c-style
   :hook (c-mode-common . google-set-c-style))
 
 (use-package cc-mode
@@ -1325,10 +1387,14 @@ The username needs to include two parts:
     (python-isort-buffer)
     (message "All imports sorted.")))
 
+(use-package blacken
+  :custom
+  (blacken-executable "~/.venv/bin/pyink"))
+
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
-              ("C-!" . #'google-pyformat)
+              ("C-!" . #'blacken-buffer)
               ("C-c C-s" . #'me//isort-region-or-buffer))
   :custom
   (python-indent-offset 2)
@@ -1403,8 +1469,8 @@ The username needs to include two parts:
 (use-package cython-mode)
 (use-package jsonnet-mode)
 (use-package ncl-mode)
-(use-package tree-sitter)
-(use-package protobuf-ts-mode)
+;; (use-package tree-sitter)
+;; (use-package protobuf-ts-mode)
 (use-package yaml-mode)
 (use-package base32)
 
