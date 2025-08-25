@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-08-24 13:03:27 gongzhitaao>
+;; Time-stamp: <2025-08-25 14:52:57 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -8,9 +8,7 @@
 
 ;;; Code:
 
-;; =============================================================================
-;; Variables
-;; =============================================================================
+;;; * Variables
 
 (defconst me-emacs-config-dir "~/.config/emacs" "My Emacs directory.")
 (defconst me-emacs-data-dir "~/.local/share/emacs" "Emacs data directory.")
@@ -96,6 +94,8 @@
 
 (add-hook 'emacs-startup-hook #'me//post-emacs-startup)
 
+;;; * Package manager
+
 ;; Added by Package.el.  This must come before configurations of installed
 ;; packages.  Don't delete this line.  If you don't want it, just comment it out
 ;; by adding a semicolon to the start of the line.  You may delete these
@@ -132,6 +132,7 @@
    '(
      ;; keep-sorted begin
      abbrev
+     appt
      comp
      composite
      dired
@@ -161,6 +162,7 @@
      org-habit
      org-id
      org-refile
+     org-roam-dailies
      org-src
      org-timer
      ox
@@ -177,8 +179,8 @@
      solar
      tramp-cache
      uniquify
-     xref
      vc-hooks
+     xref
      ;; keep-sorted end
      )))
 
@@ -187,9 +189,7 @@
 
 (setq load-prefer-newer t)
 
-;; =============================================================================
-;; Key binding
-;; =============================================================================
+;;; * Global key bindings
 
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 (global-set-key (kbd "C-;") #'comment-or-uncomment-region)
@@ -527,7 +527,7 @@ The username needs to include two parts:
   (writeroom-major-modes
    '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
       org-agenda-mode bibtex-mode bookmark-bmenu-mode
-      LilyPond-mode notmuch-show-mode protobuf-mode))
+      LilyPond-mode notmuch-show-mode protobuf-mode help-mode))
   (writeroom-major-modes-exceptions '(web-mode))
   (writeroom-maximize-window nil)
   (writeroom-mode-line t)
@@ -808,11 +808,6 @@ The username needs to include two parts:
   :hook (((prog-mode org-mode) . whitespace-mode)
          (before-save . whitespace-cleanup)))
 
-;(use-package volatile-highlights
-;  :delight
-;  :config
-;  (volatile-highlights-mode))
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -836,6 +831,13 @@ The username needs to include two parts:
   :bind (:map flyspell-mode-map
               ("C-;" . comment-or-uncomment-region)
               ("s-;" . helm-flyspell-correct)))
+
+(use-package outline
+  :config
+
+  (defun add-outline-headers ()
+    (setq-local outline-regexp (rx ";;; " (+? "*") " " (+ not-newline))))
+  (add-hook 'emacs-lisp-mode-hook #'add-outline-headers))
 
 ;; -----------------------------------------------------------------------------
 ;; UNDO
@@ -1001,17 +1003,14 @@ The username needs to include two parts:
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu))
 
+(use-package autorevert
+  :delight (global-auto-revert-mode " ")
+  :config
+  (global-auto-revert-mode))
+
 ;; =============================================================================
 ;; General utilities
 ;; =============================================================================
-
-;; (use-package gt
-;;   :config
-;;   (setq gt-langs '(en fr zh))
-;;   (setq gt-default-translator
-;;         (gt-translator
-;;          :engines (gt-google-engine)
-;;          :render  (gt-buffer-render))))
 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
@@ -1020,12 +1019,7 @@ The username needs to include two parts:
   :config
   (setopt eshell-directory-name (file-name-as-directory (file-name-concat me-emacs-cache-dir "eshell"))))
 
-;; Workaround for tramp.
-;;
-;; tramp-loaddefs.el is modified after straight builds the tramp directory.
-;; This results in dirty directory and prevents straight from pulling.
-(call-process-shell-command
- "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
+(use-package vterm)
 
 (use-package tramp
   :load-path "~/.cache/emacs/straight/build/tramp"
@@ -1037,21 +1031,13 @@ The username needs to include two parts:
    '((tramp-direct-async-process . t)))
   (connection-local-set-profiles
    '(:application tramp :protocol "ssh")
-   'remote-direct-async-process)
-  )
+   'remote-direct-async-process))
 
 (use-package tramp-cache
   :load-path "~/.cache/emacs/straight/build/tramp"
   :custom
   (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
   (tramp-use-connection-share nil))
-
-;; Workaround for tramp.
-;;
-;; tramp-loaddefs.el is modified after straight builds the tramp directory.
-;; This results in dirty directory and prevents straight from pulling.
-(call-process-shell-command
- "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
 
 (use-package flycheck
   :load-path "~/.cache/emacs/straight/build/flycheck")
@@ -1065,7 +1051,7 @@ The username needs to include two parts:
 ;; Dired
 ;; -----------------------------------------------------------------------------
 
-(use-package ffap)
+;; (use-package ffap)
 
 ;; (defun me//init-dired ()
 ;;   "Initialize Dired mode."
@@ -1136,7 +1122,6 @@ The username needs to include two parts:
 ;;   (ls-lisp-use-string-collate nil)
 ;;   (ls-lisp-ignore-case nil))
 
-
 (use-package dired
   :custom
   (dired-listing-switches
@@ -1160,7 +1145,8 @@ The username needs to include two parts:
   (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
-     ("pn" "/ssh:makermaker-cloud:~/"   "SSH server"
+     ("e" "~/.local/share/emacs"        "Emacs data")
+     ("sm" "/ssh:makermaker-cloud:~/"   "SSH server"
      ("t" "~/.local/share/Trash/"       "TrashCan"))))
   :config
   ;; (dirvish-peek-mode)             ; Preview files in minibuffer
@@ -1474,9 +1460,6 @@ The username needs to include two parts:
 (use-package yaml-mode)
 (use-package base32)
 
-(use-package eldoc
-  :config ())
-
 (defun me//init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
@@ -1603,6 +1586,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-clock-persist t)
   (org-clock-persist-file
    (file-name-concat me-emacs-cache-dir "org-clock-save.el"))
+  (org-clock-sound "~/.local/share/sounds/casio-hour-chime.wav")
   (org-log-into-drawer t)
 
   :config
@@ -1610,7 +1594,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-timer
   :custom
+  (org-timer-default-timer "0:25")
   (org-timer-display 'both))
+
+(use-package appt
+  :config
+  (appt-activate 1)
+  (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt))
 
 (use-package org-agenda
   :custom
@@ -1676,12 +1666,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (setopt org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
   (setopt org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
-           ((tags "PRIORITY=\"A\""
+           ((agenda "" ((org-agenda-span 'day)))
+            (tags "+PRIORITY=\"A\""
                   ((org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-overriding-header
-                    "High-priority unfinished tasks:")))
-            (agenda "" ((org-agenda-span 'day)))
+                    "High-priority unfinished tasks")))
             (alltodo ""
                      ((org-agenda-skip-function
                        '(or (me//org-skip-subtree-if-habit)
@@ -1806,6 +1796,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 ;; https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/
 (use-package org-src
   :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t)))
+
   (add-to-list 'org-src-lang-modes '("latex-macro" . LaTeX))
 
   (defvar org-babel-default-header-args:latex-macro
@@ -2054,8 +2048,19 @@ argument FORCE, force the creation of a new ID."
   :delight
   :config (which-key-mode))
 
-;; deft
-;; -----------------------------------------------------------------------------
+(use-package separedit
+  :bind ("C-c ," . separedit)
+  :custom
+  (separedit-continue-fill-column t)
+  (separedit-default-mode 'markdown-mode))
+
+;; ===========================================================================
+;; Notes
+;; ===========================================================================
+
+;; Deft
+;;
+;; This is mainly for text fuzzy search.
 
 (defun me//deft-parse-title (file contents)
   "Parse the given FILE and CONTENTS and determine the title.
@@ -2092,55 +2097,60 @@ argument FORCE, force the creation of a new ID."
                 "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
                 "\\)")))
 
-;; (use-package org-roam
-;;   :custom
-;;   (org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
-;;   (org-roam-complete-everywhere t)
-;;   (org-roam-graph-viewer nil)
-;;   :bind (:prefix-map me-org-roam-command-map
-;;          :prefix "C-c n"
-;;          ("c" . org-roam-capture)
-;;          ("f" . org-roam-node-find)
-;;          ("g" . org-roam-graph)
-;;          ("i" . org-roam-node-insert)
-;;          :map org-mode-map
-;;          ("C-c n l" . org-roam-buffer-toggle))
-;;   :config
-;;   (org-roam-db-autosync-mode))
+;; Org roam
+;;
+;; This is the note taking infra or backend.
 
-;; Appt
-;; -----------------------------------------------------------------------------
-
-(appt-activate 1)
-(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-
-;; =============================================================================
-;; mail
-;; =============================================================================
-
-(require 'mail-conf)
-
-;; Contacts
-;; -----------------------------------------------------------------------------
-
-(use-package bbdb
+(use-package org-roam
   :custom
-  (bbdb-allow-duplicates t)
-  (bbdb-complete-mail-allow-cycling t)
-  (bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz"))
-  (bbdb-mail-user-agent 'message-user-agent)
-  (bbdb-message-all-addresses t)
-  (bbdb-mua-pop-up nil)
-
+  ( org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
+  ( org-roam-complete-everywhere t)
+  ( org-roam-graph-viewer nil)
+  ( org-roam-capture-templates
+    '(("d" "default" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         "#+title: ${title}\n")
+      :unnarrowed t)
+     ("m" "maker" plain "%?"
+      :target (file+head "makermaker/%<%Y%m%d%H%M%S>-${slug}.org"
+                         "#+title: ${title}\n#+filetags: maker2\n")
+      :unnarrowed t)))
+  :bind ( :prefix-map me-org-roam-command-map
+          :prefix "C-c n"
+          ("c" . org-roam-capture)
+          ("f" . org-roam-node-find)
+          ("g" . org-roam-graph)
+          ("i" . org-roam-node-insert)
+          ("l" . org-roam-buffer-toggle)
+          :map org-mode-map
+          ("C-M-i" . completion-at-point))
+  :bind-keymap
   :config
-  (bbdb-initialize 'message 'anniv)
-  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
+  (org-roam-db-autosync-mode))
+
+;; (use-package org-roam-dailies
+;;   :bind ( :prefix-map org-roam-dailies-map
+;;           :prefix "C-c n d"
+;;           ("b" . org-roam-dailies-goto-previous-note)
+;;           ("d" . org-roam-dailies-goto-today)
+;;           ("f" . org-roam-dailies-goto-next-note)
+;;           ("g" . org-roam-dailies-goto-date)
+;;           ("n" . org-roam-dailies-capture-today)
+;;           ("T" . org-roam-dailies-capture-tomorrow)
+;;           ("t" . org-roam-dailies-goto-tomorrow)
+;;           ("v" . org-roam-dailies-capture-date)
+;;           ("Y" . org-roam-dailies-capture-yesterday)
+;;           ("y" . org-roam-dailies-goto-yesterday)
+;;           ))
+
+(use-package org-roam-bibtex)
 
 ;; =============================================================================
 ;; Bibliography manager
 ;; =============================================================================
 
-(defvar me-bib (file-name-as-directory (file-name-concat me-emacs-data-dir "bibliography"))
+(defvar me-bib (file-name-as-directory
+                (file-name-concat me-emacs-data-dir "bibliography"))
   "My bibliography collection path.")
 (defvar me-bib-files (list (file-name-concat me-bib "refdb.bib"))
   "My bibliography files.")
@@ -2304,14 +2314,6 @@ Each index is a list (KEY TIMESTAMP)."
   (reftex-default-bibliography me-bib-files)
 
   :hook (tex-mode . reftex-mode))
-
-;; -----------------------------------------------------------------------------
-
-(use-package separedit
-  :bind ("C-c ," . separedit)
-  :custom
-  (separedit-continue-fill-column t)
-  (separedit-default-mode 'markdown-mode))
 
 ;; =============================================================================
 ;; Working with PDF
@@ -2509,34 +2511,32 @@ alphabetically (in ascending or descending order)."
             (number-to-string (pdf-view-current-page))
             (number-to-string (pdf-cache-number-of-pages)))))
 
-;; =============================================================================
-;; Key logger
-;; =============================================================================
-
-(open-dribble-file
- (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
 ;; =============================================================================
-;; Other stuff
+;; mail
 ;; =============================================================================
 
-;; (require 'dm)
+(require 'mail-conf)
+
+;; Contacts
+;; -----------------------------------------------------------------------------
+
+(use-package bbdb
+  :custom
+  (bbdb-allow-duplicates t)
+  (bbdb-complete-mail-allow-cycling t)
+  (bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz"))
+  (bbdb-mail-user-agent 'message-user-agent)
+  (bbdb-message-all-addresses t)
+  (bbdb-mua-pop-up nil)
+
+  :config
+  (bbdb-initialize 'message 'anniv)
+  (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
 ;; =============================================================================
 ;; Theme
 ;; =============================================================================
-
-;; (straight-use-package
-;;  '(nano :type git :host github :repo "rougier/nano-emacs"))
-
-;; (use-package nano
-;;   :custom
-;;   (nano-font-family-monospaced "Iosevka Term SS09")
-;;   (nano-font-size 16))
-
-;; (require 'nano-help)
-;; (require 'nano-modeline)
-;; (require 'nano-layout)
 
 (use-package modus-themes
   :load-path "~/.cache/emacs/straight/build/modus-themes"
@@ -2557,7 +2557,14 @@ alphabetically (in ascending or descending order)."
 
   (with-eval-after-load "org-faces"
     (set-face-attribute 'org-mode-line-clock nil
-                       :inherit 'modus-themes-subtle-red)))
+                        :inherit 'modus-themes-subtle-red)))
+
+;; =============================================================================
+;; Key logger
+;; =============================================================================
+
+(open-dribble-file
+ (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
 ;; =============================================================================
 ;; Now start the server
