@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-08-25 14:52:57 gongzhitaao>
+;; Time-stamp: <2025-08-25 20:54:12 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -198,15 +198,13 @@
 
 (global-set-key (kbd "M-<delete>") #'kill-word)
 
-;; FN keys
-;; -----------------------------------------------------------------------------
+;;; ** FN keys
 
 (global-set-key (kbd "<f6>") #'calendar)
 ;; f8 -- deft
 ;; f10 -- menu
 
-;; Remaping
-;; -----------------------------------------------------------------------------
+;;; ** Remap
 
 (global-set-key [remap copy-rectangle-as-kill] #'me/copy-rectangle-as-kill)
 (global-set-key [remap isearch-backward]       #'isearch-backward-regexp)
@@ -215,11 +213,18 @@
 (global-set-key [remap switch-to-buffer]       #'helm-mini)
 (global-set-key [remap yank-pop]               #'helm-show-kill-ring)
 
-;; C-c user key
-;; -----------------------------------------------------------------------------
+;;; ** User key C-c
 
-;; C-c b -- helm-bibtex
-;; C-c c -- helm-flycheck
+;; = -- align-regex
+;; b -- helm-bibtex
+;; c -- helm-flycheck
+;; d -- drag-stuff-mode
+;; e -- custom editing shortcuts
+;; f -- dirvish
+;; m -- multiple cursors
+;; n -- org roam
+;; o -- org-mode related
+;; s -- smartparens
 
 (use-package drag-stuff
   :bind ("C-c d" . drag-stuff-mode)
@@ -269,13 +274,7 @@
            ("p"   . me/org-ref-open-pdf)
            ("s"   . me/org-sort-orgref-citation-list-by-year))
 
-;; C-c s -- smartparens
-;; C-c u -- undo-tree
-(global-set-key (kbd "C-c =") #'align-regexp)
-(global-set-key (kbd "C-c C-q") #'bury-buffer)
-
-;; M- meta keys
-;; -----------------------------------------------------------------------------
+;;; ** Meta key M-
 
 ;; M-a backward-sentence
 ;; M-b backward-word
@@ -306,7 +305,7 @@
 (global-set-key (kbd "M-<right>") #'sp-forward-sexp)
 (global-set-key (kbd "M-<up>")    #'sp-up-sexp)
 
-;;; M-s search
+;;; *** M-s search
 
 ;; M-s g helm-ag
 ;; M-s h highlight-xxx
@@ -316,9 +315,7 @@
 (use-package repeat
   :config (repeat-mode))
 
-;; =============================================================================
-;; General helpers
-;; =============================================================================
+;;; * General helpers
 
 (defun me--ad-with-region-or-line (orig-fun &rest args)
   "Advice added around ORIG-FUN with ARGS to operate on line or region."
@@ -466,31 +463,7 @@ all '.<space>' with '.<space><space>'."
     (delete-trailing-whitespace)
     (kill-new (buffer-string))))
 
-(defun me/make-username (stem)
-  "Make a random username from STEM.
-
-It is used to make an arbitrary but determinsitc username, e.g.,
-for a website.  I have Catch-all configured for one of my
-domains, so I can use username@mydomain as the email.
-
-The username needs to include two parts:
-- A unique handle about the website that I can easily recall.
-- A random string that prevents spam guessing my pattern.
-  Ideally this string is arbitrary but deterministic so that I
-  can regenerate later.
-"
-  (interactive "sUsername stem: ")
-  (let* ((suffix
-         (downcase
-          (substring (base32-encode (secure-hash 'sha256 stem nil nil t))
-                     0 5)))
-         (username (format "%s.%s" stem suffix)))
-    (message "Username: %s copied" username)
-    (kill-new username)))
-
-;; =============================================================================
-;; Appearance
-;; =============================================================================
+;;; * Appearance
 
 (blink-cursor-mode 0)
 (mouse-avoidance-mode 'animate)
@@ -513,12 +486,6 @@ The username needs to include two parts:
          (separator (make-string 8 ? )))
     (string-join `(,date ,hostname ,filepath) separator)))
 (setq frame-title-format '((:eval (me//set-title-bar))))
-
-;; Show the search result count.
-(use-package anzu
-  :delight
-  :custom (anzu-search-threshold 1000)
-  :config (global-anzu-mode))
 
 ;; Center the editing content.
 (use-package writeroom-mode
@@ -594,16 +561,25 @@ The username needs to include two parts:
   (sp-local-pair '(emacs-lisp-mode lisp-mode lisp-interaction-mode) "'"
                  nil :actions nil))
 
-;; fonts
-;; -----------------------------------------------------------------------------
+;; delight
 
-;; First we set the default font height.
-;; Then we get the base size with (frame-char-width).
-;; Then based upon the ppi, we scale the unicode size as multiple of base size.
+(delight
+ '((abbrev-mode nil t)
+   (auto-fill-function " " t)
+   (auto-revert-mode " " autorevert)
+   (eldoc-mode nil t)
+   (global-subword-mode nil subword)
+   (isearch-mode " " t)
+   (subword-mode nil subword)
+   (view-mode " " view)))
 
-(defun me//default-font-height ()
-  "Return the default font height"
-  140)
+;;; ** Fonts
+
+;; 1. First we set the default font height.
+;; 2. we get the base size with frame-char-width.
+;; 3. Based upon the ppi, we scale the unicode size as multiple of base size.
+
+(defconst me-default-font-height 140 "Return the default font height")
 
 (defun me//ppi (&optional frame)
  (let* ((attrs (frame-monitor-attributes frame))
@@ -624,7 +600,7 @@ The username needs to include two parts:
 
   (set-face-attribute 'default nil
                       :family "Victor Mono"
-                      :height (me//default-font-height))
+                      :height me-default-font-height)
 
   (let ((size (me//unicode-font-size)))
     (dolist (charset '(kana han cjk-misc bopomofo))
@@ -645,20 +621,39 @@ The username needs to include two parts:
 
 (use-package ligature
   :config
-  ;; Enable all Iosevka ligatures in programming modes
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable all ligatures in programming modes
   (ligature-set-ligatures
    'prog-mode
-   '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->"
-     "<!--" "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>"
-     "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
-     ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>"
-     "++" "+++"))
+   (ligature-set-ligatures
+    'prog-mode
+    '( "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<" "##" "#("
+       "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:" "++" "+++" "..." "+++"
+       "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~=" ":::" "::=" "=:=" "==="
+       "==>" "=!=" "=>>" "=<<" "=/=" "!==" ":=" ":-" ":+" "<*" "<*>" "*>" "<|"
+       "<|>" "|>" "+:" "-:" "=:" "<******>" "<!--" "<==" "<===" "<=" "=>" "=>>"
+       "==>" "===>" ">=" "<=>" "<==>" "<===>" "<$" "<=" "<>" "<-" "<<" "<+" "</"
+       "#{" "#[" "#:" "#=" "#!"  "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###"
+       "#_(" "..<" "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!="
+       "===" "!==" "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:" "?=" "?."
+       "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "[|" "]#" "::" ":="
+       ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:" "\\\\" "://" "<---" "<--" "<<-"
+       "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "|||>" "<|||" "<==>"
+       "<!--" "####" "~~>" "***" "||=" "||>" "~>" "~-" "**" "*>" "*/" "||" "|}"
+       "|]" "|=" "|>" "|-" "{|")))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
 
-;; modeline
-;; -----------------------------------------------------------------------------
+;;; *** Encoding
+
+(let ((my-prefer-coding-system
+       '(cp950 gb2312 cp936 gb18030 utf-16 utf-8)))
+  (dolist (c my-prefer-coding-system)
+    (prefer-coding-system c)))
+
+;;; ** Modeline
 
 (use-package time
   :custom
@@ -682,6 +677,7 @@ The username needs to include two parts:
   :config
   (file-name-shadow-mode))
 
+;; Distinguishes buffers associated with different files of same basename.
 (use-package uniquify
   :custom
   (uniquify-after-kill-buffer-p t)
@@ -689,54 +685,12 @@ The username needs to include two parts:
   (uniquify-ignore-buffers-re "^\\*")
   (uniquify-separator "/"))
 
-;; =============================================================================
-;; General editing
-;; =============================================================================
+;;; * General editing
 
-(defun me//force-backup-of-buffer ()
-  "Force to backup buffer."
-  (setq-local buffer-backed-up nil))
-
-(defun me//cleanup-old-files (directory nday)
-  "Cleanup DIRECTORY files older than NDAY."
-  (let ((age (* 60 60 24 (or nday 7)))
-        (current (float-time (current-time))))
-    (message "Deleting old backup files...")
-    (dolist (file (directory-files directory t))
-      (when (and (backup-file-name-p file)
-                 (> (- current (float-time (nth 5 (file-attributes file))))
-                    age))
-        (message "delete: %s" file)
-        (delete-file file)))))
-
-(use-package files
-  :custom
-  (backup-by-copying t)
-  (confirm-kill-emacs 'yes-or-no-p)
-  (delete-old-versions t)
-  (kept-new-versions 30)
-  (kept-old-versions 30)
-  (small-temporary-file-directory "/tmp/")
-  (version-control t)
-  (view-read-only t)
-
+(use-package autorevert
+  :delight (global-auto-revert-mode " ")
   :config
-  (let ((backup-dir (file-name-as-directory (file-name-concat me-emacs-cache-dir "backup"))))
-    (unless (file-exists-p backup-dir)
-      (mkdir backup-dir t))
-    (setopt backup-directory-alist `(("." . ,backup-dir)))
-    (me//cleanup-old-files backup-dir 7))
-
-  ;; Backup buffer before each save.
-  (add-hook 'before-save-hook #'me//force-backup-of-buffer))
-
-(defun me//make-temp-file-in-tmp (args)
-  "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
-  (cons
-   (file-name-as-directory
-    (concat (file-remote-p (car args)) temporary-file-directory))
-   (cdr args)))
-(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
+  (global-auto-revert-mode))
 
 (use-package vc-hooks
   :after tramp
@@ -746,27 +700,22 @@ The username needs to include two parts:
                                 vc-ignore-dir-regexp
                                 tramp-file-name-regexp)))
 
-(setopt auto-save-list-file-prefix
-        (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
-
 (use-package select
   :custom
   (select-enable-clipboard t))
 
-(setopt tab-always-indent t
+(setopt delete-by-moving-to-trash t
+        fill-column 80
+        history-delete-duplicates t
         standard-indent 2
-        tab-stop-list (number-sequence 2 120 2))
+        tab-always-indent t
+        tab-stop-list (number-sequence 2 120 2)
+        tab-width 4
+        truncate-lines t)
 
 (use-package sort
   :custom
   (sort-fold-case t))
-
-(setopt
- delete-by-moving-to-trash t
- fill-column 80
- history-delete-duplicates t
- tab-width 4
- truncate-lines t)
 
 (use-package comp
   :custom
@@ -832,20 +781,73 @@ The username needs to include two parts:
               ("C-;" . comment-or-uncomment-region)
               ("s-;" . helm-flyspell-correct)))
 
+(use-package flycheck
+  :load-path "~/.cache/emacs/straight/build/flycheck")
+
 (use-package outline
+  :custom
+  ( outline-minor-mode-highlight 'append)
+  ( outline-minor-mode-use-buttons 'in-margin)
+
   :config
 
-  (defun add-outline-headers ()
-    (setq-local outline-regexp (rx ";;; " (+? "*") " " (+ not-newline))))
-  (add-hook 'emacs-lisp-mode-hook #'add-outline-headers))
+  (defun lisp-comment-outline-level ()
+    (save-excursion
+      (save-restriction
+        (widen)
+        (end-of-line)
+        (if (re-search-backward (rx line-start ";;; " (+? "*") " ") nil t)
+            (- (- (match-end 0) (match-beginning 0)) 5)
+          0))))
 
-;; -----------------------------------------------------------------------------
-;; UNDO
+  (defun lisp-enable-comment-outline ()
+    (setq-local outline-regexp (rx ";;; " (+? "*") " "))
+    (setq-local outline-level 'lisp-comment-outline-level)
+    (outline-minor-mode))
+
+  (add-hook 'emacs-lisp-mode-hook #'lisp-enable-comment-outline))
+
+;; When enabled, it provides a pop-up window displaying available key bindings
+;; and their associated commands after you type an incomplete prefix key.
+(use-package which-key
+  :delight
+  :config (which-key-mode))
+
+(use-package separedit
+  :bind ("C-c ," . separedit)
+  :custom
+  (separedit-continue-fill-column t)
+  (separedit-default-mode 'markdown-mode))
+
+(use-package tramp
+  :load-path "~/.cache/emacs/straight/build/tramp"
+  :custom
+  (tramp-backup-directory-alist nil)
+  :config
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+  (connection-local-set-profiles
+   '(:application tramp :protocol "ssh")
+   'remote-direct-async-process))
+
+(use-package tramp-cache
+  :load-path "~/.cache/emacs/straight/build/tramp"
+  :custom
+  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
+  (tramp-use-connection-share nil))
+
+(use-package ssh-config-mode
+  :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
+         ("/sshd?_config\\'"      . ssh-config-mode)
+         ("/known_hosts\\'"       . ssh-known-hosts-mode)
+         ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
+
+;;; ** Undo
 ;;
 ;; Vundo supports navigating undo as a tree structure, and works well with
 ;; undo/redo history loaded by undo-fu-session, although there are no
 ;; inter-dependencies as both packages operate on Emacs built-in undo.
-;; -----------------------------------------------------------------------------
 
 ;; Saves the undo history across sessions.
 (use-package undo-fu-session
@@ -874,8 +876,13 @@ The username needs to include two parts:
   :custom-face
   (vundo-highlight ((t (:inverse-video t)))))
 
-;; Searching
-;; -----------------------------------------------------------------------------
+;;; ** Searching
+
+;; Show the search result count.
+(use-package anzu
+  :delight
+  :custom (anzu-search-threshold 1000)
+  :config (global-anzu-mode))
 
 (use-package helm-ag
   :after helm
@@ -896,15 +903,7 @@ The username needs to include two parts:
 (use-package imenu
   :custom (imenu-sort-function #'imenu--sort-by-name))
 
-;; (use-package projectile
-;;   :bind (:map projectile-mode-map
-;;               ("C-c p" . projectile-command-map))
-;;   :init
-;;   (projectile-mode))
-;; (use-package helm-projectile)
-
-;; Completion
-;; -----------------------------------------------------------------------------
+;;; ** Completion
 
 (use-package abbrev
   :custom
@@ -914,7 +913,9 @@ The username needs to include two parts:
   :delight yas-minor-mode
   :hook ((prog-mode org-mode) . yas-minor-mode)
   :config
-  (setopt yas-snippet-dirs `(,(file-name-as-directory (file-name-concat me-emacs-data-dir "snippets"))))
+  (setopt yas-snippet-dirs
+          `(,(file-name-as-directory
+              (file-name-concat me-emacs-data-dir "snippets"))))
   (yas-reload-all))
 
 (use-package company
@@ -930,23 +931,62 @@ The username needs to include two parts:
   (bind-keys :map prog-mode-map
              ("<tab>" . company-indent-or-complete-common)))
 
-;; Encoding
-;; -----------------------------------------------------------------------------
+;;; * Bookkeeping
 
-(let ((my-prefer-coding-system
-       '(cp950 gb2312 cp936 gb18030 utf-16 utf-8)))
-  (dolist (c my-prefer-coding-system)
-    (prefer-coding-system c)))
+(defun me//force-backup-of-buffer ()
+  "Force to backup buffer."
+  (setq-local buffer-backed-up nil))
 
-;; =============================================================================
-;; Bookkeeping
-;; =============================================================================
+(defun me//cleanup-old-files (directory nday)
+  "Cleanup DIRECTORY files older than NDAY."
+  (let ((age (* 60 60 24 (or nday 7)))
+        (current (float-time (current-time))))
+    (message "Deleting old backup files...")
+    (dolist (file (directory-files directory t))
+      (when (and (backup-file-name-p file)
+                 (> (- current (float-time (nth 5 (file-attributes file))))
+                    age))
+        (message "delete: %s" file)
+        (delete-file file)))))
+
+(use-package files
+  :custom
+  (backup-by-copying t)
+  (confirm-kill-emacs 'yes-or-no-p)
+  (delete-old-versions t)
+  (kept-new-versions 30)
+  (kept-old-versions 30)
+  (small-temporary-file-directory "/tmp/")
+  (version-control t)
+  (view-read-only t)
+
+  :config
+  (let ((backup-dir (file-name-as-directory
+                     (file-name-concat me-emacs-cache-dir "backup"))))
+    (unless (file-exists-p backup-dir)
+      (mkdir backup-dir t))
+    (setopt backup-directory-alist `(("." . ,backup-dir)))
+    (me//cleanup-old-files backup-dir 7))
+
+  ;; Backup buffer before each save.
+  (add-hook 'before-save-hook #'me//force-backup-of-buffer))
+
+(defun me//make-temp-file-in-tmp (args)
+  "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
+  (cons
+   (file-name-as-directory
+    (concat (file-remote-p (car args)) temporary-file-directory))
+   (cdr args)))
+(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
 
 (defun me//make-file-precious-when-remote ()
   "Set FILE-PRECIOUS-FLAG for remote files."
   (when (file-remote-p default-directory)
     (set (make-local-variable 'file-precious-flag) t)))
 (add-hook 'find-file-hook #'me//make-file-precious-when-remote)
+
+(setopt auto-save-list-file-prefix
+        (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
 
 ;; Save recent visited file list.
 (use-package recentf
@@ -1003,131 +1043,21 @@ The username needs to include two parts:
 
   (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu))
 
-(use-package autorevert
-  :delight (global-auto-revert-mode " ")
-  :config
-  (global-auto-revert-mode))
-
-;; =============================================================================
-;; General utilities
-;; =============================================================================
-
-(use-package exec-path-from-shell
-  :config (exec-path-from-shell-initialize))
-
-(use-package esh-mode
-  :config
-  (setopt eshell-directory-name (file-name-as-directory (file-name-concat me-emacs-cache-dir "eshell"))))
+;;; * Dired
 
 (use-package vterm)
 
-(use-package tramp
-  :load-path "~/.cache/emacs/straight/build/tramp"
-  :custom
-  (tramp-backup-directory-alist nil)
-  :config
-  (connection-local-set-profile-variables
-   'remote-direct-async-process
-   '((tramp-direct-async-process . t)))
-  (connection-local-set-profiles
-   '(:application tramp :protocol "ssh")
-   'remote-direct-async-process))
-
-(use-package tramp-cache
-  :load-path "~/.cache/emacs/straight/build/tramp"
-  :custom
-  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
-  (tramp-use-connection-share nil))
-
-(use-package flycheck
-  :load-path "~/.cache/emacs/straight/build/flycheck")
-
-(use-package eglot
-  :load-path "~/.cache/emacs/straight/build/eglot"
-  :config
-  (set-face-attribute 'eglot-highlight-symbol-face nil
-                      :inherit 'modus-themes-nuanced-red))
-
-;; Dired
-;; -----------------------------------------------------------------------------
-
-;; (use-package ffap)
-
-;; (defun me//init-dired ()
-;;   "Initialize Dired mode."
-;;   (hl-line-mode))
-
-;; (defun me/dired-do-delete-skip-trash (&optional arg)
-;;   (interactive "P")
-;;   (let ((delete-by-moving-to-trash nil))
-;;     (dired-do-delete arg)))
-
-;; (use-package dired
-;;   :bind (:map dired-mode-map
-;;               ("f" . find-file-literally-at-point))
-;;   :custom
-;;   (dired-dwim-target t)
-;;   (dired-recursive-deletes 'always)
-;;   (dired-recursive-copies 'always)
-;;   (dired-listing-switches "-alh")
-
-;;   :config
-;;   (add-hook 'dired-mode-hook #'me//init-dired)
-
-;;   (defface me-dired-dim-0 '((t (:foreground "gray50")))
-;;     "Dimmed face."
-;;     :group 'me-dired)
-
-;;   (defface me-dired-dim-1 '((t (:foreground "gray70")))
-;;     "Dimmed face."
-;;     :group 'me-dired)
-
-;;   (defface me-dired-executable
-;;     '((((class color) (min-colors 8)) :background "#b3fabf"))
-;;     "face for executables"
-;;     :group 'me-dired)
-
-;;   (let* ((user-group-anchor (concat "^..[-dl][-rwxsS]\\{9\\}[ ]*"
-;;                                     "\\(?:[0-9]*?\\)[ ]+"
-;;                                     "\\(.*?\\)[ ]+"
-;;                                     "\\(.*?\\)[ ]+"
-;;                                     "\\(?:.*?\\)[ ]+"))
-;;          (date-0 "\\([0-9][0-9]-[0-9][0-9][ ]+[0-9][0-9]:[0-9][0-9]\\)")
-;;          (date-1 "\\([0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)")
-;;          (executable (concat "^[ ].-\\(?:.*x.*?\\)[ ]"
-;;                              "\\(?:.*?\\(?:[0-9][0-9]:[0-9][0-9]\\)\\|"
-;;                              "\\(?:[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]\\)\\)[ ]+"
-;;                              "\\(.*$\\)")))
-;;     (font-lock-add-keywords 'dired-mode
-;;                             `((,user-group-anchor
-;;                                (1 'me-dired-dim-1)
-;;                                (2 'me-dired-dim-1)
-;;                                (,date-0 nil nil (0 'me-dired-dim-0))
-;;                                (,date-1 nil nil (0 'me-dired-dim-1)))
-;;                               (,executable
-;;                                (1 'me-dired-executable))))
-;;     (font-lock-add-keywords 'wdired-mode
-;;                             `((,user-group-anchor
-;;                                (1 'me-dired-dim-1)
-;;                                (2 'me-dired-dim-1)
-;;                                (,date-0 nil nil (0 'me-dired-dim-0))
-;;                                (,date-1 nil nil (0 'me-dired-dim-1)))
-;;                               (,executable
-;;                                (1 'me-dired-executable))))))
-
-;; (use-package ls-lisp
-;;   :custom
-;;   (ls-lisp-dirs-first t)
-;;   (ls-lisp-use-insert-directory-program nil)
-;;   (ls-lisp-use-string-collate nil)
-;;   (ls-lisp-ignore-case nil))
-
+>>>>>>> d2beb21 (Add proper outline.)
 (use-package dired
   :custom
+  (dired-dwim-target t)
+  (dired-recursive-deletes 'always)
+  (dired-recursive-copies 'always)
   (dired-listing-switches
    "-l --almost-all --human-readable --group-directories-first --no-group")
+
   :config
-  ;; this command is useful when you want to close the window of `dirvish-side'
+  ;; This command is useful when you want to close the window of `dirvish-side'
   ;; automatically when opening a file
   (put 'dired-find-alternate-file 'disabled nil))
 
@@ -1138,27 +1068,29 @@ The username needs to include two parts:
 (use-package nerd-icons)
 
 (use-package dirvish
-  :ensure t
-  :init
-  (dirvish-override-dired-mode)
+  :init (dirvish-override-dired-mode)
+
   :custom
   (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("e" "~/.local/share/emacs"        "Emacs data")
      ("sm" "/ssh:makermaker-cloud:~/"   "SSH server"
-     ("t" "~/.local/share/Trash/"       "TrashCan"))))
+      ("t" "~/.local/share/Trash/"       "TrashCan"))))
+
   :config
   ;; (dirvish-peek-mode)             ; Preview files in minibuffer
   ;; (dirvish-side-follow-mode)      ; similar to `treemacs-follow-mode'
   (setq dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
   (setq dirvish-attributes           ; The order *MATTERS* for some attributes
-        '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size)
+        '( vc-state subtree-state nerd-icons collapse git-msg file-time
+           file-size)
         dirvish-side-attributes
-        '(vc-state nerd-icons collapse file-size))
-  ;; open large directory (over 20000 files) asynchronously with `fd' command
+        '( vc-state nerd-icons collapse file-size))
+  ;; Open large directory (over 1000 files) asynchronously with `fd' command
   (setq dirvish-large-directory-threshold 1000)
+
   :bind ; Bind `dirvish-fd|dirvish-side|dirvish-dwim' as you see fit
   (("C-c f" . dirvish)
    :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
@@ -1180,8 +1112,7 @@ The username needs to include two parts:
    ("M-b" . dirvish-history-go-backward)
    ("M-e" . dirvish-emerge-menu)))
 
-;; Calendar
-;; -----------------------------------------------------------------------------
+;;; * Calendar
 
 (use-package solar
   :custom
@@ -1245,7 +1176,8 @@ The username needs to include two parts:
   ;; Prevents cal-china-x from chaning the date format in diary.
   (setopt calendar-date-display-form calendar-iso-date-display-form))
 
-;; Show buffers
+;;; * Buffer management
+
 (use-package ibuffer
   :config
   (setq ibuffer-formats
@@ -1336,9 +1268,50 @@ The username needs to include two parts:
            (format "%7.1fM" (/ (buffer-size) 1000000.0)))
           (t (format "%8dB" (buffer-size))))))
 
-;; =============================================================================
-;; Major modes
-;; =============================================================================
+;;; * Miscellaneous
+
+;;; ** Web
+
+(use-package web-mode
+  :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-enable-current-element-highlight t)
+  (web-mode-markup-indent-offset 2))
+
+(use-package js
+  :custom (js-indent-level 2))
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :delight (js2-mode "JS2")
+  :bind (:map js2-mode-map
+              ("C-!" . clang-format-region))
+  :custom
+  (js2-basic-offset 2)
+  (js2-include-node-externs t)
+  (js2-include-browser-externs t)
+
+  :config
+  (setq-default js2-additional-externs
+                '("$"
+                  "KeyEvent"
+                  "google"
+                  "sessionStorage"
+                  "URLSearchParams"
+                  "URL"
+                  "ResizeObserver")))
+
+(use-package typescript-mode
+  :bind (:map typescript-mode-map
+              ("C-!" . clang-format))
+  :custom
+  (typescript-indent-level 2))
+
+(use-package jsonnet-mode)
+
+;;; ** C
 
 (use-package google-c-style
   :hook (c-mode-common . google-set-c-style))
@@ -1350,13 +1323,7 @@ The username needs to include two parts:
 
 (use-package clang-format)
 
-(use-package web-mode
-  :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
-  :custom
-  (web-mode-code-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-enable-current-element-highlight t)
-  (web-mode-markup-indent-offset 2))
+;;; ** Python
 
 (use-package sphinx-doc
   :delight)
@@ -1384,6 +1351,7 @@ The username needs to include two parts:
               ("C-c C-s" . #'me//isort-region-or-buffer))
   :custom
   (python-indent-offset 2)
+
   :config
   (defun me//init-python()
     "Init python model."
@@ -1396,29 +1364,10 @@ The username needs to include two parts:
   (add-hook 'python-mode-hook #'me//init-python))
 
 (use-package json-mode)
+(use-package yaml-mode)
+(use-package cython-mode)
 
-(use-package js
-  :custom (js-indent-level 2))
-
-(use-package js2-mode
-  :mode "\\.js\\'"
-  :delight (js2-mode "JS2")
-  :bind (:map js2-mode-map
-              ("C-!" . clang-format-region))
-  :custom
-  (js2-basic-offset 2)
-  (js2-include-node-externs t)
-  (js2-include-browser-externs t)
-
-  :config
-  (setq-default js2-additional-externs
-                '("$"
-                  "KeyEvent"
-                  "google"
-                  "sessionStorage"
-                  "URLSearchParams"
-                  "URL"
-                  "ResizeObserver")))
+;;; ** Image
 
 (use-package image-mode
   :bind (:map image-mode-map
@@ -1429,15 +1378,13 @@ The username needs to include two parts:
               ("W"   . image-transform-fit-to-window)
               ("SPC" . image-transform-reset-to-initial)))
 
-(use-package ssh-config-mode
-  :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
-         ("/sshd?_config\\'"      . ssh-config-mode)
-         ("/known_hosts\\'"       . ssh-known-hosts-mode)
-         ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
+;;; ** Octave
 
 (use-package octave
   :mode "\\.m\\'"
   :custom (octave-comment-char ?%))
+
+;;; ** Markdown
 
 (use-package markdown-mode
   :config
@@ -1446,19 +1393,9 @@ The username needs to include two parts:
   (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
   (setq-default markdown-hide-urls t))
 
-(use-package typescript-mode
-  :bind (:map typescript-mode-map
-              ("C-!" . clang-format))
-  :custom
-  (typescript-indent-level 2))
-
-(use-package cython-mode)
-(use-package jsonnet-mode)
 (use-package ncl-mode)
-;; (use-package tree-sitter)
-;; (use-package protobuf-ts-mode)
-(use-package yaml-mode)
-(use-package base32)
+
+;;; * Org-mode
 
 (defun me//init-org ()
   "Init orgmode."
@@ -1524,6 +1461,27 @@ The username needs to include two parts:
   (define-key org-mode-map (kbd "C-c [") nil)
   (setf (alist-get "+" org-emphasis-alist) '((:strike-through "red"))))
 
+(use-package org-capture
+  :custom
+  (org-capture-templates
+   `(
+     ("l" "Log daily" plain
+      (file+olp+datetree
+       ,(file-name-concat me-emacs-data-dir
+                          (format-time-string "time-machine/%Y.org")))
+      "%?"
+      :empty-lines 1
+      :jump-to-captured t
+      :tree-type week)
+
+     ("t" "TODO" entry
+      (file+headline
+       ,(file-name-concat (format-time-string "%Y") "inbox") "Refile Me")
+      (file "capture/todo.org")
+      :empty-lines 1
+      :jump-to-captured t)
+     )))
+
 (use-package org-appear
   :custom
   (org-appear-autolinks t)
@@ -1552,6 +1510,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     (if (= pri-value pri-current)
         subtree-end
       nil)))
+
+;;; ** Time related
 
 (use-package org-habit
   :custom
@@ -1601,6 +1561,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :config
   (appt-activate 1)
   (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt))
+
+;;; ** Agenda
 
 (use-package org-agenda
   :custom
@@ -1681,26 +1643,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                        "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks nil))))))
 
-(use-package org-capture
-  :custom
-  (org-capture-templates
-   `(
-     ("l" "Log daily" plain
-      (file+olp+datetree
-       ,(file-name-concat me-emacs-data-dir
-                          (format-time-string "time-machine/%Y.org")))
-      "%?"
-      :empty-lines 1
-      :jump-to-captured t
-      :tree-type week)
-
-     ("t" "TODO" entry
-      (file+headline
-       ,(file-name-concat (format-time-string "%Y") "inbox") "Refile Me")
-      (file "capture/todo.org")
-      :empty-lines 1
-      :jump-to-captured t)
-     )))
+;;; ** Export
 
 (use-package ox
   :custom
@@ -1711,6 +1654,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-contrib)
 (use-package ox-extra
   :config (ox-extras-activate '(ignore-headlines)))
+
+;;; *** HTML
 
 (use-package ox-html
   :custom
@@ -1725,6 +1670,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
    '(("en" "<a class=\"author\"
            href=\"http://gongzhitaao.org\">%a</a> / <span
            class=\"date\">%T</span><span class=\"creator\">%c</span>"))))
+
+;;; *** LaTeX
 
 (use-package ox-bibtex)
 (use-package ox-latex
@@ -1921,9 +1868,7 @@ argument FORCE, force the creation of a new ID."
            (lambda () (me/org-custom-id-get (point) force 'uniq))))
       (org-map-entries me//org-custom-id-get-wrapper))))
 
-;; =============================================================================
-;; Helm
-;; =============================================================================
+;;; * Helm
 
 (use-package helm-mode
   :delight
@@ -1951,6 +1896,7 @@ argument FORCE, force the creation of a new ID."
   (helm-mode 1)
   (helm-autoresize-mode))
 
+;; Enable usage frequency in candidate order.
 (use-package helm-adaptive
   :custom
   (helm-adaptive-history-file
@@ -2008,70 +1954,16 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-locate
   :custom (helm-locate-fuzzy-match t))
 
-;; delight
-;; -----------------------------------------------------------------------------
-
-(delight
- '((abbrev-mode nil t)
-   (auto-fill-function " " t)
-   (auto-revert-mode " " autorevert)
-   (eldoc-mode nil t)
-   (global-subword-mode nil subword)
-   (isearch-mode " " t)
-   (subword-mode nil subword)
-   (view-mode " " view)))
-
 (use-package re-builder
   :custom
   (reb-re-syntax 'string))
 
 (use-package dockerfile-mode)
 
-;; ace-window
-;; -----------------------------------------------------------------------------
+;;; * Note taking
 
-;; (use-package ace-window
-;;   :bind ("M-p" . ace-window)
-;;   :config
-;;   (setq aw-dispatch-always t))
-
-;; x - delete window
-;; m - swap (move) window
-;; c - split window fairly, either vertically or horizontally
-;; v - split window vertically
-;; b - split window horizontally
-;; n - select the previous window
-;; i - maximize window (select which window)
-;; o - maximize current window
-
-(use-package which-key
-  :delight
-  :config (which-key-mode))
-
-(use-package separedit
-  :bind ("C-c ," . separedit)
-  :custom
-  (separedit-continue-fill-column t)
-  (separedit-default-mode 'markdown-mode))
-
-;; ===========================================================================
-;; Notes
-;; ===========================================================================
-
-;; Deft
-;;
+;;; ** Deft
 ;; This is mainly for text fuzzy search.
-
-(defun me//deft-parse-title (file contents)
-  "Parse the given FILE and CONTENTS and determine the title.
-  If `deft-use-filename-as-title' is nil, the title is taken to
-  be the first non-empty line of the FILE.  Else the base name of the FILE is
-  used as title."
-  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-    (if begin
-        (string-trim (substring contents begin (match-end 0))
-                     "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-      (deft-base-filename file))))
 
 (use-package deft
   :bind ("<f8>" . deft)
@@ -2097,8 +1989,18 @@ argument FORCE, force the creation of a new ID."
                 "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
                 "\\)")))
 
-;; Org roam
-;;
+(defun me//deft-parse-title (file contents)
+  "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+    (if begin
+        (string-trim (substring contents begin (match-end 0))
+                     "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+      (deft-base-filename file))))
+
+;;; ** Org roam
 ;; This is the note taking infra or backend.
 
 (use-package org-roam
@@ -2128,26 +2030,9 @@ argument FORCE, force the creation of a new ID."
   :config
   (org-roam-db-autosync-mode))
 
-;; (use-package org-roam-dailies
-;;   :bind ( :prefix-map org-roam-dailies-map
-;;           :prefix "C-c n d"
-;;           ("b" . org-roam-dailies-goto-previous-note)
-;;           ("d" . org-roam-dailies-goto-today)
-;;           ("f" . org-roam-dailies-goto-next-note)
-;;           ("g" . org-roam-dailies-goto-date)
-;;           ("n" . org-roam-dailies-capture-today)
-;;           ("T" . org-roam-dailies-capture-tomorrow)
-;;           ("t" . org-roam-dailies-goto-tomorrow)
-;;           ("v" . org-roam-dailies-capture-date)
-;;           ("Y" . org-roam-dailies-capture-yesterday)
-;;           ("y" . org-roam-dailies-goto-yesterday)
-;;           ))
-
 (use-package org-roam-bibtex)
 
-;; =============================================================================
-;; Bibliography manager
-;; =============================================================================
+;; ** Bibliography
 
 (defvar me-bib (file-name-as-directory
                 (file-name-concat me-emacs-data-dir "bibliography"))
@@ -2212,6 +2097,15 @@ argument FORCE, force the creation of a new ID."
 (use-package oc                         ;org-cite
   :custom
   (org-cite-global-bibliography me-bib-files))
+
+(use-package citar
+  :custom
+  (citar-bibliography me-bib-files))
+
+(use-package citar-org-roam
+  :after (citar org-roam)
+  :delight
+  :config (citar-org-roam-mode))
 
 ;; org-ref
 ;; -----------------------------------------------------------------------------
@@ -2302,8 +2196,7 @@ Each index is a list (KEY TIMESTAMP)."
              (string< (car index1) (car index2)))
         (< t1 t2))))
 
-;; reftex
-;; -----------------------------------------------------------------------------
+;;; *** reftex
 
 (use-package reftex
   :delight
@@ -2315,9 +2208,7 @@ Each index is a list (KEY TIMESTAMP)."
 
   :hook (tex-mode . reftex-mode))
 
-;; =============================================================================
-;; Working with PDF
-;; =============================================================================
+;;; *** PDF
 
 (use-package pdf-tools
   :magic ("%PDF" . pdf-view-mode)
@@ -2511,15 +2402,11 @@ alphabetically (in ascending or descending order)."
             (number-to-string (pdf-view-current-page))
             (number-to-string (pdf-cache-number-of-pages)))))
 
-
-;; =============================================================================
-;; mail
-;; =============================================================================
+;;; * Mail
 
 (require 'mail-conf)
 
-;; Contacts
-;; -----------------------------------------------------------------------------
+;;; ** Contacts
 
 (use-package bbdb
   :custom
@@ -2534,9 +2421,7 @@ alphabetically (in ascending or descending order)."
   (bbdb-initialize 'message 'anniv)
   (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 
-;; =============================================================================
-;; Theme
-;; =============================================================================
+;;; * Theme
 
 (use-package modus-themes
   :load-path "~/.cache/emacs/straight/build/modus-themes"
@@ -2559,16 +2444,12 @@ alphabetically (in ascending or descending order)."
     (set-face-attribute 'org-mode-line-clock nil
                         :inherit 'modus-themes-subtle-red)))
 
-;; =============================================================================
-;; Key logger
-;; =============================================================================
+;;; * Key logger
 
 (open-dribble-file
  (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
-;; =============================================================================
-;; Now start the server
-;; =============================================================================
+;;; * Server
 
 (use-package server
   :config
