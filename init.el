@@ -1,9 +1,9 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-08-25 20:54:12 gongzhitaao>
+;; Time-stamp: <2025-09-01 19:11:59 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
-;; me//xxx: internal helper functions, not called directly by user
+;; me--xxx: internal helper functions, not called directly by user
 ;; me-xxx: custom variables
 
 ;;; Code:
@@ -31,10 +31,11 @@
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
-(add-to-list 'load-path (file-name-as-directory (file-name-concat me-emacs-config-dir "site-lisp")))
+(add-to-list 'load-path (file-name-as-directory
+                         (file-name-concat me-emacs-config-dir "site-lisp")))
 
 ;; copied from spacemacs
-(defun me//remove-gui-elements ()
+(defun me--remove-gui-elements ()
   "Remove the menu bar, tool bar and scroll bars."
   (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
     (tool-bar-mode -1))
@@ -69,7 +70,7 @@
              "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
 
 (defvar file-name-handler-alist-original file-name-handler-alist)
-(defun me//pre-emacs-startup ()
+(defun me--pre-emacs-startup ()
   "Adjust some settings to make the startup more smooth."
 
   ;; set to 100Mib for startup
@@ -77,12 +78,12 @@
 
   (setq file-name-handler-alist nil)
 
-  (me//remove-gui-elements)
+  (me--remove-gui-elements)
   (hidden-mode-line-mode))
 
-(me//pre-emacs-startup)
+(me--pre-emacs-startup)
 
-(defun me//post-emacs-startup ()
+(defun me--post-emacs-startup ()
   "Cleanup after EMACS startup."
 
   ;; reset to 150MiB
@@ -92,7 +93,7 @@
   (makunbound 'file-name-handler-alist-original)
   (menu-bar-mode 1))
 
-(add-hook 'emacs-startup-hook #'me//post-emacs-startup)
+(add-hook 'emacs-startup-hook #'me--post-emacs-startup)
 
 ;;; * Package manager
 
@@ -242,7 +243,6 @@
            ("s s" . me/sort-symbols)
            ("s w" . me/sort-words)
            ("S"   . me/sudo-edit)
-           ("t"   . me/gnome-terminal)
            ("v"   . add-file-local-variable)
            ("V"   . add-file-local-variable-prop-line))
 
@@ -392,7 +392,7 @@ alphabetically.  See `sort-words'."
 
 ;; <https://oremacs.com/2015/04/28/blending-faces>
 
-(defun me//colir-join (r g b)
+(defun me--colir-join (r g b)
   "Build a color from R G B.
 Inverse of `color-values'."
   (format "#%02x%02x%02x"
@@ -400,7 +400,7 @@ Inverse of `color-values'."
           (ash g -8)
           (ash b -8)))
 
-(defun me//colir-blend (c1 c2 &optional alpha)
+(defun me--colir-blend (c1 c2 &optional alpha)
   "Blend the two colors C1 and C2 with ALPHA.
 C1 and C2 are in the format of `color-values'.  ALPHA is a number
 between 0.0 and 1.0 which corresponds to the influence of C1 on
@@ -408,7 +408,7 @@ the result."
   (let ((alpha (or alpha 0.5))
         (rgb1 (color-values c1))
         (rgb2 (color-values c2)))
-    (apply #'me//colir-join
+    (apply #'me--colir-join
            (cl-mapcar
             (lambda (x y)
               (round (+ (* x alpha) (* y (- 1 alpha)))))
@@ -449,11 +449,6 @@ all '.<space>' with '.<space><space>'."
   (setq deactivate-mark t)
   nil)
 
-(defun me/gnome-terminal ()
-  "Open gnome-terminal."
-  (interactive)
-  (start-process "gnome-terminal" nil "gnome-terminal"))
-
 (defun me/copy-rectangle-as-kill (start end)
   "Do `copy-rectangle-as-kill' in START and END, also save to system clipboard."
   (interactive "r")
@@ -466,11 +461,8 @@ all '.<space>' with '.<space><space>'."
 ;;; * Appearance
 
 (blink-cursor-mode 0)
-(mouse-avoidance-mode 'animate)
 
-(setq x-underline-at-descent-line t)
-
-(scroll-bar-mode 0)
+(scroll-bar-mode -1)
 (setq scroll-margin 0
       scroll-preserve-screen-position nil)
 
@@ -478,31 +470,29 @@ all '.<space>' with '.<space><space>'."
 (setq inhibit-startup-message t
       resize-mini-windows t)
 
-(defun me//set-title-bar()
+(defun me--set-title-bar()
   "Update title bar."
   (let* ((date (format-time-string "%Y-%m-%d %a"))
          (filepath (or buffer-file-name dired-directory (buffer-name)))
          (hostname (concat "@" (or (file-remote-p filepath 'host) "localhost")))
          (separator (make-string 8 ? )))
     (string-join `(,date ,hostname ,filepath) separator)))
-(setq frame-title-format '((:eval (me//set-title-bar))))
+(setq frame-title-format '((:eval (me--set-title-bar))))
 
 ;; Center the editing content.
 (use-package writeroom-mode
   :custom
   (writeroom-fullscreen-effect nil)
   (writeroom-major-modes
-   '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
+   '( prog-mode dired-mode Info-mode calendar-mode text-mode
       org-agenda-mode bibtex-mode bookmark-bmenu-mode
-      LilyPond-mode notmuch-show-mode protobuf-mode help-mode))
-  (writeroom-major-modes-exceptions '(web-mode))
+      notmuch-show-mode help-mode))
   (writeroom-maximize-window nil)
   (writeroom-mode-line t)
   (writeroom-use-derived-modes t)
-  (writeroom-width 100)
+  (writeroom-width 120)
 
   :config
-  (delete 'writeroom-set-menu-bar-lines writeroom-global-effects)
   (global-writeroom-mode))
 
 ;; Select interesting regions
@@ -545,7 +535,6 @@ all '.<space>' with '.<space><space>'."
   (show-smartparens-global-mode)
 
   (setq sp-highlight-pair-overlay nil
-        sp-show-pair-from-inside nil
         sp-cancel-autoskip-on-backward-movement nil)
 
   (sp-with-modes
@@ -581,14 +570,14 @@ all '.<space>' with '.<space><space>'."
 
 (defconst me-default-font-height 140 "Return the default font height")
 
-(defun me//ppi (&optional frame)
+(defun me--ppi (&optional frame)
  (let* ((attrs (frame-monitor-attributes frame))
          (size (alist-get 'mm-size attrs))
          (geometry (alist-get 'geometry attrs)))
    ;; 1 inches = 1 mm / 25.4
    (/ (caddr geometry) (/ (car size) 25.4))))
 
-(defun me//unicode-font-size ()
+(defun me--unicode-font-size ()
   "Return the incremental size of unicode font."
   (let ((unit (frame-char-width))
         (multiple 2))
@@ -602,7 +591,7 @@ all '.<space>' with '.<space><space>'."
                       :family "Victor Mono"
                       :height me-default-font-height)
 
-  (let ((size (me//unicode-font-size)))
+  (let ((size (me--unicode-font-size)))
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font
        (frame-parameter nil 'font) charset (font-spec
@@ -692,13 +681,13 @@ all '.<space>' with '.<space><space>'."
   :config
   (global-auto-revert-mode))
 
-(use-package vc-hooks
-  :after tramp
-  :custom
-  (vc-make-backup-files t)
-  (vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
-                                vc-ignore-dir-regexp
-                                tramp-file-name-regexp)))
+;; (use-package vc-hooks
+;;   :after tramp
+;;   :custom
+;;   (vc-make-backup-files t)
+;;   (vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
+;;                                 vc-ignore-dir-regexp
+;;                                 tramp-file-name-regexp)))
 
 (use-package select
   :custom
@@ -819,23 +808,21 @@ all '.<space>' with '.<space><space>'."
   (separedit-continue-fill-column t)
   (separedit-default-mode 'markdown-mode))
 
-(use-package tramp
-  :load-path "~/.cache/emacs/straight/build/tramp"
-  :custom
-  (tramp-backup-directory-alist nil)
-  :config
-  (connection-local-set-profile-variables
-   'remote-direct-async-process
-   '((tramp-direct-async-process . t)))
-  (connection-local-set-profiles
-   '(:application tramp :protocol "ssh")
-   'remote-direct-async-process))
+;; Workaround for tramp.
+;;
+;; tramp-loaddefs.el is modified after straight builds the tramp directory.
+;; This results in dirty directory and prevents straight from pulling.
+(call-process-shell-command
+ "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
 
-(use-package tramp-cache
-  :load-path "~/.cache/emacs/straight/build/tramp"
-  :custom
-  (tramp-persistency-file-name (file-name-concat me-emacs-cache-dir "tramp"))
-  (tramp-use-connection-share nil))
+(use-package tramp)
+
+;; Workaround for tramp.
+;;
+;; tramp-loaddefs.el is modified after straight builds the tramp directory.
+;; This results in dirty directory and prevents straight from pulling.
+(call-process-shell-command
+ "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
 
 (use-package ssh-config-mode
   :mode (("/\\.ssh/config\\'"     . ssh-config-mode)
@@ -881,8 +868,13 @@ all '.<space>' with '.<space><space>'."
 ;; Show the search result count.
 (use-package anzu
   :delight
-  :custom (anzu-search-threshold 1000)
-  :config (global-anzu-mode))
+  :custom
+  (anzu-search-threshold 1000)
+
+  :config
+  (global-anzu-mode)
+  (global-set-key [remap query-replace] #'anzu-query-replace)
+  (global-set-key [remap query-replace-regexp] #'anzu-query-replace-regexp))
 
 (use-package helm-ag
   :after helm
@@ -933,11 +925,11 @@ all '.<space>' with '.<space><space>'."
 
 ;;; * Bookkeeping
 
-(defun me//force-backup-of-buffer ()
+(defun me--force-backup-of-buffer ()
   "Force to backup buffer."
   (setq-local buffer-backed-up nil))
 
-(defun me//cleanup-old-files (directory nday)
+(defun me--cleanup-old-files (directory nday)
   "Cleanup DIRECTORY files older than NDAY."
   (let ((age (* 60 60 24 (or nday 7)))
         (current (float-time (current-time))))
@@ -966,24 +958,24 @@ all '.<space>' with '.<space><space>'."
     (unless (file-exists-p backup-dir)
       (mkdir backup-dir t))
     (setopt backup-directory-alist `(("." . ,backup-dir)))
-    (me//cleanup-old-files backup-dir 7))
+    (me--cleanup-old-files backup-dir 7))
 
   ;; Backup buffer before each save.
-  (add-hook 'before-save-hook #'me//force-backup-of-buffer))
+  (add-hook 'before-save-hook #'me--force-backup-of-buffer))
 
-(defun me//make-temp-file-in-tmp (args)
+(defun me--make-temp-file-in-tmp (args)
   "Make temporary file in /tmp instead of PREFIX and pass ARGS along."
   (cons
    (file-name-as-directory
     (concat (file-remote-p (car args)) temporary-file-directory))
    (cdr args)))
-(advice-add 'make-temp-file :filter-args #'me//make-temp-file-in-tmp)
+(advice-add 'make-temp-file :filter-args #'me--make-temp-file-in-tmp)
 
-(defun me//make-file-precious-when-remote ()
+(defun me--make-file-precious-when-remote ()
   "Set FILE-PRECIOUS-FLAG for remote files."
   (when (file-remote-p default-directory)
     (set (make-local-variable 'file-precious-flag) t)))
-(add-hook 'find-file-hook #'me//make-file-precious-when-remote)
+(add-hook 'find-file-hook #'me--make-file-precious-when-remote)
 
 (setopt auto-save-list-file-prefix
         (file-name-concat me-emacs-cache-dir "auto-save-list/saves-"))
@@ -1036,18 +1028,17 @@ all '.<space>' with '.<space><space>'."
   :custom
   (bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
   :config
-  (defun me//init-bookmark-bmenu ()
+  (defun me--init-bookmark-bmenu ()
     (set (make-local-variable 'writeroom-width) 150)
     (set-face-bold 'bookmark-menu-bookmark nil)
     (hl-line-mode))
 
-  (add-hook 'bookmark-bmenu-mode-hook #'me//init-bookmark-bmenu))
+  (add-hook 'bookmark-bmenu-mode-hook #'me--init-bookmark-bmenu))
 
 ;;; * Dired
 
 (use-package vterm)
 
->>>>>>> d2beb21 (Add proper outline.)
 (use-package dired
   :custom
   (dired-dwim-target t)
@@ -1329,7 +1320,7 @@ all '.<space>' with '.<space><space>'."
   :delight)
 (use-package python-isort)
 
-(defun me//isort-region-or-buffer (&optional beg end)
+(defun me--isort-region-or-buffer (&optional beg end)
   "Sort region in BEG and END if active, whole buffer otherwise."
   (interactive "r")
   (if (region-active-p)
@@ -1348,12 +1339,12 @@ all '.<space>' with '.<space><space>'."
   :mode ("\\.py\\'" . python-mode)
   :bind (:map python-mode-map
               ("C-!" . #'blacken-buffer)
-              ("C-c C-s" . #'me//isort-region-or-buffer))
+              ("C-c C-s" . #'me--isort-region-or-buffer))
   :custom
   (python-indent-offset 2)
 
   :config
-  (defun me//init-python()
+  (defun me--init-python()
     "Init python model."
     (sphinx-doc-mode)
     (setq-local comment-inline-offset 2)
@@ -1361,7 +1352,7 @@ all '.<space>' with '.<space><space>'."
     (setq-local comment-column 0)
     (eldoc-mode -1))
 
-  (add-hook 'python-mode-hook #'me//init-python))
+  (add-hook 'python-mode-hook #'me--init-python))
 
 (use-package json-mode)
 (use-package yaml-mode)
@@ -1397,7 +1388,7 @@ all '.<space>' with '.<space><space>'."
 
 ;;; * Org-mode
 
-(defun me//init-org ()
+(defun me--init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
   (flyspell-mode)
@@ -1455,7 +1446,7 @@ all '.<space>' with '.<space><space>'."
   (bind-keys :map org-mode-map
              ("C-J" . me/join-next-line))
 
-  (add-hook 'org-mode-hook #'me//init-org)
+  (add-hook 'org-mode-hook #'me--init-org)
   (define-key org-mode-map [remap fill-paragraph] #'org-fill-paragraph)
   (setopt org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
   (define-key org-mode-map (kbd "C-c [") nil)
@@ -1493,14 +1484,14 @@ all '.<space>' with '.<space><space>'."
   (org-refile-use-outline-path 'file)
   (org-outline-path-complete-in-steps nil))
 
-(defun me//org-skip-subtree-if-habit ()
+(defun me--org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (if (string= (org-entry-get nil "STYLE") "habit")
         subtree-end
       nil)))
 
-(defun me//org-skip-subtree-if-priority (priority)
+(defun me--org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
 PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -1594,17 +1585,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-tags-column -130)
 
   :config
-  (defun me//init-org-agenda ()
+  (defun me--init-org-agenda ()
     ;; (set (make-local-variable 'fill-column) 130)
     (set (make-local-variable 'writeroom-width) 150)
     (hl-line-mode))
-  (add-hook 'org-agenda-mode-hook #'me//init-org-agenda)
+  (add-hook 'org-agenda-mode-hook #'me--init-org-agenda)
 
   (advice-add 'org-agenda-goto :after
               (lambda (&rest args)
                 (org-narrow-to-subtree)))
 
-  (defun me//org-agenda-cmp-user-defined (a b)
+  (defun me--org-agenda-cmp-user-defined (a b)
     "Compare the todo states of strings A and B."
     (let* ((todo-priority '(("NEXT" . 6)
                             ("TODO" . 5)
@@ -1625,7 +1616,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       (cond ((< la lb) -1)
             ((< lb la) +1))))
 
-  (setopt org-agenda-cmp-user-defined #'me//org-agenda-cmp-user-defined)
+  (setopt org-agenda-cmp-user-defined #'me--org-agenda-cmp-user-defined)
   (setopt org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
            ((agenda "" ((org-agenda-span 'day)))
@@ -1636,8 +1627,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                     "High-priority unfinished tasks")))
             (alltodo ""
                      ((org-agenda-skip-function
-                       '(or (me//org-skip-subtree-if-habit)
-                            (me//org-skip-subtree-if-priority ?A)
+                       '(or (me--org-skip-subtree-if-habit)
+                            (me--org-skip-subtree-if-priority ?A)
                             (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header
                        "ALL normal priority tasks:"))))
@@ -1753,7 +1744,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     '((:results . "raw")
       (:exports . "results")))
 
-  (defun me//prefix-all-lines (pre body)
+  (defun me--prefix-all-lines (pre body)
     (with-temp-buffer
       (insert body)
       (string-insert-rectangle (point-min) (point-max) pre)
@@ -1761,9 +1752,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   (defun org-babel-execute:latex-macro (body _params)
     (concat
-     (me//prefix-all-lines "#+LATEX_HEADER: " body)
+     (me--prefix-all-lines "#+LATEX_HEADER: " body)
      "\n#+HTML_HEAD_EXTRA: <div style=\"display: none\"> \\(\n"
-     (me//prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
+     (me--prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
      "\n#+HTML_HEAD_EXTRA: \\)</div>\n")))
 
 ;; Helper functions
@@ -1771,18 +1762,18 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-id)
 
-(defun me//clean-up-heading (heading)
+(defun me--clean-up-heading (heading)
   "Clean up HEADING text."
   (replace-regexp-in-string "[^[:alpha:][:digit:][:space:]_-]" ""
                             (downcase heading)))
 
-(defun me//preprocess-heading (heading sep)
+(defun me--preprocess-heading (heading sep)
   "Preprocessing on HEADING with SEP as separator."
-  (let* ((words (split-string (me//clean-up-heading heading)))
+  (let* ((words (split-string (me--clean-up-heading heading)))
          (words2 (subseq words 0 (min 2 (length words)))))
     (replace-regexp-in-string "\\s-+" sep (mapconcat 'identity words2 " "))))
 
-(defun me//org-id-from-heading (heading &optional level sep uniq)
+(defun me--org-id-from-heading (heading &optional level sep uniq)
   "Format HEADING to use as custom ID and return it.
 
 LEVEL is provided, the level of heading is prefixed.  This
@@ -1792,10 +1783,10 @@ digit hash ID."
   (let ((sep (or sep "-")))
     (concat (when org-id-prefix (format "%s%s" org-id-prefix sep))
             (when level (format "h%d%s" level sep))
-            (me//preprocess-heading heading sep)
+            (me--preprocess-heading heading sep)
             (when uniq (concat sep (substring (org-id-new) 0 5))))))
 
-(defun me//org-id-hash (s &optional length)
+(defun me--org-id-hash (s &optional length)
   "Generate a unique string hash for S, truncated at LENGTH."
   (let ((length (or length 5))
         (hash (secure-hash 'sha1 s)))
@@ -1818,7 +1809,7 @@ is returned."
        ((and id (stringp id) (string-match "\\S-" id))
         id)
        (t
-        (setq id (me//org-id-from-heading (org-get-heading t t t t)
+        (setq id (me--org-id-from-heading (org-get-heading t t t t)
                                           (org-current-level)
                                           "-"
                                           uniq))
@@ -1850,13 +1841,13 @@ argument FORCE, force the creation of a new ID."
   (when (derived-mode-p 'org-mode)
     (when force
       (org-entry-put (point) "CUSTOM_ID" nil))
-    (let ((me//org-custom-id-get-wrapper
+    (let ((me--org-custom-id-get-wrapper
            (if force
                (lambda ()
                  (org-entry-put (point) "CUSTOM_ID" nil)
                  (me/org-custom-id-get (point) 'create))
              (lambda () (me/org-custom-id-get (point) 'create)))))
-      (org-map-entries me//org-custom-id-get-wrapper))))
+      (org-map-entries me--org-custom-id-get-wrapper))))
 
 (defun me/org-custom-id-get-create-hash-all (&optional force)
   "Create custom ID for every heading.  Overwrite current if FORCE."
@@ -1864,9 +1855,9 @@ argument FORCE, force the creation of a new ID."
   (when (derived-mode-p 'org-mode)
     (when force
       (org-entry-put (point) "CUSTOM_ID" nil))
-    (let ((me//org-custom-id-get-wrapper
+    (let ((me--org-custom-id-get-wrapper
            (lambda () (me/org-custom-id-get (point) force 'uniq))))
-      (org-map-entries me//org-custom-id-get-wrapper))))
+      (org-map-entries me--org-custom-id-get-wrapper))))
 
 ;;; * Helm
 
@@ -1907,7 +1898,7 @@ argument FORCE, force the creation of a new ID."
 (use-package helm-bookmark
   :custom (helm-bookmark-show-location t))
 
-(defun me//isearch-from-helm-occur ()
+(defun me--isearch-from-helm-occur ()
   "Continue isearch from helm-occur."
   (interactive)
   (helm-run-after-exit
@@ -1979,7 +1970,7 @@ argument FORCE, force the creation of a new ID."
   (deft-use-filter-string-for-filename t)
 
   :config
-  (advice-add 'deft-parse-title :override #'me//deft-parse-title)
+  (advice-add 'deft-parse-title :override #'me--deft-parse-title)
 
   (setq deft-strip-summary-regexp
         (concat "\\("
@@ -1989,7 +1980,7 @@ argument FORCE, force the creation of a new ID."
                 "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
                 "\\)")))
 
-(defun me//deft-parse-title (file contents)
+(defun me--deft-parse-title (file contents)
   "Parse the given FILE and CONTENTS and determine the title.
   If `deft-use-filename-as-title' is nil, the title is taken to
   be the first non-empty line of the FILE.  Else the base name of the FILE is
@@ -2041,7 +2032,7 @@ argument FORCE, force the creation of a new ID."
   "My bibliography files.")
 (defvar me-bib-pdfs (list (file-name-as-directory (file-name-concat me-bib "pdf")))
   "Paths containing my PDFs of the bibliography.")
-(defvar me-bib-notes (file-name-as-directory (file-name-concat me-bib "notes"))
+(defvar me-bib-notes (file-name-as-directory org-directory)
   "Path to store my notes on each papers.")
 
 (defun me/bibtex-find-text-begin ()
@@ -2073,13 +2064,13 @@ argument FORCE, force the creation of a new ID."
   (bibtex-text-indentation 20)
 
   :config
-  (defun me//init-bibtex ()
+  (defun me--init-bibtex ()
     "Init bibtex mode."
     (set (make-local-variable 'fill-column) 140)
     (set (make-local-variable 'writeroom-width) 150)
     (setq bibtex-maintain-sorted-entries
-          '(me//bibtex-entry-index me//bibtex-lessp)))
-  (add-hook 'bibtex-mode-hook #'me//init-bibtex))
+          '(me--bibtex-entry-index me--bibtex-lessp)))
+  (add-hook 'bibtex-mode-hook #'me--init-bibtex))
 
 (use-package bibtex-completion
   :custom
@@ -2100,11 +2091,20 @@ argument FORCE, force the creation of a new ID."
 
 (use-package citar
   :custom
-  (citar-bibliography me-bib-files))
+  ( citar-bibliography me-bib-files)
+  ( citar-library-paths me-bib-pdfs)
+
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup))
 
 (use-package citar-org-roam
-  :after (citar org-roam)
   :delight
+  :after (citar org-roam)
+
+  :custom
+  (citar-org-roam-note-title-template "${year}:${title}")
+
   :config (citar-org-roam-mode))
 
 ;; org-ref
@@ -2113,12 +2113,12 @@ argument FORCE, force the creation of a new ID."
 (use-package f
   :load-path "~/.cache/emacs/straight/build/f")
 
-(defun me//org-ref-notes-function (thekey)
+(defun me--org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
   (bibtex-completion-edit-notes
    (list (car (org-ref-get-bibtex-key-and-file thekey)))))
 
-(defun me//org-ref-add-timestamp ()
+(defun me--org-ref-add-timestamp ()
   "Add a timestamp field to a bibtex entry, ISO 8601 format."
   (interactive)
   (let ((ts (bibtex-autokey-get-field "timestamp")))
@@ -2140,7 +2140,7 @@ argument FORCE, force the creation of a new ID."
   (bind-keys :map org-mode-map
              ("C-c ]" . org-ref-insert-ref-link))
 
-  (dolist (func '(org-ref-downcase-bibtex-entry me//org-ref-add-timestamp))
+  (dolist (func '(org-ref-downcase-bibtex-entry me--org-ref-add-timestamp))
     (add-hook 'org-ref-clean-bibtex-entry-hook func))
 
   (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
@@ -2170,11 +2170,11 @@ argument FORCE, force the creation of a new ID."
                               (org-ref-clean-bibtex-entry)))))
     (bibtex-progress-message 'done)))
 
-(defun me//random-time ()
+(defun me--random-time ()
   "Generate random timestamp from epoch and now."
   (random (time-convert (current-time) 'integer)))
 
-(defun me//bibtex-entry-index ()
+(defun me--bibtex-entry-index ()
   "Return index of BibTeX entry head at or past position of point.
 
 The index is a list (KEY TIMESTAMP) that is used for sorting the
@@ -2183,10 +2183,10 @@ Move point to the end of the head of the entry found."
   (list (bibtex-key-in-head)
         (let ((ts (bibtex-autokey-get-field "timestamp")))
           (if (string-empty-p ts)
-              (me//random-time)
+              (me--random-time)
             (time-convert (date-to-time ts) 'integer)))))
 
-(defun me//bibtex-lessp (index1 index2)
+(defun me--bibtex-lessp (index1 index2)
   "Predicate for sorting BibTeX entries with indices INDEX1 and INDEX2.
 
 Each index is a list (KEY TIMESTAMP)."
@@ -2218,24 +2218,24 @@ Each index is a list (KEY TIMESTAMP)."
   (defun me/pdf-set-last-viewed-bookmark ()
     (interactive)
     (when (eq major-mode 'pdf-view-mode)
-      (let ((bmk (me//pdf-get-bookmark-name)))
-        (bookmark-set (me//pdf-get-bookmark-name))
+      (let ((bmk (me--pdf-get-bookmark-name)))
+        (bookmark-set (me--pdf-get-bookmark-name))
         (bookmark-bmenu-save)
         (message "Bookmark %s set" bmk))))
 
-  (defun me//pdf-jump-last-viewed-bookmark ()
-    (let ((bmk (me//pdf-get-bookmark-name)))
-      (when (me//pdf-has-last-viewed-bookmark bmk)
+  (defun me--pdf-jump-last-viewed-bookmark ()
+    (let ((bmk (me--pdf-get-bookmark-name)))
+      (when (me--pdf-has-last-viewed-bookmark bmk)
         (bookmark-jump bmk))))
 
-  (defun me//pdf-has-last-viewed-bookmark (bmk)
+  (defun me--pdf-has-last-viewed-bookmark (bmk)
     (assoc bmk bookmark-alist))
 
-  (defun me//pdf-get-bookmark-name ()
+  (defun me--pdf-get-bookmark-name ()
     (concat " " (file-name-sans-extension
                   (file-name-nondirectory (buffer-file-name)))))
 
-  (add-hook 'pdf-view-mode-hook 'me//pdf-jump-last-viewed-bookmark))
+  (add-hook 'pdf-view-mode-hook 'me--pdf-jump-last-viewed-bookmark))
 
 ;; Helper functions
 ;; -----------------------------------------------------------------------------
@@ -2261,7 +2261,7 @@ Each index is a list (KEY TIMESTAMP)."
   (image-backward-hscroll 7))
 
 ;; copied directly from view-window-size
-(defun me//window-size ()
+(defun me--window-size ()
   "Return the height of the current window, excluding the mode line.
 Using `window-line-height' accounts for variable-height fonts."
   (let ((h (window-line-height -1)))
@@ -2271,7 +2271,7 @@ Using `window-line-height' accounts for variable-height fonts."
       ;; nil, fall back on `window-height'.
       (1- (window-height)))))
 
-(defun me//get-cite-key ()
+(defun me--get-cite-key ()
   "Get citation key if possible."
   (cond
    ((derived-mode-p 'org-mode)
@@ -2289,7 +2289,7 @@ Using `window-line-height' accounts for variable-height fonts."
 (defun me/org-ref-open-entry ()
   "Open bibtex file to key with which the note associated."
   (interactive)
-  (let ((key (me//get-cite-key)))
+  (let ((key (me--get-cite-key)))
     (if key
         (progn
           (find-file (cdr (org-ref-get-bibtex-key-and-file key)))
@@ -2299,17 +2299,17 @@ Using `window-line-height' accounts for variable-height fonts."
 (defun me/org-ref-open-note ()
   "Open the associated note file."
   (interactive)
-  (let* ((key (me//get-cite-key))
+  (let* ((key (me--get-cite-key))
          (pdf-file (org-ref-get-pdf-filename key)))
     (if (and pdf-file (file-exists-p pdf-file))
-        (org-ref-open-notes-at-point key)
+        (citar-open-notes (list key))
       (message "Not open note for non-existing PDF %s" key))))
 
 (defun me/org-ref-open-pdf (&optional arg)
   "Open the associated PDF.
 If ARG, open with external program.  Otherwise open in Emacs."
   (interactive "P")
-  (let* ((key (me//get-cite-key))
+  (let* ((key (me--get-cite-key))
          (pdf-file (org-ref-get-pdf-filename key)))
     (if (and pdf-file (file-exists-p pdf-file))
         (org-open-file pdf-file (not arg))
@@ -2347,7 +2347,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; helper functions
 ;; -----------------------------------------------------------------------------
 
-(defun me//getkey-orgref ()
+(defun me--getkey-orgref ()
   "Get the year part of orgref citation.
 
 My bib key is (lastname)(YYYY)-(title), where title is the first
@@ -2379,9 +2379,9 @@ alphabetically (in ascending or descending order)."
   (interactive)
   (when (derived-mode-p 'org-mode)
     (cond ((org-at-item-p)
-           (org-sort-list with-case ?F #'me//getkey-orgref))
+           (org-sort-list with-case ?F #'me--getkey-orgref))
           ((org-at-heading-p)
-           (org-sort-entries with-case ?F #'me//getkey-orgref))
+           (org-sort-entries with-case ?F #'me--getkey-orgref))
           (t nil))))
 
 ;; The following three functions jump among PDF, bibtex entry and note.  For
@@ -2389,7 +2389,7 @@ alphabetically (in ascending or descending order)."
 ;; bibtex entry or the note that is associated with this bibtex entry.
 
 ;; (define-pdf-cache-function pagelabels)
-(defun me//pdf-view-page-number ()
+(defun me--pdf-view-page-number ()
   "For telephone-mode line."
   (interactive)
   (if (called-interactively-p 'interactive)
@@ -2424,13 +2424,9 @@ alphabetically (in ascending or descending order)."
 ;;; * Theme
 
 (use-package modus-themes
-  :load-path "~/.cache/emacs/straight/build/modus-themes"
-
   :custom
   (modus-themes-common-palette-overrides '((bg-region bg-ochre)
                                            (fg-region unspecified)))
-  (modus-themes-bold-constructs nil)
-  (modus-themes-italic-constructs t)
   (modus-themes-region '(bg-only no-extend))
 
   :custom-face
@@ -2438,11 +2434,7 @@ alphabetically (in ascending or descending order)."
 
   :config
   (require-theme 'modus-themes)
-  (load-theme 'modus-operandi :no-confirm)
-
-  (with-eval-after-load "org-faces"
-    (set-face-attribute 'org-mode-line-clock nil
-                        :inherit 'modus-themes-subtle-red)))
+  (load-theme 'modus-operandi :no-confirm))
 
 ;;; * Key logger
 
