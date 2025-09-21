@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-09-01 19:11:59 gongzhitaao>
+;; Time-stamp: <2025-09-21 11:17:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -310,6 +310,8 @@
 ;; M-s g helm-ag
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
+;; M-s o helm-occur
+(global-set-key (kbd "M-s o") #'helm-occur)
 ;; M-s s helm-swoop
 
 (use-package repeat
@@ -1066,8 +1068,8 @@ all '.<space>' with '.<space><space>'."
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("e" "~/.local/share/emacs"        "Emacs data")
-     ("sm" "/ssh:makermaker-cloud:~/"   "SSH server"
-      ("t" "~/.local/share/Trash/"       "TrashCan"))))
+     ("sm" "/ssh:makermaker-cloud:~/"   "SSH server")
+     ("t" "~/.local/share/Trash/"       "TrashCan")))
 
   :config
   ;; (dirvish-peek-mode)             ; Preview files in minibuffer
@@ -1364,7 +1366,7 @@ all '.<space>' with '.<space><space>'."
   :bind (:map image-mode-map
               ("H"   . image-transform-fit-to-window)
               ("q"   . quit-window)
-              ("Q"   . kill-this-buffer)
+              ("Q"   . kill-current-buffer)
               ("r"   . image-transform-set-rotation)
               ("W"   . image-transform-fit-to-window)
               ("SPC" . image-transform-reset-to-initial)))
@@ -1507,7 +1509,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-habit
   :custom
   (org-habit-following-days 1)
-  (org-habit-graph-column   50)
+  (org-habit-graph-column   100)
   (org-habit-preceding-days 28)
 
   :custom-face
@@ -1586,10 +1588,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   :config
   (defun me--init-org-agenda ()
-    ;; (set (make-local-variable 'fill-column) 130)
     (set (make-local-variable 'writeroom-width) 150)
     (hl-line-mode))
   (add-hook 'org-agenda-mode-hook #'me--init-org-agenda)
+
+  (setcar org-agenda-time-grid '(daily today))
 
   (advice-add 'org-agenda-goto :after
               (lambda (&rest args)
@@ -2338,6 +2341,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
               ("j"          . me/pdf-view-next-few-lines)
               ("k"          . me/pdf-view-prev-few-lines)
               ("n"          . me/org-ref-open-note)
+              ("Q"          . kill-current-buffer)
               ("z"          . delete-other-windows)
               ("C-<left>"   . pdf-view-previous-page-command)
               ("C-<right>"  . pdf-view-next-page-command))
