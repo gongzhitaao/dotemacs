@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-09-21 11:17:08 gongzhitaao>
+;; Time-stamp: <2025-09-26 16:00:43 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -492,7 +492,7 @@ all '.<space>' with '.<space><space>'."
   (writeroom-maximize-window nil)
   (writeroom-mode-line t)
   (writeroom-use-derived-modes t)
-  (writeroom-width 120)
+  (writeroom-width 100)
 
   :config
   (global-writeroom-mode))
@@ -591,6 +591,11 @@ all '.<space>' with '.<space><space>'."
 
   (set-face-attribute 'default nil
                       :family "Victor Mono"
+                      :height me-default-font-height)
+
+  (set-face-attribute 'variable-pitch nil
+                      :family "Iosevka Aile"
+                      :weight 'light
                       :height me-default-font-height)
 
   (let ((size (me--unicode-font-size)))
@@ -807,8 +812,8 @@ all '.<space>' with '.<space><space>'."
 (use-package separedit
   :bind ("C-c ," . separedit)
   :custom
-  (separedit-continue-fill-column t)
-  (separedit-default-mode 'markdown-mode))
+  ( separedit-continue-fill-column t)
+  ( separedit-default-mode 'markdown-mode))
 
 ;; Workaround for tramp.
 ;;
@@ -817,7 +822,9 @@ all '.<space>' with '.<space><space>'."
 (call-process-shell-command
  "cd ~/.cache/emacs/straight/repos/tramp && git restore tramp-loaddefs.el")
 
-(use-package tramp)
+(use-package tramp
+  :custom
+  ( tramp-use-connection-share nil))
 
 ;; Workaround for tramp.
 ;;
@@ -1636,6 +1643,71 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                       (org-agenda-overriding-header
                        "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks nil))))))
+
+
+;;; ** Presentation
+
+(defun me--org-present-prepare-slide (buffer-name heading)
+  ;; Show only top-level headlines
+  (org-overview)
+
+  ;; Unfold the current entry
+  (org-show-entry)
+
+  ;; Show only direct subheadings of the slide but don't expand them
+  (org-show-children))
+
+(defun me--org-present-start ()
+  ;; Need this to remove the face remap.
+  (setq-local me--org-present-cookies '())
+
+  (dolist (face '((default . 1.75)
+                  (header-line . 4.0)
+                  (org-block . 1.25)
+                  (org-block-begin-line . 0.75)
+                  (org-code . 1.75)
+                  (org-document-title . 3)
+                  (org-level-1 . 2.75)
+                  (org-level-2 . 2.5)
+                  (org-level-3 . 2.25)
+                  (org-verbatim . 1.75)))
+    (add-to-list 'me--org-present-cookies
+                 (face-remap-add-relative (car face) :height (cdr face))))
+
+  (writeroom-mode -1)
+
+  ;; Set a blank header line string to create blank space at the top
+  (setq-local header-line-format " ")
+
+  ;; Display inline images automatically
+  (org-display-inline-images)
+
+  (setq visual-fill-column-width 90
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1)
+  (variable-pitch-mode)
+  (org-appear-mode -1))
+
+(defun me--org-present-end ()
+  ;; Reset font customizations
+  (when (boundp 'me--org-present-cookies)
+      (dolist (cookie me--org-present-cookies)
+        (face-remap-remove-relative cookie))
+      (makunbound 'me--org-present-cookies))
+
+  ;; Clear the header line string so that it isn't displayed
+  (setq-local header-line-format nil)
+  (visual-fill-column-mode -1)
+  (variable-pitch-mode -1)
+  (org-remove-inline-images)
+  (org-appear-mode 1)
+  (writeroom-mode 1))
+
+;(use-package org-present
+; :config
+; (add-hook 'org-present-mode-hook 'me--org-present-start)
+; (add-hook 'org-present-mode-quit-hook 'me--org-present-end)
+; (add-hook 'org-present-after-navigate-functions 'me--org-present-prepare-slide))
 
 ;;; ** Export
 
