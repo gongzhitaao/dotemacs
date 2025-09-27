@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-09-26 16:00:43 gongzhitaao>
+;; Time-stamp: <2025-09-27 09:48:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -288,7 +288,7 @@
 ;; M-l downcase-word
 ;; M-m back-to-indentation
 ;; M-q fill-paragraph
-(global-set-key (kbd "M-Q") #'me/unfill-paragraph)
+;; (global-set-key (kbd "M-Q") #'me/unfill-paragraph)
 ;; M-r move-to-window-line-top-bottom
 ;; M-s search
 ;; M-t transpose-word
@@ -734,6 +734,9 @@ all '.<space>' with '.<space><space>'."
 (use-package subword
   :config
   (global-subword-mode 1))
+
+(use-package unfill
+  :bind ([remap fill-paragraph] . unfill-toggle))
 
 (use-package indent-bars
   :hook (python-mode . indent-bars-mode)
@@ -2092,7 +2095,6 @@ argument FORCE, force the creation of a new ID."
           ("l" . org-roam-buffer-toggle)
           :map org-mode-map
           ("C-M-i" . completion-at-point))
-  :bind-keymap
   :config
   (org-roam-db-autosync-mode))
 
