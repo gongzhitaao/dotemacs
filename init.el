@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-09-27 09:48:56 gongzhitaao>
+;; Time-stamp: <2025-09-27 19:56:51 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -486,7 +486,7 @@ all '.<space>' with '.<space><space>'."
   :custom
   (writeroom-fullscreen-effect nil)
   (writeroom-major-modes
-   '( prog-mode dired-mode Info-mode calendar-mode text-mode
+   '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
       org-agenda-mode bibtex-mode bookmark-bmenu-mode
       notmuch-show-mode help-mode))
   (writeroom-maximize-window nil)
