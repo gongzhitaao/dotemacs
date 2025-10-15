@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-09-27 19:56:51 gongzhitaao>
+;; Time-stamp: <2025-10-11 11:30:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -557,7 +557,6 @@ all '.<space>' with '.<space><space>'."
 (delight
  '((abbrev-mode nil t)
    (auto-fill-function " " t)
-   (auto-revert-mode " " autorevert)
    (eldoc-mode nil t)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
@@ -594,7 +593,8 @@ all '.<space>' with '.<space><space>'."
                       :height me-default-font-height)
 
   (set-face-attribute 'variable-pitch nil
-                      :family "Iosevka Aile"
+                      ;; :family "Iosevka Aile"
+                      :family "Serif"
                       :weight 'light
                       :height me-default-font-height)
 
@@ -686,7 +686,8 @@ all '.<space>' with '.<space><space>'."
 (use-package autorevert
   :delight (global-auto-revert-mode " ")
   :config
-  (global-auto-revert-mode))
+  (global-auto-revert-mode)
+  (setq auto-revert-remote-files t))
 
 ;; (use-package vc-hooks
 ;;   :after tramp
@@ -780,9 +781,6 @@ all '.<space>' with '.<space><space>'."
               ("C-;" . comment-or-uncomment-region)
               ("s-;" . helm-flyspell-correct)))
 
-(use-package flycheck
-  :load-path "~/.cache/emacs/straight/build/flycheck")
-
 (use-package outline
   :custom
   ( outline-minor-mode-highlight 'append)
@@ -827,7 +825,9 @@ all '.<space>' with '.<space><space>'."
 
 (use-package tramp
   :custom
-  ( tramp-use-connection-share nil))
+  ( tramp-use-connection-share nil)
+  :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 ;; Workaround for tramp.
 ;;
@@ -841,6 +841,17 @@ all '.<space>' with '.<space><space>'."
          ("/sshd?_config\\'"      . ssh-config-mode)
          ("/known_hosts\\'"       . ssh-known-hosts-mode)
          ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
+
+(use-package term
+  :custom
+  ( term-prompt-regexp "^[^#$%>\\n]*[#$%>] *"))
+
+(use-package vterm
+  :custom
+  ;; The vterm shell-side prompt confuses tramp.
+  ( vterm-use-vterm-prompt-detection-method nil))
+
+(use-package eat)
 
 ;;; ** Undo
 ;;
@@ -1049,8 +1060,6 @@ all '.<space>' with '.<space><space>'."
 
 ;;; * Dired
 
-(use-package vterm)
-
 (use-package dired
   :custom
   (dired-dwim-target t)
@@ -1078,7 +1087,7 @@ all '.<space>' with '.<space><space>'."
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("e" "~/.local/share/emacs"        "Emacs data")
-     ("sm" "/ssh:makermaker-cloud:~/"   "SSH server")
+     ("sm" "/ssh:makermaker-65:~/"      "SSH server")
      ("t" "~/.local/share/Trash/"       "TrashCan")))
 
   :config
@@ -1203,7 +1212,9 @@ all '.<space>' with '.<space><space>'."
                 (filename . "emacs/notes/.*")
                 (name . "time-machine.txt")
                 (filename . "Dropbox/plan.*")))
-           ("Dired" (mode . dired-mode))
+           ("Dired"
+            (or (mode . dired-mode)
+                (mode . dirvish-mode)))
            ("Web"
             (or (name . "\\.js")
                 (name . "\\.s?css")
@@ -1233,13 +1244,14 @@ all '.<space>' with '.<space><space>'."
                 (mode . google3-build-mode)
                 (mode . go-mode)))
            ("Mail"
-            (or (mode . message-mode)))
+            (or (mode . message-mode)
+                (mode . notmuch-hello-mode)))
            ("Console"
             (or (mode . inferior-ess-mode)
                 (mode . inferior-python-mode)
-                (mode . eshell-mode)
                 (mode . gnuplot-comint-mode)
-                (mode . comint-mode)))
+                (mode . vterm-mode)
+                (mode . eat-mode)))
            ("Helper"
             (or (mode . makefile-mode)
                 (mode . makefile-gmake-mode)
@@ -1345,17 +1357,31 @@ all '.<space>' with '.<space><space>'."
 
 (use-package blacken
   :custom
-  (blacken-executable "~/.venv/bin/pyink"))
+  ( blacken-executable "~/.venv/bin/pyink"))
+
+(use-package lsp-mode
+  :custom
+  ( lsp-keymap-prefix "C-c l")
+  :hook
+  ( ;; (python-mode . lsp-deferred)
+    (lsp-mode . lsp-enable-which-key-integration))
+  :commands
+  ( lsp lsp-deferred))
+(use-package helm-lsp
+  :commands helm-lsp-workspace-symbol)
+
+(use-package flycheck
+  :load-path "~/.cache/emacs/straight/build/flycheck")
+(use-package eglot)
+
+(use-package flycheck-eglot
+  :ensure t
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
 
 (use-package python
-  :mode ("\\.py\\'" . python-mode)
-  :bind (:map python-mode-map
-              ("C-!" . #'blacken-buffer)
-              ("C-c C-s" . #'me--isort-region-or-buffer))
-  :custom
-  (python-indent-offset 2)
-
-  :config
+  :init
   (defun me--init-python()
     "Init python model."
     (sphinx-doc-mode)
@@ -1363,8 +1389,13 @@ all '.<space>' with '.<space><space>'."
     (setq-local yas-indent-line 'fixed)
     (setq-local comment-column 0)
     (eldoc-mode -1))
-
-  (add-hook 'python-mode-hook #'me--init-python))
+  :hook (python-mode . me--init-python)
+  :mode ("\\.py\\'" . python-mode)
+  :bind (:map python-mode-map
+              ("C-!" . #'blacken-buffer)
+              ("C-c C-s" . #'me--isort-region-or-buffer))
+  :custom
+  (python-indent-offset 2))
 
 (use-package json-mode)
 (use-package yaml-mode)
@@ -1580,9 +1611,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-agenda-prefix-format
    '((agenda   . " %-16:c%-13t%-20 s")
      (timeline . "  % s")
-     (todo     . " %-16:T")
-     (tags     . " %-16:T")
-     (search   . " %-16:T")))
+     (todo     . " %-16:c")
+     (tags     . " %-16:c")
+     (search   . " %-16:c")))
   (org-agenda-remove-tags t)
   (org-agenda-show-all-dates t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
@@ -2156,7 +2187,7 @@ argument FORCE, force the creation of a new ID."
   (bibtex-completion-notes-extension ".org")
   (bibtex-completion-notes-path me-bib-notes)
   (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-pdf-symbol ""))
+  (bibtex-completion-pdf-symbol "P"))
 
 (use-package helm-bibtex
   :load-path "~/.cache/emacs/straight/build/helm-bibtex"
