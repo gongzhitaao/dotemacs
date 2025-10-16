@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-10-11 11:30:28 gongzhitaao>
+;; Time-stamp: <2025-10-15 20:38:55 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1416,7 +1416,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package octave
   :mode "\\.m\\'"
-  :custom (octave-comment-char ?%))
+  :custom ( octave-comment-char ?%))
 
 ;;; ** Markdown
 
@@ -1451,39 +1451,39 @@ all '.<space>' with '.<space><space>'."
   :mode ("\\.org\\'" . org-mode)
   :load-path "~/.cache/emacs/straight/build/org/"
   :custom
-  (org-adapt-indentation nil)
-  (org-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
-  (org-display-remote-inline-images 'cache)
-  (org-export-backends '(ascii beamer html latex md))
-  (org-fold-catch-invisible-edits 'smart)
-  (org-hide-emphasis-markers t)
-  (org-hide-macro-markers t)
-  (org-hierarchical-todo-statistics nil)
-  (org-image-actual-width nil)
-  (org-log-done 'time)
-  (org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
-  (org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
-  (org-provide-todo-statistics t)
-  (org-src-fontify-natively t)
-  (org-src-preserve-indentation t)
-  (org-startup-folded 'content)
-  (org-startup-with-inline-images t)
-  (org-support-shift-select t)
-  (org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
-  (org-todo-keywords
+  ( org-adapt-indentation nil)
+  ( org-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
+  ( org-display-remote-inline-images 'cache)
+  ( org-export-backends '(ascii beamer html latex md))
+  ( org-fold-catch-invisible-edits 'smart)
+  ( org-hide-emphasis-markers t)
+  ( org-hide-macro-markers t)
+  ( org-hierarchical-todo-statistics nil)
+  ( org-image-actual-width nil)
+  ( org-log-done 'time)
+  ( org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
+  ( org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
+  ( org-provide-todo-statistics t)
+  ( org-src-fontify-natively t)
+  ( org-src-preserve-indentation t)
+  ( org-startup-folded 'content)
+  ( org-startup-with-inline-images t)
+  ( org-support-shift-select t)
+  ( org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
+  ( org-todo-keywords
    '((sequence "TODO(t!)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
-  (org-todo-keyword-faces
+  ( org-todo-keyword-faces
    '(("TODO" :inherit modus-themes-nuanced-red)
      ("NEXT" :inherit modus-themes-nuanced-yellow)
      ("DONE" :inherit modus-themes-nuanced-green)
      ("WAIT" :inherit modus-themes-nuanced-blue)
      ("HOLD" :inherit modus-themes-nuanced-magenta)
      ("KILL" :inherit modus-themes-subtle-green)))
-  (org-treat-S-cursor-todo-selection-as-state-change nil)
-  (org-treat-insert-todo-heading-as-state-change t)
-  (org-use-fast-tag-selection 'auto)
-  (org-use-fast-todo-selection t)
+  ( org-treat-S-cursor-todo-selection-as-state-change nil)
+  ( org-treat-insert-todo-heading-as-state-change t)
+  ( org-use-fast-tag-selection 'auto)
+  ( org-use-fast-todo-selection t)
 
   :config
   (bind-keys :map org-mode-map
@@ -1497,7 +1497,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package org-capture
   :custom
-  (org-capture-templates
+  ( org-capture-templates
    `(
      ("l" "Log daily" plain
       (file+olp+datetree
@@ -1518,14 +1518,14 @@ all '.<space>' with '.<space><space>'."
 
 (use-package org-appear
   :custom
-  (org-appear-autolinks t)
+  ( org-appear-autolinks t)
   :hook (org-mode . org-appear-mode))
 
 (use-package org-refile
   :custom
-  (org-refile-targets '((org-agenda-files :maxlevel . 4)))
-  (org-refile-use-outline-path 'file)
-  (org-outline-path-complete-in-steps nil))
+  ( org-refile-targets '((org-agenda-files :maxlevel . 4)))
+  ( org-refile-use-outline-path 'file)
+  ( org-outline-path-complete-in-steps nil))
 
 (defun me--org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
@@ -1549,9 +1549,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (use-package org-habit
   :custom
-  (org-habit-following-days 1)
-  (org-habit-graph-column   100)
-  (org-habit-preceding-days 28)
+  ( org-habit-following-days 1)
+  ( org-habit-graph-column   100)
+  ( org-habit-preceding-days 28)
 
   :custom-face
   (org-habit-alert-face ((t :background unspecified
