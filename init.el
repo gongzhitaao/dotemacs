@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-10-15 20:38:55 gongzhitaao>
+;; Time-stamp: <2025-10-24 16:06:15 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1083,11 +1083,11 @@ all '.<space>' with '.<space><space>'."
   :init (dirvish-override-dired-mode)
 
   :custom
-  (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+  ( dirvish-quick-access-entries ; It's a custom option, `setq' won't work
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("e" "~/.local/share/emacs"        "Emacs data")
-     ("sm" "/ssh:makermaker-65:~/"      "SSH server")
+     ("sm" "/ssh:makermaker-38:~/"      "SSH server")
      ("t" "~/.local/share/Trash/"       "TrashCan")))
 
   :config
@@ -1126,14 +1126,24 @@ all '.<space>' with '.<space><space>'."
 
 ;;; * Calendar
 
+;; (use-package solar
+;;   :custom
+;;   ;; Montreal
+;;   (calendar-latitude [45 50 north])
+;;   (calendar-longitude [73 57 west])
+;;   ;; London
+;;   ;; (calendar-latitude [51 50 north])
+;;   ;; (calendar-longitude [0 12 west])
+;;   )
+
 (use-package solar
   :custom
-  ;; Montreal
-  (calendar-latitude [45 50 north])
-  (calendar-longitude [73 57 west])
-  ;; London
-  ;; (calendar-latitude [51 50 north])
-  ;; (calendar-longitude [0 12 west])
+  ( calendar-latitude (string-to-number
+                       (shell-command-to-string
+                        "curl -s http://ip-api.com/json | jq .lat")))
+  ( calendar-longitude (string-to-number
+                       (shell-command-to-string
+                        "curl -s http://ip-api.com/json | jq .lon")))
   )
 
 (use-package calendar
@@ -1193,11 +1203,11 @@ all '.<space>' with '.<space><space>'."
 (use-package ibuffer
   :config
   (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 30 30 :left :elide) " "
-                (size-h 9 -1 :right) " "
-                (mode 24 24 :left :elide) " "
-                filename-and-process))))
+        '(( mark modified read-only " "
+            (name 30 30 :left :elide) " "
+            (size-h 9 -1 :right) " "
+            (mode 24 24 :left :elide) " "
+            filename-and-process))))
 
 (use-package ibuf-ext
   :config
@@ -1804,9 +1814,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   :config
   (add-to-list 'org-latex-packages-alist '("dvipsnames,svgnames,x11names,hyperref" "xcolor"))
-  ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
   ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
-  ;; (add-to-list 'org-latex-packages-alist '("" "geometry"))
+  (add-to-list 'org-latex-packages-alist '("" "geometry"))
 
   (add-to-list 'org-latex-classes
                '("ctexart"
