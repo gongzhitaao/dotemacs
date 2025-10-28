@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-10-24 16:06:15 gongzhitaao>
+;; Time-stamp: <2025-10-28 18:39:56 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -590,6 +590,7 @@ all '.<space>' with '.<space><space>'."
 
   (set-face-attribute 'default nil
                       :family "Victor Mono"
+                      ;; :family "Iosevka SS09"
                       :height me-default-font-height)
 
   (set-face-attribute 'variable-pitch nil
@@ -1410,6 +1411,7 @@ all '.<space>' with '.<space><space>'."
 (use-package json-mode)
 (use-package yaml-mode)
 (use-package cython-mode)
+(use-package protobuf-mode)
 
 ;;; ** Image
 
@@ -1462,34 +1464,41 @@ all '.<space>' with '.<space><space>'."
   :load-path "~/.cache/emacs/straight/build/org/"
   :custom
   ( org-adapt-indentation nil)
+  ( org-agenda-tags-column 0)
+  ( org-auto-align-tags nil)
   ( org-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
   ( org-display-remote-inline-images 'cache)
+  ( org-ellipsis "…")
   ( org-export-backends '(ascii beamer html latex md))
   ( org-fold-catch-invisible-edits 'smart)
   ( org-hide-emphasis-markers t)
   ( org-hide-macro-markers t)
   ( org-hierarchical-todo-statistics nil)
   ( org-image-actual-width nil)
+  ( org-insert-heading-respect-content t)
   ( org-log-done 'time)
   ( org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
   ( org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
   ( org-provide-todo-statistics t)
+  ( org-special-ctrl-a/e t)
   ( org-src-fontify-natively t)
   ( org-src-preserve-indentation t)
   ( org-startup-folded 'content)
   ( org-startup-with-inline-images t)
   ( org-support-shift-select t)
+  ( org-tags-column 0)
   ( org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%Y-%m-%d %a %R %z>"))
   ( org-todo-keywords
    '((sequence "TODO(t!)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
-  ( org-todo-keyword-faces
-   '(("TODO" :inherit modus-themes-nuanced-red)
-     ("NEXT" :inherit modus-themes-nuanced-yellow)
-     ("DONE" :inherit modus-themes-nuanced-green)
-     ("WAIT" :inherit modus-themes-nuanced-blue)
-     ("HOLD" :inherit modus-themes-nuanced-magenta)
-     ("KILL" :inherit modus-themes-subtle-green)))
+  ;; Override in org-modern
+  ;; ( org-todo-keyword-faces
+  ;;   '(("TODO" :inherit error)
+  ;;     ("NEXT" :inherit info)
+  ;;     ("DONE" :inherit success)
+  ;;     ("WAIT" :inherit warning)
+  ;;     ("HOLD" :inherit shadow)
+  ;;     ("KILL" :inherit shadow)))
   ( org-treat-S-cursor-todo-selection-as-state-change nil)
   ( org-treat-insert-todo-heading-as-state-change t)
   ( org-use-fast-tag-selection 'auto)
@@ -1555,6 +1564,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
+(use-package org-modern
+  :custom-face
+  ;; This does not work because our main font is Victor.
+  ( org-modern-symbol ((t :family "Iosevka SS09")))
+  :config
+  (global-org-modern-mode))
+
 ;;; ** Time related
 
 (use-package org-habit
@@ -1563,22 +1579,24 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   ( org-habit-graph-column   100)
   ( org-habit-preceding-days 28)
 
-  :custom-face
-  (org-habit-alert-face ((t :background unspecified
-                            :inherit modus-themes-subtle-yellow)))
-  (org-habit-alert-future-face ((t :background unspecified
-                                   :inherit modus-themes-nuanced-yellow)))
-  (org-habit-clear-face ((t :background unspecified :inherit modus-themes-subtle-blue)))
-  (org-habit-clear-future-face ((t :background unspecified
-                                   :inherit modus-themes-nuanced-blue)))
-  (org-habit-overdue-face ((t :background unspecified
-                              :inherit modus-themes-subtle-red)))
-  (org-habit-overdue-future-face ((t :background unspecified
-                                     :inherit modus-themes-nuanced-red)))
-  (org-habit-ready-face ((t :background unspecified
-                            :inherit modus-themes-subtle-green)))
-  (org-habit-ready-future-face ((t :background unspecified
-                                   :inherit modus-themes-nuanced-green))))
+  ;; :custom-face
+  ;; (org-habit-alert-face ((t :background unspecified
+  ;;                           :inherit modus-themes-subtle-yellow)))
+  ;; (org-habit-alert-future-face ((t :background unspecified
+  ;;                                  :inherit modus-themes-nuanced-yellow)))
+  ;; (org-habit-clear-face ((t :background unspecified :inherit modus-themes-subtle-blue)))
+  ;; (org-habit-clear-future-face ((t :background unspecified
+  ;;                                  :inherit modus-themes-nuanced-blue)))
+  ;; (org-habit-overdue-face ((t :background unspecified
+  ;;                             :inherit modus-themes-subtle-red)))
+  ;; (org-habit-overdue-future-face ((t :background unspecified
+  ;;                                    :inherit modus-themes-nuanced-red)))
+  ;; (org-habit-ready-face ((t :background unspecified
+  ;;                           :inherit modus-themes-subtle-green)))
+  ;; (org-habit-ready-future-face ((t :background unspecified
+  ;;                                  :inherit modus-themes-nuanced-green)))
+
+  )
 
 (use-package org-clock
   :custom
@@ -1987,7 +2005,7 @@ argument FORCE, force the creation of a new ID."
   (helm-split-window-inside-p t)
 
   :custom-face
-  (helm-M-x-key ((t :foreground unspecified :inherit modus-themes-prompt)))
+  ;; (helm-M-x-key ((t :foreground unspecified :inherit modus-themes-prompt)))
   (helm-selection ((t :background unspecified :inherit hl-line)))
 
   :config
@@ -2046,10 +2064,10 @@ argument FORCE, force the creation of a new ID."
   :custom-face
   (helm-ff-directory ((t :background unspecified
                          :foreground unspecified
-                         :inherit (dired-directory modus-themes-nuanced-cyan))))
+                         :inherit dired-directory)))
   (helm-ff-dotted-directory ((t :background "gray80")))
-  (helm-ff-executable ((t :foreground unspecified
-                          :inherit modus-themes-subtle-green)))
+  ;; (helm-ff-executable ((t :foreground unspecified
+  ;;                         :inherit modus-themes-subtle-green)))
   (helm-ff-file ((t :inherit default)))
   (helm-ff-file-extension ((t :foreground unspecified :inherit default))))
 
@@ -2459,9 +2477,7 @@ If ARG, open with external program.  Otherwise open in Emacs."
               ("Q"          . kill-current-buffer)
               ("z"          . delete-other-windows)
               ("C-<left>"   . pdf-view-previous-page-command)
-              ("C-<right>"  . pdf-view-next-page-command))
-  :custom
-  (pdf-view-midnight-colors '("#e5e5e5" . "#333333")))
+              ("C-<right>"  . pdf-view-next-page-command)))
 
 ;; helper functions
 ;; -----------------------------------------------------------------------------
@@ -2544,9 +2560,12 @@ alphabetically (in ascending or descending order)."
 
 (use-package modus-themes
   :custom
-  (modus-themes-common-palette-overrides '((bg-region bg-ochre)
-                                           (fg-region unspecified)))
-  (modus-themes-region '(bg-only no-extend))
+  ( modus-themes-italic-constructs t)
+  ( modus-themes-bold-constructs t)
+
+  ( modus-themes-common-palette-overrides '((bg-region bg-ochre)
+                                            (fg-region unspecified)))
+  ( modus-themes-region '(bg-only no-extend))
 
   :custom-face
   (region ((t :extend nil)))
