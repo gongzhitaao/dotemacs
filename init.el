@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2025-10-28 18:39:56 gongzhitaao>
+;; Time-stamp: <2025-11-18 09:47:18 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -128,8 +128,8 @@
 
 (use-package straight
   :custom
-  (straight-use-package-by-default t)
-  (straight-built-in-pseudo-packages
+  ( straight-use-package-by-default t)
+  ( straight-built-in-pseudo-packages
    '(
      ;; keep-sorted begin
      abbrev
@@ -256,7 +256,7 @@
          ("i n" . mc/insert-numbers)
          ("i l" . mc/insert-letters))
   :custom
-  (mc/list-file (file-name-concat me-emacs-cache-dir "mc-lists.el")))
+  ( mc/list-file (file-name-concat me-emacs-cache-dir "mc-lists.el")))
 
 (bind-keys :prefix-map me-org-command-map
            :prefix "C-c o"
@@ -402,20 +402,6 @@ Inverse of `color-values'."
           (ash g -8)
           (ash b -8)))
 
-(defun me--colir-blend (c1 c2 &optional alpha)
-  "Blend the two colors C1 and C2 with ALPHA.
-C1 and C2 are in the format of `color-values'.  ALPHA is a number
-between 0.0 and 1.0 which corresponds to the influence of C1 on
-the result."
-  (let ((alpha (or alpha 0.5))
-        (rgb1 (color-values c1))
-        (rgb2 (color-values c2)))
-    (apply #'me--colir-join
-           (cl-mapcar
-            (lambda (x y)
-              (round (+ (* x alpha) (* y (- 1 alpha)))))
-            rgb1 rgb2))))
-
 (defun me/double-space-after-dot (beg end)
   "Exactly two spaces after dot in region (BEG, END).
 
@@ -484,15 +470,15 @@ all '.<space>' with '.<space><space>'."
 ;; Center the editing content.
 (use-package writeroom-mode
   :custom
-  (writeroom-fullscreen-effect nil)
-  (writeroom-major-modes
-   '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
-      org-agenda-mode bibtex-mode bookmark-bmenu-mode
-      notmuch-show-mode help-mode))
-  (writeroom-maximize-window nil)
-  (writeroom-mode-line t)
-  (writeroom-use-derived-modes t)
-  (writeroom-width 100)
+  ( writeroom-fullscreen-effect nil)
+  ( writeroom-major-modes
+    '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
+       org-agenda-mode bibtex-mode bookmark-bmenu-mode
+       notmuch-show-mode help-mode))
+  ( writeroom-maximize-window nil)
+  ( writeroom-mode-line t)
+  ( writeroom-use-derived-modes t)
+  ( writeroom-width 100)
 
   :config
   (global-writeroom-mode))
@@ -569,7 +555,7 @@ all '.<space>' with '.<space><space>'."
 ;; 2. we get the base size with frame-char-width.
 ;; 3. Based upon the ppi, we scale the unicode size as multiple of base size.
 
-(defconst me-default-font-height 140 "Return the default font height")
+(defconst me-default-font-height 150 "Return the default font height")
 
 (defun me--ppi (&optional frame)
  (let* ((attrs (frame-monitor-attributes frame))
@@ -589,13 +575,14 @@ all '.<space>' with '.<space><space>'."
   (interactive)
 
   (set-face-attribute 'default nil
-                      :family "Victor Mono"
-                      ;; :family "Iosevka SS09"
+                      ;; :family "Victor Mono"
+                      :family "Iosevka SS09"
+                      :weight 'semi-light
                       :height me-default-font-height)
 
   (set-face-attribute 'variable-pitch nil
-                      ;; :family "Iosevka Aile"
-                      :family "Serif"
+                      :family "Iosevka Aile"
+                      ;; :family "Serif"
                       :weight 'light
                       :height me-default-font-height)
 
@@ -618,27 +605,24 @@ all '.<space>' with '.<space><space>'."
 
 (use-package ligature
   :config
-  (ligature-set-ligatures 't '("www"))
   ;; Enable all ligatures in programming modes
   (ligature-set-ligatures
    'prog-mode
-   (ligature-set-ligatures
-    'prog-mode
-    '( "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<" "##" "#("
-       "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:" "++" "+++" "..." "+++"
-       "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~=" ":::" "::=" "=:=" "==="
-       "==>" "=!=" "=>>" "=<<" "=/=" "!==" ":=" ":-" ":+" "<*" "<*>" "*>" "<|"
-       "<|>" "|>" "+:" "-:" "=:" "<******>" "<!--" "<==" "<===" "<=" "=>" "=>>"
-       "==>" "===>" ">=" "<=>" "<==>" "<===>" "<$" "<=" "<>" "<-" "<<" "<+" "</"
-       "#{" "#[" "#:" "#=" "#!"  "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###"
-       "#_(" "..<" "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!="
-       "===" "!==" "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:" "?=" "?."
-       "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "[|" "]#" "::" ":="
-       ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:" "\\\\" "://" "<---" "<--" "<<-"
-       "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "|||>" "<|||" "<==>"
-       "<!--" "####" "~~>" "***" "||=" "||>" "~>" "~-" "**" "*>" "*/" "||" "|}"
-       "|]" "|=" "|>" "|-" "{|")))
+   '( "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<" "##" "#("
+      "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:" "++" "+++" "..." "+++"
+      "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~=" ":::" "::=" "=:=" "==="
+      "==>" "=!=" "=>>" "=<<" "=/=" "!==" ":=" ":-" ":+" "<*" "<*>" "*>" "<|"
+      "<|>" "|>" "+:" "-:" "=:" "<******>" "<!--" "<==" "<===" "<=" "=>" "=>>"
+      "==>" "===>" ">=" "<=>" "<==>" "<===>" "<$" "<=" "<>" "<-" "<<" "<+" "</"
+      "#{" "#[" "#:" "#=" "#!"  "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###"
+      "#_(" "..<" "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!="
+      "===" "!==" "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+      ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:" "?=" "?."
+      "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "[|" "]#" "::" ":="
+      ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:" "\\\\" "://" "<---" "<--" "<<-"
+      "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "|||>" "<|||" "<==>"
+      "<!--" "####" "~~>" "***" "||=" "||>" "~>" "~-" "**" "*>" "*/" "||" "|}"
+      "|]" "|=" "|>" "|-" "{|"))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
@@ -654,17 +638,17 @@ all '.<space>' with '.<space><space>'."
 
 (use-package time
   :custom
-  (display-time-24hr-format t)
-  (display-time-day-and-date t)
-  (display-time-default-load-average nil)
+  ( display-time-24hr-format t)
+  ( display-time-day-and-date t)
+  ( display-time-default-load-average nil)
 
   :config
   (display-time))
 
 (use-package simple
   :custom
-  (indent-tabs-mode nil)
-  (blink-matching-paren nil)
+  ( indent-tabs-mode nil)
+  ( blink-matching-paren nil)
 
   :config
   (column-number-mode)
@@ -677,10 +661,10 @@ all '.<space>' with '.<space><space>'."
 ;; Distinguishes buffers associated with different files of same basename.
 (use-package uniquify
   :custom
-  (uniquify-after-kill-buffer-p t)
-  (uniquify-buffer-name-style 'post-forward-angle-brackets)
-  (uniquify-ignore-buffers-re "^\\*")
-  (uniquify-separator "/"))
+  ( uniquify-after-kill-buffer-p t)
+  ( uniquify-buffer-name-style 'post-forward-angle-brackets)
+  ( uniquify-ignore-buffers-re "^\\*")
+  ( uniquify-separator "/"))
 
 ;;; * General editing
 
@@ -688,19 +672,11 @@ all '.<space>' with '.<space><space>'."
   :delight (global-auto-revert-mode " ")
   :config
   (global-auto-revert-mode)
-  (setq auto-revert-remote-files t))
-
-;; (use-package vc-hooks
-;;   :after tramp
-;;   :custom
-;;   (vc-make-backup-files t)
-;;   (vc-ignore-dir-regexp (format "\\(%s\\)\\|\\(%s\\)"
-;;                                 vc-ignore-dir-regexp
-;;                                 tramp-file-name-regexp)))
+  (setq auto-revert-remote-files nil))
 
 (use-package select
   :custom
-  (select-enable-clipboard t))
+  ( select-enable-clipboard t))
 
 (setopt delete-by-moving-to-trash t
         fill-column 80
@@ -713,11 +689,11 @@ all '.<space>' with '.<space><space>'."
 
 (use-package sort
   :custom
-  (sort-fold-case t))
+  ( sort-fold-case t))
 
 (use-package comp
   :custom
-  (native-comp-async-report-warnings-errors nil))
+  ( native-comp-async-report-warnings-errors nil))
 
 (use-package delsel
   :config
@@ -743,17 +719,16 @@ all '.<space>' with '.<space><space>'."
 (use-package indent-bars
   :hook (python-mode . indent-bars-mode)
   :custom
-  (indent-bars-width-frac 0.2)
-  (indent-bars-no-descend-lists t))
+  ( indent-bars-width-frac 0.2)
+  ( indent-bars-no-descend-lists t))
 
 (use-package whitespace
   :delight
-
   :custom
-  (whitespace-line-column nil)
-  (whitespace-style '( empty face indentation lines-tail
-                       space-after-tab space-before-tab
-                       tabs trailing))
+  ( whitespace-line-column nil)
+  ( whitespace-style '( empty face indentation lines-tail
+                        space-after-tab space-before-tab
+                        tabs trailing))
 
   :hook (((prog-mode org-mode) . whitespace-mode)
          (before-save . whitespace-cleanup)))
@@ -963,7 +938,9 @@ all '.<space>' with '.<space><space>'."
                  (> (- current (float-time (nth 5 (file-attributes file))))
                     age))
         (message "delete: %s" file)
-        (delete-file file)))))
+        (if (file-directory-p file)
+            (delete-directory file t)
+          (delete-file file))))))
 
 (use-package files
   :custom
@@ -1072,7 +1049,31 @@ all '.<space>' with '.<space><space>'."
   :config
   ;; This command is useful when you want to close the window of `dirvish-side'
   ;; automatically when opening a file
-  (put 'dired-find-alternate-file 'disabled nil))
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  (defun me--dired-copy-filename-advice (filename)
+    "Advice for `dired-copy-filename-as-kill' to provide format options.
+FILENAME is the return value from `dired-copy-filename-as-kill'."
+    (when filename
+      (let* ((full-path (dired-get-filename nil t))
+             (basename (file-name-nondirectory full-path))
+             (absolute (or (file-remote-p full-path 'localname)
+                          (expand-file-name full-path)))
+             (with-host full-path)
+             (candidates `((,basename . ,basename)
+                          (,absolute . ,absolute)
+                          (,with-host . ,with-host)))
+             (choice (completing-read "Copy filename as: "
+                                     (mapcar #'car candidates)
+                                     nil t))
+             (selected (alist-get choice candidates nil nil #'string=)))
+        (when selected
+          (kill-new selected)
+          (message "Copied: %s" selected))
+        selected)))
+
+  (advice-add 'dired-copy-filename-as-kill
+              :filter-return #'me--dired-copy-filename-advice))
 
 (use-package async
   :delight dired-async-mode
@@ -1406,7 +1407,7 @@ all '.<space>' with '.<space><space>'."
               ("C-!" . #'blacken-buffer)
               ("C-c C-s" . #'me--isort-region-or-buffer))
   :custom
-  (python-indent-offset 2))
+  ( python-indent-offset 2))
 
 (use-package json-mode)
 (use-package yaml-mode)
@@ -1565,9 +1566,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       nil)))
 
 (use-package org-modern
-  :custom-face
-  ;; This does not work because our main font is Victor.
-  ( org-modern-symbol ((t :family "Iosevka SS09")))
   :config
   (global-org-modern-mode))
 
@@ -2545,12 +2543,12 @@ alphabetically (in ascending or descending order)."
 
 (use-package bbdb
   :custom
-  (bbdb-allow-duplicates t)
-  (bbdb-complete-mail-allow-cycling t)
-  (bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz"))
-  (bbdb-mail-user-agent 'message-user-agent)
-  (bbdb-message-all-addresses t)
-  (bbdb-mua-pop-up nil)
+  ( bbdb-allow-duplicates t)
+  ( bbdb-complete-mail-allow-cycling t)
+  ( bbdb-file (file-name-concat me-emacs-data-dir "contacts.bbdb.gz"))
+  ( bbdb-mail-user-agent 'message-user-agent)
+  ( bbdb-message-all-addresses t)
+  ( bbdb-mua-pop-up nil)
 
   :config
   (bbdb-initialize 'message 'anniv)
@@ -2562,17 +2560,27 @@ alphabetically (in ascending or descending order)."
   :custom
   ( modus-themes-italic-constructs t)
   ( modus-themes-bold-constructs t)
-
-  ( modus-themes-common-palette-overrides '((bg-region bg-ochre)
-                                            (fg-region unspecified)))
   ( modus-themes-region '(bg-only no-extend))
 
   :custom-face
-  (region ((t :extend nil)))
+  ( region ((t :extend nil)))
 
   :config
   (require-theme 'modus-themes)
+  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
   (load-theme 'modus-operandi :no-confirm))
+
+(set-face-attribute 'bold nil :weight 'semi-bold)
+
+;;; * AI
+
+;; (use-package gptel
+;;   :config
+;;   (let* ((auth-info (auth-source-search :host "api.anthropic.com" :max 1))
+;;          (secret (when auth-info (funcall
+;;                                   (plist-get (car auth-info) :secret)))))
+;;     (setq gptel-backend
+;;           (gptel-make-anthropic "Claude" :stream t :key secret))))
 
 ;;; * Key logger
 
