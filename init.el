@@ -145,7 +145,7 @@
       mail-conf
       message
       sendmail
-      org-conf2
+      org-conf
       oc
       octave
       org-agenda
@@ -193,7 +193,7 @@
 ;; I received warning about org version mismatch.  One of the suggestion is to
 ;; load the desired org version right after straight.  So I moved all org related
 ;; config into a separate file and load them here.
-(use-package org-conf2
+(use-package org-conf
   :load-path "~/.config/emacs/site-lisp")
 
 ;;; * Global key bindings
