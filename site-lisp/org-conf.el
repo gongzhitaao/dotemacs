@@ -1,4 +1,4 @@
-;;; org-conf.el --- Org mode config                  -*- lexical-binding: t; -*-
+;;; org-conf.el --- Org mode config (straight.el version)  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026  Zhitao Gong
 
@@ -20,15 +20,20 @@
 
 ;;; Commentary:
 
-;;
+;; Org mode configuration using straight.el for package management.
+;; Use with init2.el.
 
 ;;; Code:
 
+;; Install org BEFORE loading other org-related packages.
+;; This ensures the newer org is loaded before the built-in one.
+(use-package org)
 
 (defun me--init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
   (flyspell-mode)
+  (org-num-mode)
 
   (defun me--org-show-context-advice (&rest ignore)
     (org-show-context 'default))
@@ -44,7 +49,6 @@
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :load-path "~/.cache/emacs/straight/build/org/"
   :custom
   ( org-adapt-indentation nil)
   ( org-agenda-tags-column 0)
@@ -74,14 +78,6 @@
   ( org-todo-keywords
    '((sequence "TODO(t!)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "KILL(k@)")))
-  ;; Override in org-modern
-  ;; ( org-todo-keyword-faces
-  ;;   '(("TODO" :inherit error)
-  ;;     ("NEXT" :inherit info)
-  ;;     ("DONE" :inherit success)
-  ;;     ("WAIT" :inherit warning)
-  ;;     ("HOLD" :inherit shadow)
-  ;;     ("KILL" :inherit shadow)))
   ( org-treat-S-cursor-todo-selection-as-state-change nil)
   ( org-treat-insert-todo-heading-as-state-change t)
   ( org-use-fast-tag-selection 'auto)
@@ -157,26 +153,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :custom
   ( org-habit-following-days 1)
   ( org-habit-graph-column   100)
-  ( org-habit-preceding-days 28)
-
-  ;; :custom-face
-  ;; (org-habit-alert-face ((t :background unspecified
-  ;;                           :inherit modus-themes-subtle-yellow)))
-  ;; (org-habit-alert-future-face ((t :background unspecified
-  ;;                                  :inherit modus-themes-nuanced-yellow)))
-  ;; (org-habit-clear-face ((t :background unspecified :inherit modus-themes-subtle-blue)))
-  ;; (org-habit-clear-future-face ((t :background unspecified
-  ;;                                  :inherit modus-themes-nuanced-blue)))
-  ;; (org-habit-overdue-face ((t :background unspecified
-  ;;                             :inherit modus-themes-subtle-red)))
-  ;; (org-habit-overdue-future-face ((t :background unspecified
-  ;;                                    :inherit modus-themes-nuanced-red)))
-  ;; (org-habit-ready-face ((t :background unspecified
-  ;;                           :inherit modus-themes-subtle-green)))
-  ;; (org-habit-ready-future-face ((t :background unspecified
-  ;;                                  :inherit modus-themes-nuanced-green)))
-
-  )
+  ( org-habit-preceding-days 28))
 
 (use-package org-clock
   :custom
@@ -345,12 +322,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-appear-mode 1)
   (writeroom-mode 1))
 
-;(use-package org-present
-; :config
-; (add-hook 'org-present-mode-hook 'me--org-present-start)
-; (add-hook 'org-present-mode-quit-hook 'me--org-present-end)
-; (add-hook 'org-present-after-navigate-functions 'me--org-present-prepare-slide))
-
 ;;; ** Export
 
 (use-package ox
@@ -360,7 +331,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
      ("html" . "@@html:$1@@"))))
 
 (use-package org-contrib)
+
 (use-package ox-extra
+  :after org-contrib
   :config (ox-extras-activate '(ignore-headlines)))
 
 ;;; *** HTML
@@ -381,7 +354,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 ;;; *** LaTeX
 
-(use-package ox-bibtex)
+(use-package ox-bibtex
+  :after org-contrib)
+
 (use-package ox-latex
   :custom
   (org-latex-caption-above nil)
@@ -413,7 +388,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :config
   (add-to-list 'org-latex-packages-alist '("dvipsnames,svgnames,x11names,hyperref" "xcolor"))
   (add-to-list 'org-latex-packages-alist '("" "minted"))
-  ;; (add-to-list 'org-latex-packages-alist '("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=basictext,factor=1100,stretch=10,shrink=10" "microtype"))
   (add-to-list 'org-latex-packages-alist '("" "geometry"))
 
   (add-to-list 'org-latex-classes
