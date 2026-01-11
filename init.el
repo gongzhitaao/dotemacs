@@ -1,10 +1,13 @@
-;;; init.el --- Yet another Emacs config  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-04 10:17:34 gongzhitaao>
+;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
+;; Time-stamp: <2026-01-11 14:41:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
 ;; me--xxx: internal helper functions, not called directly by user
 ;; me-xxx: custom variables
+;;
+;; This is a Vertico-based configuration, using straight.el for package management.
+;; To use: emacs -Q -l ~/.config/emacs/init2.el
 
 ;;; Code:
 
@@ -97,13 +100,6 @@
 
 ;;; * Package manager
 
-;; Added by Package.el.  This must come before configurations of installed
-;; packages.  Don't delete this line.  If you don't want it, just comment it out
-;; by adding a semicolon to the start of the line.  You may delete these
-;; explanatory comments.
-;;
-;;(package-initialize)
-
 (setq straight-base-dir me-emacs-cache-dir)
 
 (defvar bootstrap-version)
@@ -122,68 +118,72 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package
-  :config
-  (setq use-package-compute-statistics t))
+(straight-use-package 'use-package)
+(setq use-package-compute-statistics t)
 
 (use-package straight
   :custom
   ( straight-use-package-by-default t)
   ( straight-built-in-pseudo-packages
-   '(
-     ;; keep-sorted begin
-     abbrev
-     appt
-     comp
-     composite
-     dired
-     emacs
-     esh-mode
-     files
-     helm-adaptive
-     helm-bookmark
-     helm-buffers
-     helm-config
-     helm-elisp
-     helm-files
-     helm-for-files
-     helm-locate
-     helm-mode
-     ibuf-ext
-     image-mode
-     indent
-     lisp-mode
-     ls-lisp
-     mail-conf
-     message
-     oc
-     org-agenda
-     org-capture
-     org-clock
-     org-habit
-     org-id
-     org-refile
-     org-roam-dailies
-     org-src
-     org-timer
-     ox
-     ox-beamer
-     ox-bibtex
-     ox-extra
-     ox-html
-     ox-latex
-     pdf-view
-     project
-     python
-     rfn-eshadow
-     simple
-     solar
-     tramp-cache
-     uniquify
-     vc-hooks
-     xref
-     ;; keep-sorted end
-     )))
+    '(
+      ;; keep-sorted begin
+      abbrev
+      appt
+      autorevert
+      bookmark
+      calendar
+      comp
+      delsel
+      dired
+      eglot
+      files
+      flyspell
+      ibuf-ext
+      ibuffer
+      image-mode
+      imenu
+      mail-conf
+      message
+      sendmail
+      org-conf2
+      oc
+      octave
+      org-agenda
+      org-capture
+      org-clock
+      org-habit
+      org-id
+      org-refile
+      org-src
+      org-timer
+      outline
+      ox
+      ox-beamer
+      ox-bibtex
+      ox-extra
+      ox-html
+      ox-latex
+      pdf-view
+      python
+      re-builder
+      recentf
+      repeat
+      rfn-eshadow
+      savehist
+      saveplace
+      select
+      server
+      simple
+      solar
+      sort
+      subword
+      term
+      time
+      tramp
+      uniquify
+      whitespace
+      ;; keep-sorted end
+      )))
 
 (use-package delight)
 (use-package bind-key)
@@ -193,9 +193,8 @@
 ;; I received warning about org version mismatch.  One of the suggestion is to
 ;; load the desired org version right after straight.  So I moved all org related
 ;; config into a separate file and load them here.
-(use-package org-conf
-  :straight nil
-  :load-path "~/.config/emacs/site-list/org-conf.el")
+(use-package org-conf2
+  :load-path "~/.config/emacs/site-lisp")
 
 ;;; * Global key bindings
 
@@ -218,14 +217,14 @@
 (global-set-key [remap isearch-backward]       #'isearch-backward-regexp)
 (global-set-key [remap isearch-forward]        #'isearch-forward-regexp)
 (global-set-key [remap list-buffers]           #'ibuffer)
-(global-set-key [remap switch-to-buffer]       #'helm-mini)
-(global-set-key [remap yank-pop]               #'helm-show-kill-ring)
+(global-set-key [remap switch-to-buffer]       #'consult-buffer)
+(global-set-key [remap yank-pop]               #'consult-yank-pop)
 
 ;;; ** User key C-c
 
 ;; = -- align-regex
-;; b -- helm-bibtex
-;; c -- helm-flycheck
+;; b -- citar (bibliography)
+;; c -- consult-flycheck
 ;; d -- drag-stuff-mode
 ;; e -- custom editing shortcuts
 ;; f -- dirvish
@@ -302,11 +301,11 @@
 ;; M-u upcase-word
 ;; M-v scroll-down
 ;; M-w kill-ring-save
-;; M-x helm-M-x execute command
-;; M-y helm-show-kill-ring
+;; M-x execute-extended-command
+;; M-y consult-yank-pop
 ;; M-z zap-to-char
 
-(global-set-key (kbd "M-/") #'helm-dabbrev)
+(global-set-key (kbd "M-/") #'dabbrev-completion)
 (global-set-key (kbd "M-<down>")  #'sp-down-sexp)
 (global-set-key (kbd "M-<left>")  #'sp-backward-sexp)
 (global-set-key (kbd "M-<right>") #'sp-forward-sexp)
@@ -314,12 +313,11 @@
 
 ;;; *** M-s search
 
-;; M-s g helm-ag
+;; M-s g consult-ripgrep
 ;; M-s h highlight-xxx
 ;; M-s q vr/query-replace
-;; M-s o helm-occur
-(global-set-key (kbd "M-s o") #'helm-occur)
-;; M-s s helm-swoop
+;; M-s o consult-line
+;; M-s s consult-line
 
 (use-package repeat
   :config (repeat-mode))
@@ -369,7 +367,7 @@ for a file to visit if current buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:"
-                         (helm-read-file-name "Find file(root): ")))
+                         (read-file-name "Find file (root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:"
                                  buffer-file-name))))
 
@@ -452,6 +450,19 @@ all '.<space>' with '.<space><space>'."
     (yank-rectangle)
     (delete-trailing-whitespace)
     (kill-new (buffer-string))))
+
+(defun me/buffer-to-minimal-frame ()
+  "Display current buffer in a new minimal frame with no UI chrome."
+  (interactive)
+  (let ((buf (current-buffer))
+        (frame (make-frame '((minibuffer . nil)
+                             (menu-bar-lines . 0)
+                             (tool-bar-lines . 0)
+                             (undecorated . t)
+                             (vertical-scroll-bars . nil)))))
+    (select-frame frame)
+    (switch-to-buffer buf)
+    (setq-local mode-line-format nil)))
 
 ;;; * Appearance
 
@@ -553,6 +564,10 @@ all '.<space>' with '.<space><space>'."
    (eldoc-mode nil t)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
+   (eat-eshell-mode nil t)
+   (eshell-mode nil t)
+   (rainbow-delimiters-mode " " t)
+   (company-mode nil t)
    (subword-mode nil subword)
    (view-mode " " view)))
 
@@ -612,8 +627,6 @@ all '.<space>' with '.<space><space>'."
 
 (when (display-graphic-p)
   (me/reset-font-size))
-
-(set-face-attribute 'fixed-pitch nil :height 110)
 
 (use-package ligature
   :config
@@ -681,7 +694,7 @@ all '.<space>' with '.<space><space>'."
 ;;; * General editing
 
 (use-package autorevert
-  :delight (global-auto-revert-mode " ")
+  :delight (global-auto-revert-mode " ")
   :config
   (global-auto-revert-mode)
   (setq auto-revert-remote-files nil))
@@ -746,6 +759,7 @@ all '.<space>' with '.<space><space>'."
          (before-save . whitespace-cleanup)))
 
 (use-package rainbow-delimiters
+  :delight
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package wgrep
@@ -760,14 +774,14 @@ all '.<space>' with '.<space><space>'."
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
-(use-package helm-flyspell)
+(use-package consult-flyspell)
 (use-package flyspell
   :delight
   :hook ((prog-mode . flyspell-prog-mode)
          ((tex-mode org-mode) . flyspell-mode))
   :bind (:map flyspell-mode-map
               ("C-;" . comment-or-uncomment-region)
-              ("s-;" . helm-flyspell-correct)))
+              ("s-;" . consult-flyspell)))
 
 (use-package outline
   :custom
@@ -814,6 +828,8 @@ all '.<space>' with '.<space><space>'."
 (use-package tramp
   :custom
   ( tramp-use-connection-share nil)
+  ( tramp-use-scp-direct-remote-copying t)
+  ( tramp-verbose 1)
   :config
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
@@ -868,9 +884,7 @@ all '.<space>' with '.<space><space>'."
          ("<end>"   . #'vundo-stem-end)
          ("q"       . #'vundo-quit)
          ("C-g"     . #'vundo-quit)
-         ("RET"     . #'vundo-confirm))
-  :custom-face
-  (vundo-highlight ((t (:inverse-video t)))))
+         ("RET"     . #'vundo-confirm)))
 
 ;;; ** Searching
 
@@ -884,18 +898,6 @@ all '.<space>' with '.<space><space>'."
   (global-anzu-mode)
   (global-set-key [remap query-replace] #'anzu-query-replace)
   (global-set-key [remap query-replace-regexp] #'anzu-query-replace-regexp))
-
-(use-package helm-ag
-  :after helm
-  :bind ("M-s a" . helm-ag))
-
-(use-package helm-swoop
-  :after helm
-  :bind (("M-s s" . helm-swoop)
-         :map isearch-mode-map
-         ("M-i" . helm-swoop-from-isearch))
-  :config
-  (setq helm-multi-swoop-edit-save t))
 
 (use-package imenu-list
   :config
@@ -920,7 +922,7 @@ all '.<space>' with '.<space><space>'."
   (yas-reload-all))
 
 (use-package company
-  :delight
+  :delight company-mode
   :custom
   (company-format-margin-function #'company-text-icons-margin)
   (company-insertion-on-trigger-p)
@@ -1181,9 +1183,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   (calendar-set-date-style 'iso))
 
 (use-package cal-china-x
-  :custom-face
-  (cal-china-x-important-holiday-face ((t :background "#ff9580")))
-
   :config
   (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
 
@@ -1284,9 +1283,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
                 (mode . ess-help-mode)
                 (name . "^\\*scratch\\*$")))
            ("Image"
-            (or (mode . image-mode)))
-           ("Helm"
-            (or (predicate string-match "Hmm" mode-name))))))
+            (or (mode . image-mode))))))
 
   (add-hook
    'ibuffer-mode-hook
@@ -1389,15 +1386,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
     (lsp-mode . lsp-enable-which-key-integration))
   :commands
   ( lsp lsp-deferred))
-(use-package helm-lsp
-  :commands helm-lsp-workspace-symbol)
+(use-package consult-lsp
+  :after lsp-mode
+  :commands consult-lsp-symbols)
 
-(use-package flycheck
-  :load-path "~/.cache/emacs/straight/build/flycheck")
+(use-package flycheck)
 (use-package eglot)
 
 (use-package flycheck-eglot
-  :ensure t
   :after (flycheck eglot)
   :config
   (global-flycheck-eglot-mode 1))
@@ -1452,91 +1448,86 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package ncl-mode)
 
-;;; * Helm
+;;; * Vertico (completion framework)
 
-(use-package helm-mode
-  :delight
-  :load-path "~/.cache/emacs/straight/build/helm"
+;; Vertico - vertical completion UI
+(use-package vertico
   :custom
-  (helm-split-window-inside-p t)
-
-  :custom-face
-  ;; (helm-M-x-key ((t :foreground unspecified :inherit modus-themes-prompt)))
-  (helm-selection ((t :background unspecified :inherit hl-line)))
+  (vertico-cycle t)
+  (vertico-resize nil)
+  (vertico-count 15)
 
   :config
-  (bind-keys ("C-c h"   . helm-command-prefix)
-             ("M-x"     . helm-M-x)
-             ("C-x C-f" . helm-find-files)
-             ("M-s g"   . helm-ag)
-             ("C-b"     . helm-mini)
-             :map helm-map
-             ("<tab>"   . helm-execute-persistent-action)
-             ("C-i"     . helm-execute-persistent-action)
-             ("C-z"     . helm-select-action)
-             :map helm-command-map
-             ("d"       . helm-bookmarks))
+  (vertico-mode)
 
-  (helm-mode 1)
-  (helm-autoresize-mode))
+  ;; Load vertico-directory extension for better file navigation
+  (require 'vertico-directory)
+  (keymap-set vertico-map "RET"   #'vertico-directory-enter)
+  (keymap-set vertico-map "DEL"   #'vertico-directory-delete-char)
+  (keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
-;; Enable usage frequency in candidate order.
-(use-package helm-adaptive
+;; Orderless - flexible completion matching
+(use-package orderless
   :custom
-  (helm-adaptive-history-file
-   (file-name-concat me-emacs-cache-dir "helm-adaptive-history"))
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; Marginalia - rich annotations in minibuffer
+(use-package marginalia
   :config
-  (helm-adaptive-mode))
+  (marginalia-mode))
 
-(use-package helm-bookmark
-  :custom (helm-bookmark-show-location t))
+;; Consult - enhanced search and navigation commands
+(use-package consult
+  :bind (;; Custom bindings
+         ("C-b"     . consult-buffer)
+         ("M-s o"   . consult-line)       ; was helm-occur
+         ("M-s s"   . consult-line)       ; was helm-swoop
+         ("M-s g"   . consult-ripgrep)    ; was helm-ag
+         ("M-s a"   . consult-ripgrep)    ; was helm-ag
+         ("M-s l"   . consult-line-multi) ; multi-buffer search
+         ("C-c h d" . consult-bookmark)   ; was helm-bookmarks
 
-(defun me--isearch-from-helm-occur ()
-  "Continue isearch from helm-occur."
-  (interactive)
-  (helm-run-after-exit
-   (lambda (initial)
-     (isearch-forward nil t)
-     (isearch-yank-string initial))
-   helm-pattern))
+         ;; Additional useful bindings
+         ("C-c h r" . consult-recent-file)
+         ("C-c h m" . consult-mark)
+         ("C-c h o" . consult-outline)
+         ("C-c h i" . consult-imenu))
 
-(use-package helm-buffers
   :custom
-  (helm-buffer-max-length 40)
-  (helm-buffer-skip-remote-checking nil)
-  (helm-buffers-fuzzy-matching t)
+  (consult-narrow-key "<")
+  (consult-preview-key "M-.")
 
-  :custom-face
-  (helm-buffer-directory ((t :foreground unspecified
-                             :background: unspecified
-                             :inherit dired-directory)))
-  (helm-buffer-file ((t :inherit default)))
-  (helm-non-file-buffer ((t :inherit dired-special))))
+  :config
+  ;; Configure preview behavior
+  (consult-customize
+   consult-ripgrep consult-grep consult-git-grep
+   :preview-key '(:debounce 0.4 any))
 
-(use-package helm-files
-  :custom
-  (helm-ff-file-name-history-use-recentf t)
-  (helm-ff-search-library-in-sexp t)
-  :custom-face
-  (helm-ff-directory ((t :background unspecified
-                         :foreground unspecified
-                         :inherit dired-directory)))
-  (helm-ff-dotted-directory ((t :background "gray80")))
-  ;; (helm-ff-executable ((t :foreground unspecified
-  ;;                         :inherit modus-themes-subtle-green)))
-  (helm-ff-file ((t :inherit default)))
-  (helm-ff-file-extension ((t :foreground unspecified :inherit default))))
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.5 any)))
 
-(use-package helm-for-files
-  :custom
-  (helm-recentf-fuzzy-match t))
+;; Embark - context actions on minibuffer candidates
+(use-package embark
+  :bind (("C-."   . embark-act)
+         ("C-h B" . embark-bindings))   ; show bindings for current prefix
 
-(use-package helm-elisp
-  :custom
-  (helm-lisp-fuzzy-completion t))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
 
-(use-package helm-locate
-  :custom (helm-locate-fuzzy-match t))
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :after (embark consult)
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package re-builder
   :custom
@@ -1673,15 +1664,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   (bibtex-completion-notes-symbol "N")
   (bibtex-completion-pdf-symbol "P"))
 
-(use-package helm-bibtex
-  :load-path "~/.cache/emacs/straight/build/helm-bibtex"
-  :bind ("C-c b" . helm-bibtex))
-
-(use-package oc                         ;org-cite
-  :custom
-  (org-cite-global-bibliography me-bib-files))
-
+;; Use citar instead of helm-bibtex
 (use-package citar
+  :bind ("C-c b" . citar-open)
   :custom
   ( citar-bibliography me-bib-files)
   ( citar-library-paths me-bib-pdfs)
@@ -1689,6 +1674,15 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :hook
   (LaTeX-mode . citar-capf-setup)
   (org-mode . citar-capf-setup))
+
+(use-package citar-embark
+  :after (citar embark)
+  :config
+  (citar-embark-mode))
+
+(use-package oc                         ;org-cite
+  :custom
+  (org-cite-global-bibliography me-bib-files))
 
 (use-package citar-org-roam
   :delight
@@ -1702,8 +1696,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;; org-ref
 ;; -----------------------------------------------------------------------------
 
-(use-package f
-  :load-path "~/.cache/emacs/straight/build/f")
+(use-package f)
 
 (defun me--org-ref-notes-function (thekey)
   "Return the name of the note file by THEKEY."
@@ -1717,7 +1710,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
     (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
 
 (use-package org-ref
-  :load-path "~/.cache/emacs/straight/build/org-ref"
   :custom
   (doi-utils-download-pdf nil)
   (bibtex-completion-display-formats
@@ -1743,8 +1735,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   (remove-hook 'org-ref-clean-bibtex-entry-hook #'org-ref-replace-nonascii)
   (add-to-list 'org-ref-bibtex-journal-abbreviations
                '("ArXiv" "Archive e-print" "CoRR")))
-
-;; (require 'org-ref-helm)
 
 (eval-when-compile
   (defun me/cleanup-bibtex-file (arg)
@@ -1824,7 +1814,7 @@ Each index is a list (KEY TIMESTAMP)."
     (assoc bmk bookmark-alist))
 
   (defun me--pdf-get-bookmark-name ()
-    (concat " " (file-name-sans-extension
+    (concat " " (file-name-sans-extension
                   (file-name-nondirectory (buffer-file-name)))))
 
   (add-hook 'pdf-view-mode-hook 'me--pdf-jump-last-viewed-bookmark))
@@ -1995,7 +1985,9 @@ alphabetically (in ascending or descending order)."
 
 ;;; * Mail
 
-(require 'mail-conf)
+(use-package mail-conf
+  :straight nil
+  :load-path "~/.config/emacs/site-lisp")
 
 ;;; ** Contacts
 
@@ -2017,18 +2009,37 @@ alphabetically (in ascending or descending order)."
 (use-package modus-themes
   :custom
   ( modus-themes-italic-constructs t)
-  ( modus-themes-bold-constructs t)
   ( modus-themes-region '(bg-only no-extend))
-
-  :custom-face
-  ( region ((t :extend nil)))
 
   :config
   (require-theme 'modus-themes)
   (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
   (load-theme 'modus-operandi :no-confirm))
 
+;;; ** Face Customizations (after theme load)
+
+(set-face-attribute 'fixed-pitch nil :height 110)
 (set-face-attribute 'bold nil :weight 'semi-bold)
+(set-face-attribute 'region nil :extend nil)
+
+(with-eval-after-load 'vundo
+  (set-face-attribute 'vundo-highlight nil :inverse-video t))
+
+(with-eval-after-load 'cal-china-x
+  (set-face-attribute 'cal-china-x-important-holiday-face nil :background "#ff9580"))
+
+(with-eval-after-load 'notmuch
+  (set-face-attribute 'notmuch-tag-deleted nil :inherit 'modus-themes-mark-del))
+
+(with-eval-after-load 'claude-code
+  (set-face-attribute 'claude-code-repl-face nil :family "JuliaMono"))
+
+(with-eval-after-load 'consult
+  (modus-themes-with-colors
+    (set-face-attribute 'consult-file nil
+                        :inherit 'unspecified
+                        :foreground fg-dim
+                        :slant 'normal)))
 
 ;;; * AI
 
@@ -2036,6 +2047,7 @@ alphabetically (in ascending or descending order)."
   :straight (:type git :host github :repo "purcell/inheritenv"))
 
 (use-package eat
+  :delight eat-eshell-mode
   :straight (:type git
                    :host codeberg
                    :repo "akib/emacs-eat"
@@ -2046,12 +2058,13 @@ alphabetically (in ascending or descending order)."
                            (:exclude ".dir-locals.el" "*-tests.el"))))
 
 (use-package claude-code
-  :straight ( :type git
-              :host github
-              :repo "stevemolitor/claude-code.el"
-              :branch "main"
-              :depth 1
-              :files ("*.el" (:exclude "images/*")))
+  :delight (claude-code-mode " 󱚟")
+  :straight (:type git
+                   :host github
+                   :repo "stevemolitor/claude-code.el"
+                   :branch "main"
+                   :depth 1
+                   :files ("*.el" (:exclude "images/*")))
   :bind-keymap
   ( "C-c c" . claude-code-command-map) ;; or your preferred key
   ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
@@ -2062,7 +2075,9 @@ alphabetically (in ascending or descending order)."
   ;; (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
   ;; (monet-mode 1)
 
-  (claude-code-mode))
+  (claude-code-mode)
+
+  (setq claude-code-eat-read-only-mode-cursor-type '(hollow nil nil)))
 
 ;;; * Key logger
 
@@ -2075,4 +2090,4 @@ alphabetically (in ascending or descending order)."
   :config
   (unless (server-running-p) (server-start)))
 
-;;; init.el ends here
+;;; init2.el ends here
