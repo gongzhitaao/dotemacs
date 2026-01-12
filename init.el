@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-11 14:41:58 gongzhitaao>
+;; Time-stamp: <2026-01-11 19:41:08 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -162,6 +162,7 @@
       ox-bibtex
       ox-extra
       ox-html
+      org-num
       ox-latex
       pdf-view
       python
@@ -179,6 +180,7 @@
       subword
       term
       time
+      eldoc
       tramp
       uniquify
       whitespace
@@ -561,12 +563,8 @@ all '.<space>' with '.<space><space>'."
 (delight
  '((abbrev-mode nil t)
    (auto-fill-function " " t)
-   (eldoc-mode nil t)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
-   (eat-eshell-mode nil t)
-   (eshell-mode nil t)
-   (rainbow-delimiters-mode " " t)
    (company-mode nil t)
    (subword-mode nil subword)
    (view-mode " " view)))
@@ -759,7 +757,6 @@ all '.<space>' with '.<space><space>'."
          (before-save . whitespace-cleanup)))
 
 (use-package rainbow-delimiters
-  :delight
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package wgrep
@@ -1303,6 +1300,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
           (t (format "%8dB" (buffer-size))))))
 
 ;;; * Miscellaneous
+
+(use-package eldoc
+  :delight)
 
 ;;; ** Web
 
@@ -2047,7 +2047,6 @@ alphabetically (in ascending or descending order)."
   :straight (:type git :host github :repo "purcell/inheritenv"))
 
 (use-package eat
-  :delight eat-eshell-mode
   :straight (:type git
                    :host codeberg
                    :repo "akib/emacs-eat"
@@ -2055,7 +2054,8 @@ alphabetically (in ascending or descending order)."
                            "*.ti" ("terminfo/e" "terminfo/e/*")
                            ("terminfo/65" "terminfo/65/*")
                            ("integration" "integration/*")
-                           (:exclude ".dir-locals.el" "*-tests.el"))))
+                           (:exclude ".dir-locals.el" "*-tests.el")))
+  :delight (eat-eshell-mode nil))
 
 (use-package claude-code
   :delight (claude-code-mode " 󱚟")

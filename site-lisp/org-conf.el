@@ -46,7 +46,6 @@
   (add-to-list 'ispell-skip-region-alist '("=" "="))
   (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
 
-
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :custom
