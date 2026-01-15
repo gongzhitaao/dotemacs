@@ -213,7 +213,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   :config
   (defun me--init-org-agenda ()
-    (set (make-local-variable 'writeroom-width) 150)
+    (setq-local writeroom-width 150)
     (hl-line-mode))
   (add-hook 'org-agenda-mode-hook #'me--init-org-agenda)
 

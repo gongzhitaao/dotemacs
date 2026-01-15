@@ -9,7 +9,7 @@
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
-;; (defun me//process-sent-messages ()
+;; (defun me--process-sent-messages ()
 ;;   "Post-process sent messages based on email address.
 
 ;; Gmail/IMAP takes care of copying sent messages to sent folder.
@@ -29,7 +29,7 @@
 
 (use-package orgalist)
 
-(defun me//init-message ()
+(defun me--init-message ()
   "Init setup for message mode."
   (orgalist-mode)
   (turn-on-orgtbl)
@@ -45,7 +45,7 @@
         message-forward-ignored-headers ""
         message-auto-save-directory (file-name-concat me-emacs-cache-dir "message")
         message-make-forward-subject-function #'message-forward-subject-fwd)
-  (add-hook 'message-mode-hook #'me//init-message)
+  (add-hook 'message-mode-hook #'me--init-message)
   (add-hook 'message-send-hook 'ispell-message))
 
 (use-package gnus-alias
@@ -100,13 +100,13 @@
 ;; sending mails
 ;; -----------------------------------------------------------------------------
 
-(defun me//get-email-address (from)
+(defun me--get-email-address (from)
   "Get email address from FROM field."
   (if (null (string-match "<\\([^@<]+@[^>]+\\)>" from))
       nil
     (substring (match-string 0 from) 1 -1)))
 
-(defun me//auto-choose-email-account ()
+(defun me--auto-choose-email-account ()
   "Choose email account automatically."
   (let* ((accounts '(
                      ;; ("gongzhitaao@google.com" . "~/.mail/corp")
@@ -114,12 +114,12 @@
                      ("gongzhitaao@makermaker.ai" . "~/.mail/makermaker")
                      ("zhitaao.gong@gmail.com" . "~/.mail/personal")
                      ))
-           (from (me//get-email-address (message-fetch-field "from")))
+           (from (me--get-email-address (message-fetch-field "from")))
            (mail-dir (alist-get from accounts nil nil #'string=)))
       (if mail-dir
-          (set (make-local-variable 'message-sendmail-extra-arguments)
-                `("send" "--quiet" "-t" "-C" ,mail-dir))
-        (warn "Account: %s not found" mail-dir))))
+          (setq-local message-sendmail-extra-arguments
+                      `("send" "--quiet" "-t" "-C" ,mail-dir))
+        (warn "Account: %s not found" from))))
 
 (use-package sendmail
   :ensure nil  ; built-in package
@@ -127,7 +127,7 @@
   (setq send-mail-function 'message-send-mail-with-sendmail
         sendmail-program "gmi")
 
-  (add-hook 'message-send-hook #'me//auto-choose-email-account))
+  (add-hook 'message-send-hook #'me--auto-choose-email-account))
 
 (use-package notmuch
   :config
@@ -190,7 +190,7 @@
 ;; next nearest 5-min.
 ;; -----------------------------------------------------------------------------
 
-;; (defun me//seconds-from-now (interval &optional wait)
+;; (defun me--seconds-from-now (interval &optional wait)
 ;;   "Calculate INTERVAL+WAIT seconds from now."
 ;;   (let* ((m (mod (string-to-number (format-time-string "%M")) interval))
 ;;          (s (string-to-number (format-time-string "%S")))
@@ -200,10 +200,10 @@
 ;;         w
 ;;       (- (+ (* interval 60) w) elapsed))))
 
-;; (defun me//start-mu4e-bg ()
+;; (defun me--start-mu4e-bg ()
 ;;   "Start mu4e in background."
 ;;   (mu4e t))
-;; ;; (run-at-time (me//seconds-from-now 5) nil #'me//start-mu4e-bg)
+;; ;; (run-at-time (me--seconds-from-now 5) nil #'me--start-mu4e-bg)
 
 (provide 'mail-conf)
 ;;; mail-conf.el ends here

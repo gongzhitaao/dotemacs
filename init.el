@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-15 08:13:34 gongzhitaao>
+;; Time-stamp: <2026-01-15 08:45:28 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -28,8 +28,6 @@
 
 (setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
-;; (if (file-exists-p custom-file)
-;;     (load custom-file))
 
 ;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
@@ -723,7 +721,7 @@ all '.<space>' with '.<space><space>'."
 
 (add-hook 'before-save-hook 'time-stamp)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page   'disabled nil)
@@ -977,7 +975,7 @@ all '.<space>' with '.<space><space>'."
 (defun me--make-file-precious-when-remote ()
   "Set FILE-PRECIOUS-FLAG for remote files."
   (when (file-remote-p default-directory)
-    (set (make-local-variable 'file-precious-flag) t)))
+    (setq-local file-precious-flag t)))
 (add-hook 'find-file-hook #'me--make-file-precious-when-remote)
 
 (setopt auto-save-list-file-prefix
@@ -1031,7 +1029,7 @@ all '.<space>' with '.<space><space>'."
   ( bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
   :config
   (defun me--init-bookmark-bmenu ()
-    (set (make-local-variable 'writeroom-width) 150)
+    (setq-local writeroom-width 150)
     (set-face-bold 'bookmark-menu-bookmark nil)
     (hl-line-mode))
 
@@ -1129,24 +1127,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 ;;; * Calendar
 
-;; (use-package solar
-;;   :custom
-;;   ;; Montreal
-;;   (calendar-latitude [45 50 north])
-;;   (calendar-longitude [73 57 west])
-;;   ;; London
-;;   ;; (calendar-latitude [51 50 north])
-;;   ;; (calendar-longitude [0 12 west])
-;;   )
-
 (use-package solar
   :custom
-  ( calendar-latitude (string-to-number
-                       (shell-command-to-string
-                        "curl -s http://ip-api.com/json | jq .lat")))
-  ( calendar-longitude (string-to-number
-                       (shell-command-to-string
-                        "curl -s http://ip-api.com/json | jq .lon")))
+  ;; Montreal
+  ( calendar-latitude [45 50 north])
+  ( calendar-longitude [73 57 west])
+  ;; London
+  ;; ( calendar-latitude [51 50 north])
+  ;; ( calendar-longitude [0 12 west])
   )
 
 (use-package calendar
@@ -1285,10 +1273,10 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
-    (cond ((> (buffer-size) 1000)
-           (format "%7.1fk" (/ (buffer-size) 1000.0)))
-          ((> (buffer-size) 1000000)
+    (cond ((> (buffer-size) 1000000)
            (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+          ((> (buffer-size) 1000)
+           (format "%7.1fk" (/ (buffer-size) 1000.0)))
           (t (format "%8dB" (buffer-size))))))
 
 ;;; * Miscellaneous
@@ -1355,9 +1343,11 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :delight)
 (use-package python-isort)
 
-(defun me--isort-region-or-buffer (&optional beg end)
+(defun me--isort-region-or-buffer (beg end)
   "Sort region in BEG and END if active, whole buffer otherwise."
-  (interactive "r")
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list nil nil)))
   (if (region-active-p)
       (progn
         (python-isort-region beg end)
@@ -1642,8 +1632,8 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :config
   (defun me--init-bibtex ()
     "Init bibtex mode."
-    (set (make-local-variable 'fill-column) 140)
-    (set (make-local-variable 'writeroom-width) 150)
+    (setq-local fill-column 140)
+    (setq-local writeroom-width 150)
     (setq bibtex-maintain-sorted-entries
           '(me--bibtex-entry-index me--bibtex-lessp)))
   (add-hook 'bibtex-mode-hook #'me--init-bibtex))
