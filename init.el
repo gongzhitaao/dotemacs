@@ -692,7 +692,11 @@ all '.<space>' with '.<space><space>'."
   :delight (global-auto-revert-mode " ")
   :config
   (global-auto-revert-mode)
-  (setq auto-revert-remote-files nil))
+  (setq auto-revert-remote-files nil)
+  (add-hook 'find-file-hook
+            (lambda ()
+              (when (file-remote-p buffer-file-name)
+                (auto-revert-mode -1)))))
 
 (use-package select
   :custom
