@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-11 19:41:08 gongzhitaao>
+;; Time-stamp: <2026-01-14 19:16:15 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -593,35 +593,16 @@ all '.<space>' with '.<space><space>'."
 (defun me/reset-font-size ()
   "Manually reset all font size."
   (interactive)
-
-  (set-face-attribute 'default nil
-                      ;; :family "Victor Mono"
-                      ;;
+(set-face-attribute 'default nil
                       ;; :family "Iosevka SS09"
                       :family "Maple Mono NF CN"
                       :weight 'semi-light
                       :height me-default-font-height)
 
   (set-face-attribute 'variable-pitch nil
-                      :family "Iosevka Aile"
-                      ;; :family "Serif"
+                      :family "Iosevka Aile" ;; :family "Serif"
                       :weight 'light
-                      :height me-default-font-height)
-
-  (let ((size (me--unicode-font-size)))
-    ;; (dolist (charset '(kana han cjk-misc bopomofo))
-    ;;   (set-fontset-font
-    ;;    (frame-parameter nil 'font) charset (font-spec
-    ;;                                         ;; :family "Sarasa Mono TC"
-    ;;                                         ;; :size size
-    ;;                                         :family "Maple Mono NF CN"
-    ;;                                         )))
-    ;;
-    (set-fontset-font t
-                      (cons (decode-char 'ucs #xF000)
-                            (decode-char 'ucs #xF890))
-                      (font-spec :family "Font Awesome 7 Free"
-                                 :size size))))
+                      :height me-default-font-height))
 
 (when (display-graphic-p)
   (me/reset-font-size))
@@ -688,6 +669,22 @@ all '.<space>' with '.<space><space>'."
   ( uniquify-buffer-name-style 'post-forward-angle-brackets)
   ( uniquify-ignore-buffers-re "^\\*")
   ( uniquify-separator "/"))
+
+;;; *** Active window indicator
+
+(defvar me-mode-line-active-icon "⏺"
+  "Icon to show in mode line for active window.")
+
+(defvar-local me-mode-line-active-indicator
+  '(:eval (when (mode-line-window-selected-p)
+            (propertize me-mode-line-active-icon
+                        'face '(:foreground "#dd3333")))))
+(put 'me-mode-line-active-indicator 'risky-local-variable t)
+
+(setq-default mode-line-format
+              (append mode-line-format
+                      '(mode-line-format-right-align
+                        me-mode-line-active-indicator " ")))
 
 ;;; * General editing
 
@@ -757,6 +754,7 @@ all '.<space>' with '.<space><space>'."
          (before-save . whitespace-cleanup)))
 
 (use-package rainbow-delimiters
+  :delight
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package wgrep
@@ -861,7 +859,8 @@ all '.<space>' with '.<space><space>'."
 ;; Saves the undo history across sessions.
 (use-package undo-fu-session
   :custom
-  (undo-fu-session-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "undo")))
+  ( undo-fu-session-directory (file-name-as-directory
+                               (file-name-concat me-emacs-cache-dir "undo")))
   :config
   (undo-fu-session-global-mode))
 
@@ -889,7 +888,7 @@ all '.<space>' with '.<space><space>'."
 (use-package anzu
   :delight
   :custom
-  (anzu-search-threshold 1000)
+  ( anzu-search-threshold 1000)
 
   :config
   (global-anzu-mode)
@@ -901,28 +900,20 @@ all '.<space>' with '.<space><space>'."
   (setopt imenu-list-position 'left))
 
 (use-package imenu
-  :custom (imenu-sort-function #'imenu--sort-by-name))
+  :custom
+  ( imenu-sort-function #'imenu--sort-by-name))
 
 ;;; ** Completion
 
 (use-package abbrev
   :custom
-  (abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
-
-(use-package yasnippet
-  :delight yas-minor-mode
-  :hook ((prog-mode org-mode) . yas-minor-mode)
-  :config
-  (setopt yas-snippet-dirs
-          `(,(file-name-as-directory
-              (file-name-concat me-emacs-data-dir "snippets"))))
-  (yas-reload-all))
+  ( abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
 
 (use-package company
   :delight company-mode
   :custom
-  (company-format-margin-function #'company-text-icons-margin)
-  (company-insertion-on-trigger-p)
+  ( company-format-margin-function #'company-text-icons-margin)
+  ( company-insertion-on-trigger-p)
 
   :hook (prog-mode . company-mode)
 
@@ -953,14 +944,14 @@ all '.<space>' with '.<space><space>'."
 
 (use-package files
   :custom
-  (backup-by-copying t)
-  (confirm-kill-emacs 'yes-or-no-p)
-  (delete-old-versions t)
-  (kept-new-versions 30)
-  (kept-old-versions 30)
-  (small-temporary-file-directory "/tmp/")
-  (version-control t)
-  (view-read-only t)
+  ( backup-by-copying t)
+  ( confirm-kill-emacs 'yes-or-no-p)
+  ( delete-old-versions t)
+  ( kept-new-versions 30)
+  ( kept-old-versions 30)
+  ( small-temporary-file-directory "/tmp/")
+  ( version-control t)
+  ( view-read-only t)
 
   :config
   (let ((backup-dir (file-name-as-directory
@@ -993,8 +984,8 @@ all '.<space>' with '.<space><space>'."
 ;; Save recent visited file list.
 (use-package recentf
   :custom
-  (recentf-max-saved-items 50)
-  (recentf-save-file (file-name-concat me-emacs-cache-dir "recentf"))
+  ( recentf-max-saved-items 50)
+  ( recentf-save-file (file-name-concat me-emacs-cache-dir "recentf"))
 
   :config
   (let ((ignores `(,(file-name-concat me-emacs-cache-dir ".*") "~/.mail/.*")))
@@ -1005,26 +996,25 @@ all '.<space>' with '.<space><space>'."
 ;; Save minibuffer history
 (use-package savehist
   :custom
-  (savehist-additional-variables '(search ring regexp-search-ring))
-  (savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
+  ( savehist-additional-variables '(search ring regexp-search-ring))
+  ( savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
 
   :config
   (savehist-mode))
 
 ;; Save file editing positions across sessions.
 (use-package saveplace
-  :custom (save-place-file (file-name-concat me-emacs-cache-dir "saveplace"))
+  :custom
+  ( save-place-file (file-name-concat me-emacs-cache-dir "saveplace"))
   :config (save-place-mode))
 
 ;; Save *scratch* buffer content to files.
 (use-package persistent-scratch
   :custom
-
-  (persistent-scratch-backup-directory
-   (file-name-as-directory (file-name-concat me-emacs-cache-dir "scratch.d")))
-
-  (persistent-scratch-save-file
-   (file-name-concat me-emacs-cache-dir "scratch.d/scratch"))
+  ( persistent-scratch-backup-directory
+    (file-name-as-directory (file-name-concat me-emacs-cache-dir "scratch.d")))
+  ( persistent-scratch-save-file
+    (file-name-concat me-emacs-cache-dir "scratch.d/scratch"))
 
   :config
   (unless (file-exists-p persistent-scratch-backup-directory)
@@ -1036,7 +1026,7 @@ all '.<space>' with '.<space><space>'."
 
 (use-package bookmark
   :custom
-  (bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
+  ( bookmark-default-file (file-name-concat me-emacs-data-dir "bookmarks"))
   :config
   (defun me--init-bookmark-bmenu ()
     (set (make-local-variable 'writeroom-width) 150)
@@ -1049,10 +1039,10 @@ all '.<space>' with '.<space><space>'."
 
 (use-package dired
   :custom
-  (dired-dwim-target t)
-  (dired-recursive-deletes 'always)
-  (dired-recursive-copies 'always)
-  (dired-listing-switches
+  ( dired-dwim-target t)
+  ( dired-recursive-deletes 'always)
+  ( dired-recursive-copies 'always)
+  ( dired-listing-switches
    "-l --almost-all --human-readable --group-directories-first --no-group")
 
   :config
@@ -1159,22 +1149,22 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package calendar
   :custom
-  (calendar-chinese-all-holidays-flag t)
-  (calendar-intermonth-header
-   (propertize "Wk" 'font-lock-face '(:foreground "gray50")))
-  (calendar-intermonth-text
-   '(propertize
-     (format "%2d"
-             (car (calendar-iso-from-absolute
-                   (calendar-absolute-from-gregorian
-                    (list month day year)))))
-     'font-lock-face '(:foreground "gray70")))
-  (calendar-mark-diary-entries-flag t)
-  (calendar-mark-holidays-flag t)
-  (calendar-view-diary-initially-flag nil)
-  (calendar-view-holidays-initially-flag nil)
-  (calendar-week-start-day 1)
-  (diary-file (file-name-concat me-emacs-data-dir "time-machine/diary"))
+  ( calendar-chinese-all-holidays-flag t)
+  ( calendar-intermonth-header
+    (propertize "Wk" 'font-lock-face '(:foreground "gray50")))
+  ( calendar-intermonth-text
+    '(propertize
+      (format "%2d"
+              (car (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian
+                     (list month day year)))))
+      'font-lock-face '(:foreground "gray70")))
+  ( calendar-mark-diary-entries-flag t)
+  ( calendar-mark-holidays-flag t)
+  ( calendar-view-diary-initially-flag nil)
+  ( calendar-view-holidays-initially-flag nil)
+  ( calendar-week-start-day 1)
+  ( diary-file (file-name-concat me-emacs-data-dir "time-machine/diary"))
 
   :config
   (calendar-set-date-style 'iso))
@@ -1309,10 +1299,10 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 (use-package web-mode
   :mode ("\\.\\(html\\|htm\\)\\'" "\\.php\\'")
   :custom
-  (web-mode-code-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-enable-current-element-highlight t)
-  (web-mode-markup-indent-offset 2))
+  ( web-mode-code-indent-offset 2)
+  ( web-mode-css-indent-offset 2)
+  ( web-mode-enable-current-element-highlight t)
+  ( web-mode-markup-indent-offset 2))
 
 (use-package js
   :custom (js-indent-level 2))
@@ -1323,9 +1313,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :bind (:map js2-mode-map
               ("C-!" . clang-format-region))
   :custom
-  (js2-basic-offset 2)
-  (js2-include-node-externs t)
-  (js2-include-browser-externs t)
+  ( js2-basic-offset 2)
+  ( js2-include-browser-externs t)
+  ( js2-include-node-externs t)
 
   :config
   (setq-default js2-additional-externs
@@ -1386,6 +1376,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
     (lsp-mode . lsp-enable-which-key-integration))
   :commands
   ( lsp lsp-deferred))
+
 (use-package consult-lsp
   :after lsp-mode
   :commands consult-lsp-symbols)
@@ -1453,9 +1444,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;; Vertico - vertical completion UI
 (use-package vertico
   :custom
-  (vertico-cycle t)
-  (vertico-resize nil)
-  (vertico-count 15)
+  ( vertico-cycle t)
+  ( vertico-resize nil)
+  ( vertico-count 15)
 
   :config
   (vertico-mode)
@@ -1470,9 +1461,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;; Orderless - flexible completion matching
 (use-package orderless
   :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  ( completion-styles '(orderless basic))
+  ( completion-category-defaults nil)
+  ( completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; Marginalia - rich annotations in minibuffer
 (use-package marginalia
@@ -1497,8 +1488,8 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
          ("C-c h i" . consult-imenu))
 
   :custom
-  (consult-narrow-key "<")
-  (consult-preview-key "M-.")
+  ( consult-narrow-key "<")
+  ( consult-preview-key "M-.")
 
   :config
   ;; Configure preview behavior
@@ -1543,15 +1534,15 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 (use-package deft
   :bind ("<f8>" . deft)
   :custom
-  (deft-auto-save-interval 0)
-  (deft-default-extension "org")
-  (deft-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
-  (deft-file-naming-rules '((noslash . "-")
-                            (nospace . "-")
-                            (case-fn . downcase)))
-  (deft-recursive t)
-  (deft-use-filename-as-title nil)
-  (deft-use-filter-string-for-filename t)
+  ( deft-auto-save-interval 0)
+  ( deft-default-extension "org")
+  ( deft-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
+  ( deft-file-naming-rules '((noslash . "-")
+                             (nospace . "-")
+                             (case-fn . downcase)))
+  ( deft-recursive t)
+  ( deft-use-filename-as-title nil)
+  ( deft-use-filter-string-for-filename t)
 
   :config
   (advice-add 'deft-parse-title :override #'me--deft-parse-title)
@@ -1633,18 +1624,18 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
               ("M-<up>"                   . bibtex-beginning-of-entry))
 
   :custom
-  (bibtex-align-at-equal-sign t)
-  (bibtex-autokey-name-year-separator "")
-  (bibtex-autokey-titleword-length nil)
-  (bibtex-autokey-titleword-separator "_")
-  (bibtex-autokey-titlewords 1)
-  (bibtex-autokey-titlewords-stretch 0)
-  (bibtex-autokey-year-length 4)
-  (bibtex-autokey-year-title-separator "-")
-  (bibtex-dialect 'biblatex)
-  (bibtex-entry-format t)
-  (bibtex-maintain-sorted-entries t)
-  (bibtex-text-indentation 20)
+  ( bibtex-align-at-equal-sign t)
+  ( bibtex-autokey-name-year-separator "")
+  ( bibtex-autokey-titleword-length nil)
+  ( bibtex-autokey-titleword-separator "_")
+  ( bibtex-autokey-titlewords 1)
+  ( bibtex-autokey-titlewords-stretch 0)
+  ( bibtex-autokey-year-length 4)
+  ( bibtex-autokey-year-title-separator "-")
+  ( bibtex-dialect 'biblatex)
+  ( bibtex-entry-format t)
+  ( bibtex-maintain-sorted-entries t)
+  ( bibtex-text-indentation 20)
 
   :config
   (defun me--init-bibtex ()
@@ -1657,12 +1648,12 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package bibtex-completion
   :custom
-  (bibtex-completion-bibliography me-bib-files)
-  (bibtex-completion-library-path me-bib-pdfs)
-  (bibtex-completion-notes-extension ".org")
-  (bibtex-completion-notes-path me-bib-notes)
-  (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-pdf-symbol "P"))
+  ( bibtex-completion-bibliography me-bib-files)
+  ( bibtex-completion-library-path me-bib-pdfs)
+  ( bibtex-completion-notes-extension ".org")
+  ( bibtex-completion-notes-path me-bib-notes)
+  ( bibtex-completion-notes-symbol "N")
+  ( bibtex-completion-pdf-symbol "P"))
 
 ;; Use citar instead of helm-bibtex
 (use-package citar
@@ -1682,14 +1673,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package oc                         ;org-cite
   :custom
-  (org-cite-global-bibliography me-bib-files))
+  ( org-cite-global-bibliography me-bib-files))
 
 (use-package citar-org-roam
   :delight
   :after (citar org-roam)
 
   :custom
-  (citar-org-roam-note-title-template "${year}:${title}")
+  ( citar-org-roam-note-title-template "${year}:${title}")
 
   :config (citar-org-roam-mode))
 
@@ -1711,14 +1702,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package org-ref
   :custom
-  (doi-utils-download-pdf nil)
-  (bibtex-completion-display-formats
-   `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
-     (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
-     (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-     (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-     (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
-  (bibtex-completion-additional-search-fields '(keywords journal booktitle))
+  ( doi-utils-download-pdf nil)
+  ( bibtex-completion-display-formats
+    `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
+  ( bibtex-completion-additional-search-fields '(keywords journal booktitle))
 
   :config
   (bind-keys :map org-mode-map
@@ -1782,12 +1773,10 @@ Each index is a list (KEY TIMESTAMP)."
 
 (use-package reftex
   :delight
-
   :custom
-  (reftex-plug-into-AUCTeX t)
-  (reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref"))
-  (reftex-default-bibliography me-bib-files)
-
+  ( reftex-plug-into-AUCTeX t)
+  ( reftex-ref-style-default-list '("Cleveref" "Hyperref" "Fancyref"))
+  ( reftex-default-bibliography me-bib-files)
   :hook (tex-mode . reftex-mode))
 
 ;;; *** PDF
@@ -2021,6 +2010,9 @@ alphabetically (in ascending or descending order)."
 (set-face-attribute 'fixed-pitch nil :height 110)
 (set-face-attribute 'bold nil :weight 'semi-bold)
 (set-face-attribute 'region nil :extend nil)
+(set-face-attribute 'mode-line nil :family "Iosevka SS09")
+(set-face-attribute 'mode-line-active nil :family "Iosevka SS09")
+(set-face-attribute 'mode-line-inactive nil :family "Iosevka SS09")
 
 (with-eval-after-load 'vundo
   (set-face-attribute 'vundo-highlight nil :inverse-video t))
@@ -2058,7 +2050,7 @@ alphabetically (in ascending or descending order)."
   :delight (eat-eshell-mode nil))
 
 (use-package claude-code
-  :delight (claude-code-mode " 󱚟")
+  :delight (claude-code-mode " 󱙺")
   :straight (:type git
                    :host github
                    :repo "stevemolitor/claude-code.el"
