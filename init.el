@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-14 19:16:15 gongzhitaao>
+;; Time-stamp: <2026-01-14 19:59:35 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -682,7 +682,7 @@ all '.<space>' with '.<space><space>'."
 (put 'me-mode-line-active-indicator 'risky-local-variable t)
 
 (setq-default mode-line-format
-              (append mode-line-format
+              (append (default-value 'mode-line-format)
                       '(mode-line-format-right-align
                         me-mode-line-active-indicator " ")))
 
