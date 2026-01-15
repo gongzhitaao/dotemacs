@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-14 20:03:42 gongzhitaao>
+;; Time-stamp: <2026-01-15 08:13:34 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -689,14 +689,12 @@ all '.<space>' with '.<space><space>'."
 ;;; * General editing
 
 (use-package autorevert
-  :delight (global-auto-revert-mode " ")
+  :delight (auto-revert-mode " ")
   :config
-  (global-auto-revert-mode)
-  (setq auto-revert-remote-files nil)
   (add-hook 'find-file-hook
             (lambda ()
-              (when (file-remote-p buffer-file-name)
-                (auto-revert-mode -1)))))
+              (unless (file-remote-p buffer-file-name)
+                (auto-revert-mode 1)))))
 
 (use-package select
   :custom
