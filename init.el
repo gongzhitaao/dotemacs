@@ -1,5 +1,5 @@
 ;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-15 08:45:28 gongzhitaao>
+;; Time-stamp: <2026-01-16 09:47:05 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -670,19 +670,11 @@ all '.<space>' with '.<space><space>'."
 
 ;;; *** Active window indicator
 
-(defvar me-mode-line-active-icon "⏺"
-  "Icon to show in mode line for active window.")
-
-(defvar-local me-mode-line-active-indicator
-  '(:eval (when (mode-line-window-selected-p)
-            (propertize me-mode-line-active-icon
-                        'face '(:foreground "#dd3333")))))
-(put 'me-mode-line-active-indicator 'risky-local-variable t)
-
 (setq-default mode-line-format
-              (append (default-value 'mode-line-format)
-                      '(mode-line-format-right-align
-                        me-mode-line-active-indicator " ")))
+              (cons '(:eval (if (mode-line-window-selected-p)
+                                (propertize "⏺ " 'face '(:foreground "#dd3333"))
+                              "  "))
+                    (default-value 'mode-line-format)))
 
 ;;; * General editing
 
@@ -2016,7 +2008,9 @@ alphabetically (in ascending or descending order)."
   (set-face-attribute 'notmuch-tag-deleted nil :inherit 'modus-themes-mark-del))
 
 (with-eval-after-load 'claude-code
-  (set-face-attribute 'claude-code-repl-face nil :family "JuliaMono"))
+  (set-face-attribute 'claude-code-repl-face nil
+                      :family "JuliaMono"
+                      :height 120))
 
 (with-eval-after-load 'consult
   (modus-themes-with-colors
@@ -2039,7 +2033,9 @@ alphabetically (in ascending or descending order)."
                            ("terminfo/65" "terminfo/65/*")
                            ("integration" "integration/*")
                            (:exclude ".dir-locals.el" "*-tests.el")))
-  :delight (eat-eshell-mode nil))
+  :delight (eat-eshell-mode nil)
+  :hook (eat-mode . (lambda () (buffer-face-set
+                                '(:family "Iosevka Term SS09" :height 130)))))
 
 (use-package claude-code
   :delight (claude-code-mode " 󱙺")
@@ -2055,12 +2051,7 @@ alphabetically (in ascending or descending order)."
   :bind
   ( :repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
   :config
-  ;; optional IDE integration with Monet
-  ;; (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
-  ;; (monet-mode 1)
-
   (claude-code-mode)
-
   (setq claude-code-eat-read-only-mode-cursor-type '(hollow nil nil)))
 
 ;;; * Key logger
