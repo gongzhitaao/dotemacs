@@ -2019,6 +2019,11 @@ alphabetically (in ascending or descending order)."
                         :foreground fg-dim
                         :slant 'normal)))
 
+(with-eval-after-load 'marginalia
+  (set-face-attribute 'marginalia-documentation nil
+                      :weight 'light
+                      :slant 'normal))
+
 ;;; * AI
 
 (use-package inheritenv

@@ -24,6 +24,9 @@
 
 ;;; Code:
 
+;; Define flavor for Debian emacsen compatibility (used by latex-cjk-* packages)
+(defvar flavor 'emacs)
+
 (setopt package-enable-at-startup nil)
 (set-language-environment "UTF-8")
 
