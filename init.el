@@ -1,5 +1,5 @@
-;;; init2.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-16 09:47:05 gongzhitaao>
+;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
+;; Time-stamp: <2026-01-24 14:08:27 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -35,19 +35,13 @@
 (add-to-list 'load-path (file-name-as-directory
                          (file-name-concat me-emacs-config-dir "site-lisp")))
 
-;; copied from spacemacs
 (defun me--remove-gui-elements ()
   "Remove the menu bar, tool bar and scroll bars."
-  (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
-    (tool-bar-mode -1))
-  (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
-    (menu-bar-mode -1))
-  (when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
-    (scroll-bar-mode -1))
-  (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
-    (tooltip-mode -1)))
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tooltip-mode -1))
 
-(defvar-local hidden-mode-line-mode nil)
 (defvar-local hide-mode-line nil)
 (define-minor-mode hidden-mode-line-mode
   "Minor mode to hide the mode-line in the current buffer."
@@ -115,6 +109,8 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(setq load-prefer-newer t)
 
 (straight-use-package 'use-package)
 (setq use-package-compute-statistics t)
@@ -187,8 +183,6 @@
 
 (use-package delight)
 (use-package bind-key)
-
-(setq load-prefer-newer t)
 
 ;; I received warning about org version mismatch.  One of the suggestion is to
 ;; load the desired org version right after straight.  So I moved all org related
@@ -573,7 +567,7 @@ all '.<space>' with '.<space><space>'."
 ;; 2. we get the base size with frame-char-width.
 ;; 3. Based upon the ppi, we scale the unicode size as multiple of base size.
 
-(defconst me-default-font-height 140 "Return the default font height")
+(defconst me-default-font-height 140 "The default font height.")
 
 (defun me--ppi (&optional frame)
  (let* ((attrs (frame-monitor-attributes frame))
@@ -678,13 +672,14 @@ all '.<space>' with '.<space><space>'."
 
 ;;; * General editing
 
+(defun me--maybe-enable-auto-revert ()
+  "Enable auto-revert-mode for local files only."
+  (unless (file-remote-p buffer-file-name)
+    (auto-revert-mode 1)))
+
 (use-package autorevert
   :delight (auto-revert-mode " ")
-  :config
-  (add-hook 'find-file-hook
-            (lambda ()
-              (unless (file-remote-p buffer-file-name)
-                (auto-revert-mode 1)))))
+  :hook (find-file . me--maybe-enable-auto-revert))
 
 (use-package select
   :custom
@@ -713,7 +708,7 @@ all '.<space>' with '.<space><space>'."
 
 (add-hook 'before-save-hook 'time-stamp)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
+(setopt use-short-answers t)
 
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page   'disabled nil)
@@ -905,12 +900,11 @@ all '.<space>' with '.<space><space>'."
   :delight company-mode
   :custom
   ( company-format-margin-function #'company-text-icons-margin)
-  ( company-insertion-on-trigger-p)
+  ( company-idle-delay nil)
 
   :hook (prog-mode . company-mode)
 
   :config
-  (setopt company-idle-delay nil)
   (bind-keys :map prog-mode-map
              ("<tab>" . company-indent-or-complete-common)))
 
@@ -923,7 +917,7 @@ all '.<space>' with '.<space><space>'."
 (defun me--cleanup-old-files (directory nday)
   "Cleanup DIRECTORY files older than NDAY."
   (let ((age (* 60 60 24 (or nday 7)))
-        (current (float-time (current-time))))
+        (current (float-time)))
     (message "Deleting old backup files...")
     (dolist (file (directory-files directory t))
       (when (and (backup-file-name-p file)
@@ -988,7 +982,7 @@ all '.<space>' with '.<space><space>'."
 ;; Save minibuffer history
 (use-package savehist
   :custom
-  ( savehist-additional-variables '(search ring regexp-search-ring))
+  ( savehist-additional-variables '(search-ring regexp-search-ring))
   ( savehist-file (file-name-concat me-emacs-cache-dir "savehist"))
 
   :config
@@ -1189,6 +1183,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
             (mode 24 24 :left :elide) " "
             filename-and-process))))
 
+(defun me--init-ibuffer ()
+  "Initialize ibuffer mode."
+  (ibuffer-auto-mode 1)
+  (ibuffer-switch-to-saved-filter-groups "default")
+  (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
+  (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
+  (hl-line-mode 1))
+
 (use-package ibuf-ext
   :config
   (setq ibuffer-saved-filter-groups
@@ -1254,15 +1256,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
            ("Image"
             (or (mode . image-mode))))))
 
-  (add-hook
-   'ibuffer-mode-hook
-   (lambda ()
-     (ibuffer-auto-mode 1)
-     (ibuffer-switch-to-saved-filter-groups "default")
-     (local-set-key (kbd "<right>") 'ibuffer-forward-filter-group)
-     (local-set-key (kbd "<left>") 'ibuffer-backward-filter-group)
-     (hl-line-mode 1)))
+  :hook (ibuffer-mode . me--init-ibuffer)
 
+  :config
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
     (cond ((> (buffer-size) 1000000)
@@ -1414,12 +1410,16 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 ;;; ** Markdown
 
+(defun me--init-markdown ()
+  "Initialize markdown mode."
+  (setq-local ispell-skip-region-alist
+              (append '(("`" "`") ("^```" . "^```"))
+                      ispell-skip-region-alist)))
+
 (use-package markdown-mode
-  :config
-  (make-local-variable 'ispell-skip-region-alist)
-  (add-to-list 'ispell-skip-region-alist '("`" "`"))
-  (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
-  (setq-default markdown-hide-urls t))
+  :custom
+  (markdown-hide-urls t)
+  :hook (markdown-mode . me--init-markdown))
 
 (use-package ncl-mode)
 
@@ -2024,10 +2024,33 @@ alphabetically (in ascending or descending order)."
                       :weight 'light
                       :slant 'normal))
 
+;;; * Version Control
+
+(use-package magit
+  :bind (("C-x g" . magit-status)
+         ("C-x M-g" . magit-dispatch))
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package forge
+  :after magit
+  :custom
+  (forge-add-default-bindings t))
+
+;; To use Forge with GitLab:
+;; 1. Create a personal access token at GitLab -> Settings -> Access Tokens
+;;    with scopes: api, read_user, read_repository
+;; 2. Add to ~/.authinfo.gpg or ~/.authinfo:
+;;    machine gitlab.com login YOUR_USERNAME^forge password YOUR_TOKEN
+
 ;;; * AI
 
 (use-package inheritenv
   :straight (:type git :host github :repo "purcell/inheritenv"))
+
+(defun me--init-eat ()
+  "Initialize eat mode."
+  (buffer-face-set '(:family "Iosevka Term SS09" :height 130)))
 
 (use-package eat
   :straight (:type git
@@ -2039,8 +2062,7 @@ alphabetically (in ascending or descending order)."
                            ("integration" "integration/*")
                            (:exclude ".dir-locals.el" "*-tests.el")))
   :delight (eat-eshell-mode nil)
-  :hook (eat-mode . (lambda () (buffer-face-set
-                                '(:family "Iosevka Term SS09" :height 130)))))
+  :hook (eat-mode . me--init-eat))
 
 (use-package claude-code
   :delight (claude-code-mode " 󱙺")
@@ -2070,4 +2092,4 @@ alphabetically (in ascending or descending order)."
   :config
   (unless (server-running-p) (server-start)))
 
-;;; init2.el ends here
+;;; init.el ends here
