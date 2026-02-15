@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-24 14:08:27 gongzhitaao>
+;; Time-stamp: <2026-01-29 12:50:24 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -29,11 +29,11 @@
 (setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
 
-;; The ~/.emacs.d/site-lisp contains some configs that don't fit in here,
+;; The ~/.emacs.d/lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
 (add-to-list 'load-path (file-name-as-directory
-                         (file-name-concat me-emacs-config-dir "site-lisp")))
+                         (file-name-concat me-emacs-config-dir "lisp")))
 
 (defun me--remove-gui-elements ()
   "Remove the menu bar, tool bar and scroll bars."
@@ -188,7 +188,7 @@
 ;; load the desired org version right after straight.  So I moved all org related
 ;; config into a separate file and load them here.
 (use-package org-conf
-  :load-path "~/.config/emacs/site-lisp")
+  :load-path "~/.config/emacs/lisp")
 
 ;;; * Global key bindings
 
@@ -1960,7 +1960,7 @@ alphabetically (in ascending or descending order)."
 
 (use-package mail-conf
   :straight nil
-  :load-path "~/.config/emacs/site-lisp")
+  :load-path "~/.config/emacs/lisp")
 
 ;;; ** Contacts
 
