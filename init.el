@@ -1992,7 +1992,7 @@ alphabetically (in ascending or descending order)."
 
 (use-package modus-themes
   :custom
-  ( modus-themes-italic-constructs t)
+  ( modus-themes-italic-constructs nil)
   ( modus-themes-region '(bg-only no-extend))
 
   :config
@@ -2073,7 +2073,9 @@ alphabetically (in ascending or descending order)."
                            ("integration" "integration/*")
                            (:exclude ".dir-locals.el" "*-tests.el")))
   :delight (eat-eshell-mode nil)
-  :hook (eat-mode . me--init-eat))
+  :hook (eat-mode . me--init-eat)
+  :bind (:map eat-semi-char-mode-map
+              ("C-z" . nil)))
 
 (use-package claude-code
   :delight (claude-code-mode " 󱙺")
