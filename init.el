@@ -1361,7 +1361,18 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :after lsp-mode
   :commands consult-lsp-symbols)
 
-(use-package flycheck)
+(use-package flycheck
+  :config
+  ;; HACK: flycheck cd063dfa quotes defconst symbol refs in macro-expanded
+  ;; :error-patterns instead of evaluating them.
+  ;; Remove this workaround once flycheck/flycheck#2155 is resolved.
+  ;; https://github.com/flycheck/flycheck/issues/2155
+  (dolist (checker '(markdown-markdownlint-cli markdown-markdownlint-cli2
+                     sh-bash sh-posix-bash))
+    (when-let* ((patterns (flycheck-checker-get checker 'error-patterns))
+                ((symbolp patterns)))
+      (setf (flycheck-checker-get checker 'error-patterns)
+            (symbol-value patterns)))))
 (use-package eglot)
 
 (use-package flycheck-eglot
