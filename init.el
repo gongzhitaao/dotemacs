@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-01-29 12:50:24 gongzhitaao>
+;; Time-stamp: <2026-02-16 07:51:36 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -7,7 +7,7 @@
 ;; me-xxx: custom variables
 ;;
 ;; This is a Vertico-based configuration, using straight.el for package management.
-;; To use: emacs -Q -l ~/.config/emacs/init2.el
+;; To use: emacs -Q -l ~/.config/emacs/init.el
 
 ;;; Code:
 
@@ -29,7 +29,7 @@
 (setq custom-file (file-name-concat me-emacs-config-dir "custom.el"))
 
 
-;; The ~/.emacs.d/lisp contains some configs that don't fit in here,
+;; The ~/.config/emacs/lisp contains some configs that don't fit in here,
 ;; because it is site-specific or it contains sensitive information.  These
 ;; configs will not go into the public git repo.
 (add-to-list 'load-path (file-name-as-directory
@@ -42,18 +42,18 @@
   (scroll-bar-mode -1)
   (tooltip-mode -1))
 
-(defvar-local hide-mode-line nil)
+(defvar hide-mode-line nil)
 (define-minor-mode hidden-mode-line-mode
-  "Minor mode to hide the mode-line in the current buffer."
+  "Minor mode to hide the mode-line in all buffers."
   :init-value nil
   :global t
   :variable hidden-mode-line-mode
   (if hidden-mode-line-mode
-      (setq hide-mode-line mode-line-format
+      (setq hide-mode-line (default-value 'mode-line-format)
             mode-line-format nil)
-    (setq mode-line-format hide-mode-line
-          hide-mode-line nil))
-  (force-mode-line-update)
+    (setq-default mode-line-format hide-mode-line)
+    (setq hide-mode-line nil))
+  (force-mode-line-update t)
   ;; Apparently force-mode-line-update is not always enough to
   ;; redisplay the mode-line
   (redraw-display)
@@ -130,6 +130,7 @@
       delsel
       dired
       eglot
+      eldoc
       files
       flyspell
       ibuf-ext
@@ -138,15 +139,15 @@
       imenu
       mail-conf
       message
-      sendmail
-      org-conf
       oc
       octave
       org-agenda
       org-capture
       org-clock
+      org-conf
       org-habit
       org-id
+      org-num
       org-refile
       org-src
       org-timer
@@ -156,7 +157,6 @@
       ox-bibtex
       ox-extra
       ox-html
-      org-num
       ox-latex
       pdf-view
       python
@@ -167,6 +167,7 @@
       savehist
       saveplace
       select
+      sendmail
       server
       simple
       solar
@@ -174,7 +175,6 @@
       subword
       term
       time
-      eldoc
       tramp
       uniquify
       whitespace
@@ -557,8 +557,7 @@ all '.<space>' with '.<space><space>'."
    (auto-fill-function " " t)
    (global-subword-mode nil subword)
    (isearch-mode " " t)
-   (company-mode nil t)
-   (subword-mode nil subword)
+(subword-mode nil subword)
    (view-mode " " view)))
 
 ;;; ** Fonts
@@ -1361,19 +1360,8 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :after lsp-mode
   :commands consult-lsp-symbols)
 
-(use-package flycheck
-  :config
-  ;; HACK: flycheck cd063dfa quotes defconst symbol refs in macro-expanded
-  ;; :error-patterns instead of evaluating them.
-  ;; Remove this workaround once flycheck/flycheck#2155 is resolved.
-  ;; https://github.com/flycheck/flycheck/issues/2155
-  (dolist (checker '(markdown-markdownlint-cli markdown-markdownlint-cli2
-                     sh-bash sh-posix-bash))
-    (when-let* ((patterns (flycheck-checker-get checker 'error-patterns))
-                ((symbolp patterns)))
-      (setf (flycheck-checker-get checker 'error-patterns)
-            (symbol-value patterns)))))
-(use-package eglot)
+(use-package flycheck :defer t)
+(use-package eglot :defer t)
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -1993,7 +1981,6 @@ alphabetically (in ascending or descending order)."
 (use-package modus-themes
   :custom
   ( modus-themes-italic-constructs nil)
-  ( modus-themes-region '(bg-only no-extend))
 
   :config
   (require-theme 'modus-themes)
@@ -2059,9 +2046,9 @@ alphabetically (in ascending or descending order)."
 (use-package inheritenv
   :straight (:type git :host github :repo "purcell/inheritenv"))
 
-(defun me--init-eat ()
-  "Initialize eat mode."
-  (buffer-face-set '(:family "Iosevka Term SS09" :height 130)))
+(defun me--set-eat-buffer-font ()
+  "Apply my preferred font to all Eat terminal buffers."
+  (buffer-face-set '(:family "JuliaMono" :height 120)))
 
 (use-package eat
   :straight (:type git
@@ -2073,7 +2060,8 @@ alphabetically (in ascending or descending order)."
                            ("integration" "integration/*")
                            (:exclude ".dir-locals.el" "*-tests.el")))
   :delight (eat-eshell-mode nil)
-  :hook (eat-mode . me--init-eat)
+  :hook ((eat-mode . me--set-eat-buffer-font)
+         (eat-eshell-mode . me--set-eat-buffer-font))
   :bind (:map eat-semi-char-mode-map
               ("C-z" . nil)))
 
