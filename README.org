@@ -9,90 +9,122 @@
 :CUSTOM_ID: h1-package-manager
 :END:
 
-*Dependencies*: Cask, pallet.
+Packages are managed by [[https://github.com/radian-software/straight.el][straight.el]] with [[https://github.com/jwiegley/use-package][use-package]] integration.
+All packages are installed from source via straight and configured
+declaratively with =use-package=.
 
-Third party libraries are managed by Cask and pallet.  Every morning I open up
-the terminal and enter the =emacs.d= directory, type =cask update= will update
-and byte-compile the packages listed in a file named =Cask=.  When you install
-packages inside Emacs, =pallet= makes sure that =Cask= is updated accordingly.
+* Completion Framework
+:PROPERTIES:
+:CUSTOM_ID: h1-completion-framework
+:END:
+
+A Vertico-based completion stack:
+
+- [[https://github.com/minad/vertico][Vertico]] -- vertical minibuffer completion UI
+- [[https://github.com/oantolin/orderless][Orderless]] -- flexible matching (regexp, literal, initialism)
+- [[https://github.com/minad/marginalia][Marginalia]] -- rich annotations in the minibuffer
+- [[https://github.com/minad/consult][Consult]] -- enhanced search and navigation (ripgrep, line, buffer, etc.)
+- [[https://github.com/oantolin/embark][Embark]] -- context actions on completion candidates
 
 * Org Mode
 :PROPERTIES:
 :CUSTOM_ID: h1-org-mode
 :END:
 
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/orgmode.png]]
+Org configuration lives in a separate file (=lisp/org-conf.el=) to
+avoid version conflicts with straight.el.
 
-- Scientific paper writing, with ~org-ref~ package.  The org file may be exported
-  to nearly all well-known format.  I've been using Org mode for dissertation,
-  conference paper, slides (~beamer~) and much more.
-- A complete TODO system, can be as simple or as complicated as possible.
-- Agenda, with habits tracking, compatible with Google Calendar events.
+- Agenda, habit tracking, time clocking
+- Capture templates for quick notes and tasks
+- Export to LaTeX, Beamer, HTML
+- Clipboard image paste: =me/org-yank= detects images on the clipboard
+  (raw data or file URIs) and saves them into an assets directory with
+  auto-incrementing names
 
-* Bibliography Manager
+* Note-Taking
 :PROPERTIES:
-:CUSTOM_ID: h1-bibliography-manager
+:CUSTOM_ID: h1-note-taking
 :END:
 
-This is a killer feature for scientific paper writing in Org-mode.
+- [[https://github.com/org-roam/org-roam][Org-roam]] -- Zettelkasten-style note-taking with backlinks
+- [[https://github.com/jrblevin/deft][Deft]] ({{{kbd(F8)}}}) -- full-text search across notes
 
-~helm-bibtex~ allows fuzzy-search on the bibtex file.
+* Bibliography
+:PROPERTIES:
+:CUSTOM_ID: h1-bibliography
+:END:
 
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/bibtex-search.png]]
-
-Associate PDF file, note file with a bibtex entry, and jump among them.
-Specifically, {{{kbd(C-c o p)}}} opens the PDF file, {{{kbd(C-c o n)}}} opens the note file
-and {{{kbd(C-c o c)}}} jumps to the bibtex entry.  For example, when you are viewing
-the PDF in Emacs, {{{kbd(C-c o n)}}} opens the note file (create one if necessary),
-{{{kbd(C-c o c)}}} jumps to the bibtex entry for this PDF file.
-
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/bibtex-manager.png]]
-
-Cleanup/format bibtex entries, auto construct keys for bibtex entries.  You
-could copy a bibtex entry from online, and press {{{kbd(C-c C-c)}}}, the entries will
-be cleanup as follows.  The ~timestamp~ is automatically inserted.
-
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/bibtex.png]]
-
-With the help of ~org-ref,~ we can quickly insert citations to org files, which
-can be exported to TeX, PDF or HTML with appropriate reference list.
+- [[https://github.com/emacs-citar/citar][Citar]] ({{{kbd(C-c b)}}}) -- citation insertion and management
+- [[https://github.com/emacs-citar/citar-org-roam][Citar-org-roam]] -- connect references to org-roam notes
+- [[https://github.com/jkitchin/org-ref][Org-ref]] -- reference management, bibtex cleanup, citation sorting
 
 * Email
 :PROPERTIES:
 :CUSTOM_ID: h1-email
 :END:
 
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/mu4e.png]]
+Mail configuration is in =lisp/mail-conf.el= (not public).  Contact
+management via [[https://savannah.nongnu.org/projects/bbdb/][BBDB]].
 
-A full-fledged email client with ~mu4e~.  Current settings are compatible with
-multiple Gmail and Office 365 accounts.
-
-* Editing Enhancement
+* Editing
 :PROPERTIES:
-:CUSTOM_ID: h1-editing-enhancement
+:CUSTOM_ID: h1-editing
 :END:
 
-** Writeroom with Fill-column Indicator
+- [[https://github.com/Fuco1/smartparens][Smartparens]] ({{{kbd(C-c s)}}}) -- structural editing
+- [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] ({{{kbd(C-c m)}}}) -- multi-cursor editing
+- [[https://github.com/karabber/drag-stuff][Drag-stuff]] ({{{kbd(C-c d)}}}) -- drag lines and regions
+- [[https://github.com/magnars/expand-region.el][Expand-region]] ({{{kbd(C-=)}}}) -- incremental selection expansion
+- [[https://github.com/casouri/vundo][Vundo]] -- visual undo tree with =hjkl= navigation
+- [[https://github.com/jdtsmith/indent-bars][Indent-bars]] -- visual indentation guides
+- [[https://github.com/ideasman42/emacs-undo-fu-session][Undo-fu-session]] -- persistent undo across sessions
+
+* Programming
 :PROPERTIES:
-:CUSTOM_ID: h2-writeroom-with-fill-column-indicator
+:CUSTOM_ID: h1-programming
 :END:
 
-The buffer content is centered, especially useful when you have a wide screen.
-This is not compatible with =linum-mode= (said to be fixed in Emacs 26), which I
-never use.  ~fill-column-indicator~ shows a dimmed white line at ~fill-column~.
+- [[https://github.com/joaotavora/eglot][Eglot]] -- built-in LSP client
+- [[https://www.flycheck.org][Flycheck]] -- on-the-fly syntax checking
+- [[https://github.com/company-mode/company-mode][Company]] -- text completion
+- [[https://github.com/nicferrier/separedit.el][Separedit]] ({{{kbd(C-c ,)}}}) -- edit code blocks in their native major mode
+- Languages: Python (isort, pyink), JavaScript/TypeScript, C/C++
+  (google-c-style, clang-format), web-mode, YAML, JSON, Jsonnet,
+  Cython, Protobuf, Octave, NCL
 
-** Whitespace
+* File Management
 :PROPERTIES:
-:CUSTOM_ID: h2-whitespace
+:CUSTOM_ID: h1-file-management
 :END:
 
-It highlights trailing spaces, leading/trailing empty lines, and automatically
-cleans up them when saved.
+- [[https://github.com/alexluigit/dirvish][Dirvish]] ({{{kbd(C-c f)}}}) -- enhanced dired with icons, git info, and
+  quick-access shortcuts
+- [[https://github.com/magit/magit][Magit]] ({{{kbd(C-x g)}}}) -- Git porcelain
+- [[https://github.com/magit/forge][Forge]] -- GitHub/GitLab integration from Magit
 
-#+ATTR_ORG: :width 700
-[[file:docs_src/img/whitespace.png]]
+* Terminal & Remote
+:PROPERTIES:
+:CUSTOM_ID: h1-terminal-remote
+:END:
+
+- [[https://codeberg.org/akib/emacs-eat][Eat]] -- terminal emulator
+- [[https://github.com/akermu/emacs-libvterm][Vterm]] -- libvterm-based terminal
+- Tramp -- remote file editing via SSH
+
+* PDF
+:PROPERTIES:
+:CUSTOM_ID: h1-pdf
+:END:
+
+- [[https://github.com/vedang/pdf-tools][Pdf-tools]] -- PDF viewing with automatic last-page bookmarking
+
+* UI
+:PROPERTIES:
+:CUSTOM_ID: h1-ui
+:END:
+
+- [[https://protesilaos.com/emacs/modus-themes][Modus-themes]] (operandi) -- high-contrast accessible theme
+- [[https://github.com/joostkremers/writeroom-mode][Writeroom-mode]] -- centered, distraction-free editing
+- [[https://github.com/justbur/emacs-which-key][Which-key]] -- discoverable keybindings
+- [[https://github.com/rainstormstudio/nerd-icons.el][Nerd-icons]] -- icons in modeline and dired
+- Fonts: Iosevka SS09 (modeline), JuliaMono (terminal)
