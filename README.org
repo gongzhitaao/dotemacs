@@ -2,8 +2,6 @@
 #+OPTIONS: num:3 H:4 ^:{} pri:t
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
 
-#+MACRO: kbd @@html:<kbd>$1</kbd>@@
-
 * Package Manager
 :PROPERTIES:
 :CUSTOM_ID: h1-package-manager
@@ -47,14 +45,14 @@ avoid version conflicts with straight.el.
 :END:
 
 - [[https://github.com/org-roam/org-roam][Org-roam]] -- Zettelkasten-style note-taking with backlinks
-- [[https://github.com/jrblevin/deft][Deft]] ({{{kbd(F8)}}}) -- full-text search across notes
+- [[https://github.com/jrblevin/deft][Deft]] (~F8~) -- full-text search across notes
 
 * Bibliography
 :PROPERTIES:
 :CUSTOM_ID: h1-bibliography
 :END:
 
-- [[https://github.com/emacs-citar/citar][Citar]] ({{{kbd(C-c b)}}}) -- citation insertion and management
+- [[https://github.com/emacs-citar/citar][Citar]] (~C-c b~) -- citation insertion and management
 - [[https://github.com/emacs-citar/citar-org-roam][Citar-org-roam]] -- connect references to org-roam notes
 - [[https://github.com/jkitchin/org-ref][Org-ref]] -- reference management, bibtex cleanup, citation sorting
 
@@ -71,10 +69,10 @@ management via [[https://savannah.nongnu.org/projects/bbdb/][BBDB]].
 :CUSTOM_ID: h1-editing
 :END:
 
-- [[https://github.com/Fuco1/smartparens][Smartparens]] ({{{kbd(C-c s)}}}) -- structural editing
-- [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] ({{{kbd(C-c m)}}}) -- multi-cursor editing
-- [[https://github.com/karabber/drag-stuff][Drag-stuff]] ({{{kbd(C-c d)}}}) -- drag lines and regions
-- [[https://github.com/magnars/expand-region.el][Expand-region]] ({{{kbd(C-=)}}}) -- incremental selection expansion
+- [[https://github.com/Fuco1/smartparens][Smartparens]] (~C-c s~) -- structural editing
+- [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] (~C-c m~) -- multi-cursor editing
+- [[https://github.com/karabber/drag-stuff][Drag-stuff]] (~C-c d~) -- drag lines and regions
+- [[https://github.com/magnars/expand-region.el][Expand-region]] (~C-=~) -- incremental selection expansion
 - [[https://github.com/casouri/vundo][Vundo]] -- visual undo tree with =hjkl= navigation
 - [[https://github.com/jdtsmith/indent-bars][Indent-bars]] -- visual indentation guides
 - [[https://github.com/ideasman42/emacs-undo-fu-session][Undo-fu-session]] -- persistent undo across sessions
@@ -87,7 +85,7 @@ management via [[https://savannah.nongnu.org/projects/bbdb/][BBDB]].
 - [[https://github.com/joaotavora/eglot][Eglot]] -- built-in LSP client
 - [[https://www.flycheck.org][Flycheck]] -- on-the-fly syntax checking
 - [[https://github.com/company-mode/company-mode][Company]] -- text completion
-- [[https://github.com/nicferrier/separedit.el][Separedit]] ({{{kbd(C-c ,)}}}) -- edit code blocks in their native major mode
+- [[https://github.com/nicferrier/separedit.el][Separedit]] (~C-c ,~) -- edit code blocks in their native major mode
 - Languages: Python (isort, pyink), JavaScript/TypeScript, C/C++
   (google-c-style, clang-format), web-mode, YAML, JSON, Jsonnet,
   Cython, Protobuf, Octave, NCL
@@ -97,9 +95,9 @@ management via [[https://savannah.nongnu.org/projects/bbdb/][BBDB]].
 :CUSTOM_ID: h1-file-management
 :END:
 
-- [[https://github.com/alexluigit/dirvish][Dirvish]] ({{{kbd(C-c f)}}}) -- enhanced dired with icons, git info, and
+- [[https://github.com/alexluigit/dirvish][Dirvish]] (~C-c f~) -- enhanced dired with icons, git info, and
   quick-access shortcuts
-- [[https://github.com/magit/magit][Magit]] ({{{kbd(C-x g)}}}) -- Git porcelain
+- [[https://github.com/magit/magit][Magit]] (~C-x g~) -- Git porcelain
 - [[https://github.com/magit/forge][Forge]] -- GitHub/GitLab integration from Magit
 
 * Terminal & Remote
@@ -127,4 +125,4 @@ management via [[https://savannah.nongnu.org/projects/bbdb/][BBDB]].
 - [[https://github.com/joostkremers/writeroom-mode][Writeroom-mode]] -- centered, distraction-free editing
 - [[https://github.com/justbur/emacs-which-key][Which-key]] -- discoverable keybindings
 - [[https://github.com/rainstormstudio/nerd-icons.el][Nerd-icons]] -- icons in modeline and dired
-- Fonts: Iosevka SS09 (modeline), JuliaMono (terminal)
+- Fonts: Maple Mono (main), Iosevka SS09 (modeline), JuliaMono (terminal)
