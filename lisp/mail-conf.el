@@ -1,27 +1,18 @@
 ;;; mail-conf.el --- Reading mails                   -*- lexical-binding: t; -*-
 ;;; Commentary:
+;; Public mail configuration.  Personal details (addresses, identities,
+;; account mappings) live in mail-private.el which is not tracked in git.
 
 ;;; Code:
 
-(setq user-mail-address "zhitaao.gong@gmail.com"
-      user-full-name "Zhitao Gong")
+(require 'mail-private)
 
 ;; Core settings
 ;; -----------------------------------------------------------------------------
 
-;; (defun me--process-sent-messages ()
-;;   "Post-process sent messages based on email address.
-
-;; Gmail/IMAP takes care of copying sent messages to sent folder.
-;; So we just delete it locally."
-;;   (if (string-match-p
-;;        (regexp-opt '("@gmail.com" "@tigermail.auburn.edu" "@auburn.edu"))
-;;        (message-sendmail-envelope-from))
-;;       'delete 'sent))
-
 (defvar display-time-mail-string)
 (defvar display-time-use-mail-icon)
-(setq display-time-mail-string " "
+(setq display-time-mail-string " "
       display-time-use-mail-icon nil)
 
 ;; Message buffer
@@ -50,51 +41,9 @@
 
 (use-package gnus-alias
   :config
-  ;; Define two identities, "home" and "work"
-  (setq gnus-alias-identity-alist
-        `(
-
-          ("personal"
-           nil ;; Does not refer to any other identity
-           "Zhitao <zhitaao.gong@gmail.com>" ;; Sender address
-           nil ;; No organization header
-           nil ;; No extra headers
-           nil ;; No extra body text
-           ,(expand-file-name "signature/personal"
-                              me-emacs-data-dir))
-
-          ("makermaker"
-           nil ;; Does not refer to any other identity
-           "Zhitao <gongzhitaao@makermaker.ai>" ;; Sender address
-           "MakerMaker"
-           nil ;; No extra headers
-           nil ;; No extra body text
-           ,(expand-file-name "signature/makermaker"
-                              me-emacs-data-dir))
-
-          ;; ("gdm"
-          ;;  nil
-          ;;  "Zhitao <gongzhitaao@google.com>"
-          ;;  "Google DeepMind"
-          ;;  nil
-          ;;  nil
-          ;;  ,(expand-file-name "signature/gdm"
-          ;;                     me-emacs-data-dir))
-          ))
-
-  ;; Use "home" identity by default
-  (setq gnus-alias-default-identity "personal")
-
-  ;; Define rules to match work identity
-  ;; (setq gnus-alias-identity-rules
-  ;;       '(("work" ("any" "gongzhitaao@\\(google\\|deepmind\\)\\.com" both)
-  ;;          "work")))
-
-  (setq gnus-alias-identity-rules
-        '(("For Makermaker" ("any" "gongzhitaao@makermaker.ai" both)
-           "makermaker")))
-
-  ;; Determine identity when message-mode loads
+  (setq gnus-alias-identity-alist me-mail-identities)
+  (setq gnus-alias-default-identity me-mail-default-identity)
+  (setq gnus-alias-identity-rules me-mail-identity-rules)
   (add-hook 'message-setup-hook 'gnus-alias-determine-identity))
 
 ;; sending mails
@@ -108,25 +57,18 @@
 
 (defun me--auto-choose-email-account ()
   "Choose email account automatically."
-  (let* ((accounts '(
-                     ;; ("gongzhitaao@google.com" . "~/.mail/corp")
-                     ;; ("gongzhitaao@deepmind.com" . "~/.mail/corp")
-                     ("gongzhitaao@makermaker.ai" . "~/.mail/makermaker")
-                     ("zhitaao.gong@gmail.com" . "~/.mail/personal")
-                     ))
-           (from (me--get-email-address (message-fetch-field "from")))
-           (mail-dir (alist-get from accounts nil nil #'string=)))
-      (if mail-dir
-          (setq-local message-sendmail-extra-arguments
-                      `("send" "--quiet" "-t" "-C" ,mail-dir))
-        (warn "Account: %s not found" from))))
+  (let* ((from (me--get-email-address (message-fetch-field "from")))
+         (mail-dir (alist-get from me-mail-accounts nil nil #'string=)))
+    (if mail-dir
+        (setq-local message-sendmail-extra-arguments
+                    `("send" "--quiet" "-t" "-C" ,mail-dir))
+      (warn "Account: %s not found" from))))
 
 (use-package sendmail
-  :ensure nil  ; built-in package
+  :ensure nil
   :config
   (setq send-mail-function 'message-send-mail-with-sendmail
         sendmail-program "gmi")
-
   (add-hook 'message-send-hook #'me--auto-choose-email-account))
 
 (use-package notmuch
@@ -155,55 +97,8 @@
       (define-key notmuch-search-mode-map key (intern fname))))
 
   (setq-default notmuch-search-oldest-first nil)
-
-  (setq notmuch-saved-searches
-        '(
-          ;; (:name "corp/inbox:7d" :query "tag:corp and tag:inbox date:<7d>.."
-          ;;  :key "ci")
-          ;; (:name "corp/unread" :query "tag:corp and tag:unread" :key "cu")
-          ;; (:name "corp/starred" :query "tag:corp and tag:flagged" :key "cs")
-
-          (:name "makerⁿ/inbox:7d" :query "tag:maker and tag:inbox date:<7d>.."
-           :key "ci")
-          (:name "makerⁿ/unread" :query "tag:maker and tag:unread" :key "cu")
-          (:name "makerⁿ/starred" :query "tag:maker and tag:flagged" :key "cs")
-
-          (:name "haha/inbox:7d" :query "tag:haha and tag:inbox date:<7d>.."
-           :key "hi")
-          (:name "haha/unread" :query "tag:haha and tag:unread" :key "hu")
-          (:name "haha/starred" :query "tag:haha and tag:flagged" :key "hs")))
-
+  (setq notmuch-saved-searches me-notmuch-saved-searches)
   (setq notmuch-fcc-dirs nil))
-
-;; message notification, only in the modeline
-;; -----------------------------------------------------------------------------
-
-;; (use-package mu4e-alert
-;;   :config
-;;   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-;;   (mu4e-alert-set-default-style 'mode-line))
-
-;; Automatically start.
-;;
-;; The mbsync runs on 5, 10, 15, ... every hour.  It does not make sense for
-;; mu4e to update before mbsync.  Thus we start mu4e on x+0.5min, where x is the
-;; next nearest 5-min.
-;; -----------------------------------------------------------------------------
-
-;; (defun me--seconds-from-now (interval &optional wait)
-;;   "Calculate INTERVAL+WAIT seconds from now."
-;;   (let* ((m (mod (string-to-number (format-time-string "%M")) interval))
-;;          (s (string-to-number (format-time-string "%S")))
-;;          (elapsed (+ (* m 60) s))
-;;          (w (or wait 30)))
-;;     (if (< elapsed (- w 15))
-;;         w
-;;       (- (+ (* interval 60) w) elapsed))))
-
-;; (defun me--start-mu4e-bg ()
-;;   "Start mu4e in background."
-;;   (mu4e t))
-;; ;; (run-at-time (me--seconds-from-now 5) nil #'me--start-mu4e-bg)
 
 (provide 'mail-conf)
 ;;; mail-conf.el ends here

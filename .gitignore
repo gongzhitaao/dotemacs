@@ -2,3 +2,4 @@
 eln-cache/
 flycheck_*
 .aider*
+lisp/mail-private.el
