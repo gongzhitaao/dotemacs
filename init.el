@@ -482,6 +482,7 @@ all '.<space>' with '.<space><space>'."
 ;; Center the editing content.
 (use-package writeroom-mode
   :custom
+  ( writeroom-fringes-outside-margins nil)
   ( writeroom-fullscreen-effect nil)
   ( writeroom-major-modes
     '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
