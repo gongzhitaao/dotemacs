@@ -880,7 +880,53 @@ all '.<space>' with '.<space><space>'."
   :config
   (global-anzu-mode)
   (global-set-key [remap query-replace] #'anzu-query-replace)
-  (global-set-key [remap query-replace-regexp] #'anzu-query-replace-regexp))
+  (global-set-key [remap query-replace-regexp] #'anzu-query-replace-regexp)
+
+  (defvar me--anzu-pdf-cache nil
+    "Cache (QUERY . MATCHES) for PDF anzu searches.")
+
+  (defun me/anzu--update-pdf (orig-fn query)
+    "Advice for `anzu--update' to support `pdf-view-mode'.
+Search the PDF document via pdf-info and update anzu's match count."
+    (if (not (derived-mode-p 'pdf-view-mode))
+        (funcall orig-fn query)
+      (when (>= (length query) anzu-minimum-input-length)
+        (let* ((case-fold-search isearch-case-fold-search)
+               (all-matches (if (and me--anzu-pdf-cache
+                                     (anzu--use-result-cache-p query))
+                                (cdr me--anzu-pdf-cache)
+                              (let ((result (if isearch-regexp
+                                                (pdf-info-search-regexp query)
+                                              (pdf-info-search-string query))))
+                                (setq me--anzu-pdf-cache (cons query result))
+                                result)))
+               (total (length all-matches))
+               (cur-page (or pdf-isearch-current-page (pdf-view-current-page)))
+               (cur-match pdf-isearch-current-match)
+               (curpos 0))
+          (when cur-match
+            (let ((before-count 0)
+                  (page-idx 0))
+              (dolist (m all-matches)
+                (let ((page (alist-get 'page m)))
+                  (cond
+                   ((< page cur-page) (cl-incf before-count))
+                   ((= page cur-page) (cl-incf page-idx)
+                    (when (and (zerop curpos)
+                               (equal cur-match
+                                      (pdf-util-scale-relative-to-pixel
+                                       (alist-get 'edges m) 'round)))
+                      (setq curpos (+ before-count page-idx)))))))
+              (when (zerop curpos)
+                (setq curpos (+ before-count 1)))))
+          (setq anzu--total-matched total
+                anzu--overflow-p nil
+                anzu--current-position curpos
+                anzu--last-search-state (cons (anzu--isearch-regexp-function)
+                                              isearch-regexp)
+                anzu--last-isearch-string query)
+          (force-mode-line-update)))))
+  (advice-add 'anzu--update :around #'me/anzu--update-pdf))
 
 (use-package imenu-list
   :config
