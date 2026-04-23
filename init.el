@@ -184,6 +184,11 @@
 (use-package delight)
 (use-package bind-key)
 
+;; Load straight's transient early so its build path precedes Emacs's
+;; built-in transient on `load-path', otherwise magit emits an emergency
+;; warning about transient < 0.13.
+(use-package transient)
+
 ;; I received warning about org version mismatch.  One of the suggestion is to
 ;; load the desired org version right after straight.  So I moved all org related
 ;; config into a separate file and load them here.
