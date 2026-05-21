@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-02-16 07:51:36 gongzhitaao>
+;; Time-stamp: <2026-05-19 14:10:15 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -1122,11 +1122,11 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
   :custom
   ( dirvish-quick-access-entries ; It's a custom option, `setq' won't work
-   '(("h" "~/"                          "Home")
-     ("d" "~/Downloads/"                "Downloads")
-     ("e" "~/.local/share/emacs"        "Emacs data")
-     ("sm" "/ssh:makermaker-38:~/"      "SSH server")
-     ("t" "~/.local/share/Trash/"       "TrashCan")))
+   '(("h" "~/"                               "Home")
+     ("d" "~/Downloads/"                     "Downloads")
+     ("e" "~/.local/share/emacs"             "Emacs data")
+     ("sm" "/ssh:makermaker-workstation:~/"  "SSH server")
+     ("t" "~/.local/share/Trash/"            "TrashCan")))
 
   :config
   ;; (dirvish-peek-mode)             ; Preview files in minibuffer
@@ -1821,6 +1821,11 @@ Each index is a list (KEY TIMESTAMP)."
   :config
   (pdf-tools-install)
 
+  ;; pdf-tools 1.3.0 calls `pdf-roll-page-overlay' unconditionally in
+  ;; `pdf-links-read-link-action' (bound to F), but never loads pdf-roll.
+  ;; Require it so the symbol isn't void even without continuous scroll.
+  (require 'pdf-roll)
+
   (defun me/pdf-set-last-viewed-bookmark ()
     (interactive)
     (when (eq major-mode 'pdf-view-mode)
@@ -2115,7 +2120,8 @@ alphabetically (in ascending or descending order)."
   :hook ((eat-mode . me--set-eat-buffer-font)
          (eat-eshell-mode . me--set-eat-buffer-font))
   :bind (:map eat-semi-char-mode-map
-              ("C-z" . nil)))
+              ("C-z" . nil)
+              ("M-w" . kill-ring-save)))
 
 (use-package claude-code
   :delight (claude-code-mode " 󱙺")
