@@ -460,6 +460,21 @@ all '.<space>' with '.<space><space>'."
     (switch-to-buffer buf)
     (setq-local mode-line-format nil)))
 
+(defun make-note-frame ()
+  "Create a new `org-mode' note frame without a mode line or menu bar."
+  (interactive)
+  (let ((frame (make-frame '((name . "note")
+                             (menu-bar-lines . 0)
+                             (tool-bar-lines . 0)
+                             (bottom-divider-width . 1))))
+        (buf (get-buffer-create "*note*")))
+    (with-current-buffer buf
+      (unless (derived-mode-p 'org-mode)
+        (org-mode))
+      (setq-local mode-line-format nil))
+    (select-frame-set-input-focus frame)
+    (switch-to-buffer buf)))
+
 ;;; * Appearance
 
 (blink-cursor-mode 0)
