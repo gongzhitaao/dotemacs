@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-05-19 14:10:15 gongzhitaao>
+;; Time-stamp: <2026-06-25 11:12:14 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -272,9 +272,6 @@
            ("H"   . me/org-custom-id-get-create-hash-all)
            ("i"   . me/org-custom-id-get-create)
            ("I"   . me/org-custom-id-get-create-all)
-           ("l b" . org-ref-extract-bibtex-entries)
-           ("l f" . org-ref-list-of-figures)
-           ("l t" . org-ref-list-of-tables)
            ("n"   . me/org-ref-open-note)
            ("p"   . me/org-ref-open-pdf)
            ("s"   . me/org-sort-orgref-citation-list-by-year))
@@ -470,6 +467,10 @@ all '.<space>' with '.<space><space>'."
 (scroll-bar-mode -1)
 (setq scroll-margin 0
       scroll-preserve-screen-position nil)
+
+;; Internal padding between the frame's content and its edges.
+(add-to-list 'default-frame-alist '(internal-border-width . 10))
+(set-frame-parameter nil 'internal-border-width 10)
 
 (setq visible-bell t)
 (setq inhibit-startup-message t
@@ -683,7 +684,7 @@ all '.<space>' with '.<space><space>'."
     (auto-revert-mode 1)))
 
 (use-package autorevert
-  :delight (auto-revert-mode " ")
+  :delight
   :hook (find-file . me--maybe-enable-auto-revert))
 
 (use-package select
@@ -1649,10 +1650,78 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   (interactive)
   (bibtex-find-text t))
 
+(defun me--bibtex-add-timestamp ()
+  "Add an ISO 8601 timestamp field to the current bibtex entry."
+  (interactive)
+  (bibtex-set-field "timestamp" (format-time-string "%FT%T%z")))
+
+(defvar me-bibtex-lowercase-words
+  '("a" "an" "on" "and" "for" "the" "of" "in")
+  "Words kept lowercase when title-casing a BibTeX title.")
+
+(defvar me-bibtex-title-case-types '(("article" . ("title")))
+  "Alist of (ENTRY-TYPE . FIELDS) whose FIELDS get title-cased.")
+
+(defun me--bibtex-title-case ()
+  "Title-case configured fields of the current BibTeX entry.
+Ported from `org-ref-title-case', driven by
+`me-bibtex-title-case-types' and `me-bibtex-lowercase-words'."
+  (save-restriction
+    (bibtex-narrow-to-entry)
+    (bibtex-beginning-of-entry)
+    (let* ((entry-type (downcase (cdr (assoc "=type=" (bibtex-parse-entry)))))
+           (fields (cdr (assoc entry-type me-bibtex-title-case-types)))
+           title words start)
+      (dolist (field fields)
+        (when (bibtex-autokey-get-field field)
+          (setq title (bibtex-autokey-get-field field)
+                words (split-string title)
+                start 0)
+          (setq words
+                (mapcar
+                 (lambda (word)
+                   (cond
+                    ;; Abbreviations (more than one dot): leave as-is.
+                    ((> (seq-count (lambda (c) (eq c ?.)) word) 1) word)
+                    ;; LaTeX or otherwise protected words: leave as-is.
+                    ((string-match "\\$\\|{\\|}\\|(\\|)\\|\\\\" word) word)
+                    ;; Minor words stay lowercase.
+                    ((member (downcase word) me-bibtex-lowercase-words)
+                     (downcase word))
+                    ;; Quoted words.
+                    ((string-prefix-p "\"" word)
+                     (concat "\"" (capitalize (substring word 1))))
+                    (t (capitalize word))))
+                 words))
+          ;; The first word is always capitalized.
+          (when (member (car words) me-bibtex-lowercase-words)
+            (setcar words (capitalize (car words))))
+          (setq title (mapconcat #'identity words " "))
+          ;; Capitalize the letter following a dash.
+          (while (string-match "[a-zA-Z]-\\([a-z]\\)" title start)
+            (setq title (concat (substring title 0 (match-beginning 1))
+                                (upcase (match-string 1 title))
+                                (substring title (match-end 1)))
+                  start (match-end 1)))
+          (bibtex-set-field field title))))))
+
+(defun me/bibtex-clean-entry (&optional _new-key)
+  "Timestamp, title-case, then clean and re-key the current entry.
+Replacement for `org-ref-clean-bibtex-entry' built on the stock
+`bibtex-clean-entry'.  The key is always regenerated with
+`bibtex-generate-autokey' from the `bibtex-autokey-*' settings;
+field formatting, case unification, page dashes and field sorting
+come from `bibtex-entry-format' (set to t)."
+  (interactive "P")
+  (save-excursion
+    (me--bibtex-add-timestamp)
+    (me--bibtex-title-case)
+    (bibtex-clean-entry t)))
+
 (use-package bibtex
   :bind (:map bibtex-mode-map
               ([remap fill-paragraph]     . bibtex-fill-entry)
-              ([remap bibtex-clean-entry] . org-ref-clean-bibtex-entry)
+              ([remap bibtex-clean-entry] . me/bibtex-clean-entry)
               ("C-c C-v"                  . bibtex-validate)
               ("<backtab>"                . me/bibtex-find-text-begin)
               ("M-<down>"                 . bibtex-end-of-entry)
@@ -1688,9 +1757,17 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   ( bibtex-completion-notes-extension ".org")
   ( bibtex-completion-notes-path me-bib-notes)
   ( bibtex-completion-notes-symbol "N")
-  ( bibtex-completion-pdf-symbol "P"))
+  ( bibtex-completion-pdf-symbol "P")
+  ( bibtex-completion-additional-search-fields '(keywords journal booktitle))
+  ( bibtex-completion-display-formats
+    `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
+      (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? ))))))
 
 ;; Use citar instead of helm-bibtex
+
 (use-package citar
   :bind ("C-c b" . citar-open)
   :custom
@@ -1703,12 +1780,16 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package citar-embark
   :after (citar embark)
+  :delight
   :config
   (citar-embark-mode))
 
 (use-package oc                         ;org-cite
   :custom
-  ( org-cite-global-bibliography me-bib-files))
+  ( org-cite-global-bibliography me-bib-files)
+  ( org-cite-insert-processor 'citar)
+  ( org-cite-follow-processor 'citar)
+  ( org-cite-activate-processor 'basic))
 
 (use-package citar-org-roam
   :delight
@@ -1718,49 +1799,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   ( citar-org-roam-note-title-template "${year}:${title}")
 
   :config (citar-org-roam-mode))
-
-;; org-ref
-;; -----------------------------------------------------------------------------
-
-(use-package f)
-
-(defun me--org-ref-notes-function (thekey)
-  "Return the name of the note file by THEKEY."
-  (bibtex-completion-edit-notes
-   (list (car (org-ref-get-bibtex-key-and-file thekey)))))
-
-(defun me--org-ref-add-timestamp ()
-  "Add a timestamp field to a bibtex entry, ISO 8601 format."
-  (interactive)
-  (let ((ts (bibtex-autokey-get-field "timestamp")))
-    (bibtex-set-field "timestamp" (format-time-string "%FT%T%z"))))
-
-(use-package org-ref
-  :custom
-  ( doi-utils-download-pdf nil)
-  ( bibtex-completion-display-formats
-    `((article       . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${journal:15} ${=has-pdf=:1} ${=has-note=:1}")
-      (inbook        . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${chapter:15} ${=has-pdf=:1} ${=has-note=:1}")
-      (incollection  . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-      (inproceedings . "${author:20}  ${title:*}  ${year:4} ${keywords:40} ${booktitle:15} ${=has-pdf=:1} ${=has-note=:1}")
-      (t             . ,(format "${author:20}  ${title:*}  ${year:4} ${keywords:40}  %s  ${=has-pdf=:1} ${=has-note=:1}" (make-string 13 ? )))))
-  ( bibtex-completion-additional-search-fields '(keywords journal booktitle))
-
-  :config
-  (bind-keys :map org-mode-map
-             ("C-c ]" . org-ref-insert-ref-link))
-
-  (dolist (func '(org-ref-downcase-bibtex-entry me--org-ref-add-timestamp))
-    (add-hook 'org-ref-clean-bibtex-entry-hook func))
-
-  (define-key org-ref-cite-keymap (kbd "M-<right>") #'org-ref-next-key)
-  (define-key org-ref-cite-keymap (kbd "M-<left>") #'org-ref-previous-key)
-  (define-key org-ref-cite-keymap (kbd "C-<left>") nil)
-  (define-key org-ref-cite-keymap (kbd "C-<right>") nil)
-
-  (remove-hook 'org-ref-clean-bibtex-entry-hook #'org-ref-replace-nonascii)
-  (add-to-list 'org-ref-bibtex-journal-abbreviations
-               '("ArXiv" "Archive e-print" "CoRR")))
 
 (eval-when-compile
   (defun me/cleanup-bibtex-file (arg)
@@ -1775,7 +1813,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
         (narrow-to-region (point) (point-max))
         (bibtex-map-entries (lambda (_key _start _end)
                               (bibtex-progress-message)
-                              (org-ref-clean-bibtex-entry)))))
+                              (me/bibtex-clean-entry)))))
     (bibtex-progress-message 'done)))
 
 (defun me--random-time ()
@@ -1886,10 +1924,9 @@ Using `window-line-height' accounts for variable-height fonts."
   "Get citation key if possible."
   (cond
    ((derived-mode-p 'org-mode)
-    ;; If there is key under curor return it.  Otherwise, use the filename as
-    ;; the key.  If the current file is a note associated with a PDF, the
-    ;; filename it a key by default.
-    (or (ignore-errors (org-ref-get-bibtex-key-under-cursor))
+    ;; Key under cursor in an org-cite citation.  Otherwise the file name
+    ;; (a note file is named after its key by default).
+    (or (citar-key-at-point)
         (file-name-base (buffer-file-name))))
    ((derived-mode-p 'bibtex-mode)
     (bibtex-completion-key-at-point))
@@ -1898,35 +1935,33 @@ Using `window-line-height' accounts for variable-height fonts."
    (t nil)))
 
 (defun me/org-ref-open-entry ()
-  "Open bibtex file to key with which the note associated."
+  "Open the bibtex entry for the key at point / of the current file."
   (interactive)
   (let ((key (me--get-cite-key)))
     (if key
-        (progn
-          (find-file (cdr (org-ref-get-bibtex-key-and-file key)))
-          (bibtex-search-entry key))
-      (message "Non existing key %s" key))))
+        (citar-open-entry key)
+      (message "No citation key found"))))
 
 (defun me/org-ref-open-note ()
-  "Open the associated note file."
+  "Open the note associated with the key at point / current file."
   (interactive)
-  (let* ((key (me--get-cite-key))
-         (pdf-file (org-ref-get-pdf-filename key)))
-    (if (and pdf-file (file-exists-p pdf-file))
+  (let ((key (me--get-cite-key)))
+    (if key
         (citar-open-notes (list key))
-      (message "Not open note for non-existing PDF %s" key))))
+      (message "No citation key found"))))
 
 (defun me/org-ref-open-pdf (&optional arg)
-  "Open the associated PDF.
+  "Open the PDF associated with the key at point / current file.
 If ARG, open with external program.  Otherwise open in Emacs."
   (interactive "P")
   (let* ((key (me--get-cite-key))
-         (pdf-file (org-ref-get-pdf-filename key)))
-    (if (and pdf-file (file-exists-p pdf-file))
-        (org-open-file pdf-file (not arg))
-      (if (derived-mode-p 'pdf-view-mode)
-          (message "Already opened")
-        (message "No PDF found with name %s" pdf-file)))))
+         (pdf-file (car (and key (gethash key (citar-get-files key))))))
+    (cond
+     ((and pdf-file (file-exists-p pdf-file))
+      (org-open-file pdf-file (not arg)))
+     ((derived-mode-p 'pdf-view-mode)
+      (message "Already opened"))
+     (t (message "No PDF found for %s" key)))))
 
 (use-package pdf-view
   :bind (:map pdf-view-mode-map
@@ -1958,19 +1993,20 @@ If ARG, open with external program.  Otherwise open in Emacs."
 ;; -----------------------------------------------------------------------------
 
 (defun me--getkey-orgref ()
-  "Get the year part of orgref citation.
+  "Get the year part of an org-cite citation on the current line.
 
 My bib key is (lastname)(YYYY)-(title), where title is the first
 non-trivial word in title, This function will
 return (YYYY)(lastname)(title).  Note the parenthesis is only for
 readability, no parenthesis actually exist."
   (save-excursion
-    (if (re-search-forward org-ref-cite-re nil t)
-        (let* ((bibkey (match-string 0))
-               (YYYY-re "\\([0-9]\\{4\\}\\)"))
-          (string-match YYYY-re bibkey)
-          (concat (match-string 0 bibkey)
-                  (replace-regexp-in-string YYYY-re "" bibkey)))
+    (if (re-search-forward "@\\([[:alnum:]_:.-]+\\)" (line-end-position) t)
+        (let ((bibkey (match-string 1))
+              (YYYY-re "\\([0-9]\\{4\\}\\)"))
+          (if (string-match YYYY-re bibkey)
+              (concat (match-string 0 bibkey)
+                      (replace-regexp-in-string YYYY-re "" bibkey))
+            bibkey))
       "")))
 
 (defun me/org-sort-orgref-citation-list-by-year
@@ -1980,9 +2016,9 @@ readability, no parenthesis actually exist."
 Case sensitive if WITH-CASE.  SORTING-TYPE is not used here.
 
 The list looks like:
-- [X] cite:someone2017 dummy
-- [ ] cite:others2013 dummy
-- [ ] cite:hello2018 dummy
+- [X] [cite:@someone2017] dummy
+- [ ] [cite:@others2013] dummy
+- [ ] [cite:@hello2018] dummy
 
 I want to sort the list first by year (newest first), then
 alphabetically (in ascending or descending order)."
@@ -2124,7 +2160,7 @@ alphabetically (in ascending or descending order)."
               ("M-w" . kill-ring-save)))
 
 (use-package claude-code
-  :delight (claude-code-mode " 󱙺")
+  :delight
   :straight (:type git
                    :host github
                    :repo "stevemolitor/claude-code.el"
@@ -2139,6 +2175,28 @@ alphabetically (in ascending or descending order)."
   :config
   (claude-code-mode)
   (setq claude-code-eat-read-only-mode-cursor-type '(hollow nil nil)))
+
+(defun me--claude-code-compact-modeline ()
+  "Compact modeline label for Claude Code buffers: a robot glyph, a LAN
+marker + `m²' for `makermaker-*' hosts, and just the final path component.
+The real buffer name is preserved; the full name shows on hover."
+  (let* ((dir  (directory-file-name
+                (or (file-remote-p default-directory 'localname)
+                    default-directory)))
+         (host (file-remote-p default-directory 'host))
+         (host (cond ((null host) nil)
+                     ((string-match-p "\\`makermaker-" host) "m²")
+                     (t host)))
+         (label (concat "󰚩 "
+                        (and host (concat (nerd-icons-mdicon "nf-md-lan_connect")
+                                          " " host " "))
+                        (file-name-nondirectory dir))))
+    (setq-local mode-line-buffer-identification
+                (list (propertize label
+                                  'face 'mode-line-buffer-id
+                                  'help-echo (buffer-name))))))
+
+(add-hook 'claude-code-start-hook #'me--claude-code-compact-modeline)
 
 ;;; * Key logger
 
