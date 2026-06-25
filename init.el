@@ -1636,6 +1636,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;; ** Bibliography and PDF reading
 ;; Extracted to lisp/bib-conf.el to keep init.el manageable.
 (use-package bib-conf
+  :straight nil
   :load-path "~/.config/emacs/lisp")
 
 ;;; * Mail
