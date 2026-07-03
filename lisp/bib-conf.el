@@ -43,10 +43,33 @@
   (interactive)
   (bibtex-find-text t))
 
+(defun me--bibtex-set-field (field value &optional nodelim)
+  "Set FIELD to VALUE in the current BibTeX entry, creating it if absent.
+Optional NODELIM is passed to `bibtex-make-field'.  Ported from
+org-ref's `bibtex-set-field', which is no longer loaded."
+  (bibtex-beginning-of-entry)
+  (let ((found (bibtex-search-forward-field field t)))
+    (if found
+        (progn
+          (goto-char (cadr found))
+          (when value
+            (bibtex-kill-field)
+            (bibtex-make-field field nil nil nodelim)
+            (backward-char)
+            (insert value)))
+      (bibtex-beginning-of-entry)
+      (forward-line)
+      (beginning-of-line)
+      (bibtex-next-field nil)
+      (forward-char)
+      (bibtex-make-field field nil nil nodelim)
+      (backward-char)
+      (insert value))))
+
 (defun me--bibtex-add-timestamp ()
   "Add an ISO 8601 timestamp field to the current bibtex entry."
   (interactive)
-  (bibtex-set-field "timestamp" (format-time-string "%FT%T%z")))
+  (me--bibtex-set-field "timestamp" (format-time-string "%FT%T%z")))
 
 (defvar me-bibtex-lowercase-words
   '("a" "an" "on" "and" "for" "the" "of" "in")
@@ -96,7 +119,7 @@ Ported from `org-ref-title-case', driven by
                                 (upcase (match-string 1 title))
                                 (substring title (match-end 1)))
                   start (match-end 1)))
-          (bibtex-set-field field title))))))
+          (me--bibtex-set-field field title))))))
 
 (defun me/bibtex-clean-entry (&optional _new-key)
   "Timestamp, title-case, then clean and re-key the current entry.
