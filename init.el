@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-06-25 11:12:14 gongzhitaao>
+;; Time-stamp: <2026-07-03 08:30:33 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -609,7 +609,7 @@ all '.<space>' with '.<space><space>'."
 (set-face-attribute 'default nil
                       ;; :family "Iosevka SS09"
                       :family "Maple Mono NF CN"
-                      :weight 'semi-light
+                      :weight 'light
                       :height me-default-font-height)
 
   (set-face-attribute 'variable-pitch nil
@@ -699,7 +699,7 @@ all '.<space>' with '.<space><space>'."
     (auto-revert-mode 1)))
 
 (use-package autorevert
-  :delight
+  :delight auto-revert-mode
   :hook (find-file . me--maybe-enable-auto-revert))
 
 (use-package select
