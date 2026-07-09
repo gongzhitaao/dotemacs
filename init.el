@@ -1809,6 +1809,20 @@ The real buffer name is preserved; the full name shows on hover."
 (open-dribble-file
  (file-name-concat me-keylog (format-time-string "key-%FT%H%M%S.log")))
 
+;; Post-process the dribble files with scripts/keyfreq.py.
+
+;;; * Command logger
+
+;; Which commands do I actually run, and do I reach them through a key or
+;; through `M-x'?  `cmdfreq-show' answers both.
+(use-package cmdfreq
+  :straight nil
+  :load-path "~/.config/emacs/lisp"
+  :custom
+  (cmdfreq-file (file-name-concat me-emacs-data-dir "cmdfreq.eld"))
+  :config
+  (cmdfreq-mode))
+
 ;;; * Server
 
 (use-package server
