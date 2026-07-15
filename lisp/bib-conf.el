@@ -251,9 +251,17 @@ Move point to the end of the head of the entry found."
 (defun me--bibtex-lessp (index1 index2)
   "Predicate for sorting BibTeX entries with indices INDEX1 and INDEX2.
 
-Each index is a list (KEY TIMESTAMP)."
+Each index is normally a list (KEY TIMESTAMP).  During
+`bibtex-clean-entry', however, the entry being cleaned is indexed
+with the stock `crossref' scheme, so its second element is a
+crossref key (nil when absent) rather than a timestamp.  Coerce a
+non-numeric timestamp to the newest possible value: a just-cleaned
+entry always carries a fresh timestamp, so sorting it to the end
+is correct and, crucially, avoids comparing nil with `=' or `<'."
   (let ((t1 (nth 1 index1))
         (t2 (nth 1 index2)))
+    (unless (numberp t1) (setq t1 most-positive-fixnum))
+    (unless (numberp t2) (setq t2 most-positive-fixnum))
     (or (and (= t1 t2)
              (string< (car index1) (car index2)))
         (< t1 t2))))
