@@ -233,8 +233,17 @@ on the far side; this kills the tmux session too."
 (use-package agent-shell
   :bind (("C-c a" . agent-shell)
          :map agent-shell-mode-map
-         ("C-c C-q" . me-agent-shell-compose))
+         ("C-c C-q" . me-agent-shell-compose)
+         ;; Alias for the C-c C-c that is already there, to match the
+         ;; C-c C-k that aborts the compose buffer, org-src, magit and
+         ;; every other "this was a mistake" buffer.
+         ("C-c C-k" . agent-shell-interrupt))
   :custom
+  ;; Show what the agent actually ran.  Both are needed: the group flag
+  ;; reveals the members of a run of consecutive actions, the tool-use
+  ;; flag expands each member's command and diff.  Thoughts stay folded.
+  (agent-shell-activity-group-expand-by-default t)
+  (agent-shell-tool-use-expand-by-default t)
   ;; Permission mode, not the model: "use a model classifier to approve or
   ;; deny permission prompts" rather than stopping on each one.  The other
   ;; mode IDs claude-agent-acp reports are default, acceptEdits, plan,
