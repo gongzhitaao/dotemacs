@@ -296,7 +296,11 @@ their locks, backups and VC state."
   (let ((vc-handled-backends nil)
         (make-backup-files nil)
         (create-lockfiles nil)
-        (auto-save-default nil)
+        ;; Not `auto-save-default': that is read once when the buffer is
+        ;; created, so a buffer the agent opens here would stay without
+        ;; auto-save for the rest of its life, including after I start
+        ;; editing it by hand.  These two are consulted per operation
+        ;; instead, and only for remote files.
         (remote-file-name-inhibit-locks t)
         (remote-file-name-inhibit-auto-save t)
         (remote-file-name-inhibit-auto-save-visited t))
