@@ -1696,39 +1696,50 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;; effect makes the whole block order-independent: it no longer has to
 ;; sit after `load-theme'.
 
+(defconst me--face-tweak-features
+  '(vundo cal-china-x notmuch-tag consult marginalia)
+  "Features defining faces that `me--apply-face-tweaks' overrides.
+Reapplied on each one's load, since a package can load either before or
+after a theme change.  These are the features that define the faces, not
+necessarily the ones I configure: `notmuch-tag-deleted' lives in
+notmuch-tag.el, which notmuch-tree and notmuch-show pull in without
+notmuch.el.")
+
 (defun me--apply-face-tweaks (&rest _)
   "Reapply my face overrides on top of whatever theme is now active.
-On `enable-theme-functions', so this runs on every `load-theme'.  Faces
-owned by lazy packages are guarded with `featurep' and reapplied from
-`with-eval-after-load' below, since a package can load either before or
-after a theme change."
+On `enable-theme-functions', so this runs on every `load-theme'.
+Faces from lazy packages are guarded because `set-face-attribute'
+errors on a face that does not exist yet, which would abort the rest of
+this function.  The guard is `facep' rather than `featurep': existing is
+the actual precondition, and it stays right regardless of which file
+ends up defining the face."
   (set-face-attribute 'fixed-pitch nil :height 110)
   (set-face-attribute 'bold nil :weight 'semi-bold)
   (set-face-attribute 'region nil :extend nil)
   (dolist (face '(mode-line mode-line-active mode-line-inactive))
     (set-face-attribute face nil :family "Iosevka SS09"))
-  (when (featurep 'vundo)
+  (when (facep 'vundo-highlight)
     (set-face-attribute 'vundo-highlight nil :inverse-video t))
-  (when (featurep 'cal-china-x)
+  (when (facep 'cal-china-x-important-holiday-face)
     (set-face-attribute 'cal-china-x-important-holiday-face nil
                         :background "#ff9580"))
-  (when (featurep 'notmuch)
+  (when (facep 'notmuch-tag-deleted)
     (set-face-attribute 'notmuch-tag-deleted nil
                         :inherit 'modus-themes-mark-del))
-  (when (featurep 'consult)
+  (when (facep 'consult-file)
     (modus-themes-with-colors
       (set-face-attribute 'consult-file nil
                           :inherit 'unspecified
                           :foreground fg-dim
                           :slant 'normal)))
-  (when (featurep 'marginalia)
+  (when (facep 'marginalia-documentation)
     (set-face-attribute 'marginalia-documentation nil
                         :weight 'light
                         :slant 'normal)))
 
 (add-hook 'enable-theme-functions #'me--apply-face-tweaks)
 
-(dolist (feature '(vundo cal-china-x notmuch consult marginalia))
+(dolist (feature me--face-tweak-features)
   (with-eval-after-load feature
     (me--apply-face-tweaks)))
 
