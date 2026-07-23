@@ -214,18 +214,16 @@ on the far side; this kills the tmux session too."
 ;;
 ;; The tradeoff is that ACP is a lowest-common-denominator protocol, so
 ;; some CLI-specific niceties are missing.  Hence keeping both for now.
+;;
+;; Authentication needs no setting: `agent-shell-anthropic-authentication'
+;; defaults to (:login . t), which reuses the `claude' CLI's own
+;; credentials.  Set it with `agent-shell-anthropic-make-authentication'
+;; if an :api-key or :oauth token is ever wanted instead -- from
+;; `:config' rather than `:custom', since that constructor does not exist
+;; until the package has loaded.
 
 (use-package agent-shell
-  :bind ("C-c a" . agent-shell)
-  :config
-  ;; Reuse the `claude' CLI's own credentials rather than keeping a key
-  ;; here.  This matches the default, and is spelled out only because
-  ;; :api-key and :oauth are the alternatives and it is not obvious which
-  ;; one is live.  Must be in `:config' rather than `:custom':
-  ;; `agent-shell-anthropic-make-authentication' does not exist until the
-  ;; package has loaded.
-  (setq agent-shell-anthropic-authentication
-        (agent-shell-anthropic-make-authentication :login t)))
+  :bind ("C-c a" . agent-shell))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
