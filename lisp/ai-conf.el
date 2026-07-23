@@ -375,7 +375,29 @@ and left alone entirely for local sessions, where pipes work."
   ;; claude-fable-5[1m], sonnet and haiku, and "default" -- already the
   ;; value when unset -- is the one that picks for itself.  C-c C-v to
   ;; override for a session.
-  (agent-shell-anthropic-default-session-mode-id "auto"))
+  (agent-shell-anthropic-default-session-mode-id "auto")
+
+  :config
+  ;; Fenced code blocks are already run through the language's major-mode
+  ;; font-lock by default, so ```python and ```elisp highlight out of the
+  ;; box.  The catch is `agent-shell-markdown--resolve-lang-mode' just
+  ;; appends "-mode" to the tag and keeps it only if that is `fboundp', so
+  ;; a tag whose mode has a different name silently renders plain.  The
+  ;; built-in alias table covers elisp/cpp/objc; add the shell family and a
+  ;; couple of config formats, all mapping to modes that ship with Emacs
+  ;; and need no tree-sitter grammar.  console is left unmapped on purpose
+  ;; -- it is command output, not shell source, and plain is right for it.
+  ;; yaml/rust/... would need their grammars or -mode packages installed
+  ;; first, then an entry here.
+  (setq agent-shell-markdown-language-mapping
+        (append '(("bash" . "sh")
+                  ("shell" . "sh")
+                  ("sh" . "sh")
+                  ("zsh" . "sh")
+                  ("shellscript" . "sh")
+                  ("json" . "js-json")
+                  ("toml" . "conf-toml"))
+                agent-shell-markdown-language-mapping)))
 
 ;; agent-shell's faces are all semantic (prompt, model, error...) with no
 ;; body face to hang a family on, so the buffer's default gets remapped,
