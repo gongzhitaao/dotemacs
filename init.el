@@ -222,8 +222,9 @@
 ;;; ** User key C-c
 
 ;; = -- align-regex
+;; a -- agent-shell (AI agent over ACP)
 ;; b -- citar (bibliography)
-;; c -- consult-flycheck
+;; c -- claude-code
 ;; d -- drag-stuff-mode
 ;; e -- custom editing shortcuts
 ;; f -- dirvish

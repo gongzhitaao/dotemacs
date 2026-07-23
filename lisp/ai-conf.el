@@ -24,6 +24,13 @@
 ;; to run coding agents inside Emacs, including `eat', which I use only
 ;; as the terminal backend for `claude-code.el' rather than as a general
 ;; purpose terminal.
+;;
+;; Two ways in, deliberately kept side by side for now:
+;;
+;;   C-c c  `claude-code.el' -- drives the CLI inside an eat terminal.
+;;          Everything the CLI can do, but it is a terminal.
+;;   C-c a  `agent-shell'    -- speaks ACP to the agent, so the session
+;;          is a plain comint buffer.  Fewer features, real Emacs keys.
 
 ;;; Code:
 
@@ -190,6 +197,35 @@ on the far side; this kills the tmux session too."
   (advice-add 'claude-code--term-make :around #'me--claude-code-remote-tmux)
   (define-key claude-code-command-map (kbd "q")
               #'me-claude-code-kill-remote-session))
+
+;;; * Agent shell
+
+;; ACP (Agent Client Protocol) is the JSON-RPC protocol Zed introduced
+;; for talking to coding agents.  `agent-shell' speaks it from a
+;; `shell-maker' comint buffer, so unlike `claude-code.el' there is no
+;; terminal emulator in the loop: normal keybindings, isearch, yanking
+;; and fonts all behave.  Diffs and permission requests render as
+;; in-buffer buttons.
+;;
+;; Needs the adapter on PATH (straight pulls agent-shell, acp and
+;; shell-maker from MELPA on its own):
+;;
+;;     npm install -g @agentclientprotocol/claude-agent-acp
+;;
+;; The tradeoff is that ACP is a lowest-common-denominator protocol, so
+;; some CLI-specific niceties are missing.  Hence keeping both for now.
+
+(use-package agent-shell
+  :bind ("C-c a" . agent-shell)
+  :config
+  ;; Reuse the `claude' CLI's own credentials rather than keeping a key
+  ;; here.  This matches the default, and is spelled out only because
+  ;; :api-key and :oauth are the alternatives and it is not obvious which
+  ;; one is live.  Must be in `:config' rather than `:custom':
+  ;; `agent-shell-anthropic-make-authentication' does not exist until the
+  ;; package has loaded.
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication :login t)))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
