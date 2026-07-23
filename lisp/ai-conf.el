@@ -223,7 +223,12 @@ on the far side; this kills the tmux session too."
 ;; until the package has loaded.
 
 (use-package agent-shell
-  :bind ("C-c a" . agent-shell))
+  :bind ("C-c a" . agent-shell)
+  :custom
+  ;; One of the IDs listed under "Available models" when a shell starts.
+  ;; claude-agent-acp offers auto, default, opus, opusplan, sonnet and
+  ;; sonnet[1m].  Switch per session with C-c C-v.
+  (agent-shell-anthropic-default-model-id "auto"))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
