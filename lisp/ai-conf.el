@@ -42,10 +42,15 @@ Smaller than the editing default, since these buffers hold streamed
 prose and diffs rather than code I am editing.")
 
 (defun me--set-agent-buffer-font ()
-  "Apply `me-agent-buffer-font' to the current buffer.
+  "Apply `me-agent-buffer-font' to the current buffer and its header line.
 For modes with no single body face to override, so the remap has to be
-buffer-local."
-  (buffer-face-set me-agent-buffer-font))
+buffer-local.  `buffer-face-set' only remaps `default', which leaves
+agent-shell's header line -- \"Claude > Sonnet > Auto > 42K/1m\" -- at the
+frame's font size, so `header-line' is remapped too.  The faces the
+header uses inherit colour only and pin no height of their own, so one
+remap of the base face shrinks all of it."
+  (buffer-face-set me-agent-buffer-font)
+  (apply #'face-remap-add-relative 'header-line me-agent-buffer-font))
 
 ;;; * Terminal backend
 
