@@ -276,6 +276,37 @@ resolved directory is inside the project, which this never is."
          (project (if (string-empty-p project) "default" project)))
     (agent-shell-cache-dir host project subdir)))
 
+(defun me--agent-shell-lean-remote-fs (orig &rest args)
+  "Run ORIG with ARGS without the incidental work of visiting a file.
+
+agent-shell answers fs/read_text_file and fs/write_text_file by going
+through `find-file-noselect' and `basic-save-buffer', so each file the
+agent touches also drags in a VC backend probe -- which runs git on the
+remote host -- plus a lock file, a backup copy and auto-save setup.  Every
+one of those is a separate synchronous round trip, and TRAMP has no async
+file primitives to fall back on, so Emacs is wedged for the duration.
+
+None of that work is wanted here.  The agent already has the content, the
+file is not being visited for editing, and the transcript records what
+changed.  Binding it all away leaves one round trip per file instead of
+five or six.
+
+Deliberately scoped to these two handlers: files opened by hand keep
+their locks, backups and VC state."
+  (let ((vc-handled-backends nil)
+        (make-backup-files nil)
+        (create-lockfiles nil)
+        (auto-save-default nil)
+        (remote-file-name-inhibit-locks t)
+        (remote-file-name-inhibit-auto-save t)
+        (remote-file-name-inhibit-auto-save-visited t))
+    (apply orig args)))
+
+(with-eval-after-load 'agent-shell
+  (dolist (fn '(agent-shell--on-fs-read-text-file-request
+                agent-shell--on-fs-write-text-file-request))
+    (advice-add fn :around #'me--agent-shell-lean-remote-fs)))
+
 (defun me--acp-pty-for-remote (orig &rest args)
   "Run ORIG with ARGS, forcing a pty for the ACP process when remote.
 
