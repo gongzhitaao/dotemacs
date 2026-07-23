@@ -125,12 +125,22 @@ The real buffer name is preserved; the full name shows on hover."
 ;; detaches the client, and starting Claude again in the same directory
 ;; re-attaches to the still-running conversation.
 ;;
-;; `env' fixes up the terminal for tmux: eat exports TERM=eat-truecolor
-;; plus a TERMINFO pointing at a *local* directory, neither of which the
-;; remote ncurses can resolve, and tmux refuses to start without a
-;; usable terminfo entry.  (To keep truecolor instead, rsync
-;; `eat-term-terminfo-directory' to ~/.terminfo on the remote and drop
-;; the TERM= override below.)
+;; `env -u TERMINFO' is the terminal fix-up tmux needs.  eat points
+;; TERMINFO at a local build directory that does not exist on the remote,
+;; and while it stays set ncurses searches only there and cannot find any
+;; terminal type, so tmux refuses to start.  Unsetting it lets ncurses
+;; fall back to ~/.terminfo, where eat's own terminfo must be installed
+;; once per host (the entries are symlinks, so -h dereferences them):
+;;
+;;   tar -chf - -C <eat-term-terminfo-directory> . \
+;;     | ssh HOST 'mkdir -p ~/.terminfo && tar xf - -C ~/.terminfo'
+;;
+;; With that present, TERM=eat-truecolor -- what eat already exports --
+;; resolves remotely and tmux draws to eat with eat's real capabilities.
+;; The previous TERM=xterm-256color override made tmux emit xterm
+;; partial-redraw sequences that eat renders imperfectly, leaving the
+;; buffer stale until a window resize forced a full repaint.  If a host
+;; lacks the terminfo, tmux will fail to start until it is copied over.
 
 (defcustom me-claude-code-remote-tmux t
   "Whether to run remote Claude Code sessions inside tmux."
@@ -170,7 +180,6 @@ unchanged."
              (program (or (executable-find program 'remote) program))
              (buffer (funcall orig backend buffer-name "env"
                               (append (list "-u" "TERMINFO"
-                                            "TERM=xterm-256color"
                                             "tmux" "new-session"
                                             "-A"   ; attach if it exists
                                             "-D"   ; ...evicting stale clients
