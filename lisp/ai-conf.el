@@ -356,6 +356,14 @@ and left alone entirely for local sessions, where pipes work."
   (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
   (agent-shell-dot-subdir-function #'me--agent-shell-dot-subdir)
 
+  ;; Two-region UX: a read-only streaming view plus a persistent editable
+  ;; compose buffer, split rather than crammed into one buffer.  The shell
+  ;; buffer locks its whole tail while a turn streams (read-only text,
+  ;; self-insert remapped to `ignore'), so an inline input line is not
+  ;; possible there; the compose buffer stays editable throughout and
+  ;; queues when busy.  C-c C-c sends, C-c C-k cancels.
+  (agent-shell-prefer-viewport-interaction t)
+
   ;; Put the agent / model / mode / context-usage readout in the mode line
   ;; rather than a header line.  The `graphical' default draws an SVG badge
   ;; sized at (* 3 char-height), so the header is three lines tall no matter
