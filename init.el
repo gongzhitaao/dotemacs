@@ -1687,35 +1687,53 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
   (load-theme 'modus-operandi :no-confirm))
 
-;;; ** Face Customizations (after theme load)
+;;; ** Face Customizations
 
-(set-face-attribute 'fixed-pitch nil :height 110)
-(set-face-attribute 'bold nil :weight 'semi-bold)
-(set-face-attribute 'region nil :extend nil)
-(set-face-attribute 'mode-line nil :family "Iosevka SS09")
-(set-face-attribute 'mode-line-active nil :family "Iosevka SS09")
-(set-face-attribute 'mode-line-inactive nil :family "Iosevka SS09")
+;; `enable-theme' recalculates every face the theme specifies, which
+;; silently discards a bare `set-face-attribute' done once at startup.
+;; Switching modus-operandi to modus-vivendi used to revert all of these.
+;; Reapplying from `enable-theme-functions' fixes that, and as a side
+;; effect makes the whole block order-independent: it no longer has to
+;; sit after `load-theme'.
 
-(with-eval-after-load 'vundo
-  (set-face-attribute 'vundo-highlight nil :inverse-video t))
-
-(with-eval-after-load 'cal-china-x
-  (set-face-attribute 'cal-china-x-important-holiday-face nil :background "#ff9580"))
-
-(with-eval-after-load 'notmuch
-  (set-face-attribute 'notmuch-tag-deleted nil :inherit 'modus-themes-mark-del))
-
-(with-eval-after-load 'consult
-  (modus-themes-with-colors
-    (set-face-attribute 'consult-file nil
-                        :inherit 'unspecified
-                        :foreground fg-dim
+(defun me--apply-face-tweaks (&rest _)
+  "Reapply my face overrides on top of whatever theme is now active.
+On `enable-theme-functions', so this runs on every `load-theme'.  Faces
+owned by lazy packages are guarded with `featurep' and reapplied from
+`with-eval-after-load' below, since a package can load either before or
+after a theme change."
+  (set-face-attribute 'fixed-pitch nil :height 110)
+  (set-face-attribute 'bold nil :weight 'semi-bold)
+  (set-face-attribute 'region nil :extend nil)
+  (dolist (face '(mode-line mode-line-active mode-line-inactive))
+    (set-face-attribute face nil :family "Iosevka SS09"))
+  (when (featurep 'vundo)
+    (set-face-attribute 'vundo-highlight nil :inverse-video t))
+  (when (featurep 'cal-china-x)
+    (set-face-attribute 'cal-china-x-important-holiday-face nil
+                        :background "#ff9580"))
+  (when (featurep 'notmuch)
+    (set-face-attribute 'notmuch-tag-deleted nil
+                        :inherit 'modus-themes-mark-del))
+  (when (featurep 'consult)
+    (modus-themes-with-colors
+      (set-face-attribute 'consult-file nil
+                          :inherit 'unspecified
+                          :foreground fg-dim
+                          :slant 'normal)))
+  (when (featurep 'marginalia)
+    (set-face-attribute 'marginalia-documentation nil
+                        :weight 'light
                         :slant 'normal)))
 
-(with-eval-after-load 'marginalia
-  (set-face-attribute 'marginalia-documentation nil
-                      :weight 'light
-                      :slant 'normal))
+(add-hook 'enable-theme-functions #'me--apply-face-tweaks)
+
+(dolist (feature '(vundo cal-china-x notmuch consult marginalia))
+  (with-eval-after-load feature
+    (me--apply-face-tweaks)))
+
+;; The theme above loaded before the hook existed, so seed it once.
+(me--apply-face-tweaks)
 
 ;;; * Version Control
 
