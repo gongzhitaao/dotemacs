@@ -252,6 +252,30 @@ Inert locally, where `file-remote-p' returns nil throughout."
         (concat remote path))
     path))
 
+(defun me--agent-shell-dot-subdir (subdir)
+  "Return a local path for SUBDIR of agent-shell's per-project data.
+
+The default, `agent-shell--dot-subdir-in-repo', puts this under
+.agent-shell/ in the project root.  On a TRAMP project that root is
+remote, so the transcript -- which is appended to after every message --
+is rewritten over ssh each time, and the session spends its life
+shuttling the file back and forth.
+
+Keeping the data under the local cache instead makes those writes local.
+Paths are keyed by host and project so a project checked out on several
+machines does not collide with itself.
+
+This covers screenshots as well, since both go through
+`agent-shell--dot-subdir', and it also stops agent-shell adding
+.agent-shell/ to the repo's exclude file: that only happens when the
+resolved directory is inside the project, which this never is."
+  (let* ((cwd (agent-shell-cwd))
+         (host (or (file-remote-p cwd 'host) "localhost"))
+         (local (or (file-remote-p cwd 'localname) cwd))
+         (project (file-name-nondirectory (directory-file-name local)))
+         (project (if (string-empty-p project) "default" project)))
+    (agent-shell-cache-dir host project subdir)))
+
 (defun me--acp-pty-for-remote (orig &rest args)
   "Run ORIG with ARGS, forcing a pty for the ACP process when remote.
 
@@ -290,6 +314,7 @@ and left alone entirely for local sessions, where pipes work."
          ("C-c C-k" . agent-shell-interrupt))
   :custom
   (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
+  (agent-shell-dot-subdir-function #'me--agent-shell-dot-subdir)
 
   ;; Put the agent / model / mode / context-usage readout in the mode line
   ;; rather than a header line.  The `graphical' default draws an SVG badge
