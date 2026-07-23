@@ -129,18 +129,15 @@ The real buffer name is preserved; the full name shows on hover."
 ;; TERMINFO at a local build directory that does not exist on the remote,
 ;; and while it stays set ncurses searches only there and cannot find any
 ;; terminal type, so tmux refuses to start.  Unsetting it lets ncurses
-;; fall back to ~/.terminfo, where eat's own terminfo must be installed
-;; once per host (the entries are symlinks, so -h dereferences them):
+;; fall back to ~/.terminfo.
 ;;
-;;   tar -chf - -C <eat-term-terminfo-directory> . \
-;;     | ssh HOST 'mkdir -p ~/.terminfo && tar xf - -C ~/.terminfo'
-;;
-;; With that present, TERM=eat-truecolor -- what eat already exports --
-;; resolves remotely and tmux draws to eat with eat's real capabilities.
-;; The previous TERM=xterm-256color override made tmux emit xterm
-;; partial-redraw sequences that eat renders imperfectly, leaving the
-;; buffer stale until a window resize forced a full repaint.  If a host
-;; lacks the terminfo, tmux will fail to start until it is copied over.
+;; When eat's own terminfo lives there, TERM=eat-truecolor -- what eat
+;; already exports -- resolves remotely and tmux draws with eat's real
+;; capabilities.  `me--claude-code-ensure-remote-terminfo' copies it over
+;; on first use of a host, so this needs no manual per-host setup; when
+;; the copy has not (yet) happened, TERM falls back to xterm-256color so
+;; tmux still starts, just with the imperfect partial redraws that leave
+;; the buffer stale until a window resize forces a full repaint.
 
 (defcustom me-claude-code-remote-tmux t
   "Whether to run remote Claude Code sessions inside tmux."
@@ -162,6 +159,55 @@ keeps `tmux ls' output useful."
             (replace-regexp-in-string "[^A-Za-z0-9_-]" "-" base)
             (substring (md5 buffer-name) 0 6))))
 
+(defun me--claude-code-ensure-remote-terminfo ()
+  "Install eat's terminfo under the remote ~/.terminfo when it is absent.
+Return non-nil when eat-truecolor should resolve on the remote afterward,
+so the caller can choose TERM=eat-truecolor over the xterm-256color
+fallback.  eat ships its terminfo entries as symlinks into a local build
+tree, so the bytes are read through the link and written as plain files;
+`default-directory' is remote throughout, so all the target paths are."
+  (let* ((dir (and (boundp 'eat-term-terminfo-directory)
+                   eat-term-terminfo-directory
+                   (file-directory-p eat-term-terminfo-directory)
+                   eat-term-terminfo-directory))
+         ;; Build the remote path explicitly: a bare "~/.terminfo" would
+         ;; expand against the *local* home even under a remote
+         ;; `default-directory'.  The TRAMP prefix forces the remote side,
+         ;; and ~ is expanded there by the file ops below.
+         (base (and dir (concat (file-remote-p default-directory) "~/.terminfo")))
+         (probe (and base (expand-file-name "e/eat-truecolor" base))))
+    (cond
+     ((null dir) nil)
+     ((file-exists-p probe) t)
+     (t
+      (condition-case err
+          (progn
+            (dolist (sub (directory-files dir nil "\\`[^.]"))
+              (let ((local-sub (expand-file-name sub dir)))
+                (when (file-directory-p local-sub)
+                  (dolist (entry (directory-files local-sub nil "\\`[^.]"))
+                    (let ((local-file (expand-file-name entry local-sub))
+                          (remote-file (expand-file-name
+                                        (format "%s/%s" sub entry) base)))
+                      (make-directory (file-name-directory remote-file) t)
+                      (when (file-symlink-p remote-file)
+                        (delete-file remote-file))
+                      (let ((coding-system-for-read 'binary)
+                            (coding-system-for-write 'binary))
+                        (with-temp-buffer
+                          (set-buffer-multibyte nil)
+                          (insert-file-contents-literally local-file)
+                          (write-region (point-min) (point-max)
+                                        remote-file nil 'silent))))))))
+            (message "Installed eat terminfo on %s"
+                     (file-remote-p default-directory 'host))
+            t)
+        (error
+         (message "eat terminfo install on %s failed (%s); using xterm-256color"
+                  (file-remote-p default-directory 'host)
+                  (error-message-string err))
+         nil))))))
+
 (defun me--claude-code-remote-tmux (orig backend buffer-name program
                                          &optional switches)
   "Around advice for `claude-code--term-make' running PROGRAM under tmux.
@@ -172,6 +218,10 @@ unchanged."
            (file-remote-p default-directory)
            (executable-find "tmux" 'remote))
       (let* ((session (me--claude-code-tmux-session-name buffer-name))
+             ;; eat-truecolor when its terminfo is (now) on the remote,
+             ;; else xterm-256color so tmux still starts.
+             (term (if (me--claude-code-ensure-remote-terminfo)
+                       "eat-truecolor" "xterm-256color"))
              ;; Resolve claude here rather than letting tmux look it up:
              ;; tmux runs the pane command with the *server's* environment,
              ;; which was fixed whenever that server first started and need
@@ -180,6 +230,7 @@ unchanged."
              (program (or (executable-find program 'remote) program))
              (buffer (funcall orig backend buffer-name "env"
                               (append (list "-u" "TERMINFO"
+                                            (concat "TERM=" term)
                                             "tmux" "new-session"
                                             "-A"   ; attach if it exists
                                             "-D"   ; ...evicting stale clients
