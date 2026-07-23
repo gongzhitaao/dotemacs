@@ -1704,11 +1704,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 (with-eval-after-load 'notmuch
   (set-face-attribute 'notmuch-tag-deleted nil :inherit 'modus-themes-mark-del))
 
-(with-eval-after-load 'claude-code
-  (set-face-attribute 'claude-code-repl-face nil
-                      :family "JuliaMono"
-                      :height 120))
-
 (with-eval-after-load 'consult
   (modus-themes-with-colors
     (set-face-attribute 'consult-file nil
@@ -1742,67 +1737,11 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 ;;; * AI
 
-(use-package inheritenv
-  :straight (:type git :host github :repo "purcell/inheritenv"))
-
-(defun me--set-eat-buffer-font ()
-  "Apply my preferred font to all Eat terminal buffers."
-  (buffer-face-set '(:family "JuliaMono" :height 120)))
-
-(use-package eat
-  :straight (:type git
-                   :host codeberg
-                   :repo "akib/emacs-eat"
-                   :files ("*.el" ("term" "term/*.el") "*.texi"
-                           "*.ti" ("terminfo/e" "terminfo/e/*")
-                           ("terminfo/65" "terminfo/65/*")
-                           ("integration" "integration/*")
-                           (:exclude ".dir-locals.el" "*-tests.el")))
-  :delight (eat-eshell-mode nil)
-  :hook ((eat-mode . me--set-eat-buffer-font)
-         (eat-eshell-mode . me--set-eat-buffer-font))
-  :bind (:map eat-semi-char-mode-map
-              ("C-z" . nil)
-              ("M-w" . kill-ring-save)))
-
-(use-package claude-code
-  :delight
-  :straight (:type git
-                   :host github
-                   :repo "stevemolitor/claude-code.el"
-                   :branch "main"
-                   :depth 1
-                   :files ("*.el" (:exclude "images/*")))
-  :bind-keymap
-  ( "C-c c" . claude-code-command-map) ;; or your preferred key
-  ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
-  :bind
-  ( :repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
-  :config
-  (claude-code-mode)
-  (setq claude-code-eat-read-only-mode-cursor-type '(hollow nil nil)))
-
-(defun me--claude-code-compact-modeline ()
-  "Compact modeline label for Claude Code buffers: a robot glyph, a LAN
-marker + `m²' for `makermaker-*' hosts, and just the final path component.
-The real buffer name is preserved; the full name shows on hover."
-  (let* ((dir  (directory-file-name
-                (or (file-remote-p default-directory 'localname)
-                    default-directory)))
-         (host (file-remote-p default-directory 'host))
-         (host (cond ((null host) nil)
-                     ((string-match-p "\\`makermaker-" host) "m²")
-                     (t host)))
-         (label (concat "󰚩 "
-                        (and host (concat (nerd-icons-mdicon "nf-md-lan_connect")
-                                          " " host " "))
-                        (file-name-nondirectory dir))))
-    (setq-local mode-line-buffer-identification
-                (list (propertize label
-                                  'face 'mode-line-buffer-id
-                                  'help-echo (buffer-name))))))
-
-(add-hook 'claude-code-start-hook #'me--claude-code-compact-modeline)
+;; Coding agents, plus the `eat' terminal they run in.  Extracted to
+;; lisp/ai-conf.el to keep init.el manageable.
+(use-package ai-conf
+  :straight nil
+  :load-path "~/.config/emacs/lisp")
 
 ;;; * Key logger
 
