@@ -223,12 +223,85 @@ on the far side; this kills the tmux session too."
 ;; until the package has loaded.
 
 (use-package agent-shell
-  :bind ("C-c a" . agent-shell)
+  :bind (("C-c a" . agent-shell)
+         :map agent-shell-mode-map
+         ("C-c C-q" . me-agent-shell-compose))
   :custom
   ;; One of the IDs listed under "Available models" when a shell starts.
   ;; claude-agent-acp offers auto, default, opus, opusplan, sonnet and
   ;; sonnet[1m].  Switch per session with C-c C-v.
   (agent-shell-anthropic-default-model-id "auto"))
+
+;;; ** Composing requests in Org
+
+;; Typing at the shell prompt while a request is in flight does nothing:
+;; `shell-maker--clear-input-for-execution' wraps its body in an `unless
+;; shell-maker--busy', so RET is silently dropped.  agent-shell's answer
+;; is `agent-shell-queue-request', which reads from the minibuffer, and
+;; its viewport compose buffer, which is derived from `text-mode'.
+;;
+;; Neither suits a long request.  This opens a scratch Org buffer instead,
+;; so a prompt can be written with lists, source blocks and the usual
+;; editing bindings.  C-c C-c sends, C-c C-k discards.  Mid-request the
+;; text is queued rather than dropped, which is what agent-shell's own
+;; send commands do.
+
+(defvar me-agent-shell-compose-buffer-name "*agent-shell compose*"
+  "Name of the buffer used to compose agent-shell requests.")
+
+(defvar-local me--agent-shell-compose-target nil
+  "Shell buffer that this compose buffer submits to.")
+
+(defvar-keymap me-agent-shell-compose-mode-map
+  :doc "Keymap for `me-agent-shell-compose-mode'."
+  "C-c C-c" #'me-agent-shell-compose-send
+  "C-c C-k" #'me-agent-shell-compose-cancel)
+
+(define-minor-mode me-agent-shell-compose-mode
+  "Minor mode for composing an agent-shell request in an Org buffer."
+  :lighter " Compose")
+
+(defun me-agent-shell-compose ()
+  "Compose a request for this project's agent shell in an Org buffer.
+Reuses the compose buffer if it already holds an unsent draft."
+  (interactive)
+  (require 'agent-shell)
+  ;; `agent-shell--shell-buffer' is private, but it is the only thing that
+  ;; does the full resolution -- viewport, current shell, project shell,
+  ;; then prompt -- and reimplementing that would drift.
+  (let ((shell (agent-shell--shell-buffer)))
+    (pop-to-buffer (get-buffer-create me-agent-shell-compose-buffer-name))
+    ;; `org-mode' calls `kill-all-local-variables', so the target has to be
+    ;; recorded after it, not before.
+    (unless (derived-mode-p 'org-mode)
+      (org-mode))
+    (me-agent-shell-compose-mode 1)
+    (setq me--agent-shell-compose-target shell)
+    (setq header-line-format
+          (substitute-command-keys
+           (format "%s  \\<me-agent-shell-compose-mode-map>\\[me-agent-shell-compose-send] send, \\[me-agent-shell-compose-cancel] discard"
+                   (buffer-name shell))))))
+
+(defun me-agent-shell-compose-send ()
+  "Send the composed request, queueing it if the agent is busy."
+  (interactive)
+  (let ((text (string-trim (buffer-substring-no-properties
+                            (point-min) (point-max))))
+        (shell me--agent-shell-compose-target))
+    (when (string-empty-p text)
+      (user-error "Nothing to send"))
+    (unless (buffer-live-p shell)
+      (user-error "Shell buffer is gone; C-c C-k to discard"))
+    (if (with-current-buffer shell (shell-maker-busy))
+        (with-current-buffer shell (agent-shell-queue-request text))
+      (agent-shell-insert :text text :submit t :shell-buffer shell))
+    (kill-buffer)
+    (pop-to-buffer shell)))
+
+(defun me-agent-shell-compose-cancel ()
+  "Discard the composed request."
+  (interactive)
+  (kill-buffer))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
