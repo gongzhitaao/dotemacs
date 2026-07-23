@@ -252,6 +252,34 @@ Inert locally, where `file-remote-p' returns nil throughout."
         (concat remote path))
     path))
 
+(defun me--acp-pty-for-remote (orig &rest args)
+  "Run ORIG with ARGS, forcing a pty for the ACP process when remote.
+
+`acp.el' spawns the agent with :connection-type \\='pipe.  Over TRAMP that
+channel is write-only: the remote process starts and stays alive, but
+nothing sent to its stdin ever arrives, so the agent never sees
+`initialize' and agent-shell sits on \"Starting agent\" with no error.
+Reproducible without any of this code -- \"sh -c \\='read l; echo GOT:$l\\='\"
+run through `make-process' on a TRAMP directory blocks forever on a pipe
+and answers immediately on a pty.
+
+A pty carries stdin fine and, checked against claude-agent-acp over ssh,
+neither echoes input back nor translates newlines, so the JSON-RPC
+stream stays intact.
+
+Scoped to this one call rather than advising `make-process' globally,
+and left alone entirely for local sessions, where pipes work."
+  (if (not (file-remote-p default-directory))
+      (apply orig args)
+    (let ((real (symbol-function 'make-process)))
+      (cl-letf (((symbol-function 'make-process)
+                 (lambda (&rest a)
+                   (apply real (plist-put a :connection-type 'pty)))))
+        (apply orig args)))))
+
+(with-eval-after-load 'acp
+  (advice-add 'acp--start-client :around #'me--acp-pty-for-remote))
+
 (use-package agent-shell
   :bind (("C-c a" . agent-shell)
          :map agent-shell-mode-map
