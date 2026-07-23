@@ -101,5 +101,95 @@ The real buffer name is preserved; the full name shows on hover."
 
 (add-hook 'claude-code-start-hook #'me--claude-code-compact-modeline)
 
+;;; ** Persistent remote Claude sessions
+
+;; On a TRAMP directory `claude-code.el' starts claude through an
+;; Emacs-owned ssh channel, so quitting Emacs takes the remote session
+;; down with it.  Wrapping the remote invocation in tmux moves the
+;; session's lifetime to the remote host: killing the eat buffer only
+;; detaches the client, and starting Claude again in the same directory
+;; re-attaches to the still-running conversation.
+;;
+;; `env' fixes up the terminal for tmux: eat exports TERM=eat-truecolor
+;; plus a TERMINFO pointing at a *local* directory, neither of which the
+;; remote ncurses can resolve, and tmux refuses to start without a
+;; usable terminfo entry.  (To keep truecolor instead, rsync
+;; `eat-term-terminfo-directory' to ~/.terminfo on the remote and drop
+;; the TERM= override below.)
+
+(defcustom me-claude-code-remote-tmux t
+  "Whether to run remote Claude Code sessions inside tmux."
+  :type 'boolean
+  :group 'claude-code)
+
+(defvar-local me-claude-code-tmux-session nil
+  "Name of the remote tmux session backing this Claude buffer.")
+
+(defun me--claude-code-tmux-session-name (buffer-name)
+  "Stable tmux session name for the Claude buffer BUFFER-NAME.
+The hash keeps directory and instance distinct; the readable prefix
+keeps `tmux ls' output useful."
+  (let ((base (file-name-nondirectory
+               (directory-file-name
+                (or (file-remote-p default-directory 'localname)
+                    default-directory)))))
+    (format "claude-%s-%s"
+            (replace-regexp-in-string "[^A-Za-z0-9_-]" "-" base)
+            (substring (md5 buffer-name) 0 6))))
+
+(defun me--claude-code-remote-tmux (orig backend buffer-name program
+                                         &optional switches)
+  "Around advice for `claude-code--term-make' running PROGRAM under tmux.
+Only applies when `default-directory' is remote and the host has tmux;
+otherwise ORIG runs with BACKEND, BUFFER-NAME, PROGRAM and SWITCHES
+unchanged."
+  (if (and me-claude-code-remote-tmux
+           (file-remote-p default-directory)
+           (executable-find "tmux" 'remote))
+      (let* ((session (me--claude-code-tmux-session-name buffer-name))
+             ;; Resolve claude here rather than letting tmux look it up:
+             ;; tmux runs the pane command with the *server's* environment,
+             ;; which was fixed whenever that server first started and need
+             ;; not have ~/.local/bin on PATH.  Tramp's own-remote-path does
+             ;; know where claude lives.
+             (program (or (executable-find program 'remote) program))
+             (buffer (funcall orig backend buffer-name "env"
+                              (append (list "-u" "TERMINFO"
+                                            "TERM=xterm-256color"
+                                            "tmux" "new-session"
+                                            "-A"   ; attach if it exists
+                                            "-D"   ; ...evicting stale clients
+                                            "-s" session
+                                            "-c" (file-remote-p
+                                                  default-directory 'localname)
+                                            program)
+                                      switches))))
+        (when (buffer-live-p buffer)
+          (with-current-buffer buffer
+            (setq me-claude-code-tmux-session session)))
+        buffer)
+    (funcall orig backend buffer-name program switches)))
+
+(defun me-claude-code-kill-remote-session ()
+  "Really end the remote Claude session behind the current buffer.
+`claude-code-kill' only kills the tmux client, leaving claude running
+on the far side; this kills the tmux session too."
+  (interactive)
+  (let ((session (buffer-local-value 'me-claude-code-tmux-session
+                                     (current-buffer))))
+    (cond
+     ((not session) (user-error "Not a tmux-backed Claude buffer"))
+     ((not (yes-or-no-p (format "Kill remote session %s? " session))) nil)
+     (t (process-file "tmux" nil nil nil "kill-session" "-t" session)
+        (claude-code-kill)
+        (message "Killed remote session %s" session)))))
+
+;; Advise after load: `claude-code--term-make' is a `cl-defgeneric', and
+;; advising the symbol before it exists confuses its method dispatch.
+(with-eval-after-load 'claude-code
+  (advice-add 'claude-code--term-make :around #'me--claude-code-remote-tmux)
+  (define-key claude-code-command-map (kbd "q")
+              #'me-claude-code-kill-remote-session))
+
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
