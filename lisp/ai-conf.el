@@ -42,15 +42,10 @@ Smaller than the editing default, since these buffers hold streamed
 prose and diffs rather than code I am editing.")
 
 (defun me--set-agent-buffer-font ()
-  "Apply `me-agent-buffer-font' to the current buffer and its header line.
+  "Apply `me-agent-buffer-font' to the current buffer.
 For modes with no single body face to override, so the remap has to be
-buffer-local.  `buffer-face-set' only remaps `default', which leaves
-agent-shell's header line -- \"Claude > Sonnet > Auto > 42K/1m\" -- at the
-frame's font size, so `header-line' is remapped too.  The faces the
-header uses inherit colour only and pin no height of their own, so one
-remap of the base face shrinks all of it."
-  (buffer-face-set me-agent-buffer-font)
-  (apply #'face-remap-add-relative 'header-line me-agent-buffer-font))
+buffer-local."
+  (buffer-face-set me-agent-buffer-font))
 
 ;;; * Terminal backend
 
@@ -244,6 +239,15 @@ on the far side; this kills the tmux session too."
          ;; every other "this was a mistake" buffer.
          ("C-c C-k" . agent-shell-interrupt))
   :custom
+  ;; Put the agent / model / mode / context-usage readout in the mode line
+  ;; rather than a header line.  The `graphical' default draws an SVG badge
+  ;; sized at (* 3 char-height), so the header is three lines tall no matter
+  ;; what font it is given -- shrinking the text cannot help.  `text' would
+  ;; give a one-line header instead; nil drops the header entirely and
+  ;; `agent-shell--mode-line-format' takes over, which is set up from
+  ;; `agent-shell--start' and so survives the dead mode hook noted below.
+  (agent-shell-header-style nil)
+
   ;; Show what the agent actually ran.  Both are needed: the group flag
   ;; reveals the members of a run of consecutive actions, the tool-use
   ;; flag expands each member's command and diff.  Thoughts stay folded.
