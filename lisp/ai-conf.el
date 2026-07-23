@@ -230,6 +230,28 @@ on the far side; this kills the tmux session too."
 ;; `:config' rather than `:custom', since that constructor does not exist
 ;; until the package has loaded.
 
+(defun me--agent-shell-resolve-path (path)
+  "Translate PATH between TRAMP form and the remote host's own form.
+
+`acp.el' passes :file-handler to `make-process' when `default-directory'
+is remote, so on a TRAMP buffer the agent runs on the far host and speaks
+that host's paths: /home/me/x, never /ssh:host:/home/me/x.
+
+Both directions need mapping, and `agent-shell-path-resolver-function' is
+the single hook for both.  Outbound, the cwd sent with session/new must
+lose the TRAMP prefix or the agent is handed a directory that does not
+exist -- which is a hang, not an error.  Inbound is the dangerous one:
+fs/read_text_file and fs/write_text_file arrive carrying the remote
+host's path, and without the prefix restored Emacs would happily read and
+write the identically named file on this machine.
+
+Inert locally, where `file-remote-p' returns nil throughout."
+  (if-let* ((remote (file-remote-p default-directory)))
+      (if (file-remote-p path)
+          (file-remote-p path 'localname)
+        (concat remote path))
+    path))
+
 (use-package agent-shell
   :bind (("C-c a" . agent-shell)
          :map agent-shell-mode-map
@@ -239,6 +261,8 @@ on the far side; this kills the tmux session too."
          ;; every other "this was a mistake" buffer.
          ("C-c C-k" . agent-shell-interrupt))
   :custom
+  (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
+
   ;; Put the agent / model / mode / context-usage readout in the mode line
   ;; rather than a header line.  The `graphical' default draws an SVG badge
   ;; sized at (* 3 char-height), so the header is three lines tall no matter
