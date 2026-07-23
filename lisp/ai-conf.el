@@ -34,14 +34,23 @@
 
 ;;; Code:
 
+;;; * Shared
+
+(defconst me-agent-buffer-font '(:family "JuliaMono" :height 120)
+  "Face spec shared by every agent buffer.
+Smaller than the editing default, since these buffers hold streamed
+prose and diffs rather than code I am editing.")
+
+(defun me--set-agent-buffer-font ()
+  "Apply `me-agent-buffer-font' to the current buffer.
+For modes with no single body face to override, so the remap has to be
+buffer-local."
+  (buffer-face-set me-agent-buffer-font))
+
 ;;; * Terminal backend
 
 (use-package inheritenv
   :straight (:type git :host github :repo "purcell/inheritenv"))
-
-(defun me--set-eat-buffer-font ()
-  "Apply my preferred font to all Eat terminal buffers."
-  (buffer-face-set '(:family "JuliaMono" :height 120)))
 
 (use-package eat
   :straight (:type git
@@ -53,8 +62,8 @@
                            ("integration" "integration/*")
                            (:exclude ".dir-locals.el" "*-tests.el")))
   :delight (eat-eshell-mode nil)
-  :hook ((eat-mode . me--set-eat-buffer-font)
-         (eat-eshell-mode . me--set-eat-buffer-font))
+  :hook ((eat-mode . me--set-agent-buffer-font)
+         (eat-eshell-mode . me--set-agent-buffer-font))
   :bind (:map eat-semi-char-mode-map
               ("C-z" . nil)
               ("M-w" . kill-ring-save)))
@@ -82,9 +91,8 @@
 ;; has to land after `load-theme', and claude-code is lazy enough that it
 ;; always does.
 (with-eval-after-load 'claude-code
-  (set-face-attribute 'claude-code-repl-face nil
-                      :family "JuliaMono"
-                      :height 120))
+  (apply #'set-face-attribute 'claude-code-repl-face nil
+         me-agent-buffer-font))
 
 (defun me--claude-code-compact-modeline ()
   "Compact modeline label for Claude Code buffers: a robot glyph, a LAN
@@ -231,6 +239,30 @@ on the far side; this kills the tmux session too."
   ;; claude-agent-acp offers auto, default, opus, opusplan, sonnet and
   ;; sonnet[1m].  Switch per session with C-c C-v.
   (agent-shell-anthropic-default-model-id "auto"))
+
+;; agent-shell's faces are all semantic (prompt, model, error...) with no
+;; body face to hang a family on, so the buffer's default gets remapped,
+;; the same way the eat buffers do.
+;;
+;; This cannot be an `agent-shell-mode' hook, because that hook never
+;; runs.  `shell-maker-define-major-mode' builds the mode with
+;;
+;;     (eval `(define-derived-mode ... (use-local-map ,mode-map)))
+;;
+;; which splices the keymap *object* into the body, so the mode ends up
+;; evaluating `(keymap ...)' as a function call and signals
+;; `void-function keymap'.  It fails after the keymap and syntax table
+;; are installed but before `run-mode-hooks', which is why the shell is
+;; usable while every mode hook is silently skipped.  `unwind-protect'
+;; gets the font on either way without swallowing the error.
+
+(defun me--agent-shell-mode-font (orig &rest args)
+  "Apply `me-agent-buffer-font' around ORIG, called with ARGS."
+  (unwind-protect (apply orig args)
+    (me--set-agent-buffer-font)))
+
+(with-eval-after-load 'agent-shell
+  (advice-add 'agent-shell-mode :around #'me--agent-shell-mode-font))
 
 ;;; ** Composing requests in Org
 
