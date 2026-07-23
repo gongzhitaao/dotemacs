@@ -494,5 +494,67 @@ Reuses the compose buffer if it already holds an unsent draft."
   (interactive)
   (kill-buffer))
 
+;;; ** Rich busy indicator
+
+;; The stock busy indicator is a bare spinner glyph.  This grows it into
+;; the Claude-Code-style readout -- "Ruminating… (1m 23s · ↓ 4.2k tokens)"
+;; -- by advising the one function that renders the glyph.  The heartbeat
+;; already re-renders the mode line on every tick, so the clock ticks for
+;; free; nothing here schedules its own timer.
+;;
+;; Honesty about the token count: agent-shell fills :output-tokens from
+;; the end-of-turn PromptResponse, so during a long think it shows the
+;; PREVIOUS turn's total, not a live climb, and is absent on the very
+;; first turn.  Shown when present, dropped when zero, never faked.
+
+(defvar me-agent-shell-busy-words
+  '("Thinking" "Pondering" "Ruminating" "Cogitating" "Mulling"
+    "Noodling" "Percolating" "Chewing" "Brewing" "Conjuring"
+    "Befuddling" "Wrangling" "Untangling" "Divining" "Scheming")
+  "Whimsical gerunds cycled through while the agent works.")
+
+(defvar-local me--agent-shell-busy-start nil
+  "`float-time' when the current busy stretch began, or nil when idle.")
+
+(defun me--agent-shell-format-elapsed (seconds)
+  "Format SECONDS as \"1m 23s\", or \"23s\" under a minute."
+  (let ((s (floor seconds)))
+    (if (>= s 60)
+        (format "%dm %ds" (/ s 60) (% s 60))
+      (format "%ds" s))))
+
+(defun me--agent-shell-format-tokens (n)
+  "Format token count N as \"4.2k\" / \"1.3m\", matching Claude Code."
+  (cond ((>= n 1000000) (format "%.1fm" (/ n 1000000.0)))
+        ((>= n 1000)    (format "%.1fk" (/ n 1000.0)))
+        (t              (format "%d" n))))
+
+(defun me--agent-shell-busy-suffix (frame)
+  "Append elapsed time and token count to the busy indicator FRAME.
+Advice on `agent-shell--busy-indicator-frame', which returns the spinner
+glyph while busy and nil otherwise -- so nil is the idle edge where the
+elapsed clock resets."
+  (if (not frame)
+      (progn (setq me--agent-shell-busy-start nil) frame)
+    (unless me--agent-shell-busy-start
+      (setq me--agent-shell-busy-start (float-time)))
+    (let* ((elapsed (- (float-time) me--agent-shell-busy-start))
+           ;; Rotate the word every few seconds so it feels alive without
+           ;; flickering each 100ms tick.
+           (word (nth (mod (floor elapsed 3) (length me-agent-shell-busy-words))
+                      me-agent-shell-busy-words))
+           (tokens (map-nested-elt (agent-shell--state) '(:usage :output-tokens)))
+           (parts (list (me--agent-shell-format-elapsed elapsed))))
+      (when (and (numberp tokens) (> tokens 0))
+        (push (format "↓ %s tokens" (me--agent-shell-format-tokens tokens)) parts))
+      (concat frame " "
+              (propertize (concat word "…") 'face 'agent-shell-secondary)
+              (propertize (format " (%s)" (string-join (nreverse parts) " · "))
+                          'face 'agent-shell-secondary)))))
+
+(with-eval-after-load 'agent-shell
+  (advice-add 'agent-shell--busy-indicator-frame
+              :filter-return #'me--agent-shell-busy-suffix))
+
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
