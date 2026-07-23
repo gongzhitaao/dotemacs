@@ -235,10 +235,17 @@ on the far side; this kills the tmux session too."
          :map agent-shell-mode-map
          ("C-c C-q" . me-agent-shell-compose))
   :custom
-  ;; One of the IDs listed under "Available models" when a shell starts.
-  ;; claude-agent-acp offers auto, default, opus, opusplan, sonnet and
-  ;; sonnet[1m].  Switch per session with C-c C-v.
-  (agent-shell-anthropic-default-model-id "auto"))
+  ;; Permission mode, not the model: "use a model classifier to approve or
+  ;; deny permission prompts" rather than stopping on each one.  The other
+  ;; mode IDs claude-agent-acp reports are default, acceptEdits, plan,
+  ;; dontAsk and bypassPermissions.  Change per session with C-c C-m, or
+  ;; cycle with C-<tab>.
+  ;;
+  ;; The model is deliberately left alone: its IDs are default, opus[1m],
+  ;; claude-fable-5[1m], sonnet and haiku, and "default" -- already the
+  ;; value when unset -- is the one that picks for itself.  C-c C-v to
+  ;; override for a session.
+  (agent-shell-anthropic-default-session-mode-id "auto"))
 
 ;; agent-shell's faces are all semantic (prompt, model, error...) with no
 ;; body face to hang a family on, so the buffer's default gets remapped,
