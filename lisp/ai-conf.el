@@ -346,7 +346,12 @@ and left alone entirely for local sessions, where pipes work."
          ;; Alias for the C-c C-c that is already there, to match the
          ;; C-c C-k that aborts the compose buffer, org-src, magit and
          ;; every other "this was a mistake" buffer.
-         ("C-c C-k" . agent-shell-interrupt))
+         ("C-c C-k" . agent-shell-interrupt)
+         ;; Make the shell's own prompt the always-there input box: RET
+         ;; queues when busy instead of dropping the line.  A direct RET
+         ;; binding in this child map shadows shell-maker's remap of
+         ;; comint-send-input in the parent.  S-RET is still newline.
+         ("RET" . me-agent-shell-return))
   :custom
   (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
   (agent-shell-dot-subdir-function #'me--agent-shell-dot-subdir)
@@ -493,6 +498,34 @@ Reuses the compose buffer if it already holds an unsent draft."
   "Discard the composed request."
   (interactive)
   (kill-buffer))
+
+;;; ** Queue from the shell prompt
+
+;; The shell's comint prompt is always on screen, so it is the natural
+;; place to type a follow-up -- no need for the minibuffer or a separate
+;; compose buffer.  The catch is that RET runs `shell-maker-submit', whose
+;; `comint-send-input' consumes the line and then hands it to
+;; `shell-maker--clear-input-for-execution', which no-ops while busy: the
+;; text just vanishes.
+;;
+;; Divert RET so that while the agent is busy it lifts the input line off
+;; the prompt and enqueues it through `agent-shell-queue-request', which
+;; sends the whole queue when the current turn ends.  Idle RET is the
+;; normal submit.  The queued text leaves the prompt and lives in the
+;; queue rather than echoing back, so watch the "N pending" message for
+;; confirmation.
+
+(defun me-agent-shell-return ()
+  "Submit the prompt input, or queue it when the agent is busy."
+  (interactive)
+  (if (not (shell-maker-busy))
+      (call-interactively #'shell-maker-submit)
+    (let* ((pm (marker-position (shell-maker--pm)))
+           (text (string-trim (buffer-substring-no-properties pm (point-max)))))
+      (if (string-empty-p text)
+          (message "Agent is busy; type a message, then RET to queue it")
+        (delete-region pm (point-max))
+        (agent-shell-queue-request text)))))
 
 ;;; ** Rich busy indicator
 
