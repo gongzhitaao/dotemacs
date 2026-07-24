@@ -686,10 +686,16 @@ all '.<space>' with '.<space><space>'."
 
 ;;; *** Active window indicator
 
+;; Always draw the glyph so the mode line never reflows; in unselected
+;; windows it is painted in the background color, i.e. invisible.
 (setq-default mode-line-format
-              (cons '(:eval (if (mode-line-window-selected-p)
-                                (propertize "⏺ " 'face '(:foreground "#dd3333"))
-                              "  "))
+              (cons '(:eval (propertize
+                             "⏺ " 'face
+                             (if (mode-line-window-selected-p)
+                                 '(:foreground "#dd3333")
+                               (list :foreground
+                                     (face-attribute 'mode-line-inactive
+                                                     :background nil 'default)))))
                     (default-value 'mode-line-format)))
 
 ;;; * General editing
