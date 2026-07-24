@@ -504,6 +504,55 @@ text horizontally (and a hair vertically)."
 (with-eval-after-load 'agent-shell
   (advice-add 'agent-shell-mode :around #'me--agent-shell-mode-font))
 
+;; C-c a's agent picker prefixes every candidate with an icon, which is
+;; fun -- but `agent-shell--config-icon' hardcodes its height to
+;; `frame-char-height' (50px on this HiDPI display), so it fills a whole
+;; text line and reads as oversized.  There is no size knob, so shrink the
+;; one `frame-char-height' call inside that function: bind it to a
+;; fraction only for the duration of the icon render, leaving every other
+;; caller untouched.
+
+(defconst me-agent-shell-config-icon-scale 0.6
+  "Fraction of `frame-char-height' to size the agent picker icon at.")
+
+(defun me--agent-shell-small-config-icon (orig &rest args)
+  "Render ORIG's agent picker icon smaller, ORIG called with ARGS."
+  (cl-letf* ((real (symbol-function 'frame-char-height))
+             ((symbol-function 'frame-char-height)
+              (lambda (&rest a)
+                (round (* me-agent-shell-config-icon-scale (apply real a))))))
+    (apply orig args)))
+
+(with-eval-after-load 'agent-shell
+  (advice-add 'agent-shell--config-icon
+              :around #'me--agent-shell-small-config-icon))
+
+;; Droid's icon is a GitHub avatar URL with no file extension, so
+;; `agent-shell--fetch-agent-icon' caches a real PNG under an
+;; extensionless name -- which `agent-shell--config-icon' then discards,
+;; because its `image-supported-file-p' guard judges by filename, not
+;; content.  Give the cached file the extension its bytes call for so the
+;; guard accepts it; agents whose icon is already well-named pass through.
+
+(defun me--agent-shell-icon-add-extension (path)
+  "Return PATH with an image extension inferred from its own bytes.
+No-op when PATH is nil, missing, or already an accepted image name."
+  (if (and path
+           (file-exists-p path)
+           (not (image-supported-file-p path)))
+      (if-let* ((type (ignore-errors (image-type path nil nil)))
+                (typed (concat path "." (symbol-name type))))
+          (progn
+            (unless (file-exists-p typed)
+              (copy-file path typed))
+            typed)
+        path)
+    path))
+
+(with-eval-after-load 'agent-shell
+  (advice-add 'agent-shell--fetch-agent-icon
+              :filter-return #'me--agent-shell-icon-add-extension))
+
 ;;; ** @ / completion at the prompt
 
 ;; agent-shell offers @ (project files) and / (agent commands) completion
