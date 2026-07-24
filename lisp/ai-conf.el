@@ -459,6 +459,13 @@ and left alone entirely for local sessions, where pipes work."
                   ("toml" . "conf-toml"))
                 agent-shell-markdown-language-mapping)))
 
+;; Both ride along in every shell (SUI is agent-shell-ui-mode, @/Compl is
+;; agent-shell-completion-mode), so their lighters are noise, not status.
+;; The third element names the defining feature so delight can defer until
+;; each is loaded rather than forcing it now.
+(delight '((agent-shell-ui-mode nil agent-shell-ui)
+           (agent-shell-completion-mode nil agent-shell-completion)))
+
 ;; agent-shell's faces are all semantic (prompt, model, error...) with no
 ;; body face to hang a family on, so the buffer's default gets remapped,
 ;; the same way the eat buffers do.
