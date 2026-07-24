@@ -411,14 +411,15 @@ and left alone entirely for local sessions, where pipes work."
   (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
   (agent-shell-dot-subdir-function #'me--agent-shell-dot-subdir)
 
-  ;; Put the agent / model / mode / context-usage readout in the mode line
-  ;; rather than a header line.  The `graphical' default draws an SVG badge
-  ;; sized at (* 3 char-height), so the header is three lines tall no matter
-  ;; what font it is given -- shrinking the text cannot help.  `text' would
-  ;; give a one-line header instead; nil drops the header entirely and
-  ;; `agent-shell--mode-line-format' takes over, which is set up from
-  ;; `agent-shell--start' and so survives the dead mode hook noted below.
-  (agent-shell-header-style nil)
+  ;; Show the agent / model / mode / context-usage readout in a header
+  ;; line.  The `graphical' default draws an SVG badge sized at (* 3
+  ;; char-height), so the header is three lines tall no matter what font it
+  ;; is given -- shrinking the text cannot help.  `text' gives a one-line,
+  ;; default-font header instead, which is what we want here.  (nil drops
+  ;; the header entirely and pushes the readout into the mode line via
+  ;; `agent-shell--mode-line-format' -- too cramped alongside everything
+  ;; else there.)
+  (agent-shell-header-style 'text)
 
   ;; Show what the agent actually ran.  Both are needed: the group flag
   ;; reveals the members of a run of consecutive actions, the tool-use
@@ -482,10 +483,23 @@ and left alone entirely for local sessions, where pipes work."
 ;; usable while every mode hook is silently skipped.  `unwind-protect'
 ;; gets the font on either way without swallowing the error.
 
+(defun me--agent-shell-pad-header ()
+  "Give the text header line some breathing room on either side.
+agent-shell's `text' header opens with a single leading space and no
+trailing one, so it sits flush against the edges.  agent-shell has no
+padding option, but an invisible `:box' -- drawn in the header-line's
+own background so it reads as padding rather than a border -- insets the
+text horizontally (and a hair vertically)."
+  (face-remap-add-relative
+   'header-line
+   `(:box (:line-width (5 . 5)
+           :color ,(face-attribute 'header-line :background nil 'default)))))
+
 (defun me--agent-shell-mode-font (orig &rest args)
-  "Apply `me-agent-buffer-font' around ORIG, called with ARGS."
+  "Set up ORIG's buffer font and header padding, ORIG called with ARGS."
   (unwind-protect (apply orig args)
-    (me--set-agent-buffer-font)))
+    (me--set-agent-buffer-font)
+    (me--agent-shell-pad-header)))
 
 (with-eval-after-load 'agent-shell
   (advice-add 'agent-shell-mode :around #'me--agent-shell-mode-font))
