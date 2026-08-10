@@ -279,10 +279,11 @@ Mirrors the load-time value of `org-agenda-files' above."
 
 (defun me-org-agenda-category (&optional width)
   "Return a display category for the agenda item at point.
-Roam notes have no #+category, so `org-get-category' falls back to the
-timestamped file name -- ugly in the agenda.  When that happens, use the
-note's #+title instead; respect an explicit #+category when one is set.
-Truncate/pad to WIDTH columns when it is a number."
+Set a short label per note with a #+category keyword (or a subtree
+:CATEGORY: property).  When none is set, `org-get-category' falls back to
+the timestamped file name, so strip a leading org-roam timestamp for a
+tidy default (e.g. 20260810090346-raas -> raas).  Truncate/pad to WIDTH
+columns when it is a number."
   (let* ((result
           ;; Synthetic agenda entries (time grid, diary) are formatted in the
           ;; *Org Agenda* buffer with no source file; org-mode lookups warn
@@ -291,10 +292,10 @@ Truncate/pad to WIDTH columns when it is a number."
               (let* ((file (and buffer-file-name
                                 (file-name-sans-extension
                                  (file-name-nondirectory buffer-file-name))))
-                     (title (and (fboundp 'org-get-title) (org-get-title)))
                      (category (org-get-category)))
-                (or (if (and title (string-equal category file)) title category)
-                    ""))
+                (if (and file (string-equal category file))
+                    (replace-regexp-in-string "\\`[0-9]\\{12,14\\}-" "" file)
+                  category))
             "")))
     (if (numberp width)
         (truncate-string-to-width result width 0 ?\s "…")
