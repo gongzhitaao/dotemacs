@@ -213,6 +213,7 @@ come from `bibtex-entry-format' (set to t)."
 
   :custom
   ( citar-org-roam-note-title-template "${year}:${title}")
+  ( citar-org-roam-subdir "refs")
 
   :config (citar-org-roam-mode))
 

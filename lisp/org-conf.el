@@ -264,6 +264,104 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            ((org-agenda-compact-blocks nil))))))
 
 
+;;; ** Roam notes as agenda sources
+
+;; Notes live in `org-roam-directory'.  Any note that contains an active
+;; (not-done) TODO is automatically tagged "project" on find-file/save,
+;; and the agenda is rebuilt from the curated index plus those notes --
+;; so TODOs can live inside notes without the agenda scanning thousands
+;; of files.  Adapted from d12frosted's task-management-with-roam series.
+
+(defun me-org-agenda-curated-index ()
+  "Return the current year's curated agenda index file.
+Mirrors the load-time value of `org-agenda-files' above."
+  (file-name-concat org-directory (format-time-string "%Y") "agenda"))
+
+(defun me-org-roam-project-p ()
+  "Return non-nil if the current buffer holds any not-done TODO entry."
+  (org-element-map (org-element-parse-buffer 'headline) 'headline
+    (lambda (h) (eq (org-element-property :todo-type h) 'todo))
+    nil 'first-match))
+
+(defun me--org-roam-file-p ()
+  "Return non-nil when the buffer visits a file under `org-roam-directory'."
+  (and (buffer-file-name)
+       (string-prefix-p
+        (expand-file-name (file-name-as-directory org-roam-directory))
+        (expand-file-name (buffer-file-name)))))
+
+(defun me--org-filetags ()
+  "Return the buffer's #+filetags as a list of strings.
+Accepts both colon- (:a:b:) and space-separated values."
+  (org-with-wide-buffer
+   (goto-char (point-min))
+   (let ((case-fold-search t) (tags '()))
+     (while (re-search-forward "^#\\+filetags:\\s-*\\(.*\\)$" nil t)
+       (setq tags (nconc tags (split-string (match-string-no-properties 1)
+                                            "[ \t:]+" t))))
+     tags)))
+
+(defun me--org-set-filetags (tags)
+  "Rewrite the buffer's #+filetags line to TAGS, canonical colon form."
+  (org-with-wide-buffer
+   (goto-char (point-min))
+   (let ((case-fold-search t)
+         (value (and tags (concat ":" (string-join tags ":") ":"))))
+     (cond
+      ((re-search-forward "^#\\+filetags:.*$" nil t)
+       (if value
+           (replace-match (concat "#+filetags: " value) t t)
+         (delete-region (line-beginning-position)
+                        (min (point-max) (1+ (line-end-position))))))
+      (value
+       (goto-char (point-min))
+       (if (re-search-forward "^#\\+title:.*$" nil t)
+           (progn (end-of-line) (insert "\n#+filetags: " value))
+         (insert "#+filetags: " value "\n")))))))
+
+(defun me-org-roam-project-update-tag ()
+  "Add or remove the \"project\" filetag on the current roam note.
+A note is a project when it holds at least one not-done TODO.  Rewrites
+the buffer only when the tag set actually changes."
+  (when (and (not (active-minibuffer-window))
+             (derived-mode-p 'org-mode)
+             (me--org-roam-file-p))
+    (let* ((tags (me--org-filetags))
+           (new-tags (if (me-org-roam-project-p)
+                         (seq-uniq (cons "project" tags))
+                       (remove "project" tags))))
+      (unless (equal (sort (copy-sequence tags) #'string-lessp)
+                     (sort (copy-sequence new-tags) #'string-lessp))
+        (me--org-set-filetags new-tags)))))
+
+(add-hook 'find-file-hook   #'me-org-roam-project-update-tag)
+(add-hook 'before-save-hook #'me-org-roam-project-update-tag)
+
+(defun me-org-roam-project-files ()
+  "Return note files that currently carry the \"project\" filetag."
+  (when (fboundp 'org-roam-db-query)
+    (seq-uniq
+     (seq-map #'car
+              (org-roam-db-query
+               [:select [nodes:file]
+                :from tags
+                :left-join nodes :on (= tags:node-id nodes:id)
+                :where (like tag (quote "%\"project\"%"))])))))
+
+(defun me-org-agenda-files-update (&rest _)
+  "Rebuild `org-agenda-files' from curated files plus roam project notes."
+  (setq org-agenda-files
+        (seq-uniq
+         (append
+          ;; Expand the curated index file through org's own reader.
+          (let ((org-agenda-files (me-org-agenda-curated-index)))
+            (ignore-errors (org-agenda-files t)))
+          (me-org-roam-project-files)))))
+
+(advice-add 'org-agenda    :before #'me-org-agenda-files-update)
+(advice-add 'org-todo-list :before #'me-org-agenda-files-update)
+
+
 ;;; ** Presentation
 
 (defun me--org-present-prepare-slide (buffer-name heading)
