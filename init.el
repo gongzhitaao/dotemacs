@@ -1254,6 +1254,8 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 ;;; * Buffer management
 
 (use-package ibuffer
+  :custom
+  ( ibuffer-show-empty-filter-groups nil)
   :config
   (setq ibuffer-formats
         '(( mark modified read-only " "
