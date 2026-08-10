@@ -194,11 +194,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                                       (format-time-string "%Y") "agenda"))
   (org-agenda-include-diary nil)
   (org-agenda-prefix-format
-   '((agenda   . " %-16:c%-13t%-20 s")
+   '((agenda   . " %-20:(me-org-agenda-category 20)%-13t%-20 s")
      (timeline . "  % s")
-     (todo     . " %-16:c")
-     (tags     . " %-16:c")
-     (search   . " %-16:c")))
+     (todo     . " %-20:(me-org-agenda-category 20)")
+     (tags     . " %-20:(me-org-agenda-category 20)")
+     (search   . " %-20:(me-org-agenda-category 20)")))
   (org-agenda-remove-tags t)
   (org-agenda-show-all-dates t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
@@ -276,6 +276,23 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   "Return the current year's curated agenda index file.
 Mirrors the load-time value of `org-agenda-files' above."
   (file-name-concat org-directory (format-time-string "%Y") "agenda"))
+
+(defun me-org-agenda-category (&optional width)
+  "Return a display category for the agenda item at point.
+Roam notes have no #+category, so `org-get-category' falls back to the
+timestamped file name -- ugly in the agenda.  When that happens, use the
+note's #+title instead; respect an explicit #+category when one is set.
+Truncate/pad to WIDTH columns when it is a number."
+  (let* ((file (and buffer-file-name
+                    (file-name-sans-extension
+                     (file-name-nondirectory buffer-file-name))))
+         (title (and (fboundp 'org-get-title) (org-get-title)))
+         (category (org-get-category))
+         (result (or (if (and title (string-equal category file)) title category)
+                     "")))
+    (if (numberp width)
+        (truncate-string-to-width result width 0 ?\s "…")
+      result)))
 
 (defun me-org-roam-project-p ()
   "Return non-nil if the current buffer holds any not-done TODO entry."
