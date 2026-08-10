@@ -1453,6 +1453,12 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package python
   :init
+  ;; Pin the grammar: python.el's font-lock/docstring queries expect this
+  ;; grammar's node shapes (e.g. docstrings wrapped in `expression_statement').
+  ;; Reinstall with `M-x treesit-install-language-grammar'.
+  (add-to-list 'treesit-language-source-alist
+               '(python "https://github.com/tree-sitter/tree-sitter-python" "v0.23.6"))
+
   ;; Tree-sitter pilot: open Python via `python-ts-mode' when the grammar
   ;; is present.  `python-base-mode' is the shared parent of `python-mode'
   ;; and `python-ts-mode', so the hook and keymap below reach both.
@@ -1712,7 +1718,13 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
   :config
   (require-theme 'modus-themes)
-  (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-faint)
+  ;; Render docstrings in the comment color.  `python-ts-mode' (and
+  ;; others) tag docstrings with `font-lock-doc-face', which modus maps to
+  ;; the `docstring' palette key; point it at the `comment' mapping (ahead
+  ;; of the faint preset, first match wins) so the two always match.
+  (setq modus-themes-common-palette-overrides
+        (cons '(docstring comment)
+              modus-themes-preset-overrides-faint))
   (load-theme 'modus-operandi :no-confirm))
 
 ;;; ** Face Customizations
