@@ -283,13 +283,19 @@ Roam notes have no #+category, so `org-get-category' falls back to the
 timestamped file name -- ugly in the agenda.  When that happens, use the
 note's #+title instead; respect an explicit #+category when one is set.
 Truncate/pad to WIDTH columns when it is a number."
-  (let* ((file (and buffer-file-name
-                    (file-name-sans-extension
-                     (file-name-nondirectory buffer-file-name))))
-         (title (and (fboundp 'org-get-title) (org-get-title)))
-         (category (org-get-category))
-         (result (or (if (and title (string-equal category file)) title category)
-                     "")))
+  (let* ((result
+          ;; Synthetic agenda entries (time grid, diary) are formatted in the
+          ;; *Org Agenda* buffer with no source file; org-mode lookups warn
+          ;; there, so only compute a category for real org buffers.
+          (if (derived-mode-p 'org-mode)
+              (let* ((file (and buffer-file-name
+                                (file-name-sans-extension
+                                 (file-name-nondirectory buffer-file-name))))
+                     (title (and (fboundp 'org-get-title) (org-get-title)))
+                     (category (org-get-category)))
+                (or (if (and title (string-equal category file)) title category)
+                    ""))
+            "")))
     (if (numberp width)
         (truncate-string-to-width result width 0 ?\s "…")
       result)))
