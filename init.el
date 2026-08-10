@@ -1164,6 +1164,11 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   ;; Open large directory (over 1000 files) asynchronously with `fd' command
   (setq dirvish-large-directory-threshold 1000)
 
+  ;; Single-pane dired by default (no parent, no preview).  Pop the
+  ;; full-frame layout (parent | current | preview) on demand with
+  ;; `dirvish-layout-toggle' (also under the setup menu: `a' then `f').
+  (setq dirvish-default-layout nil)
+
   :bind ; Bind `dirvish-fd|dirvish-side|dirvish-dwim' as you see fit
   (("C-c f" . dirvish)
    :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
