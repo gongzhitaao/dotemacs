@@ -657,7 +657,6 @@ all '.<space>' with '.<space><space>'."
 (use-package time
   :custom
   ( display-time-24hr-format t)
-  ( display-time-day-and-date t)
   ( display-time-default-load-average nil)
 
   :config
