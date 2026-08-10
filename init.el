@@ -752,7 +752,7 @@ all '.<space>' with '.<space><space>'."
   :bind ([remap fill-paragraph] . unfill-toggle))
 
 (use-package indent-bars
-  :hook (python-mode . indent-bars-mode)
+  :hook (python-base-mode . indent-bars-mode)
   :custom
   ( indent-bars-width-frac 0.2)
   ( indent-bars-no-descend-lists t))
@@ -1311,6 +1311,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
                 (mode . sh-mode)
                 (name . "\\.[ch]\\(pp\\|xx\\|\\+\\+\\)?")
                 (mode . python-mode)
+                (mode . python-ts-mode)
                 (name . "\\.ya?ml")
                 (name . "\\.R")
                 (name . "\\.lua")
@@ -1452,6 +1453,13 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package python
   :init
+  ;; Tree-sitter pilot: open Python via `python-ts-mode' when the grammar
+  ;; is present.  `python-base-mode' is the shared parent of `python-mode'
+  ;; and `python-ts-mode', so the hook and keymap below reach both.
+  (when (and (fboundp 'treesit-language-available-p)
+             (treesit-language-available-p 'python))
+    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
+
   (defun me--init-python()
     "Init python model."
     (sphinx-doc-mode)
@@ -1459,9 +1467,16 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
     (setq-local yas-indent-line 'fixed)
     (setq-local comment-column 0)
     (eldoc-mode -1))
-  :hook (python-mode . me--init-python)
+  :hook (python-base-mode . me--init-python)
   :mode ("\\.py\\'" . python-mode)
+  ;; python.el binds C-c C-s directly in `python-mode-map', and
+  ;; `python-ts-mode-map' is a copy that inherits it -- a parent
+  ;; (`python-base-mode-map') binding would be shadowed, so bind in both
+  ;; concrete maps.
   :bind (:map python-mode-map
+              ("C-!" . #'blacken-buffer)
+              ("C-c C-s" . #'me--isort-region-or-buffer)
+              :map python-ts-mode-map
               ("C-!" . #'blacken-buffer)
               ("C-c C-s" . #'me--isort-region-or-buffer))
   :custom
