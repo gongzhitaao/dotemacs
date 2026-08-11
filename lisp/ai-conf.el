@@ -556,57 +556,16 @@ No-op when PATH is nil, missing, or already an accepted image name."
 ;;; ** @ / completion at the prompt
 
 ;; agent-shell offers @ (project files) and / (agent commands) completion
-;; as `completion-at-point-functions', switched on by
-;; `agent-shell-completion-mode'.  Its auto-trigger, though, calls the
-;; built-in `completion-at-point', which pops the plain `*Completions*'
-;; window -- `company', the in-buffer UI used everywhere else, is only
-;; hooked to `prog-mode' and never turns on in this `shell-maker' buffer,
-;; so none of the init-file completion setup applies at the / prompt.
+;; as `completion-at-point-functions', triggered on the @ or / char by
+;; `agent-shell-completion-mode'.  Its trigger calls the built-in
+;; `completion-at-point', which corfu renders through its
+;; `completion-in-region-function' -- so the prompt gets the same popup UI
+;; as everywhere else with no extra wiring.
 ;;
-;; Route the prompt through company instead: turn it on and point it at
-;; the capf backend, then replace agent-shell's trigger with one that pops
-;; `company-complete' -- an explicit begin, so it shows even with the empty
-;; prefix right after / or @, and `company-idle-delay' stays nil as
-;; elsewhere (completion appears only on the trigger char, not every key).
-;;
-;; This hangs off `agent-shell-completion-mode-hook' rather than
-;; `agent-shell-mode-hook': the latter never runs (see the font advice
-;; above), but the minor-mode hook fires normally, and it is enabled at
-;; shell start whenever `agent-shell-file-completion-enabled' is non-nil.
-
-(declare-function agent-shell--command-completion-at-point "agent-shell-completion")
-(declare-function agent-shell--trigger-completion-at-point "agent-shell-completion")
-
-(defun me--agent-shell-complete-on-trigger ()
-  "Pop `company' when @ or / is typed at a word boundary.
-Mirrors `agent-shell--trigger-completion-at-point' -- same boundary
-test and same guard that / only fires once the agent has sent its
-available commands -- but shows the company popup rather than the
-built-in `*Completions*' window."
-  (when (and (memq (char-before) '(?@ ?/))
-             (or (= (point) (1+ (line-beginning-position)))
-                 (memq (char-before (1- (point))) '(?\s ?\t ?\n)))
-             (or (eq (char-before) ?@)
-                 (agent-shell--command-completion-at-point)))
-    (company-complete)))
-
-(defun me--agent-shell-company ()
-  "Drive agent-shell's @ and / completion through `company'."
-  (cond
-   (agent-shell-completion-mode
-    (remove-hook 'post-self-insert-hook
-                 #'agent-shell--trigger-completion-at-point t)
-    (add-hook 'post-self-insert-hook
-              #'me--agent-shell-complete-on-trigger nil t)
-    (company-mode 1)
-    (setq-local company-backends '(company-capf)))
-   (t
-    (remove-hook 'post-self-insert-hook
-                 #'me--agent-shell-complete-on-trigger t)
-    (company-mode -1))))
-
-(with-eval-after-load 'agent-shell-completion
-  (add-hook 'agent-shell-completion-mode-hook #'me--agent-shell-company))
+;; This used to need a custom trigger: `company' is a parallel frontend,
+;; not a `completion-in-region' one, so `completion-at-point' bypassed it
+;; and fell back to the plain `*Completions*' window.  Switching the
+;; in-buffer UI to corfu removed the need entirely.
 
 ;;; ** Rich busy indicator
 

@@ -716,7 +716,7 @@ all '.<space>' with '.<space><space>'."
         fill-column 80
         history-delete-duplicates t
         standard-indent 2
-        tab-always-indent t
+        tab-always-indent 'complete
         tab-stop-list (number-sequence 2 120 2)
         tab-width 4
         truncate-lines t)
@@ -969,17 +969,24 @@ Search the PDF document via pdf-info and update anzu's match count."
   :custom
   ( abbrev-file-name (file-name-concat me-emacs-data-dir "abbrev_defs")))
 
-(use-package company
-  :delight company-mode
+;; Corfu - in-buffer completion popup, the capf-native counterpart to the
+;; Vertico stack.  `corfu-auto' nil keeps it on-demand: `tab-always-indent'
+;; is set to `complete' above, so TAB indents first and completes at point
+;; once indentation is satisfied (the old `company-indent-or-complete-common'
+;; behaviour).
+(use-package corfu
   :custom
-  ( company-format-margin-function #'company-text-icons-margin)
-  ( company-idle-delay nil)
+  ( corfu-cycle t)
+  ( corfu-auto nil)
+  :init
+  (global-corfu-mode))
 
-  :hook (prog-mode . company-mode)
-
+;; Kind icons in the margin, matching `company-text-icons-margin'.  Reuses
+;; the `nerd-icons' font already loaded for dirvish/ibuffer.
+(use-package nerd-icons-corfu
+  :after corfu
   :config
-  (bind-keys :map prog-mode-map
-             ("<tab>" . company-indent-or-complete-common)))
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;; * Bookkeeping
 
