@@ -207,7 +207,6 @@
 ;;; ** FN keys
 
 (global-set-key (kbd "<f6>") #'calendar)
-;; f8 -- deft
 ;; f10 -- menu
 
 ;;; ** Remap
@@ -1373,32 +1372,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 (use-package js
   :custom (js-indent-level 2))
 
-(use-package js2-mode
-  :mode "\\.js\\'"
-  :delight (js2-mode "JS2")
-  :bind (:map js2-mode-map
-              ("C-!" . clang-format-region))
-  :custom
-  ( js2-basic-offset 2)
-  ( js2-include-browser-externs t)
-  ( js2-include-node-externs t)
-
-  :config
-  (setq-default js2-additional-externs
-                '("$"
-                  "KeyEvent"
-                  "google"
-                  "sessionStorage"
-                  "URLSearchParams"
-                  "URL"
-                  "ResizeObserver")))
-
-(use-package typescript-mode
-  :bind (:map typescript-mode-map
-              ("C-!" . clang-format))
-  :custom
-  (typescript-indent-level 2))
-
 (use-package jsonnet-mode)
 
 ;;; ** C
@@ -1415,8 +1388,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 ;;; ** Python
 
-(use-package sphinx-doc
-  :delight)
 (use-package python-isort)
 
 (defun me--isort-region-or-buffer (beg end)
@@ -1474,7 +1445,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
   (defun me--init-python()
     "Init python model."
-    (sphinx-doc-mode)
     (setq-local comment-inline-offset 2)
     (setq-local yas-indent-line 'fixed)
     (setq-local comment-column 0)
@@ -1528,8 +1498,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :custom
   (markdown-hide-urls t)
   :hook (markdown-mode . me--init-markdown))
-
-(use-package ncl-mode)
 
 ;;; * Vertico (completion framework)
 
@@ -1619,44 +1587,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 (use-package dockerfile-mode)
 
 ;;; * Note taking
-
-;;; ** Deft
-;; This is mainly for text fuzzy search.
-
-(use-package deft
-  :bind ("<f8>" . deft)
-  :custom
-  ( deft-auto-save-interval 0)
-  ( deft-default-extension "org")
-  ( deft-directory (file-name-as-directory (file-name-concat me-emacs-data-dir "notes")))
-  ( deft-file-naming-rules '((noslash . "-")
-                             (nospace . "-")
-                             (case-fn . downcase)))
-  ( deft-recursive t)
-  ( deft-use-filename-as-title nil)
-  ( deft-use-filter-string-for-filename t)
-
-  :config
-  (advice-add 'deft-parse-title :override #'me--deft-parse-title)
-
-  (setq deft-strip-summary-regexp
-        (concat "\\("
-                "\n"              ; newline
-                "\\|^:.+:.*$"     ; any line with a :SOMETHING:
-                "\\|^#\\+.*$"     ; anyline starting with a #+
-                "\\|^\\*.+.*$"    ; anyline where an asterisk starts the line
-                "\\)")))
-
-(defun me--deft-parse-title (file contents)
-  "Parse the given FILE and CONTENTS and determine the title.
-  If `deft-use-filename-as-title' is nil, the title is taken to
-  be the first non-empty line of the FILE.  Else the base name of the FILE is
-  used as title."
-  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-    (if begin
-        (string-trim (substring contents begin (match-end 0))
-                     "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-      (deft-base-filename file))))
 
 ;;; ** Org roam
 ;; This is the note taking infra or backend.
