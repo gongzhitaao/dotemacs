@@ -46,6 +46,14 @@
   (add-to-list 'ispell-skip-region-alist '("=" "="))
   (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
 
+(defun me--org-num-zero-format (numbering)
+  "Format `org-num' NUMBERING 0-indexed at every level.
+Like `org-num-default-format' but the first heading of each level is
+0 rather than 1.  `max' guards the empty counter a skipped level
+leaves behind, so a stray `***' under a `*' shows 0 rather than -1."
+  (concat (mapconcat (lambda (n) (number-to-string (max 0 (1- n)))) numbering ".")
+          " "))
+
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :custom
@@ -64,6 +72,7 @@
   ( org-insert-heading-respect-content t)
   ( org-log-done 'time)
   ( org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
+  ( org-num-format-function #'me--org-num-zero-format)
   ( org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
   ( org-provide-todo-statistics t)
   ( org-special-ctrl-a/e t)
