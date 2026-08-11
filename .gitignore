@@ -1,4 +1,5 @@
 *~
+*.elc
 eln-cache/
 flycheck_*
 .aider*
