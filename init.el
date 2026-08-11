@@ -1420,13 +1420,37 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :after lsp-mode
   :commands consult-lsp-symbols)
 
-(use-package flycheck :defer t)
-(use-package eglot :defer t)
-
-(use-package flycheck-eglot
-  :after (flycheck eglot)
+(use-package flycheck
+  ;; Load once Eglot does.  flycheck 40+ ships native Eglot support, so no
+  ;; third-party bridge is needed: `global-flycheck-eglot-mode' feeds the
+  ;; server's diagnostics into flycheck and -- via `flycheck-eglot-exclusive'
+  ;; (on by default) -- turns off Eglot's flymake backend.
+  :after eglot
   :config
   (global-flycheck-eglot-mode 1))
+
+(use-package eglot
+  :defer t
+  ;; Auto-start for both `python-mode' and `python-ts-mode', local or remote.
+  :hook (python-base-mode . eglot-ensure)
+  :custom
+  ;; Connect asynchronously so opening a (remote) file never blocks Emacs while
+  ;; the server starts.  Over TRAMP the ssh + server spin-up costs a few
+  ;; seconds; LSP features light up once the handshake finishes.
+  ( eglot-sync-connect nil)
+  ;; Remote server startup over ssh is slow -- give it room before giving up.
+  ( eglot-connect-timeout 120)
+  ;; The JSON-RPC events buffer logs every message, a real drag over TRAMP.
+  ;; Disable it (this replaces the old `eglot-events-buffer-size').
+  ( eglot-events-buffer-config '(:size 0 :format short))
+  ;; Don't nag with server progress reports in the echo area.
+  ( eglot-report-progress nil)
+  ;; Drop the server when its last managed buffer is killed.
+  ( eglot-autoshutdown t)
+  :config
+  ;; Let LSP responses arrive in bigger chunks -- helps throughput generally,
+  ;; and especially over a TRAMP pipe.
+  (setq read-process-output-max (* 1024 1024)))
 
 (use-package python
   :init
