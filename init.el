@@ -1518,10 +1518,23 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
               (append '(("`" "`") ("^```" . "^```"))
                       ispell-skip-region-alist)))
 
+(defun me--markdown-local-preview-file (orig &rest args)
+  "Keep markdown preview output local when the source is on TRAMP.
+`markdown-export-file-name' derives its output path from the buffer's
+file name, which for a remote buffer would write the HTML back onto the
+remote host.  Redirect such output to a local temp file instead."
+  (let ((name (apply orig args)))
+    (if (and name (file-remote-p name))
+        (expand-file-name (concat (md5 name) ".html")
+                          temporary-file-directory)
+      name)))
+
 (use-package markdown-mode
   :custom
   (markdown-hide-urls t)
-  :hook (markdown-mode . me--init-markdown))
+  :hook (markdown-mode . me--init-markdown)
+  :config
+  (advice-add 'markdown-export-file-name :around #'me--markdown-local-preview-file))
 
 ;;; * Vertico (completion framework)
 
