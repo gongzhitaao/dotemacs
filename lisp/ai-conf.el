@@ -166,6 +166,14 @@ so the caller can choose TERM=eat-truecolor over the xterm-256color
 fallback.  eat ships its terminfo entries as symlinks into a local build
 tree, so the bytes are read through the link and written as plain files;
 `default-directory' is remote throughout, so all the target paths are."
+  ;; `claude-code.el' requires eat lazily (inside `claude-code--term-make'),
+  ;; and the advice below runs this guard *before* that require fires.  On
+  ;; the first remote session after an Emacs restart eat is therefore not
+  ;; loaded yet, `eat-term-terminfo-directory' is unbound, and the guard
+  ;; wrongly reports failure -- poisoning that one session with the
+  ;; xterm-256color fallback.  Load eat here so the variable is bound; a
+  ;; failed load leaves `boundp' nil and the graceful fallback intact.
+  (require 'eat nil t)
   (let* ((dir (and (boundp 'eat-term-terminfo-directory)
                    eat-term-terminfo-directory
                    (file-directory-p eat-term-terminfo-directory)
