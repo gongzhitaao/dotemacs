@@ -381,15 +381,23 @@ the buffer only when the tag set actually changes."
                 :left-join nodes :on (= tags:node-id nodes:id)
                 :where (like tag (quote "%\"project\"%"))])))))
 
+(defvar me-org-agenda-exclude-regexp
+  (rx "/old/")
+  "Files whose absolute name matches are kept out of `org-agenda-files'.")
+
 (defun me-org-agenda-files-update (&rest _)
-  "Rebuild `org-agenda-files' from curated files plus roam project notes."
+  "Rebuild `org-agenda-files' from curated files plus roam project notes.
+Files matching `me-org-agenda-exclude-regexp' are dropped."
   (setq org-agenda-files
-        (seq-uniq
-         (append
-          ;; Expand the curated index file through org's own reader.
-          (let ((org-agenda-files (me-org-agenda-curated-index)))
-            (ignore-errors (org-agenda-files t)))
-          (me-org-roam-project-files)))))
+        (seq-remove
+         (lambda (f) (string-match-p me-org-agenda-exclude-regexp
+                                     (expand-file-name f)))
+         (seq-uniq
+          (append
+           ;; Expand the curated index file through org's own reader.
+           (let ((org-agenda-files (me-org-agenda-curated-index)))
+             (ignore-errors (org-agenda-files t)))
+           (me-org-roam-project-files))))))
 
 (advice-add 'org-agenda    :before #'me-org-agenda-files-update)
 (advice-add 'org-todo-list :before #'me-org-agenda-files-update)

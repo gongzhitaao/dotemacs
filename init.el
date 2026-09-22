@@ -1631,6 +1631,8 @@ remote host.  Redirect such output to a local temp file instead."
 (use-package org-roam
   :custom
   ( org-roam-directory (file-name-concat me-emacs-data-dir "notes"))
+  ;; Skip the archived `old/' folder when scanning/syncing the roam db.
+  ( org-roam-file-exclude-regexp '("/old/"))
   ( org-roam-complete-everywhere t)
   ( org-roam-graph-viewer nil)
   ( org-roam-capture-templates

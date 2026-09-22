@@ -4,3 +4,8 @@ eln-cache/
 flycheck_*
 .aider*
 lisp/mail-private.el
+
+;; Runtime state / caches -- never version these.
+/org-roam.db
+/org-clock-save.el
+/url/

@@ -407,6 +407,13 @@ and left alone entirely for local sessions, where pipes work."
 (with-eval-after-load 'acp
   (advice-add 'acp--start-client :around #'me--acp-pty-for-remote))
 
+(defun me--agent-shell-viewport-soft-wrap ()
+  "Soft-wrap the agent-shell compose buffer at `fill-column'.
+`visual-fill-column-mode' only reshapes the margins; the actual
+line wrapping is `visual-line-mode', so both are needed."
+  (visual-line-mode +1)
+  (visual-fill-column-mode +1))
+
 (use-package agent-shell
   :bind (("C-c a" . agent-shell)
          :map agent-shell-mode-map
@@ -414,7 +421,25 @@ and left alone entirely for local sessions, where pipes work."
          ;; Alias for the C-c C-c that is already there, to match the
          ;; C-c C-k that aborts the compose buffer, org-src, magit and
          ;; every other "this was a mistake" buffer.
-         ("C-c C-k" . agent-shell-interrupt))
+         ("C-c C-k" . agent-shell-interrupt)
+         ;; Swap the submit key.  Out of the box RET submits: comint's RET
+         ;; runs `comint-send-input', which `agent-shell-mode-map' remaps to
+         ;; `agent-shell-submit'.  A newline needs S-RET.  Reverse that so a
+         ;; multi-line prompt is the easy path: bind RET directly to
+         ;; `newline' (a direct key binding shadows the inherited remap) and
+         ;; put submit on C-RET.  C-RET is only a distinct event under a GUI
+         ;; Emacs; in a terminal it collapses to RET, so there S-RET (still
+         ;; live) remains the newline and RET would submit again.
+         ("RET" . newline)
+         ("C-<return>" . agent-shell-submit))
+  ;; Soft-wrap composed prompts at `fill-column'.  The viewport edit buffer
+  ;; is where the prompt is typed; wrapping it looks like `auto-fill' but
+  ;; inserts no hard newlines, so the submitted text stays one logical line
+  ;; per paragraph.  `visual-fill-column-mode' needs `visual-line-mode' under
+  ;; it (it just moves the window margins in so the visual-line wrap lands at
+  ;; `fill-column' instead of the window edge; width is `fill-column' while
+  ;; `visual-fill-column-width' is nil).  View mode is read-only, left alone.
+  :hook (agent-shell-viewport-edit-mode . me--agent-shell-viewport-soft-wrap)
   :custom
   (agent-shell-path-resolver-function #'me--agent-shell-resolve-path)
   (agent-shell-dot-subdir-function #'me--agent-shell-dot-subdir)
@@ -429,11 +454,12 @@ and left alone entirely for local sessions, where pipes work."
   ;; else there.)
   (agent-shell-header-style 'text)
 
-  ;; Show what the agent actually ran.  Both are needed: the group flag
-  ;; reveals the members of a run of consecutive actions, the tool-use
-  ;; flag expands each member's command and diff.  Thoughts stay folded.
-  (agent-shell-activity-group-expand-by-default t)
-  (agent-shell-tool-use-expand-by-default t)
+  ;; Keep tool output folded by default -- the group flag would reveal the
+  ;; members of a run of consecutive actions, the tool-use flag would expand
+  ;; each member's command and diff.  Both off means a compact transcript you
+  ;; expand on demand; thoughts stay folded regardless.
+  (agent-shell-activity-group-expand-by-default nil)
+  (agent-shell-tool-use-expand-by-default nil)
   ;; Permission mode, not the model: "use a model classifier to approve or
   ;; deny permission prompts" rather than stopping on each one.  The other
   ;; mode IDs claude-agent-acp reports are default, acceptEdits, plan,
