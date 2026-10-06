@@ -36,7 +36,7 @@
   (org-num-mode)
 
   (defun me--org-show-context-advice (&rest ignore)
-    (org-show-context 'default))
+    (org-fold-show-context 'default))
   (advice-add 'ispell-highlight-spelling-error :before
               'me--org-show-context-advice)
 
@@ -71,12 +71,10 @@ leaves behind, so a stray `***' under a `*' shows 0 rather than -1."
   ( org-image-actual-width nil)
   ( org-insert-heading-respect-content t)
   ( org-log-done 'time)
-  ( org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit org-table))
+  ( org-modules '(ol-bbdb ol-bibtex ol-gnus org-clock org-tempo org-habit))
   ( org-num-format-function #'me--org-num-zero-format)
   ( org-preview-latex-image-directory (file-name-as-directory (file-name-concat me-emacs-cache-dir "ltximg/")))
-  ( org-provide-todo-statistics t)
   ( org-special-ctrl-a/e t)
-  ( org-src-fontify-natively t)
   ( org-src-preserve-indentation t)
   ( org-startup-folded 'content)
   ( org-startup-with-inline-images t)
@@ -195,7 +193,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-agenda
   :custom
   (org-agenda-clockreport-parameter-plist
-   '(:link t :maxlevel 2 :compact t :formula % :fileskip0 t ::stepskip0 t))
+   '(:link t :maxlevel 2 :compact t :formula % :fileskip0 t :stepskip0 t))
   (org-agenda-columns-add-appointments-to-effort-sum t)
   (org-agenda-compact-blocks nil)
   (org-agenda-dim-blocked-tasks t)
@@ -317,8 +315,11 @@ columns when it is a number."
     nil 'first-match))
 
 (defun me--org-roam-file-p ()
-  "Return non-nil when the buffer visits a file under `org-roam-directory'."
-  (and (buffer-file-name)
+  "Return non-nil when the buffer visits a file under `org-roam-directory'.
+Returns nil when org-roam has not been loaded yet (the variable is unbound),
+so the find-file/save hooks stay inert until roam is actually in use."
+  (and (bound-and-true-p org-roam-directory)
+       (buffer-file-name)
        (string-prefix-p
         (expand-file-name (file-name-as-directory org-roam-directory))
         (expand-file-name (buffer-file-name)))))
@@ -615,7 +616,7 @@ Files matching `me-org-agenda-exclude-regexp' are dropped."
 (defun me--preprocess-heading (heading sep)
   "Preprocessing on HEADING with SEP as separator."
   (let* ((words (split-string (me--clean-up-heading heading)))
-         (words2 (subseq words 0 (min 2 (length words)))))
+         (words2 (seq-take words 2)))
     (replace-regexp-in-string "\\s-+" sep (mapconcat 'identity words2 " "))))
 
 (defun me--org-id-from-heading (heading &optional level sep uniq)
