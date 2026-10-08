@@ -12,6 +12,7 @@
    :straight nil)
 
 (use-package editorconfig
+  :straight nil
   :delight)
 
 (use-package google-emacs-utilities
@@ -77,37 +78,37 @@
 
 (defun me--g3-filepath (filepath)
   "Return google3/ path if FILEPATH is a google3 file."
-  (string-match "/google/src/cloud/\\w+/\\w+/google3/" filepath)
-  (let ((start (match-end 0))
-        (g3path "")
-        (candidates nil)
-        (selection ""))
-    (when (< start (length filepath))
-      ;; Now we have an absolute path pointing to a file in a citc client.
+  (when (string-match "/google/src/cloud/\\w+/\\w+/google3/" filepath)
+    (let ((start (match-end 0))
+          (g3path "")
+          (candidates nil)
+          (selection ""))
+      (when (< start (length filepath))
+        ;; Now we have an absolute path pointing to a file in a citc client.
 
-      ;; Get the file path relative to the google3/ directory.
-      (setq g3path (substring filepath start))
+        ;; Get the file path relative to the google3/ directory.
+        (setq g3path (substring filepath start))
 
-      (push g3path candidates)
+        (push g3path candidates)
 
-      (unless (me--string-capitalized-p (file-name-base g3path))
-        (push (me--g3-make-build-target g3path) candidates))
+        (unless (me--string-capitalized-p (file-name-base g3path))
+          (push (me--g3-make-build-target g3path) candidates))
 
-      (pcase (file-name-extension g3path)
-        ("h" (push (me--g3-make-cc-include g3path) candidates))
-        ("cc" (push (me--g3-make-cc-include g3path) candidates))
-        ("py" (push (me--g3-make-py-import g3path) candidates))
-        ("proto"
-         (push (me--g3-make-py-import g3path) candidates)
-         (push (me--g3-make-cc-include g3path) candidates)))
+        (pcase (file-name-extension g3path)
+          ("h" (push (me--g3-make-cc-include g3path) candidates))
+          ("cc" (push (me--g3-make-cc-include g3path) candidates))
+          ("py" (push (me--g3-make-py-import g3path) candidates))
+          ("proto"
+           (push (me--g3-make-py-import g3path) candidates)
+           (push (me--g3-make-cc-include g3path) candidates)))
 
-      (if (eq (length candidates) 1)
-          (setq selection (nth 0 candidates))
-        (setq selection (completing-read "Select to copy: " candidates)))
+        (if (eq (length candidates) 1)
+            (setq selection (nth 0 candidates))
+          (setq selection (completing-read "Select to copy: " candidates)))
 
-      (unless (string= selection "")
-        (kill-new selection)
-        (message selection)))))
+        (unless (string= selection "")
+          (kill-new selection)
+          (message selection))))))
 
 (advice-add 'dired-copy-filename-as-kill
             :filter-return #'me--g3-filepath)

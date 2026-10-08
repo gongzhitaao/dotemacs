@@ -177,6 +177,7 @@
       time
       tramp
       uniquify
+      which-key
       whitespace
       ;; keep-sorted end
       )))
@@ -290,7 +291,6 @@
 ;; M-l downcase-word
 ;; M-m back-to-indentation
 ;; M-q fill-paragraph
-;; (global-set-key (kbd "M-Q") #'me/unfill-paragraph)
 ;; M-r move-to-window-line-top-bottom
 ;; M-s search
 ;; M-t transpose-word
@@ -393,16 +393,6 @@ alphabetically.  See `sort-words'."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
 
-;; <https://oremacs.com/2015/04/28/blending-faces>
-
-(defun me--colir-join (r g b)
-  "Build a color from R G B.
-Inverse of `color-values'."
-  (format "#%02x%02x%02x"
-          (ash r -8)
-          (ash g -8)
-          (ash b -8)))
-
 (defun me/double-space-after-dot (beg end)
   "Exactly two spaces after dot in region (BEG, END).
 
@@ -417,14 +407,6 @@ all '.<space>' with '.<space><space>'."
             (new ".  "))
         (while (re-search-forward old nil t)
           (replace-match new))))))
-
-(defun me/unfill-paragraph (&optional region)
-  "Unfill paragraph, in the REGION if provided."
-  (interactive (progn (barf-if-buffer-read-only) '(t)))
-  (let ((fill-column (point-max))
-        ;; This would override `fill-column' if it's an integer.
-        (emacs-lisp-docstring-fill-column t))
-    (fill-paragraph nil region)))
 
 (defun me/copy-region-escaped (beg end)
   "Copy buffer between BEG and END."
@@ -478,10 +460,6 @@ all '.<space>' with '.<space><space>'."
 ;;; * Appearance
 
 (blink-cursor-mode 0)
-
-(scroll-bar-mode -1)
-(setq scroll-margin 0
-      scroll-preserve-screen-position nil)
 
 ;; Internal padding between the frame's content and its edges.
 (add-to-list 'default-frame-alist '(internal-border-width . 10))
@@ -584,24 +562,7 @@ all '.<space>' with '.<space><space>'."
 
 ;;; ** Fonts
 
-;; 1. First we set the default font height.
-;; 2. we get the base size with frame-char-width.
-;; 3. Based upon the ppi, we scale the unicode size as multiple of base size.
-
 (defconst me-default-font-height 140 "The default font height.")
-
-(defun me--ppi (&optional frame)
- (let* ((attrs (frame-monitor-attributes frame))
-         (size (alist-get 'mm-size attrs))
-         (geometry (alist-get 'geometry attrs)))
-   ;; 1 inches = 1 mm / 25.4
-   (/ (caddr geometry) (/ (car size) 25.4))))
-
-(defun me--unicode-font-size ()
-  "Return the incremental size of unicode font."
-  (let ((unit (frame-char-width))
-        (multiple 2))
-    (* unit multiple)))
 
 (defun me/reset-font-size ()
   "Manually reset all font size."
@@ -1407,19 +1368,6 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :custom
   ( blacken-executable "~/.venv/bin/pyink"))
 
-(use-package lsp-mode
-  :custom
-  ( lsp-keymap-prefix "C-c l")
-  :hook
-  ( ;; (python-mode . lsp-deferred)
-    (lsp-mode . lsp-enable-which-key-integration))
-  :commands
-  ( lsp lsp-deferred))
-
-(use-package consult-lsp
-  :after lsp-mode
-  :commands consult-lsp-symbols)
-
 (use-package flycheck
   ;; Load once Eglot does.  flycheck 40+ ships native Eglot support, so no
   ;; third-party bridge is needed: `global-flycheck-eglot-mode' feeds the
@@ -1431,8 +1379,9 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
 
 (use-package eglot
   :defer t
-  ;; Auto-start for both `python-mode' and `python-ts-mode', local or remote.
-  :hook (python-base-mode . eglot-ensure)
+  ;; Don't auto-start: over TRAMP the server handshake is slow enough to be a
+  ;; drag on every remote Python buffer.  Start it on demand with `M-x eglot'
+  ;; (or `M-x eglot-ensure') when LSP features are actually wanted.
   :custom
   ;; Connect asynchronously so opening a (remote) file never blocks Emacs while
   ;; the server starts.  Over TRAMP the ssh + server spin-up costs a few
@@ -1656,8 +1605,6 @@ remote host.  Redirect such output to a local temp file instead."
   :config
   (org-roam-db-autosync-mode))
 
-(use-package org-roam-bibtex)
-
 ;; ** Bibliography and PDF reading
 ;; Extracted to lisp/bib-conf.el to keep init.el manageable.
 (use-package bib-conf
@@ -1712,7 +1659,7 @@ remote host.  Redirect such output to a local temp file instead."
 ;; sit after `load-theme'.
 
 (defconst me--face-tweak-features
-  '(vundo cal-china-x notmuch-tag consult marginalia)
+  '(vundo cal-china-x notmuch-tag consult marginalia agent-shell-markdown)
   "Features defining faces that `me--apply-face-tweaks' overrides.
 Reapplied on each one's load, since a package can load either before or
 after a theme change.  These are the features that define the faces, not
@@ -1750,7 +1697,12 @@ ends up defining the face."
   (when (facep 'marginalia-documentation)
     (set-face-attribute 'marginalia-documentation nil
                         :weight 'light
-                        :slant 'normal)))
+                        :slant 'normal))
+  (when (facep 'agent-shell-markdown-table-zebra)
+    (modus-themes-with-colors
+      (set-face-attribute 'agent-shell-markdown-table-zebra nil
+                          :inherit 'agent-shell-markdown-table
+                          :background bg-dim))))
 
 (add-hook 'enable-theme-functions #'me--apply-face-tweaks)
 

@@ -34,12 +34,15 @@
 
 ;;; Code:
 
+(require 'cl-lib)                        ; `cl-letf' used below
+
 ;;; * Shared
 
-(defconst me-agent-buffer-font '(:family "JuliaMono" :height 120)
+(defconst me-agent-buffer-font (list :family "JuliaMono"
+                                     :height me-default-font-height)
   "Face spec shared by every agent buffer.
-Smaller than the editing default, since these buffers hold streamed
-prose and diffs rather than code I am editing.")
+A distinct family from the editing default, but the same height, since
+120 reads too small for streamed prose and diffs.")
 
 (defun me--set-agent-buffer-font ()
   "Apply `me-agent-buffer-font' to the current buffer.
@@ -48,9 +51,6 @@ buffer-local."
   (buffer-face-set me-agent-buffer-font))
 
 ;;; * Terminal backend
-
-(use-package inheritenv
-  :straight (:type git :host github :repo "purcell/inheritenv"))
 
 (use-package eat
   :straight (:type git

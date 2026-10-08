@@ -217,21 +217,20 @@ come from `bibtex-entry-format' (set to t)."
 
   :config (citar-org-roam-mode))
 
-(eval-when-compile
-  (defun me/cleanup-bibtex-file (arg)
-    "Cleanup entries, start from the begnning if ARG."
-    (interactive "P")
-    (bibtex-progress-message "Cleanup bibtex buffer...")
-    (save-excursion
-      (if arg
-          (bibtex-beginning-first-field)
-        (bibtex-beginning-of-entry))
-      (save-restriction
-        (narrow-to-region (point) (point-max))
-        (bibtex-map-entries (lambda (_key _start _end)
-                              (bibtex-progress-message)
-                              (me/bibtex-clean-entry)))))
-    (bibtex-progress-message 'done)))
+(defun me/cleanup-bibtex-file (arg)
+  "Cleanup entries, start from the begnning if ARG."
+  (interactive "P")
+  (bibtex-progress-message "Cleanup bibtex buffer...")
+  (save-excursion
+    (if arg
+        (bibtex-beginning-first-field)
+      (bibtex-beginning-of-entry))
+    (save-restriction
+      (narrow-to-region (point) (point-max))
+      (bibtex-map-entries (lambda (_key _start _end)
+                            (bibtex-progress-message)
+                            (me/bibtex-clean-entry)))))
+  (bibtex-progress-message 'done))
 
 (defun me--random-time ()
   "Generate random timestamp from epoch and now."
