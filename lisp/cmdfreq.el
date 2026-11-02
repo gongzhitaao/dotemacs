@@ -188,6 +188,72 @@ A high count in the \"M-x\" column means the command is worth binding."
     (tabulated-list-print)
     (pop-to-buffer (current-buffer))))
 
+;;; Reporting per library
+
+(defun cmdfreq--library (command)
+  "Return the Lisp library or C source that defines COMMAND, as a string.
+A command no longer defined in this session yields \"unknown\": its
+origin cannot be resolved without the definition loaded."
+  (if (not (fboundp command))
+      "unknown"
+    (let ((file (find-lisp-object-file-name command (symbol-function command))))
+      (cond
+       ((eq file 'C-source) "C-source")
+       ((stringp file)
+        (let ((base (file-name-nondirectory file)))
+          (while (member (file-name-extension base) '("gz" "el" "elc"))
+            (setq base (file-name-sans-extension base)))
+          base))
+       (t "unknown")))))
+
+(defun cmdfreq--package-rows ()
+  "Return `tabulated-list-entries' aggregated per defining library."
+  (let ((counts (make-hash-table :test #'equal))    ; library -> total count
+        (commands (make-hash-table :test #'equal)))  ; library -> list of commands
+    (pcase-dolist (`(,command ,_binding ,count) (cmdfreq--entries (cmdfreq--total)))
+      (let ((lib (cmdfreq--library command)))
+        (cl-incf (gethash lib counts 0) count)
+        (push command (gethash lib commands))))
+    (let (rows)
+      (maphash
+       (lambda (lib total)
+         (push (list lib
+                     (vector (number-to-string total)
+                             (number-to-string
+                              (length (delete-dups (gethash lib commands))))
+                             lib))
+               rows))
+       counts)
+      rows)))
+
+(define-derived-mode cmdfreq-package-report-mode tabulated-list-mode "CmdFreq/pkg"
+  "Major mode listing command usage counts aggregated per library."
+  (setq tabulated-list-format
+        [("Count" 9 (lambda (a b) (< (string-to-number (aref (cadr a) 0))
+                                     (string-to-number (aref (cadr b) 0))))
+          :right-align t)
+         ("Cmds" 5 (lambda (a b) (< (string-to-number (aref (cadr a) 1))
+                                    (string-to-number (aref (cadr b) 1))))
+          :right-align t)
+         ("Library" 0 t)])
+  (setq tabulated-list-sort-key '("Count" . t))
+  (tabulated-list-init-header))
+
+;;;###autoload
+(defun cmdfreq-show-by-package ()
+  "Show how often commands from each library or package were called.
+Each interactive command is attributed to the Lisp library (or C
+source) that defines it, and the counts are summed per library.  The
+\"Cmds\" column is how many distinct commands from that library you
+have run.  Requires the libraries to be loaded, so run it in a normal
+session rather than in batch."
+  (interactive)
+  (with-current-buffer (get-buffer-create "*cmdfreq-by-package*")
+    (cmdfreq-package-report-mode)
+    (setq tabulated-list-entries #'cmdfreq--package-rows)
+    (tabulated-list-print)
+    (pop-to-buffer (current-buffer))))
+
 ;;; Entry point
 
 ;;;###autoload
