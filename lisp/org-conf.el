@@ -788,5 +788,70 @@ the image there with an auto-incrementing name."
         (org-redisplay-inline-images)
         (message "Image saved to %s" image-path)))))
 
+;; Snap repeating tasks to a calendar boundary instead of shifting by a
+;; fixed interval.  A stock repeater cookie (`+1m', `++1m', `.+1m', ...)
+;; is only needed to fire the repeat machinery; its prefix and count are
+;; irrelevant.  Opt in per entry with the property REPEAT_SNAP = t, then
+;; the SCHEDULED date snaps to the start of the cookie's unit, advanced
+;; by the cookie's count:
+;;
+;;   .+1h -> top of the next hour        .+1m -> first of next month
+;;   .+1d -> next day                    .+1y -> Jan 1 next year
+;;   .+1w -> start of next week (per `org-agenda-start-on-weekday')
+;;
+;; A time-of-day in the stamp is preserved (`.+1d 20:00' -> tomorrow
+;; 20:00); the `h' unit snaps to the top of the hour.
+
+(defun me--org-snap-time (unit n hour min)
+  "Return the time at the start of UNIT, advanced by N units.
+HOUR and MIN set the time-of-day (nil means midnight); they are
+ignored for the \"h\" unit, which snaps to the top of the hour."
+  (let* ((now (decode-time))
+         (mn  (or min 0))
+         (hr  (or hour 0))
+         (day (nth 3 now)) (mon (nth 4 now)) (year (nth 5 now)))
+    (pcase unit
+      ("h" (setq mn 0 hr (+ (nth 2 now) n)))
+      ("d" (setq day (+ day n)))
+      ("w" (let* ((dow   (nth 6 now))                    ; 0=Sun .. 6=Sat
+                  (start (or org-agenda-start-on-weekday 1))
+                  (delta (mod (- dow start) 7)))
+             (setq day (+ (- day delta) (* n 7)))))
+      ("m" (setq day 1 mon (+ mon n)))
+      ("y" (setq day 1 mon 1 year (+ year n))))
+    ;; `encode-time' normalizes out-of-range day/month/hour for us.
+    (encode-time (list 0 mn hr day mon year nil -1 nil))))
+
+(defun me--org-snap-repeat ()
+  "Snap SCHEDULED to the start of its repeater's period after a repeat.
+Opt in with the property REPEAT_SNAP = t.  Added to
+`org-todo-repeat-hook', which runs after Org has shifted the
+timestamp."
+  (when (org-entry-get nil "REPEAT_SNAP")
+    (let ((bound (save-excursion
+                   (org-back-to-heading t) (outline-next-heading) (point))))
+      (save-excursion
+        (org-back-to-heading t)
+        (when (re-search-forward org-scheduled-time-regexp bound t)
+          (let ((inner (match-string 1)))
+            (when (string-match "\\([.+]+\\)\\([0-9]+\\)\\([hdwmy]\\)" inner)
+              (let* ((cookie   (match-string 0 inner))
+                     (n        (string-to-number (match-string 2 inner)))
+                     (unit     (match-string 3 inner))
+                     (has-time (string-match "\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
+                                             inner))
+                     (hour     (and has-time
+                                    (string-to-number (match-string 1 inner))))
+                     (min      (and has-time
+                                    (string-to-number (match-string 2 inner))))
+                     (fmt      (if (or (equal unit "h") has-time)
+                                   "%Y-%m-%d %a %H:%M" "%Y-%m-%d %a"))
+                     (new      (concat (format-time-string
+                                        fmt (me--org-snap-time unit n hour min))
+                                       " " cookie)))
+                (replace-match new t t nil 1)))))))))
+
+(add-hook 'org-todo-repeat-hook #'me--org-snap-repeat)
+
 (provide 'org-conf)
 ;;; org-conf.el ends here
