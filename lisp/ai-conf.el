@@ -697,6 +697,51 @@ in `ignore-errors' so a mis-step can never wedge the shell's redisplay."
   (advice-add 'agent-shell-chat--relabel
               :after #'me--agent-shell-timestamp-labels))
 
+;;; ** Timestamps on activity-group headers
+
+;; The collapsible header over each run of agent activity ("Ran a command",
+;; "Thought", "Thought, ran 2 commands") is rendered by
+;; `agent-shell-activity-group-header-label-function', called with the shell
+;; state and a stable group id.  Unlike the chat labels this is a documented
+;; override point, so no reaching into internals: wrap it, freeze each group's
+;; time the first time its (non-empty) header is drawn -- which is when the
+;; run began -- and append it.  The group id keys a per-buffer table so the
+;; frozen time survives the re-renders the header gets as its run grows.
+
+(defvar-local me--agent-shell-group-times nil
+  "Hash table mapping an activity group id to its first-seen time.")
+
+(defun me--agent-shell-group-time (state group-id)
+  "Return GROUP-ID's frozen time, stamping `current-time' on first sight.
+Kept in STATE's buffer so it survives the header's re-renders."
+  (with-current-buffer (or (map-elt state :buffer) (current-buffer))
+    (unless me--agent-shell-group-times
+      (setq me--agent-shell-group-times (make-hash-table :test 'equal)))
+    (or (gethash group-id me--agent-shell-group-times)
+        (puthash group-id (current-time) me--agent-shell-group-times))))
+
+(defun me--agent-shell-group-label-with-time (orig group)
+  "Append the activity group's frozen time to its header label.
+ORIG is the wrapped `agent-shell-activity-group-header-label-function';
+GROUP is its argument, an alist of :state and :group-id.  Returns nil
+untouched (an empty group), so no time shows until the run has content."
+  (when-let* ((label (funcall orig group)))
+    (concat label
+            (propertize (concat "  " (format-time-string
+                                      me-agent-shell-label-time-format
+                                      (me--agent-shell-group-time
+                                       (map-elt group :state)
+                                       (map-elt group :group-id))))
+                        ;; The header is buffer text agent-shell faces through
+                        ;; `font-lock-face', so set both: `face' alone loses to
+                        ;; the heading's `font-lock-face' in this context.
+                        'face 'me-agent-shell-label-time
+                        'font-lock-face 'me-agent-shell-label-time))))
+
+(with-eval-after-load 'agent-shell
+  (add-function :around agent-shell-activity-group-header-label-function
+                #'me--agent-shell-group-label-with-time))
+
 ;;; ** @ / completion at the prompt
 
 ;; agent-shell offers @ (project files) and / (agent commands) completion
