@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-07-03 08:30:33 gongzhitaao>
+;; Time-stamp: <2026-11-03 13:36:58 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -651,7 +651,8 @@ all '.<space>' with '.<space><space>'."
               (cons '(:eval (propertize
                              "⏺ " 'face
                              (if (mode-line-window-selected-p)
-                                 '(:foreground "#dd3333")
+                                 (modus-themes-with-colors
+                                   (list :foreground red-intense))
                                (list :foreground
                                      (face-attribute 'mode-line-inactive
                                                      :background nil 'default)))))
@@ -1172,14 +1173,14 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
   :custom
   ( calendar-chinese-all-holidays-flag t)
   ( calendar-intermonth-header
-    (propertize "Wk" 'font-lock-face '(:foreground "gray50")))
+    (propertize "Wk" 'font-lock-face 'shadow))
   ( calendar-intermonth-text
     '(propertize
       (format "%2d"
               (car (calendar-iso-from-absolute
                     (calendar-absolute-from-gregorian
                      (list month day year)))))
-      'font-lock-face '(:foreground "gray70")))
+      'font-lock-face 'shadow))
   ( calendar-mark-diary-entries-flag t)
   ( calendar-mark-holidays-flag t)
   ( calendar-view-diary-initially-flag nil)
@@ -1683,8 +1684,9 @@ ends up defining the face."
   (when (facep 'vundo-highlight)
     (set-face-attribute 'vundo-highlight nil :inverse-video t))
   (when (facep 'cal-china-x-important-holiday-face)
-    (set-face-attribute 'cal-china-x-important-holiday-face nil
-                        :background "#ff9580"))
+    (modus-themes-with-colors
+      (set-face-attribute 'cal-china-x-important-holiday-face nil
+                          :background bg-red-intense)))
   (when (facep 'notmuch-tag-deleted)
     (set-face-attribute 'notmuch-tag-deleted nil
                         :inherit 'modus-themes-mark-del))
