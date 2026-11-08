@@ -589,22 +589,21 @@ No-op when PATH is nil, missing, or already an accepted image name."
 
 ;;; ** Timestamps on chat labels
 
-;; agent-shell draws each turn's badge ("Me", or the agent's name such as
-;; "Claude") on an overlay tagged `me-label' or `agent', holding the badge
-;; text in the overlay's `display' -- or in `before-string' when the
-;; prompt is too short to give each label row a position of its own.  No
-;; per-turn time is recorded anywhere, and the label is recomputed and
-;; re-applied on every relabel (`agent-shell-chat--relabel' runs on each
-;; agent event), so stamping the current time into
-;; `agent-shell-chat-label-function' would paint every past turn with the
-;; time of the latest relabel rather than when that turn happened.
+;; `agent-shell-chat-label-function' is the documented way to draw each
+;; turn's badge ("Me", or the agent's name such as "Claude"), so no
+;; reaching into overlays: wrap the default boxed badge and append the
+;; turn's time.
 ;;
-;; Instead, freeze each turn's time the first time its badge is seen, as a
-;; text property on the buffer position the badge overlay sits on.  The
-;; transcript only ever appends, so that position -- and thus the stored
-;; time -- is stable for every completed turn.  An `:after' advice on the
-;; relabel re-appends the frozen time whenever agent-shell redraws the
-;; badge.
+;; The function is called on every relabel, so stamping `current-time'
+;; into it directly would paint every past turn with the time of the
+;; latest relabel.  Instead freeze each turn's time the first time its
+;; badge is drawn, as a text property at the turn's `:prompt-start' -- a
+;; buffer position that, as the label docstring notes, travels with the
+;; turn across relabels.  `:prompt-start' is nil for the live, not-yet-
+;; submitted prompt, which is exactly when a badge should stay unstamped
+;; (a time is "when I sent this", not "when the empty prompt was drawn").
+;; User and agent share a turn's `:prompt-start', so the stamp is keyed
+;; by role too, letting each keep the time its own badge first appeared.
 
 (defface me-agent-shell-label-time
   '((t :inherit shadow :weight normal))
@@ -616,86 +615,38 @@ No-op when PATH is nil, missing, or already an accepted image name."
   :type 'string
   :group 'agent-shell)
 
-(defun me--agent-shell-turn-time (pos)
-  "Return the time frozen for the turn whose badge sits at POS.
-Stamps `current-time' the first time POS is seen and returns that stamp
-thereafter, so a turn keeps the time it was first drawn."
-  (or (get-text-property pos 'me--agent-shell-ts)
-      (let ((now (current-time)))
-        (with-silent-modifications
-          (put-text-property pos (min (point-max) (1+ pos))
-                             'me--agent-shell-ts now))
-        now)))
+(defun me--agent-shell-turn-time (prompt-start role)
+  "Return the time frozen for ROLE's badge of the turn at PROMPT-START.
+Stamps `current-time' the first time (PROMPT-START, ROLE) is seen and
+returns that stamp thereafter, stored as a text property at PROMPT-START
+so it travels with the turn across relabels."
+  (let ((prop (if (eq role 'user)
+                  'me--agent-shell-ts-user
+                'me--agent-shell-ts-agent)))
+    (or (get-text-property prompt-start prop)
+        (let ((now (current-time)))
+          (with-silent-modifications
+            (put-text-property prompt-start (min (point-max) (1+ prompt-start))
+                               prop now))
+          now))))
 
-(defun me--agent-shell-badge-carrier (overlay)
-  "Return (PROP . STRING) for the badge text OVERLAY draws, or nil.
-The badge rides either `display' or `before-string'; the carrier is
-whichever is a string with non-whitespace in it, so the blank rows
-around the badge and an image `display' are skipped."
-  (seq-some (lambda (prop)
-              (let ((val (overlay-get overlay prop)))
-                (and (stringp val)
-                     (string-match-p "[^ \t\n]" val)
-                     (cons prop val))))
-            '(display before-string)))
-
-(defun me--agent-shell-live-prompt-start ()
-  "Return the start of the live (pending, unsubmitted) prompt, or nil.
-The live prompt is the last one shell-maker has not closed with an
-end-of-prompt marker.  That marker lands the instant input is submitted,
-so the live prompt's `Me' badge must stay unstamped until then: a time
-is \"when I sent this\", not \"when the empty prompt was drawn\"."
-  (when-let* ((ranges (agent-shell-prompt-ranges))
-              (last (car (last ranges)))
-              (input-end (map-elt last :input-end))
-              ((not (get-text-property input-end 'shell-maker--marker))))
-    (map-elt last :prompt-start)))
-
-(defun me--agent-shell-timestamp-labels (&rest _)
-  "Append each turn's frozen time to its chat badge.
-Runs after `agent-shell-chat--relabel' has (re)drawn the labels.  Wrapped
-in `ignore-errors' so a mis-step can never wedge the shell's redisplay."
-  (ignore-errors
-    (let ((live-start (me--agent-shell-live-prompt-start)))
-      ;; Drop any stamp sitting in the pending region so the live prompt is
-      ;; always timed fresh on submit, even if an earlier pass (or an older
-      ;; version of this code) stamped it when the empty prompt first appeared.
-      (when live-start
-        (with-silent-modifications
-          (remove-text-properties (max (point-min) (1- live-start)) (point-max)
-                                  '(me--agent-shell-ts nil))))
-      (dolist (overlay (overlays-in (point-min) (point-max)))
-        (let ((tag (overlay-get overlay 'agent-shell-chat--tag)))
-          (when (and (memq tag '(me-label agent))
-                     ;; Leave the live prompt's `Me' badge unstamped until the
-                     ;; prompt is submitted (and so stops being live).
-                     (not (and (eq tag 'me-label)
-                               live-start
-                               (>= (overlay-end overlay) (1- live-start)))))
-            (when-let* ((carrier (me--agent-shell-badge-carrier overlay))
-                        (prop (car carrier))
-                        (text (cdr carrier))
-                        ;; Skip a carrier already stamped (idempotent within a
-                        ;; pass; agent-shell resets the label to plain between
-                        ;; passes, so the stamp is reapplied each relabel).
-                        ((not (text-property-any 0 (length text)
-                                                 'me--agent-shell-timed t text))))
-              (let* ((time (me--agent-shell-turn-time (overlay-start overlay)))
-                     (stamp (propertize
-                             (concat "  " (format-time-string
-                                           me-agent-shell-label-time-format time))
-                             'face 'me-agent-shell-label-time
-                             'me--agent-shell-timed t))
-                     ;; Insert before the badge row's trailing newline(s) so
-                     ;; the time sits on the same line as the badge.
-                     (at (or (string-match "\n+\\'" text) (length text))))
-                (overlay-put overlay prop
-                             (concat (substring text 0 at)
-                                     stamp (substring text at)))))))))))
+(defun me-agent-shell-chat-label (label)
+  "Draw LABEL as the default boxed badge, with the turn's time appended.
+A value for `agent-shell-chat-label-function'.  LABEL's :prompt-start is
+nil for the live prompt, which stays unstamped until submitted."
+  (let ((badge (agent-shell-chat-boxed-label label))
+        (prompt-start (map-elt label :prompt-start)))
+    (if (not prompt-start)
+        badge
+      (let ((time (me--agent-shell-turn-time prompt-start
+                                             (map-elt label :role))))
+        (concat badge
+                (propertize (concat "  " (format-time-string
+                                          me-agent-shell-label-time-format time))
+                            'face 'me-agent-shell-label-time))))))
 
 (with-eval-after-load 'agent-shell
-  (advice-add 'agent-shell-chat--relabel
-              :after #'me--agent-shell-timestamp-labels))
+  (setq agent-shell-chat-label-function #'me-agent-shell-chat-label))
 
 ;;; ** Timestamps on activity-group headers
 
