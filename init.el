@@ -1621,6 +1621,9 @@ remote host.  Redirect such output to a local temp file instead."
 ;;; ** Contacts
 
 (use-package bbdb
+  ;; Upstream on git.savannah.nongnu.org is flaky (intermittent fetch
+  ;; failures via its HTTPS redirect). Use the GitHub mirror instead.
+  :straight (bbdb :type git :host github :repo "emacsmirror/bbdb")
   :custom
   ( bbdb-allow-duplicates t)
   ( bbdb-complete-mail-allow-cycling t)
