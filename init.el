@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-11-03 13:36:58 gongzhitaao>
+;; Time-stamp: <2026-11-08 10:59:01 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -113,7 +113,6 @@
 (setq load-prefer-newer t)
 
 (straight-use-package 'use-package)
-(setq use-package-compute-statistics t)
 
 (use-package straight
   :custom
@@ -346,15 +345,6 @@ advice."
 (me-with-region-or-line #'comment-or-uncomment-region)
 (me-with-region-or-line #'kill-ring-save)
 
-(defvar comint-buffer-maximum-size)
-(defun me-clear-shell ()
-  "Clear shell window."
-  (interactive)
-  (let ((old-max comint-buffer-maximum-size))
-    (setq comint-buffer-maximum-size 0)
-    (comint-truncate-buffer)
-    (setq comint-buffer-maximum-size old-max)))
-
 (defun me/sudo-edit (&optional arg)
   "Edit file as root.
 
@@ -428,34 +418,6 @@ all '.<space>' with '.<space><space>'."
     (yank-rectangle)
     (delete-trailing-whitespace)
     (kill-new (buffer-string))))
-
-(defun me/buffer-to-minimal-frame ()
-  "Display current buffer in a new minimal frame with no UI chrome."
-  (interactive)
-  (let ((buf (current-buffer))
-        (frame (make-frame '((minibuffer . nil)
-                             (menu-bar-lines . 0)
-                             (tool-bar-lines . 0)
-                             (undecorated . t)
-                             (vertical-scroll-bars . nil)))))
-    (select-frame frame)
-    (switch-to-buffer buf)
-    (setq-local mode-line-format nil)))
-
-(defun make-note-frame ()
-  "Create a new `org-mode' note frame without a mode line or menu bar."
-  (interactive)
-  (let ((frame (make-frame '((name . "note")
-                             (menu-bar-lines . 0)
-                             (tool-bar-lines . 0)
-                             (bottom-divider-width . 1))))
-        (buf (get-buffer-create "*note*")))
-    (with-current-buffer buf
-      (unless (derived-mode-p 'org-mode)
-        (org-mode))
-      (setq-local mode-line-format nil))
-    (select-frame-set-input-focus frame)
-    (switch-to-buffer buf)))
 
 ;;; * Appearance
 
@@ -1281,9 +1243,7 @@ FILENAME is the return value from `dired-copy-filename-as-kill'."
                 (mode . python-ts-mode)
                 (name . "\\.ya?ml")
                 (name . "\\.R")
-                (name . "\\.lua")
-                (mode . google3-build-mode)
-                (mode . go-mode)))
+                (name . "\\.lua")))
            ("Mail"
             (or (mode . message-mode)
                 (mode . notmuch-hello-mode)))
