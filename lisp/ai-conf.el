@@ -726,8 +726,15 @@ untouched (an empty group), so no time shows until the run has content."
     "Befuddling" "Wrangling" "Untangling" "Divining" "Scheming")
   "Whimsical gerunds cycled through while the agent works.")
 
-(defvar-local me--agent-shell-busy-start nil
-  "`float-time' when the current busy stretch began, or nil when idle.")
+(defvar-local me--agent-shell-turn-start nil
+  "`float-time' when the current turn began, or nil before its first tick.
+Stamped on a turn's first busy tick and left running past the idle edge
+-- unlike the spinner, which clears -- so the end-of-turn summary can
+report the total.  A new `:request-count' restamps it (see
+`me--agent-shell-turn-id').")
+
+(defvar-local me--agent-shell-turn-id nil
+  "`:request-count' that `me--agent-shell-turn-start' was stamped for.")
 
 (defun me--agent-shell-format-elapsed (seconds)
   "Format SECONDS as \"1m 23s\", or \"23s\" under a minute."
@@ -742,20 +749,29 @@ untouched (an empty group), so no time shows until the run has content."
         ((>= n 1000)    (format "%.1fk" (/ n 1000.0)))
         (t              (format "%d" n))))
 
+(defun me--agent-shell-turn-word (elapsed)
+  "Whimsical gerund for a turn that has run ELAPSED seconds.
+Rotates every few seconds so the live indicator feels alive without
+flickering each 100ms tick; the end-of-turn summary reuses the formula so
+it freezes whichever word was showing when the turn finished."
+  (nth (mod (floor elapsed 3) (length me-agent-shell-busy-words))
+       me-agent-shell-busy-words))
+
 (defun me--agent-shell-busy-suffix (frame)
   "Append elapsed time and token count to the busy indicator FRAME.
 Advice on `agent-shell--busy-indicator-frame', which returns the spinner
-glyph while busy and nil otherwise -- so nil is the idle edge where the
-elapsed clock resets."
+glyph while busy and nil otherwise.  The turn clock is stamped on the
+first busy tick of each `:request-count' and left running past the idle
+edge, so `me--agent-shell-turn-summary' can report the total."
   (if (not frame)
-      (progn (setq me--agent-shell-busy-start nil) frame)
-    (unless me--agent-shell-busy-start
-      (setq me--agent-shell-busy-start (float-time)))
-    (let* ((elapsed (- (float-time) me--agent-shell-busy-start))
-           ;; Rotate the word every few seconds so it feels alive without
-           ;; flickering each 100ms tick.
-           (word (nth (mod (floor elapsed 3) (length me-agent-shell-busy-words))
-                      me-agent-shell-busy-words))
+      frame
+    (let ((rc (map-elt (agent-shell--state) :request-count)))
+      (unless (and me--agent-shell-turn-start
+                   (equal me--agent-shell-turn-id rc))
+        (setq me--agent-shell-turn-start (float-time)
+              me--agent-shell-turn-id rc)))
+    (let* ((elapsed (- (float-time) me--agent-shell-turn-start))
+           (word (me--agent-shell-turn-word elapsed))
            (tokens (map-nested-elt (agent-shell--state) '(:usage :output-tokens)))
            (parts (list (me--agent-shell-format-elapsed elapsed))))
       (when (and (numberp tokens) (> tokens 0))
@@ -765,9 +781,49 @@ elapsed clock resets."
               (propertize (format " (%s)" (string-join (nreverse parts) " · "))
                           'face 'agent-shell-secondary)))))
 
+;; Leaving a trace.  The live clock vanishes when the turn ends, so freeze
+;; it into the transcript the way the Claude Code terminal does -- a muted
+;; "Thinking for 9s · done 20:51" where the spinner was.  The word is the
+;; same gerund the spinner last showed; the completion time reuses
+;; `me-agent-shell-label-time-format', matching the chat and group-header
+;; stamps.  Rendered as a one-line fragment (body only, no label), the way
+;; agent-shell's own Usage and stop-reason boxes land at turn end.
+
+(defun me--agent-shell-turn-summary (_event)
+  "Freeze the turn's elapsed clock into a persistent transcript line.
+A `turn-complete' subscriber: reads the clock `me--agent-shell-busy-suffix'
+stamped for this `:request-count' and renders a muted one-line fragment.
+No-op for a turn too quick to have stamped a clock."
+  (let ((state (agent-shell--state)))
+    (when (and me--agent-shell-turn-start
+               (equal me--agent-shell-turn-id (map-elt state :request-count)))
+      (let* ((elapsed (- (float-time) me--agent-shell-turn-start))
+             (summary (format "%s for %s · done %s"
+                              (me--agent-shell-turn-word elapsed)
+                              (me--agent-shell-format-elapsed elapsed)
+                              (format-time-string me-agent-shell-label-time-format))))
+        (agent-shell--update-fragment
+         :state state
+         :block-id (format "%s-turn-summary" (map-elt state :request-count))
+         ;; Both faces: the body is buffer text agent-shell font-locks, so
+         ;; `font-lock-face' holds the muted look that `face' alone loses.
+         :body (propertize summary
+                           'face 'agent-shell-secondary
+                           'font-lock-face 'agent-shell-secondary)
+         :create-new t)))))
+
+(defun me--agent-shell-subscribe-turn-summary ()
+  "Subscribe the current shell to end-of-turn summary lines.
+An `agent-shell-mode-hook' entry, run once per shell with state ready."
+  (agent-shell-subscribe-to
+   :shell-buffer (current-buffer)
+   :event 'turn-complete
+   :on-event #'me--agent-shell-turn-summary))
+
 (with-eval-after-load 'agent-shell
   (advice-add 'agent-shell--busy-indicator-frame
-              :filter-return #'me--agent-shell-busy-suffix))
+              :filter-return #'me--agent-shell-busy-suffix)
+  (add-hook 'agent-shell-mode-hook #'me--agent-shell-subscribe-turn-summary))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here
