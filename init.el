@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-11-08 10:59:01 gongzhitaao>
+;; Time-stamp: <2026-11-11 15:35:10 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -448,7 +448,7 @@ all '.<space>' with '.<space><space>'."
   ( writeroom-major-modes
     '( prog-mode conf-mode dired-mode Info-mode calendar-mode text-mode
        org-agenda-mode bibtex-mode bookmark-bmenu-mode
-       notmuch-show-mode help-mode))
+       notmuch-show-mode help-mode agent-shell-mode))
   ( writeroom-maximize-window nil)
   ( writeroom-mode-line t)
   ( writeroom-use-derived-modes t)
