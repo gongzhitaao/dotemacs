@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-11-11 15:35:10 gongzhitaao>
+;; Time-stamp: <2026-11-12 14:01:38 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -131,7 +131,6 @@
       eglot
       eldoc
       files
-      flyspell
       ibuf-ext
       ibuffer
       image-mode
@@ -706,14 +705,19 @@ all '.<space>' with '.<space><space>'."
 (use-package visual-regexp
   :bind ("M-s q" . vr/query-replace))
 
-(use-package consult-flyspell)
-(use-package flyspell
+;; `jinx' replaces `flyspell': an Enchant-based checker that spell-checks
+;; only the visible region and is syntax-aware, so one hook covers prose
+;; and code (comments/strings) alike.  Needs libenchant headers to build
+;; its module on first load: apt install libenchant-2-dev.  `C-;'
+;; (comment-or-uncomment-region) stays global from above; jinx's map is
+;; empty by default, so correction goes on `M-$', the traditional
+;; `ispell-word' key, alongside `C-M-$' for switching dictionaries.
+(use-package jinx
   :delight
-  :hook ((prog-mode . flyspell-prog-mode)
-         ((tex-mode org-mode) . flyspell-mode))
-  :bind (:map flyspell-mode-map
-              ("C-;" . comment-or-uncomment-region)
-              ("s-;" . consult-flyspell)))
+  :hook ((prog-mode tex-mode org-mode) . jinx-mode)
+  :bind (:map jinx-mode-map
+              ("M-$" . jinx-correct)
+              ("C-M-$" . jinx-languages)))
 
 (use-package outline
   :custom
