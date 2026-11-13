@@ -836,9 +836,10 @@ An `agent-shell-mode-hook' entry, run once per shell with state ready."
 
 ;; The frame the header shows while the agent works: an actual pixel-art
 ;; nyan cat flying across a rainbow and waving its legs, not a glyph bar.
-;; Each frame advances the cat one cell along a fixed-width runway (rainbow
-;; tiles behind, blank ahead) and one step through its six leg sprites, so
-;; it travels and animates at once; the runway loops back to the left.
+;; The cat rides a fixed-width runway (rainbow tiles behind, blank ahead),
+;; gliding one cell every `me-agent-shell-nyan-slowness' ticks while its
+;; legs step a sprite every tick -- so the travel is slow but the wave
+;; stays lively; the runway loops back to the left.
 ;;
 ;; Two sharp edges, both about how Emacs renders these cells:
 ;;
@@ -873,8 +874,15 @@ config splits them, pointing the latter at ~/.cache/emacs.")
 
 (defconst me-agent-shell-nyan-flight 12
   "How many cells the pixel-art cat crosses before the flight loops.
-Also the frame count.  Keep it a multiple of 6 -- the number of leg
-sprites -- so the legs cycle seamlessly across the loop point.")
+Keep it a multiple of 6 -- the number of leg sprites -- so the legs cycle
+seamlessly across the loop point.")
+
+(defconst me-agent-shell-nyan-slowness 3
+  "Heartbeat ticks the cat dwells in each cell before advancing one.
+The legs still wave every tick regardless (a fresh sprite per frame);
+this only slows the travel, so raise it to make the cat glide more
+lazily beneath the same leg animation.  The frame list is
+`flight' * this long.")
 
 (defun me--agent-shell-nyan-image (file)
   "Return the scaled, vertically centered XPM sprite FILE as a fresh image.
@@ -890,24 +898,25 @@ Fresh for the same `eq'-merging reason as `me--agent-shell-nyan-image'."
   (propertize " " 'display
               (list 'space :width (list (* me-agent-shell-nyan-scale 8)))))
 
-(defun me--agent-shell-nyan-pixel-frame (phase)
-  "Return the pixel-art nyan-cat frame at PHASE of the flight (0-based).
-The cat sits PHASE cells along the runway -- PHASE rainbow tiles behind,
-blank space ahead to a constant width -- with its legs at sprite
-`(1+ (mod PHASE 6))', so it flies and waves at once.  Every tile is a
-FRESH image or space (see `me--agent-shell-nyan-image'), or an `eq'-merged
-run would collapse to a single tile.  The rainbow count makes each
-frame's string unique, which is what makes agent-shell redraw -- `equal'
-ignores the `display' images doing the showing."
+(defun me--agent-shell-nyan-pixel-frame (position leg)
+  "Return the pixel-art nyan-cat frame at runway POSITION with leg sprite LEG.
+The cat sits POSITION cells along the runway -- POSITION rainbow tiles
+behind, blank space ahead to a constant width -- with its legs at sprite
+`(1+ LEG)'.  POSITION and LEG are driven separately (see the frame list),
+so the cat can glide slowly while the legs wave every tick.  Every tile
+is a FRESH image or space (see `me--agent-shell-nyan-image'), or an
+`eq'-merged run would collapse to a single tile.  The LEG digit is the
+cat cell, so consecutive frames differ even mid-cell -- which is what
+makes agent-shell redraw, since `equal' ignores the `display' images."
   (concat
    (mapconcat (lambda (_)
                 (propertize "r" 'display (me--agent-shell-nyan-image "rainbow.xpm")))
-              (number-sequence 1 phase) "")
-   (propertize "C" 'display
+              (number-sequence 1 position) "")
+   (propertize (number-to-string leg) 'display
                (me--agent-shell-nyan-image
-                (format "nyan-frame-%d.xpm" (1+ (mod phase 6)))))
+                (format "nyan-frame-%d.xpm" (1+ leg))))
    (mapconcat (lambda (_) (me--agent-shell-nyan-blank))
-              (number-sequence 1 (- me-agent-shell-nyan-flight 1 phase)) "")))
+              (number-sequence 1 (- me-agent-shell-nyan-flight 1 position)) "")))
 
 ;; --- Glyph fallback for terminal frames (no image support) ---
 
@@ -942,9 +951,16 @@ change every phase, which is what makes `agent-shell' redraw and animate."
   (when (ignore-errors (file-exists-p
                         (expand-file-name "rainbow.xpm"
                                           me-agent-shell-nyan-image-dir)))
-    (mapcar #'me--agent-shell-nyan-pixel-frame
-            (number-sequence 0 (1- me-agent-shell-nyan-flight))))
-  "Precomputed pixel-art nyan frames: the cat flying across while waving, or nil.")
+    ;; One frame per tick of a full loop: the cat advances a cell every
+    ;; `slowness' ticks (POSITION) but steps a leg sprite every tick (LEG).
+    ;; `flight' being a multiple of 6 keeps both seamless at the wrap.
+    (mapcar (lambda (tick)
+              (me--agent-shell-nyan-pixel-frame
+               (/ tick me-agent-shell-nyan-slowness)
+               (mod tick 6)))
+            (number-sequence
+             0 (1- (* me-agent-shell-nyan-flight me-agent-shell-nyan-slowness)))))
+  "Precomputed pixel-art nyan frames: the cat gliding while its legs wave, or nil.")
 
 (defconst me-agent-shell-nyan-glyph-frames
   (mapcar #'me--agent-shell-nyan-glyph-frame
