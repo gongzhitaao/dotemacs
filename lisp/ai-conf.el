@@ -454,6 +454,13 @@ line wrapping is `visual-line-mode', so both are needed."
   ;; else there.)
   (agent-shell-header-style 'text)
 
+  ;; The running indicator in that header is a nyan cat flying a rainbow
+  ;; rather than the stock `wide' block bar.  A function, not the frame
+  ;; list itself, because the frames are built further down the file (see
+  ;; "Nyan cat busy indicator") and `:custom' is expanded up here; the
+  ;; function is only called at heartbeat time, by when the file is loaded.
+  (agent-shell-busy-indicator-frames #'me-agent-shell-nyan-frames)
+
   ;; Keep tool output folded by default -- the group flag would reveal the
   ;; members of a run of consecutive actions, the tool-use flag would expand
   ;; each member's command and diff.  Both off means a compact transcript you
@@ -824,6 +831,112 @@ An `agent-shell-mode-hook' entry, run once per shell with state ready."
   (advice-add 'agent-shell--busy-indicator-frame
               :filter-return #'me--agent-shell-busy-suffix)
   (add-hook 'agent-shell-mode-hook #'me--agent-shell-subscribe-turn-summary))
+
+;;; ** Nyan cat busy indicator
+
+;; The frame the header shows while the agent works: an actual pixel-art
+;; nyan cat, waving its legs behind a rainbow, rather than a glyph bar.
+;;
+;; `agent-shell' picks `frames[tick mod len]' each heartbeat and only
+;; redraws when the frame STRING differs from the one last drawn -- and
+;; `equal' on strings ignores text properties, `display' included.  So the
+;; pixels cannot carry the animation: every frame below renders through a
+;; `display' image, but the UNDERLYING characters are what must differ, or
+;; agent-shell judges the frame unchanged and the cat freezes.  Each
+;; frame's cat cell is the phase digit (0-5), so the strings are distinct
+;; while the images do the showing.
+;;
+;; The art is vendored from nyan-mode (see img/nyan/README) -- the cat is
+;; six 25x15 sprites with the legs in different positions, the rainbow a
+;; repeatable 8x15 tile.  The rich suffix above (`me--agent-shell-busy-
+;; suffix') still appends the clock and token count after the frame, so
+;; the cat trails "Thinking… (1m 23s · ↓ 4.2k tokens)".
+;;
+;; A terminal frame can't show images, so there a glyph cat flies instead:
+;; it travels a fixed-width runway laying a colored-block rainbow behind
+;; it, the character layout (and so the string) changing every phase.
+
+(defconst me-agent-shell-nyan-image-dir
+  (expand-file-name "img/nyan/" me-emacs-config-dir)
+  "Directory holding the vendored nyan-cat XPM sprites.
+Anchored to `me-emacs-config-dir', not `user-emacs-directory': this
+config splits them, pointing the latter at ~/.cache/emacs.")
+
+(defconst me-agent-shell-nyan-scale 2
+  "Integer upscale for the nyan sprites; keep it whole so pixels stay crisp.")
+
+(defconst me-agent-shell-nyan-rainbow-tiles 3
+  "How many rainbow tiles trail the pixel-art cat.")
+
+(defun me--agent-shell-nyan-image (file)
+  "Return the scaled, vertically centered XPM sprite FILE as an image."
+  (create-image (expand-file-name file me-agent-shell-nyan-image-dir)
+                'xpm nil :scale me-agent-shell-nyan-scale :ascent 'center))
+
+(defun me--agent-shell-nyan-pixel-frame (phase)
+  "Return the pixel-art nyan-cat frame for leg position PHASE (0-5).
+A run of rainbow-tile images, then the cat sprite for PHASE, each shown
+through a cell's `display' image.  The cat cell's character is the PHASE
+digit so the frame string is unique per phase -- `equal' ignores
+`display', so same-text frames would freeze the animation."
+  (let ((rainbow (me--agent-shell-nyan-image "rainbow.xpm"))
+        (cat (me--agent-shell-nyan-image
+              (format "nyan-frame-%d.xpm" (1+ phase)))))
+    (concat
+     (mapconcat (lambda (_) (propertize "r" 'display rainbow))
+                (number-sequence 1 me-agent-shell-nyan-rainbow-tiles) "")
+     (propertize (number-to-string phase) 'display cat))))
+
+;; --- Glyph fallback for terminal frames (no image support) ---
+
+(defconst me-agent-shell-nyan-colors
+  ["#ff5f5f" "#ff9f43" "#ffd93d" "#4ad66d" "#4dabf7" "#9775fa"]
+  "Nyan-cat rainbow stripe colors, red through violet, for the glyph cat.")
+
+(defconst me-agent-shell-nyan-runway 6
+  "How many cells the glyph cat travels before the flight loops.
+One rainbow stripe is laid per cell, so this also caps the trail length;
+set it to the stripe count to show the full rainbow at full extension.")
+
+(defun me--agent-shell-nyan-glyph-frame (phase)
+  "Return the glyph nyan-cat frame at animation PHASE.
+The cat sits PHASE cells along the runway, trailing PHASE rainbow
+stripes -- stripe I in the Ith color -- and padded with spaces ahead to
+a constant width.  Both the block/space layout and so the frame string
+change every phase, which is what makes `agent-shell' redraw and animate."
+  (let ((n (length me-agent-shell-nyan-colors)))
+    (concat
+     (mapconcat
+      (lambda (i)
+        (propertize "█" 'face `(:foreground
+                                ,(aref me-agent-shell-nyan-colors (mod i n)))))
+      (number-sequence 0 (1- phase))      ; nil (empty trail) when PHASE is 0
+      "")
+     (propertize "[,,_,,]" 'face '(:foreground "#ffb3d9"))
+     (propertize ":3" 'face '(:foreground "#9aa0a6"))
+     (make-string (- me-agent-shell-nyan-runway phase) ?\s))))
+
+(defconst me-agent-shell-nyan-pixel-frames
+  (when (ignore-errors (file-exists-p
+                        (expand-file-name "rainbow.xpm"
+                                          me-agent-shell-nyan-image-dir)))
+    (mapcar #'me--agent-shell-nyan-pixel-frame (number-sequence 0 5)))
+  "Precomputed pixel-art nyan frames, one per cat leg position, or nil.")
+
+(defconst me-agent-shell-nyan-glyph-frames
+  (mapcar #'me--agent-shell-nyan-glyph-frame
+          (number-sequence 0 me-agent-shell-nyan-runway))
+  "Precomputed glyph nyan frames, the terminal fallback.")
+
+(defun me-agent-shell-nyan-frames ()
+  "Return the nyan-cat frames for `agent-shell-busy-indicator-frames'.
+Pixel-art sprites on an image-capable frame, the glyph cat otherwise.
+A function so the custom, expanded earlier in the file, can name it
+before the frame lists are built, and so the choice is made per tick in
+the shell's own frame."
+  (if (and me-agent-shell-nyan-pixel-frames (display-images-p))
+      me-agent-shell-nyan-pixel-frames
+    me-agent-shell-nyan-glyph-frames))
 
 (provide 'ai-conf)
 ;;; ai-conf.el ends here

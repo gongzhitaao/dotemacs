@@ -1,0 +1,7 @@
+Nyan cat sprites for the agent-shell busy indicator.
+
+Vendored from nyan-mode by Jacek "TeMPOraL" Zlydach and contributors:
+  https://github.com/TeMPOraL/nyan-mode   (GPL-3.0-or-later)
+
+Files: nyan-frame-1.xpm .. nyan-frame-6.xpm (cat, waving legs), rainbow.xpm.
+Used by lisp/ai-conf.el ("Nyan cat busy indicator").
