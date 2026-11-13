@@ -877,7 +877,7 @@ config splits them, pointing the latter at ~/.cache/emacs.")
 Keep it a multiple of 6 -- the number of leg sprites -- so the legs cycle
 seamlessly across the loop point.")
 
-(defconst me-agent-shell-nyan-slowness 3
+(defconst me-agent-shell-nyan-slowness 4
   "Heartbeat ticks the cat dwells in each cell before advancing one.
 The legs still wave every tick regardless (a fresh sprite per frame);
 this only slows the travel, so raise it to make the cat glide more
