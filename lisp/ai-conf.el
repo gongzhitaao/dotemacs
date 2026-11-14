@@ -869,13 +869,17 @@ An `agent-shell-mode-hook' entry, run once per shell with state ready."
 Anchored to `me-emacs-config-dir', not `user-emacs-directory': this
 config splits them, pointing the latter at ~/.cache/emacs.")
 
-(defconst me-agent-shell-nyan-scale 2
-  "Integer upscale for the nyan sprites; keep it whole so pixels stay crisp.")
+(defconst me-agent-shell-nyan-scale 1
+  "Integer upscale for the nyan sprites; keep it whole so pixels stay crisp.
+At 1 the 25x15 sprite sits inside a normal text line; 2 overflows a ~26px
+line and reads as oversized.")
 
-(defconst me-agent-shell-nyan-flight 12
+(defconst me-agent-shell-nyan-flight 8
   "How many cells the pixel-art cat crosses before the flight loops.
-Keep it a multiple of 6 -- the number of leg sprites -- so the legs cycle
-seamlessly across the loop point.")
+Ideally `flight' * `slowness' is a multiple of 6 -- the number of leg
+sprites -- so the legs cycle seamlessly across the loop point; at 8 * 4
+= 32 the wave takes one tiny backward step per wrap, which is hard to
+spot.  Drop to 6, or set `slowness' to 3 or 6, to restore seamless legs.")
 
 (defconst me-agent-shell-nyan-slowness 4
   "Heartbeat ticks the cat dwells in each cell before advancing one.
