@@ -24,7 +24,6 @@
   "Init setup for message mode."
   (orgalist-mode)
   (turn-on-orgtbl)
-  (turn-on-flyspell)
   (setq fill-column 80))
 
 (use-package message

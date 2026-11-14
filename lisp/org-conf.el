@@ -32,7 +32,6 @@
 (defun me--init-org ()
   "Init orgmode."
   (turn-on-auto-fill)
-  (flyspell-mode)
   (org-num-mode)
 
   (defun me--org-show-context-advice (&rest ignore)

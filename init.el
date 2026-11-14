@@ -1,5 +1,5 @@
 ;;; init.el --- Yet another Emacs config (Vertico version)  -*- lexical-binding: t; -*-
-;; Time-stamp: <2026-11-12 14:01:38 gongzhitaao>
+;; Time-stamp: <2026-11-13 00:00:00 gongzhitaao>
 
 ;;; Commentary:
 ;; me/xxx: mostly interactive functions, may be executed with M-x or keys
@@ -714,7 +714,7 @@ all '.<space>' with '.<space><space>'."
 ;; `ispell-word' key, alongside `C-M-$' for switching dictionaries.
 (use-package jinx
   :delight
-  :hook ((prog-mode tex-mode org-mode) . jinx-mode)
+  :hook ((prog-mode tex-mode org-mode message-mode) . jinx-mode)
   :bind (:map jinx-mode-map
               ("M-$" . jinx-correct)
               ("C-M-$" . jinx-languages)))
