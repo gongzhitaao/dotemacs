@@ -524,23 +524,10 @@ line wrapping is `visual-line-mode', so both are needed."
 ;; usable while every mode hook is silently skipped.  `unwind-protect'
 ;; gets the font on either way without swallowing the error.
 
-(defun me--agent-shell-pad-header ()
-  "Give the text header line some breathing room on either side.
-agent-shell's `text' header opens with a single leading space and no
-trailing one, so it sits flush against the edges.  agent-shell has no
-padding option, but an invisible `:box' -- drawn in the header-line's
-own background so it reads as padding rather than a border -- insets the
-text horizontally (and a hair vertically)."
-  (face-remap-add-relative
-   'header-line
-   `(:box (:line-width (5 . 5)
-           :color ,(face-attribute 'header-line :background nil 'default)))))
-
 (defun me--agent-shell-mode-font (orig &rest args)
-  "Set up ORIG's buffer font and header padding, ORIG called with ARGS."
+  "Set up ORIG's buffer font, ORIG called with ARGS."
   (unwind-protect (apply orig args)
-    (me--set-agent-buffer-font)
-    (me--agent-shell-pad-header)))
+    (me--set-agent-buffer-font)))
 
 (with-eval-after-load 'agent-shell
   (advice-add 'agent-shell-mode :around #'me--agent-shell-mode-font))
